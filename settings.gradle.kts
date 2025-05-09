@@ -24,3 +24,4 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 include(":app")
 include(":core:ui")
+include(":feature:tools")

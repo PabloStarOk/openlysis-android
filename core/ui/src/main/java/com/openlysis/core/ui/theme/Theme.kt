@@ -5,6 +5,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import com.openlysis.core.ui.theme.type.Typography
 
 private val DarkColorScheme =
@@ -12,7 +13,11 @@ private val DarkColorScheme =
         primary = BrandTransparent.Value300,
         primaryContainer = BrandTransparent.Value300,
         surface = BrandTransparent.Value100,
-        onSurface = Brand.Value200
+        onSurface = Brand.Value200,
+        background = Gray.Value900,
+        onBackground = Color.White,
+        outline = Gray.Value600,
+        onSurfaceVariant = White.Value500
     )
 
 private val LightColorScheme =
@@ -20,7 +25,11 @@ private val LightColorScheme =
         primary = Brand.Value800,
         primaryContainer = Brand.Value800,
         surface = Brand.Value100,
-        onSurface = Brand.Value800
+        onSurface = Brand.Value800,
+        background = Color.White,
+        onBackground = Gray.Value900,
+        outline = Gray.Value300,
+        onSurfaceVariant = Gray.Value500
     )
 
 @Composable
