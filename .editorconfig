@@ -996,3 +996,15 @@ ij_markdown_wrap_text_inside_blockquotes = true
 
 [{*.toml,Cargo.lock,Cargo.toml.orig,Gopkg.lock,Pipfile,poetry.lock,uv.lock}]
 ij_toml_keep_indents_on_empty_lines = false
+
+
+[*.{kt,kts}]
+# Ignore the "function-naming" rule on any function annotated with @Composable
+ktlint_function_naming_ignore_when_annotated_with = Composable
+
+# Enforce naming strategy for compose previews.
+compose_preview_naming_enabled = true
+compose_preview_naming_strategy = suffix
+
+# Disallow use of Material Design 2 API.
+compose_disallow_material2 = true
