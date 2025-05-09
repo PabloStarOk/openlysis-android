@@ -2,6 +2,13 @@ package com.openlysis.core.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Brand800 = Color(0xFF106FEB)
+object Brand {
+    val Value100 = Color(0xFFEEF6FF)
+    val Value200 = Color(0xBFDCFFFF)
+    val Value800 = Color(0xFF106FEB)
+}
 
-val BrandTransparent300 = Color(0x4D0057D1)
+object BrandTransparent {
+    val Value100 = Color(0x1A0057D1)
+    val Value300 = Color(0x4D0057D1)
+}

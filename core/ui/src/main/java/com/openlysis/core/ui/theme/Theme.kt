@@ -9,14 +9,18 @@ import com.openlysis.core.ui.theme.type.Typography
 
 private val DarkColorScheme =
     darkColorScheme(
-        primary = BrandTransparent300,
-        primaryContainer = BrandTransparent300
+        primary = BrandTransparent.Value300,
+        primaryContainer = BrandTransparent.Value300,
+        surface = BrandTransparent.Value100,
+        onSurface = Brand.Value200
     )
 
 private val LightColorScheme =
     lightColorScheme(
-        primary = Brand800,
-        primaryContainer = Brand800
+        primary = Brand.Value800,
+        primaryContainer = Brand.Value800,
+        surface = Brand.Value100,
+        onSurface = Brand.Value800
     )
 
 @Composable
@@ -33,6 +37,7 @@ fun OpenlysisTheme(
     MaterialTheme(
         colorScheme = colorScheme,
         typography = Typography,
-        content = content
+        content = content,
+        shapes = Shapes
     )
 }
