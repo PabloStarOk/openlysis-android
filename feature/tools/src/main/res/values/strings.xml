@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="message_analysis_tools_section_title">Message Analysis</string>
+    <string name="other_analysis_tools_section_title">Other Analysis Tools</string>
+    <string name="reputation_tools_section_title">Data Reputation</string>
+
+    <string name="email_message_tool_name">Email</string>
+    <string name="sms_message_tool_name">SMS</string>
+    <string name="file_tool_name">File</string>
+    <string name="url_tool_name">URL</string>
+    <string name="email_address_tool_name">Email Address</string>
+    <string name="phone_number_tool_name">Phone Number</string>
+
+    <string name="email_message_tool_description">Analyze an email from your inbox.</string>
+    <string name="sms_message_tool_description">Analyze an SMS from your inbox.</string>
+    <string name="file_tool_description">Analyze a file.</string>
+    <string name="url_tool_description">Analyze a URL.</string>
+    <string name="email_address_tool_description">Get the reputation of an email address.</string>
+    <string name="phone_number_tool_description">Get the reputation of a phone number.</string>
+
+    <string name="email_messages_tool_icon_alt">Email icon.</string>
+    <string name="sms_messages_tool_icon_alt">SMS icon.</string>
+    <string name="file_tool_icon_alt">File icon.</string>
+    <string name="url_tool_icon_alt">URL icon.</string>
+    <string name="email_address_tool_icon_alt">At-sign icon.</string>
+    <string name="phone_number_tool_icon_alt">Phone icon.</string>
+</resources>

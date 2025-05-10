@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="message_analysis_tools_section_title">Análisis de Mensajes</string>
+    <string name="other_analysis_tools_section_title">Otras Herramientas de Análisis</string>
+    <string name="reputation_tools_section_title">Reputación de Datos</string>
+    <string name="email_message_tool_name">Correo Electrónico</string>
+    <string name="sms_message_tool_name">Mensaje de Texto SMS</string>
+    <string name="file_tool_name">Archivo</string>
+    <string name="url_tool_name">Enlace</string>
+    <string name="email_address_tool_name">Dirección de Correo Electrónico</string>
+    <string name="phone_number_tool_name">Número telefónico</string>
+    <string name="email_message_tool_description">Analiza un correo electrónico de una de tus bandejas.</string>
+    <string name="sms_message_tool_description">Analiza un mensaje de texto SMS de tu dispositivo móvil.</string>
+    <string name="file_tool_description">Analiza un archivo.</string>
+    <string name="url_tool_description">Analiza un enlace.</string>
+    <string name="email_address_tool_description">Obtén la reputación de una dirección de correo electrónico.</string>
+    <string name="phone_number_tool_description">Obtén la reputación de un número telefónico.</string>
+    <string name="email_messages_tool_icon_alt">Icono de un correo electrónico.</string>
+    <string name="sms_messages_tool_icon_alt">Icono de un mensaje de texto SMS.</string>
+    <string name="file_tool_icon_alt">Icono de un archivo.</string>
+    <string name="url_tool_icon_alt">Icono de un enlace.</string>
+    <string name="email_address_tool_icon_alt">Icono de un signo arroba.</string>
+    <string name="phone_number_tool_icon_alt">Icono de un número de teléfono.</string>
+</resources>
