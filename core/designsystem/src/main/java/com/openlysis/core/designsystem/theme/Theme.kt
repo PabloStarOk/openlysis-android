@@ -6,6 +6,7 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import com.openlysis.core.designsystem.theme.radius.Shapes
 import com.openlysis.core.designsystem.theme.type.Typography
 
 private val DarkColorScheme =
