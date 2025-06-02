@@ -1,4 +1,4 @@
-package com.openlysis.core.ui.theme.type
+package com.openlysis.core.designsystem.theme.type
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.ExperimentalTextApi
@@ -8,7 +8,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontVariation
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import com.openlysis.core.ui.R
+import com.openlysis.core.designsystem.R
 
 @OptIn(ExperimentalTextApi::class)
 private val Montserrat =

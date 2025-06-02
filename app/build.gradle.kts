@@ -49,7 +49,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
 
-    implementation(projects.core.ui)
+    implementation(projects.core.designsystem)
 
     testImplementation(libs.junit)
 

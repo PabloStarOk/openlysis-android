@@ -1,4 +1,4 @@
-package com.openlysis.core.ui.theme.size
+package com.openlysis.core.designsystem.theme.size
 
 import androidx.compose.ui.unit.dp
 

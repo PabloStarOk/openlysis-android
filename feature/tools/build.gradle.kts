@@ -42,7 +42,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.navigation)
 
-    implementation(projects.core.ui)
+    implementation(projects.core.designsystem)
 
     testImplementation(libs.junit)
 

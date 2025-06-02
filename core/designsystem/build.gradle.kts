@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.openlysis.core.ui"
+    namespace = "com.openlysis.core.designsystem"
     compileSdk = 35
 
     defaultConfig {

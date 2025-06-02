@@ -1,4 +1,4 @@
-package com.openlysis.core.ui.theme.type
+package com.openlysis.core.designsystem.theme.type
 
 import androidx.compose.ui.unit.sp
 

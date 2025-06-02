@@ -13,9 +13,9 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.openlysis.core.ui.components.SectionTitle
-import com.openlysis.core.ui.theme.OpenlysisTheme
-import com.openlysis.core.ui.theme.size.Spacing
+import com.openlysis.core.designsystem.components.SectionTitle
+import com.openlysis.core.designsystem.theme.OpenlysisTheme
+import com.openlysis.core.designsystem.theme.size.Spacing
 import com.openlysis.feature.tools.components.ToolCard
 import com.openlysis.feature.tools.data.Tool
 import com.openlysis.feature.tools.data.ToolsDataSource

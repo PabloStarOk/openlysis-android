@@ -1,4 +1,4 @@
-package com.openlysis.core.ui.theme
+package com.openlysis.core.designsystem.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -6,7 +6,7 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import com.openlysis.core.ui.theme.type.Typography
+import com.openlysis.core.designsystem.theme.type.Typography
 
 private val DarkColorScheme =
     darkColorScheme(

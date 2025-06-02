@@ -1,4 +1,4 @@
-package com.openlysis.core.ui.components
+package com.openlysis.core.designsystem.components
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -8,9 +8,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import com.openlysis.core.ui.theme.OpenlysisTheme
-import com.openlysis.core.ui.theme.size.Depth
-import com.openlysis.core.ui.theme.size.Spacing
+import com.openlysis.core.designsystem.theme.OpenlysisTheme
+import com.openlysis.core.designsystem.theme.size.Depth
+import com.openlysis.core.designsystem.theme.size.Spacing
 
 @Composable
 fun SectionTitle(

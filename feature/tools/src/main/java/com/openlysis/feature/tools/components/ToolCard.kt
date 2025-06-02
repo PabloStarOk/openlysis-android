@@ -31,9 +31,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.openlysis.core.ui.theme.OpenlysisTheme
-import com.openlysis.core.ui.theme.size.Spacing
-import com.openlysis.core.ui.theme.type.Body
+import com.openlysis.core.designsystem.theme.OpenlysisTheme
+import com.openlysis.core.designsystem.theme.size.Spacing
+import com.openlysis.core.designsystem.theme.type.Body
 
 @Composable
 internal fun ToolCard(
