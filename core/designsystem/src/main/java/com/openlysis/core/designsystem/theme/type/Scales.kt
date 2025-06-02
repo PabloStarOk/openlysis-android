@@ -2,6 +2,9 @@ package com.openlysis.core.designsystem.theme.type
 
 import androidx.compose.ui.unit.sp
 
+/**
+ * Scales is an object that defines a set of predefined font sizes.
+ */
 internal object Scales {
     val Value01 = 12.sp
     val Value02 = 14.sp
