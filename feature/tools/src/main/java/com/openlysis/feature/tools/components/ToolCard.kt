@@ -32,7 +32,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.openlysis.core.designsystem.theme.OpenlysisTheme
-import com.openlysis.core.designsystem.theme.size.Spacing
+import com.openlysis.core.designsystem.theme.size.LocalAppSpacing
 import com.openlysis.core.designsystem.theme.type.LocalAppTypography
 
 @Composable
@@ -87,10 +87,10 @@ internal fun ToolCard(
             modifier =
                 Modifier
                     .padding(
-                        Spacing.Value400
+                        LocalAppSpacing.current.value400
                     ).fillMaxHeight()
                     .height(IntrinsicSize.Max),
-            horizontalArrangement = Arrangement.spacedBy(Spacing.Value400),
+            horizontalArrangement = Arrangement.spacedBy(LocalAppSpacing.current.value400),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column(

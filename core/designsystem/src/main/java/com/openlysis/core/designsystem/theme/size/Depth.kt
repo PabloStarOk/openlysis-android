@@ -1,14 +1,19 @@
 package com.openlysis.core.designsystem.theme.size
 
-import androidx.compose.ui.unit.dp
+import androidx.compose.runtime.Immutable
+import androidx.compose.ui.unit.Dp
 
-object Depth {
-    val Value0 = 0.dp
-    val Value025 = 1.dp
-    val Value050 = 2.dp
-    val Value100 = 4.dp
-    val Value200 = 8.dp
-    val Value400 = 16.dp
-    val Value800 = 32.dp
-    val Value1200 = 48.dp
-}
+/**
+ * A set of values to be used for elevation and shadow effects.
+ */
+@Immutable
+data class Depth(
+    val value0: Dp,
+    val value025: Dp,
+    val value050: Dp,
+    val value100: Dp,
+    val value200: Dp,
+    val value400: Dp,
+    val value800: Dp,
+    val value1200: Dp
+)

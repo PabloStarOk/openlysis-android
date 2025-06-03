@@ -1,19 +1,24 @@
 package com.openlysis.core.designsystem.theme.size
 
-import androidx.compose.ui.unit.dp
+import androidx.compose.runtime.Immutable
+import androidx.compose.ui.unit.Dp
 
-object Spacing {
-    val Value0 = 0.dp
-    val Value050 = 2.dp
-    val Value100 = 4.dp
-    val Value150 = 6.dp
-    val Value200 = 8.dp
-    val Value300 = 12.dp
-    val Value400 = 16.dp
-    val Value600 = 24.dp
-    val Value800 = 32.dp
-    val Value1200 = 48.dp
-    val Value1600 = 64.dp
-    val Value2400 = 96.dp
-    val Value4000 = 160.dp
-}
+/**
+ * A set of spacing values to use in layouts.
+ */
+@Immutable
+data class Spacing(
+    val value0: Dp,
+    val value050: Dp,
+    val value100: Dp,
+    val value150: Dp,
+    val value200: Dp,
+    val value300: Dp,
+    val value400: Dp,
+    val value600: Dp,
+    val value800: Dp,
+    val value1200: Dp,
+    val value1600: Dp,
+    val value2400: Dp,
+    val value4000: Dp
+)

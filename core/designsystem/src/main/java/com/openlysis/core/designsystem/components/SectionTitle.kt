@@ -9,8 +9,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import com.openlysis.core.designsystem.theme.OpenlysisTheme
-import com.openlysis.core.designsystem.theme.size.Depth
-import com.openlysis.core.designsystem.theme.size.Spacing
+import com.openlysis.core.designsystem.theme.size.LocalAppDepth
+import com.openlysis.core.designsystem.theme.size.LocalAppSpacing
 
 @Composable
 fun SectionTitle(
@@ -19,15 +19,15 @@ fun SectionTitle(
 ) {
     Surface(
         modifier = modifier,
-        shadowElevation = Depth.Value050,
+        shadowElevation = LocalAppDepth.current.value050,
         shape = MaterialTheme.shapes.medium
     ) {
         Text(
             text = title,
             modifier =
                 modifier.padding(
-                    horizontal = Spacing.Value400,
-                    vertical = Spacing.Value200
+                    horizontal = LocalAppSpacing.current.value400,
+                    vertical = LocalAppSpacing.current.value200
                 ),
             style = MaterialTheme.typography.titleMedium,
             maxLines = 1,

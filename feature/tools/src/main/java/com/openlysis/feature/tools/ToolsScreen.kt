@@ -15,7 +15,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.openlysis.core.designsystem.components.SectionTitle
 import com.openlysis.core.designsystem.theme.OpenlysisTheme
-import com.openlysis.core.designsystem.theme.size.Spacing
+import com.openlysis.core.designsystem.theme.size.LocalAppSpacing
 import com.openlysis.feature.tools.components.ToolCard
 import com.openlysis.feature.tools.data.Tool
 import com.openlysis.feature.tools.data.ToolsDataSource
@@ -37,10 +37,10 @@ internal fun ToolsScreen(
     modifier: Modifier = Modifier
 ) {
     Column(
-        verticalArrangement = Arrangement.spacedBy(Spacing.Value800),
+        verticalArrangement = Arrangement.spacedBy(LocalAppSpacing.current.value800),
         modifier =
             modifier
-                .padding(Spacing.Value400)
+                .padding(LocalAppSpacing.current.value400)
                 .verticalScroll(rememberScrollState())
     ) {
         MessageToolsSection(repository.getMessageAnalysisTools())
@@ -56,7 +56,7 @@ private fun SectionScaffold(
     modifier: Modifier = Modifier
 ) {
     Column(
-        verticalArrangement = Arrangement.spacedBy(Spacing.Value400),
+        verticalArrangement = Arrangement.spacedBy(LocalAppSpacing.current.value400),
         modifier = modifier
     ) {
         SectionTitle(
@@ -106,7 +106,7 @@ private fun OtherAnalysesSection(
         title = stringResource(R.string.other_analysis_tools_section_title),
         content = {
             Row(
-                horizontalArrangement = Arrangement.spacedBy(Spacing.Value400)
+                horizontalArrangement = Arrangement.spacedBy(LocalAppSpacing.current.value400)
             ) {
                 tools.forEach { tool ->
                     MapToolCard(
