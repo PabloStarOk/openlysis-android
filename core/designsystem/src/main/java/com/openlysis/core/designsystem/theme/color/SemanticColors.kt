@@ -2,6 +2,9 @@ package com.openlysis.core.designsystem.theme.color
 
 import androidx.compose.runtime.Immutable
 
+/**
+ * A set of tokenized colors for common use cases in the UI.
+ */
 @Immutable
 data class SemanticColors<TColors>(
     val default: TColors,
