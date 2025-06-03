@@ -7,7 +7,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.staticCompositionLocalOf
 import com.openlysis.core.designsystem.theme.color.DarkAppColorScheme
 import com.openlysis.core.designsystem.theme.color.LightAppColorScheme
-import com.openlysis.core.designsystem.theme.radius.Shapes
+import com.openlysis.core.designsystem.theme.radius.FallbackRadius
 import com.openlysis.core.designsystem.theme.type.FallbackTypography
 
 val LocalAppColorScheme =
@@ -31,7 +31,7 @@ fun OpenlysisTheme(
         content = {
             MaterialTheme(
                 typography = FallbackTypography,
-                shapes = Shapes,
+                shapes = FallbackRadius,
                 content = content
             )
         }

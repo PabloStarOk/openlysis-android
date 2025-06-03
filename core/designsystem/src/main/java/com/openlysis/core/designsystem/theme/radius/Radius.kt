@@ -1,16 +1,21 @@
 package com.openlysis.core.designsystem.theme.radius
 
-import androidx.compose.ui.unit.dp
+import androidx.compose.runtime.Immutable
+import androidx.compose.ui.unit.Dp
 
 /**
- * Contains standard radius values used throughout the application.
+ * Radius values used for the application.
  *
- * These values are defined as `Dp` (Density-independent Pixels) to ensure
- * consistent appearance across different screen densities.
+ * @property value100 A small radius value, often used for subtle rounding.
+ * @property value200 A medium radius value.
+ * @property value400 A larger radius value.
+ * @property full A radius value that typically results in a fully rounded shape (e.g., a circle or pill shape),
+ *                often calculated as half of the smaller dimension of the component it's applied to.
  */
-object Radius {
-    val Value100 = 4.dp
-    val Value200 = 8.dp
-    val Value400 = 16.dp
-    val Full = 9999.dp
-}
+@Immutable
+data class Radius(
+    val value100: Dp,
+    val value200: Dp,
+    val value400: Dp,
+    val full: Dp
+)
