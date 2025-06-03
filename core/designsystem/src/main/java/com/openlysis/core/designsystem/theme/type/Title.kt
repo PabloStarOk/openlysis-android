@@ -55,6 +55,6 @@ internal object Title {
             fontFamily = Montserrat,
             fontWeight = FontWeight.SemiBold,
             fontSize = Scales.Value03,
-            lineHeight = 19.2.sp
+            lineHeight = 22.4.sp
         )
 }
