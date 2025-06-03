@@ -33,7 +33,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.openlysis.core.designsystem.theme.OpenlysisTheme
 import com.openlysis.core.designsystem.theme.size.Spacing
-import com.openlysis.core.designsystem.theme.type.LocalTypography
+import com.openlysis.core.designsystem.theme.type.LocalAppTypography
 
 @Composable
 internal fun ToolCard(
@@ -102,7 +102,7 @@ internal fun ToolCard(
             ) {
                 Text(
                     text = label,
-                    style = LocalTypography.current.bodyBaseStrong,
+                    style = LocalAppTypography.current.bodyBaseStrong,
                     color = labelColor,
                     modifier = Modifier.fillMaxWidth()
                 )
