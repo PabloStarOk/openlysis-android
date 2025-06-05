@@ -39,6 +39,7 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.ui.tooling.preview)
+    implementation(libs.androidx.navigation)
 
     testImplementation(libs.junit)
 

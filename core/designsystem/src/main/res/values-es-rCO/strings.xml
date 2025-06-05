@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="top_bar_back_icon_description">Botón para ir atrás.</string>
+    <string name="dropdown_menu_icon_description">Botón para abrir el menú.</string>
+</resources>
