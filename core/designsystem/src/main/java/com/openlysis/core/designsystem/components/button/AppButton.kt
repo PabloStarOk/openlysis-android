@@ -24,6 +24,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.openlysis.core.designsystem.modifier.SizeType
 import com.openlysis.core.designsystem.theme.LocalAppColorScheme
 import com.openlysis.core.designsystem.theme.OpenlysisTheme
 import com.openlysis.core.designsystem.theme.radius.LocalAppRadius
@@ -33,7 +34,8 @@ import com.openlysis.core.designsystem.theme.type.LocalAppTypography
 /**
  * A composable function that displays a customizable button with optional icon and label.
  *
- * @param buttonType The type of button, which determines its appearance (e.g., primary, secondary).
+ * @param type The type of button, which determines its appearance (e.g., primary, secondary).
+ * @param size The size of the button, see [SizeType].
  * @param onClick The callback function to be executed when the button is clicked.
  * @param displayLabel A boolean indicating whether to display the label.
  * @param displayIcon A boolean indicating whether to display the icon.
@@ -44,7 +46,8 @@ import com.openlysis.core.designsystem.theme.type.LocalAppTypography
  */
 @Composable
 fun AppButton(
-    buttonType: ButtonType,
+    type: ButtonType,
+    size: SizeType,
     onClick: () -> Unit,
     displayLabel: Boolean,
     displayIcon: Boolean,
@@ -53,23 +56,24 @@ fun AppButton(
     icon: ImageVector? = null,
     iconAlt: String? = null
 ) {
-    val buttonData = ButtonTypeColorsMap.getValue(buttonType)
+    val type = ButtonTypeColorsMap.getValue(type)
+    val size = ButtonSizeTypeMap.getValue(size)
     val ripple =
         ripple(
             bounded = true,
-            color = buttonData.getRippleColor(LocalAppColorScheme.current)
+            color = type.getRippleColor(LocalAppColorScheme.current)
         )
 
     Surface(
-        color = buttonData.getBackgroundColor(LocalAppColorScheme.current),
+        color = type.getBackgroundColor(LocalAppColorScheme.current),
         shape = RoundedCornerShape(LocalAppRadius.current.value100),
         modifier =
             modifier
                 .border(
                     width = 1.dp,
-                    color = buttonData.getBorderColor(LocalAppColorScheme.current),
+                    color = type.getBorderColor(LocalAppColorScheme.current),
                     shape = RoundedCornerShape(LocalAppRadius.current.value100)
-                ).heightIn(min = 48.dp, max = 48.dp)
+                ).heightIn(min = size.height, max = size.height)
                 .clickable(
                     onClick = onClick,
                     interactionSource = remember { MutableInteractionSource() },
@@ -80,27 +84,22 @@ fun AppButton(
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(LocalAppSpacing.current.value200),
-            modifier =
-                Modifier
-                    .padding(
-                        vertical = LocalAppSpacing.current.value200,
-                        horizontal = LocalAppSpacing.current.value300
-                    )
+            modifier = Modifier.padding(size.getPadding(LocalAppSpacing.current))
         ) {
             if (displayIcon && icon != null && !iconAlt.isNullOrBlank()) {
                 Icon(
                     imageVector = icon,
                     contentDescription = iconAlt,
-                    tint = buttonData.getForegroundColor(LocalAppColorScheme.current),
-                    modifier = Modifier.size(24.dp)
+                    tint = type.getForegroundColor(LocalAppColorScheme.current),
+                    modifier = Modifier.size(size.iconSize)
                 )
             }
 
             if (displayLabel && !label.isNullOrBlank()) {
                 Text(
                     text = label,
-                    color = buttonData.getForegroundColor(LocalAppColorScheme.current),
-                    style = LocalAppTypography.current.bodyBase,
+                    color = type.getForegroundColor(LocalAppColorScheme.current),
+                    style = size.getTextStyle(LocalAppTypography.current),
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 1
                 )
@@ -114,7 +113,8 @@ fun AppButton(
 private fun PrimaryButtonPreview() {
     OpenlysisTheme(darkTheme = false) {
         AppButton(
-            buttonType = ButtonType.Danger,
+            type = ButtonType.Primary,
+            size = SizeType.Default,
             onClick = { },
             displayLabel = true,
             displayIcon = true,
