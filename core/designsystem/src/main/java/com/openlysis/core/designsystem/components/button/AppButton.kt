@@ -83,8 +83,14 @@ fun AppButton(
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(LocalAppSpacing.current.value200),
-            modifier = Modifier.padding(size.getPadding(LocalAppSpacing.current))
+            horizontalArrangement =
+                Arrangement
+                    .spacedBy(
+                        space = LocalAppSpacing.current.value200,
+                        alignment = Alignment.CenterHorizontally
+                    ),
+            modifier = Modifier
+                .padding(size.getPadding(LocalAppSpacing.current))
         ) {
             if (displayIcon && icon != null && !iconAlt.isNullOrBlank()) {
                 Icon(

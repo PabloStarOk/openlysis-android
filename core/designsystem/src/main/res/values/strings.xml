@@ -4,4 +4,8 @@
     <string name="dropdown_menu_icon_description">Button to open a menu.</string>
     <string name="warning_alert_icon_alt">Triangle warning icon.</string>
     <string name="danger_alert_icon_alt">Octagon danger icon.</string>
+    <string name="confirmation_dialog_accept">Accept</string>
+    <string name="confirmation_dialog_accept_icon_alt">Check mark.</string>
+    <string name="confirmation_dialog_cancel">Cancel</string>
+    <string name="confirmation_dialog_cancel_icon_alt">Cross mark.</string>
 </resources>

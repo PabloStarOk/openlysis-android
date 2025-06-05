@@ -30,13 +30,14 @@ import com.openlysis.core.designsystem.theme.type.LocalAppTypography
 @Composable
 fun Alert(
     type: AlertType,
-    text: String
+    text: String,
+    modifier: Modifier = Modifier
 ) {
     val data = AlertTypeDataMap.getValue(type)
     Box(
         contentAlignment = Alignment.Center,
         modifier =
-            Modifier
+            modifier
                 .clip(shape = RoundedCornerShape(LocalAppRadius.current.value100))
                 .background(data.getBackgroundColor(LocalAppColorScheme.current))
     ) {
