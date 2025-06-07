@@ -2,7 +2,6 @@ package com.openlysis.feature.tools
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -22,11 +21,7 @@ import com.openlysis.feature.tools.data.ToolsDataSource
 import com.openlysis.feature.tools.data.ToolsRepository
 
 /**
- * Composable function that displays the tools screen.
- *
- * This screen presents a list of different tool categories, each containing
- * specific tools for message analysis, other data analysis, and reputation checking.
- * The layout uses a vertical column with spacing between sections and is scrollable.
+ * Display the analysis tools screen.
  *
  * @param repository The [ToolsRepository] providing the data for the various tool sections.
  * @param modifier Optional [Modifier] to apply to the top-level layout container.
@@ -43,12 +38,31 @@ internal fun ToolsScreen(
                 .padding(LocalAppSpacing.current.value400)
                 .verticalScroll(rememberScrollState())
     ) {
-        MessageToolsSection(repository.getMessageAnalysisTools())
-        OtherAnalysesSection(repository.getDataAnalysisTools())
-        ReputationToolsSection(repository.getReputationTools())
+        SectionScaffold(
+            title = stringResource(R.string.message_analysis_tools_section_title),
+            content = {
+                repository.getMessageAnalysisTools().forEach { tool ->
+                    MapToolCard(tool)
+                }
+            },
+            modifier = modifier
+        )
+
+        SectionScaffold(
+            title = stringResource(R.string.other_analysis_tools_section_title),
+            content = {
+                repository.getDataAnalysisTools().forEach { tool ->
+                    MapToolCard(tool)
+                }
+            },
+            modifier = modifier
+        )
     }
 }
 
+/**
+ * A scaffold for each section in the screen.
+ */
 @Composable
 private fun SectionScaffold(
     title: String,
@@ -68,6 +82,9 @@ private fun SectionScaffold(
     }
 }
 
+/**
+ * Creates a UI Card from the specified [Tool].
+ */
 @Composable
 private fun MapToolCard(
     tool: Tool,
@@ -79,57 +96,6 @@ private fun MapToolCard(
         icon = ImageVector.vectorResource(tool.iconResource),
         iconAlt = stringResource(tool.iconAltResource),
         onClick = tool.onClick,
-        modifier = modifier
-    )
-}
-
-@Composable
-private fun MessageToolsSection(
-    tools: List<Tool>,
-    modifier: Modifier = Modifier
-) {
-    SectionScaffold(
-        title = stringResource(R.string.message_analysis_tools_section_title),
-        content = {
-            tools.forEach { tool -> MapToolCard(tool) }
-        },
-        modifier = modifier
-    )
-}
-
-@Composable
-private fun OtherAnalysesSection(
-    tools: List<Tool>,
-    modifier: Modifier = Modifier
-) {
-    SectionScaffold(
-        title = stringResource(R.string.other_analysis_tools_section_title),
-        content = {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(LocalAppSpacing.current.value400)
-            ) {
-                tools.forEach { tool ->
-                    MapToolCard(
-                        tool,
-                        Modifier.weight(1f)
-                    )
-                }
-            }
-        },
-        modifier = modifier
-    )
-}
-
-@Composable
-private fun ReputationToolsSection(
-    tools: List<Tool>,
-    modifier: Modifier = Modifier
-) {
-    SectionScaffold(
-        title = stringResource(R.string.reputation_tools_section_title),
-        content = {
-            tools.forEach { tool -> MapToolCard(tool) }
-        },
         modifier = modifier
     )
 }

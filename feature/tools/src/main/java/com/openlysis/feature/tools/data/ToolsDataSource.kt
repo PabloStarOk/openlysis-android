@@ -3,8 +3,7 @@ package com.openlysis.feature.tools.data
 import com.openlysis.feature.tools.R
 
 /**
- * A data source implementation for retrieving a list of available tools.
- * This class implements the [ToolsRepository] interface.
+ * A data source implementation for retrieving a list of available analysis tools.
  */
 internal class ToolsDataSource : ToolsRepository {
     private val messageAnalysisTools =
@@ -43,24 +42,6 @@ internal class ToolsDataSource : ToolsRepository {
             )
         )
 
-    private val reputationTools =
-        listOf(
-            Tool(
-                nameResource = R.string.email_address_tool_name,
-                descriptionResource = R.string.email_address_tool_description,
-                iconResource = R.drawable.atsign_icon,
-                iconAltResource = R.string.email_address_tool_icon_alt,
-                onClick = { }
-            ),
-            Tool(
-                nameResource = R.string.phone_number_tool_name,
-                descriptionResource = R.string.phone_number_tool_description,
-                iconResource = R.drawable.phone_icon,
-                iconAltResource = R.string.phone_number_tool_icon_alt,
-                onClick = { }
-            )
-        )
-
     /**
      * Returns a list of tools available for message analysis.
      *
@@ -82,15 +63,4 @@ internal class ToolsDataSource : ToolsRepository {
      * @return A list of [Tool] objects for data analysis.
      */
     override fun getDataAnalysisTools(): List<Tool> = fileAndUrlTools
-
-    /**
-     * Retrieves a list of reputation-related tools.
-     *
-     * This function provides access to a predefined list of `Tool` objects
-     * that are specifically designed or related to managing or interacting
-     * with reputation within the application.
-     *
-     * @return A `List` of `Tool` objects representing the reputation tools.
-     */
-    override fun getReputationTools(): List<Tool> = reputationTools
 }

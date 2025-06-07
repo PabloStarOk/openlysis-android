@@ -11,15 +11,27 @@ import com.openlysis.feature.tools.ToolsScreen
 import com.openlysis.feature.tools.data.ToolsDataSource
 import kotlinx.serialization.Serializable
 
+/**
+ * Route to the tools nested graph.
+ */
 @Serializable
 object ToolsNestedGraphRoute
 
+/**
+ * Route for accessing the tools main screen of the nested graph.
+ */
 @Serializable
 object ToolsRoute
 
+/**
+ * Provides functionality to navigate to the tools screen.
+ */
 fun NavController.navigateToTools(navOptions: NavOptions) =
     navigate(ToolsRoute, navOptions = navOptions)
 
+/**
+ * Adds the tool screen as a nested graph to the navigation.
+ */
 fun NavGraphBuilder.toolsScreen(
     enterTransition: EnterTransition,
     exitTransition: ExitTransition,

@@ -120,10 +120,10 @@ internal val DarkForeground =
         default =
             ForegroundColors(
                 primary = Color(0xFFFFFFFF),
-                onPrimary = Color(0xB3FFFFFF),
-                secondary = Color(0x66FFFFFF),
+                onPrimary = Color.Unspecified,
+                secondary = Color(0xB3FFFFFF),
                 onSecondary = Color.Unspecified,
-                tertiary = Color.Unspecified,
+                tertiary = Color(0x66FFFFFF),
                 onTertiary = Color.Unspecified
             ),
         neutral =

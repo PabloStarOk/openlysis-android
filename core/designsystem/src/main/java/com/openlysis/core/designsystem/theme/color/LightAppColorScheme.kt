@@ -120,10 +120,10 @@ internal val LightForeground =
         default =
             ForegroundColors(
                 primary = Color(0xFF1E1E1E),
-                onPrimary = Color(0xFF757575),
-                secondary = Color(0xFFB3B3B3),
+                onPrimary = Color.Transparent,
+                secondary = Color(0xFF757575),
                 onSecondary = Color.Unspecified,
-                tertiary = Color.Unspecified,
+                tertiary = Color(0xFFB3B3B3),
                 onTertiary = Color.Unspecified
             ),
         neutral =
