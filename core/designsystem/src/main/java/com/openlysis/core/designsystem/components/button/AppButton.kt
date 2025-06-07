@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextOverflow
@@ -69,6 +70,7 @@ fun AppButton(
         shape = RoundedCornerShape(LocalAppRadius.current.value100),
         modifier =
             modifier
+                .clip(RoundedCornerShape(LocalAppRadius.current.value100))
                 .border(
                     width = 1.dp,
                     color = type.getBorderColor(LocalAppColorScheme.current),
@@ -89,8 +91,9 @@ fun AppButton(
                         space = LocalAppSpacing.current.value200,
                         alignment = Alignment.CenterHorizontally
                     ),
-            modifier = Modifier
-                .padding(size.getPadding(LocalAppSpacing.current))
+            modifier =
+                Modifier
+                    .padding(size.getPadding(LocalAppSpacing.current))
         ) {
             if (displayIcon && icon != null && !iconAlt.isNullOrBlank()) {
                 Icon(

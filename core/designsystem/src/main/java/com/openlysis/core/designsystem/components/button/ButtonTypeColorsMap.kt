@@ -22,7 +22,7 @@ internal val ButtonTypeColorsMap =
                 getBackgroundColor = { Color.Transparent },
                 getBorderColor = { scheme -> scheme.border.brand.primary },
                 getForegroundColor = { scheme -> scheme.text.brand.primary },
-                getRippleColor = { scheme -> scheme.background.brand.secondaryActive }
+                getRippleColor = { scheme -> scheme.background.brand.primaryActive }
             )
         ),
         Pair(
@@ -31,7 +31,7 @@ internal val ButtonTypeColorsMap =
                 getBackgroundColor = { Color.Transparent },
                 getBorderColor = { Color.Transparent },
                 getForegroundColor = { scheme -> scheme.text.brand.primary },
-                getRippleColor = { scheme -> scheme.background.brand.tertiaryActive }
+                getRippleColor = { scheme -> scheme.background.brand.primaryActive }
             )
         ),
         Pair(
@@ -40,7 +40,7 @@ internal val ButtonTypeColorsMap =
                 getBackgroundColor = { Color.Transparent },
                 getBorderColor = { scheme -> scheme.border.positive.primary },
                 getForegroundColor = { scheme -> scheme.text.positive.primary },
-                getRippleColor = { scheme -> scheme.background.positive.tertiaryActive }
+                getRippleColor = { scheme -> scheme.background.positive.primaryActive }
             )
         ),
         Pair(
@@ -49,7 +49,7 @@ internal val ButtonTypeColorsMap =
                 getBackgroundColor = { Color.Transparent },
                 getBorderColor = { scheme -> scheme.border.danger.primary },
                 getForegroundColor = { scheme -> scheme.text.danger.primary },
-                getRippleColor = { scheme -> scheme.background.danger.tertiaryActive }
+                getRippleColor = { scheme -> scheme.background.danger.primaryActive }
             )
         )
     )
