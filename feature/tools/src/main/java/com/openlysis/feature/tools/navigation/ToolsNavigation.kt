@@ -1,7 +1,9 @@
 package com.openlysis.feature.tools.navigation
 
+import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
@@ -33,19 +35,31 @@ fun NavController.navigateToTools(navOptions: NavOptions) =
  * Adds the tool screen as a nested graph to the navigation.
  */
 fun NavGraphBuilder.toolsScreen(
-    enterTransition: EnterTransition,
-    exitTransition: ExitTransition,
-    popEnterTransition: EnterTransition = enterTransition,
-    popExitTransition: ExitTransition = exitTransition
+    enterTransition: (
+    AnimatedContentTransitionScope<NavBackStackEntry>.()
+    -> @JvmSuppressWildcards EnterTransition?
+    ),
+    exitTransition: (
+    AnimatedContentTransitionScope<NavBackStackEntry>.()
+    -> @JvmSuppressWildcards ExitTransition?
+    ),
+    popEnterTransition: (
+    AnimatedContentTransitionScope<NavBackStackEntry>.()
+    -> @JvmSuppressWildcards EnterTransition?
+    ) = enterTransition,
+    popExitTransition: (
+    AnimatedContentTransitionScope<NavBackStackEntry>.()
+    -> @JvmSuppressWildcards ExitTransition?
+    ) = exitTransition
 ) {
     navigation<ToolsNestedGraphRoute> (
         startDestination = ToolsRoute
     ) {
         composable<ToolsRoute>(
-            enterTransition = { enterTransition },
-            exitTransition = { exitTransition },
-            popEnterTransition = { popEnterTransition },
-            popExitTransition = { popExitTransition }
+            enterTransition = enterTransition,
+            exitTransition = exitTransition,
+            popEnterTransition = popEnterTransition,
+            popExitTransition = popExitTransition
         ) {
             ToolsScreen(ToolsDataSource())
         }
