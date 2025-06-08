@@ -11,13 +11,12 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.openlysis.core.designsystem.R
 import com.openlysis.core.designsystem.components.button.AppButton
 import com.openlysis.core.designsystem.components.button.ButtonType
+import com.openlysis.core.designsystem.icon.AppIcons
 import com.openlysis.core.designsystem.modifier.SizeType
 import com.openlysis.core.designsystem.theme.LocalAppColorScheme
 import com.openlysis.core.designsystem.theme.radius.LocalAppRadius
@@ -56,7 +55,7 @@ fun AppDropdownMenu(
             onClick = onExpand,
             displayLabel = false,
             displayIcon = true,
-            icon = ImageVector.vectorResource(R.drawable.menu_icon),
+            icon = AppIcons.Menu,
             iconAlt = stringResource(R.string.dropdown_menu_icon_description)
         )
 

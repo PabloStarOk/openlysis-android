@@ -1,6 +1,7 @@
 package com.openlysis.core.designsystem.components.alert
 
 import com.openlysis.core.designsystem.R
+import com.openlysis.core.designsystem.icon.AppIconsIds
 
 /**
  * A map that associates each [AlertType] with its corresponding [AlertTypeData].
@@ -12,7 +13,7 @@ internal val AlertTypeDataMap =
             AlertTypeData(
                 getBackgroundColor = { scheme -> scheme.background.warning.secondary },
                 getForegroundColor = { scheme -> scheme.text.warning.onSecondary },
-                iconResId = R.drawable.alert_triangle_icon,
+                iconResId = AppIconsIds.TriangleAlert,
                 iconAlt = R.string.warning_alert_icon_alt
             )
         ),
@@ -21,7 +22,7 @@ internal val AlertTypeDataMap =
             AlertTypeData(
                 getBackgroundColor = { scheme -> scheme.background.danger.secondary },
                 getForegroundColor = { scheme -> scheme.text.danger.onSecondary },
-                iconResId = R.drawable.alert_octagon_icon,
+                iconResId = AppIconsIds.OctagonAlert,
                 iconAlt = R.string.danger_alert_icon_alt
             )
         )

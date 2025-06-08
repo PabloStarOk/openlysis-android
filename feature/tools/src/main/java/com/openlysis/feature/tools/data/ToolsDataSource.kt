@@ -1,5 +1,6 @@
 package com.openlysis.feature.tools.data
 
+import com.openlysis.core.designsystem.icon.AppIconsIds
 import com.openlysis.feature.tools.R
 
 /**
@@ -11,14 +12,14 @@ internal class ToolsDataSource : ToolsRepository {
             Tool(
                 nameResource = R.string.email_message_tool_name,
                 descriptionResource = R.string.email_message_tool_description,
-                iconResource = R.drawable.mail_icon,
+                iconResource = AppIconsIds.Mail,
                 iconAltResource = R.string.email_messages_tool_icon_alt,
                 onClick = { }
             ),
             Tool(
                 nameResource = R.string.sms_message_tool_name,
                 descriptionResource = R.string.sms_message_tool_description,
-                iconResource = R.drawable.sms_icon,
+                iconResource = AppIconsIds.Sms,
                 iconAltResource = R.string.sms_messages_tool_icon_alt,
                 onClick = { }
             )
@@ -29,14 +30,14 @@ internal class ToolsDataSource : ToolsRepository {
             Tool(
                 nameResource = R.string.file_tool_name,
                 descriptionResource = R.string.file_tool_description,
-                iconResource = R.drawable.file_icon,
+                iconResource = AppIconsIds.File,
                 iconAltResource = R.string.file_tool_icon_alt,
                 onClick = { }
             ),
             Tool(
                 nameResource = R.string.url_tool_name,
                 descriptionResource = R.string.url_tool_description,
-                iconResource = R.drawable.link_icon,
+                iconResource = AppIconsIds.Link,
                 iconAltResource = R.string.url_tool_icon_alt,
                 onClick = { }
             )

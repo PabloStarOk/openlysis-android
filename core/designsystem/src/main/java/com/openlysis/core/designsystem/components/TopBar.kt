@@ -21,9 +21,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
@@ -33,6 +31,7 @@ import com.openlysis.core.designsystem.components.button.AppButton
 import com.openlysis.core.designsystem.components.button.ButtonType
 import com.openlysis.core.designsystem.components.dropdown.AppDropdownMenu
 import com.openlysis.core.designsystem.components.dropdown.DropdownMenuItemData
+import com.openlysis.core.designsystem.icon.AppIcons
 import com.openlysis.core.designsystem.modifier.SizeType
 import com.openlysis.core.designsystem.theme.LocalAppColorScheme
 import com.openlysis.core.designsystem.theme.OpenlysisTheme
@@ -82,7 +81,7 @@ fun TopBar(
                 onClick = onBackButtonClick,
                 displayLabel = false,
                 displayIcon = true,
-                icon = ImageVector.vectorResource(R.drawable.arrow_left_icon),
+                icon = AppIcons.Back,
                 iconAlt = stringResource(R.string.top_bar_back_icon_description)
             )
             Text(

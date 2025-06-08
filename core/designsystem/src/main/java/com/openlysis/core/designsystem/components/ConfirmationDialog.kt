@@ -13,9 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -24,6 +22,7 @@ import com.openlysis.core.designsystem.components.alert.Alert
 import com.openlysis.core.designsystem.components.alert.AlertType
 import com.openlysis.core.designsystem.components.button.AppButton
 import com.openlysis.core.designsystem.components.button.ButtonType
+import com.openlysis.core.designsystem.icon.AppIcons
 import com.openlysis.core.designsystem.modifier.SizeType
 import com.openlysis.core.designsystem.theme.LocalAppColorScheme
 import com.openlysis.core.designsystem.theme.OpenlysisTheme
@@ -114,7 +113,7 @@ fun ConfirmationDialog(
                         displayLabel = true,
                         displayIcon = true,
                         label = stringResource(R.string.confirmation_dialog_accept),
-                        icon = ImageVector.vectorResource(R.drawable.check_icon),
+                        icon = AppIcons.Check,
                         iconAlt = stringResource(R.string.confirmation_dialog_accept_icon_alt),
                         modifier = Modifier.weight(1f)
                     )
@@ -126,7 +125,7 @@ fun ConfirmationDialog(
                         displayLabel = true,
                         displayIcon = true,
                         label = stringResource(R.string.confirmation_dialog_cancel),
-                        icon = ImageVector.vectorResource(R.drawable.x_icon),
+                        icon = AppIcons.Cross,
                         iconAlt = stringResource(R.string.confirmation_dialog_cancel_icon_alt),
                         modifier = Modifier.weight(1f)
                     )

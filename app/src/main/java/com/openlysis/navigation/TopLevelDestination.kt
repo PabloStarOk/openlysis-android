@@ -3,6 +3,7 @@ package com.openlysis.navigation
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.openlysis.R
+import com.openlysis.core.designsystem.icon.AppIconsIds
 import com.openlysis.feature.tools.navigation.ToolsRoute
 import kotlinx.serialization.Serializable
 import kotlin.reflect.KClass
@@ -22,19 +23,19 @@ internal enum class TopLevelDestination(
     val route: KClass<*>
 ) {
     Tools(
-        iconResId = R.drawable.search_icon,
+        iconResId = AppIconsIds.Tools,
         iconAltResId = R.string.nav_bar_tools_icon_alt,
         navBarItemLabelResId = R.string.nav_bar_tools_label,
         route = ToolsRoute::class
     ),
     Results(
-        iconResId = R.drawable.stats_icon,
+        iconResId = AppIconsIds.Results,
         iconAltResId = R.string.nav_bar_results_icon_alt,
         navBarItemLabelResId = R.string.nav_bar_results_label,
         route = TemporaryResults::class
     ),
     Settings(
-        iconResId = R.drawable.settings_icon,
+        iconResId = AppIconsIds.Settings,
         iconAltResId = R.string.nav_bar_settings_icon_alt,
         navBarItemLabelResId = R.string.nav_bar_settings_label,
         route = TemporarySettings::class
