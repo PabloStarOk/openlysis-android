@@ -1,0 +1,48 @@
+package com.openlysis.navigation
+
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
+import com.openlysis.R
+import com.openlysis.feature.tools.navigation.ToolsRoute
+import kotlinx.serialization.Serializable
+import kotlin.reflect.KClass
+
+/**
+ * Represents the top-level destinations in the application's navigation.
+ *
+ * @property iconResId The resource ID of the icon for the destination.
+ * @property iconAltResId The resource ID of the alternative text for the icon (for accessibility).
+ * @property navBarItemLabelResId The resource ID of the label for the navigation bar item.
+ * @property route The [KClass] representing the destination's route.
+ */
+internal enum class TopLevelDestination(
+    @DrawableRes val iconResId: Int,
+    @StringRes val iconAltResId: Int,
+    @StringRes val navBarItemLabelResId: Int,
+    val route: KClass<*>
+) {
+    Tools(
+        iconResId = R.drawable.search_icon,
+        iconAltResId = R.string.nav_bar_tools_icon_alt,
+        navBarItemLabelResId = R.string.nav_bar_tools_label,
+        route = ToolsRoute::class
+    ),
+    Results(
+        iconResId = R.drawable.stats_icon,
+        iconAltResId = R.string.nav_bar_results_icon_alt,
+        navBarItemLabelResId = R.string.nav_bar_results_label,
+        route = TemporaryResults::class
+    ),
+    Settings(
+        iconResId = R.drawable.settings_icon,
+        iconAltResId = R.string.nav_bar_settings_icon_alt,
+        navBarItemLabelResId = R.string.nav_bar_settings_label,
+        route = TemporarySettings::class
+    )
+}
+
+@Serializable
+internal object TemporaryResults
+
+@Serializable
+internal object TemporarySettings
