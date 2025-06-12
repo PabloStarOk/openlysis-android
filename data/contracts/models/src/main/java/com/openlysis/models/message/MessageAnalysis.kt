@@ -2,8 +2,8 @@ package com.openlysis.models.message
 
 import com.openlysis.models.analysis.AnalysisStatus
 import com.openlysis.models.analysis.FileMultiAnalysis
-import com.openlysis.models.analysis.HashValues
 import com.openlysis.models.analysis.UrlMultiAnalysis
+import com.openlysis.models.common.HashValues
 import com.openlysis.models.common.Verdict
 import com.openlysis.models.reputation.EmailAddressReputation
 import com.openlysis.models.reputation.MultiReputation

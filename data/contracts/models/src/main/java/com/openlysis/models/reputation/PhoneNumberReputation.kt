@@ -17,6 +17,6 @@ class PhoneNumberReputation(
     verdict: Verdict,
     val localFormat: String,
     val countryCode: String,
-    val dialingCode: String,
+    val dialingCode: Int,
     val lineType: String
 ) : Reputation(serviceName, verdict)

@@ -12,10 +12,11 @@ kotlin {
         jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11
     }
 }
-
 dependencies {
-    compileOnly(libs.moshi.kotlin)
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.converter.moshi)
     ksp(libs.moshi.kotlin.codegen)
 
     implementation(projects.data.contracts.models)
+    implementation(projects.data.contracts.remote)
 }

@@ -1,5 +1,7 @@
 package com.openlysis.data.remote.response
 
+import com.squareup.moshi.JsonClass
+
 /**
  * A response after requesting a analysis of an URL, file or message.
  *
@@ -9,6 +11,7 @@ package com.openlysis.data.remote.response
  * @property sha256 The SHA-256 hash value associated with the analyzed data.
  * @property sha512 The SHA-512 hash value associated with the analyzed data.
  */
+@JsonClass(generateAdapter = true)
 data class AnalyzeResponse(
     val id: String,
     val md5: String,

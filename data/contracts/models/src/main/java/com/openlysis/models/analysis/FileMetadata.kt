@@ -1,5 +1,7 @@
 package com.openlysis.models.analysis
 
+import com.squareup.moshi.JsonClass
+
 /**
  * Metadata about a file.
  *
@@ -7,6 +9,7 @@ package com.openlysis.models.analysis
  * @property contentType The MIME type of the file, indicating its format.
  * @property size The size of the file in bytes.
  */
+@JsonClass(generateAdapter = true)
 data class FileMetadata(
     val name: String,
     val contentType: String,

@@ -1,5 +1,6 @@
 package com.openlysis.models.analysis
 
+import com.openlysis.models.common.HashValues
 import com.openlysis.models.common.Verdict
 import java.time.Instant
 
