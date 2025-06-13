@@ -1,67 +1,34 @@
 package com.openlysis.data.local
 
-import com.openlysis.models.analysis.FileMultiAnalysis
-import com.openlysis.models.analysis.UrlMultiAnalysis
-import com.openlysis.models.message.MessageAnalysis
-
 /**
- * Repository interface for managing local analysis data.
+ * Repository interface for local storage operations on analysis data.
+ *
+ * @param TAnalysis The type of analysis entity.
  */
-interface LocalAnalysisRepository {
+interface LocalAnalysisRepository<TAnalysis> where TAnalysis : Any {
     /**
-     * Saves a [UrlMultiAnalysis] object to the local data source.
+     * Saves the given analysis entity to local storage.
      *
-     * @param analysis The analysis to save.
+     * @param analysis The analysis entity to save.
      */
-    suspend fun saveUrlMultiAnalysis(analysis: UrlMultiAnalysis)
+    suspend fun save(analysis: TAnalysis)
 
     /**
-     * Saves a [FileMultiAnalysis] object to the local data source.
+     * Updates the given analysis entity in local storage.
      *
-     * @param analysis The analysis to save.
+     * @param analysis The analysis entity to update.
      */
-    suspend fun saveFileMultiAnalysis(analysis: FileMultiAnalysis)
+    suspend fun update(analysis: TAnalysis)
 
     /**
-     * Saves a [MessageAnalysis] object to the local data source.
-     *
-     * @param analysis The analysis to save.
-     */
-    suspend fun saveMessageAnalysis(analysis: MessageAnalysis)
-
-    /**
-     * Retrieves a paginated list of [UrlMultiAnalysis] objects.
+     * Retrieves a paginated list of analysis entities from local storage.
      *
      * @param page The page number to retrieve.
-     * @param size The number of items per page.
-     * @return A list of [UrlMultiAnalysis] objects.
+     * @param size The number of entities per page.
+     * @return A list of analysis entities.
      */
-    suspend fun getUrlMultiAnalyses(
+    suspend fun getMany(
         page: Int,
         size: Int
-    ): List<UrlMultiAnalysis>
-
-    /**
-     * Retrieves a paginated list of [FileMultiAnalysis] objects.
-     *
-     * @param page The page number to retrieve.
-     * @param size The number of items per page.
-     * @return A list of [FileMultiAnalysis] objects.
-     */
-    suspend fun getFileMultiAnalyses(
-        page: Int,
-        size: Int
-    ): List<FileMultiAnalysis>
-
-    /**
-     * Retrieves a paginated list of [MessageAnalysis] objects.
-     *
-     * @param page The page number to retrieve.
-     * @param size The number of items per page.
-     * @return A list of [MessageAnalysis] objects.
-     */
-    suspend fun getMessageAnalyses(
-        page: Int,
-        size: Int
-    ): List<MessageAnalysis>
+    ): List<TAnalysis>
 }
