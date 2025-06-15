@@ -23,14 +23,14 @@ internal interface OpenlysisService {
     /**
      * Analyzes a URL.
      *
-     * @param url The URL to analyze, wrapped in a [RequestBody].
+     * @param url The URL to analyze.
      * @param reanalyze Whether to force reanalysis of the URL.
      * @return [AnalyzeResponse] containing the analysis result.
      */
     @FormUrlEncoded
     @POST(ApiEndpoints.ANALYZE_URL)
     suspend fun analyzeUrl(
-        @Field(ApiFields.URL) url: RequestBody,
+        @Field(ApiFields.URL) url: String,
         @Field(ApiFields.REANALYZE) reanalyze: Boolean
     ): AnalyzeResponse
 

@@ -29,7 +29,7 @@ internal class OpenlysisRepository(
         try {
             val response =
                 service.analyzeUrl(
-                    url = request.url.toString().asPlainRequestBody(),
+                    url = request.url.toString(),
                     reanalyze = request.reanalyze
                 )
             return Result.success(response)
