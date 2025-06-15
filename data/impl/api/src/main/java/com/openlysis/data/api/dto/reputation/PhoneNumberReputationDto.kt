@@ -13,6 +13,7 @@ import com.squareup.moshi.JsonClass
  */
 @JsonClass(generateAdapter = true)
 internal data class PhoneNumberReputationDto(
+    val id: String,
     val serviceName: String,
     val verdict: String,
     val phoneInfo: PhoneInfoDto
@@ -24,6 +25,7 @@ internal data class PhoneNumberReputationDto(
      */
     internal fun convertToModel(): PhoneNumberReputation =
         PhoneNumberReputation(
+            id = id,
             serviceName = serviceName,
             verdict = Verdict.parse(verdict),
             localFormat = phoneInfo.localFormat,

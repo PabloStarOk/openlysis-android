@@ -13,10 +13,11 @@ import com.openlysis.models.common.Verdict
  * @property lineType The type of phone line.
  */
 class PhoneNumberReputation(
+    id: String,
     serviceName: String,
     verdict: Verdict,
     val localFormat: String,
     val countryCode: String,
     val dialingCode: Int,
     val lineType: String
-) : Reputation(serviceName, verdict)
+) : Reputation(id, serviceName, verdict)

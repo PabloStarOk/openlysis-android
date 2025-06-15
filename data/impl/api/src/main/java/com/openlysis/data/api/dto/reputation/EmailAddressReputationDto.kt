@@ -14,6 +14,7 @@ import com.squareup.moshi.JsonClass
  */
 @JsonClass(generateAdapter = true)
 internal data class EmailAddressReputationDto(
+    val id: String,
     val serviceName: String,
     val verdict: String,
     val isDisposable: Boolean?,
@@ -26,6 +27,7 @@ internal data class EmailAddressReputationDto(
      */
     internal fun convertToModel(): EmailAddressReputation =
         EmailAddressReputation(
+            id = id,
             serviceName = serviceName,
             verdict = Verdict.parse(verdict),
             isDisposable = isDisposable,

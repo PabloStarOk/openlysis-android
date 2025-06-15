@@ -11,8 +11,9 @@ import com.openlysis.models.common.Verdict
  * @property isRiskyTld A nullable boolean flag indicating whether the email address's top-level domain (TLD) is considered risky or commonly associated with spam or malicious activities. `true` if it is, `false` otherwise, or `null` if unknown.
  */
 class EmailAddressReputation(
+    id: String,
     serviceName: String,
     verdict: Verdict,
     val isDisposable: Boolean?,
     val isRiskyTld: Boolean?
-) : Reputation(serviceName, verdict)
+) : Reputation(id, serviceName, verdict)

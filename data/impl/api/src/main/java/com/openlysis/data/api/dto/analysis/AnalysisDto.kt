@@ -15,6 +15,7 @@ import com.squareup.moshi.JsonClass
  */
 @JsonClass(generateAdapter = true)
 internal data class AnalysisDto(
+    val id: String,
     val serviceName: String,
     val status: String,
     val verdict: String,
@@ -27,6 +28,7 @@ internal data class AnalysisDto(
      */
     internal fun convertToModel(): Analysis =
         Analysis(
+            id = id,
             serviceName = serviceName,
             status = AnalysisStatus.parse(status),
             verdict = Verdict.parse(verdict),
