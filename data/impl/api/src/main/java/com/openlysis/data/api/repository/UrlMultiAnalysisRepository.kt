@@ -4,9 +4,12 @@ import com.openlysis.data.api.OpenlysisService
 import com.openlysis.data.remote.request.AnalyzeUrl
 import com.openlysis.data.remote.response.AnalyzeResponse
 import com.openlysis.models.analysis.UrlMultiAnalysis
+import retrofit2.Response
 
 /**
  * Repository implementation for handling URL multi-analysis operations.
+ *
+ * Provides methods to analyze URLs and retrieve multi-analysis results from the remote API.
  *
  * @param service The [OpenlysisService] used to perform network operations.
  */
@@ -14,12 +17,12 @@ internal class UrlMultiAnalysisRepository(
     service: OpenlysisService
 ) : BaseAnalysisRepository<AnalyzeUrl, UrlMultiAnalysis>(service) {
     /**
-     * Sends an analysis request for a URL.
+     * Analyzes the given URL using the provided [AnalyzeUrl] request.
      *
-     * @param request The [AnalyzeUrl] request containing the URL and reanalyze flag.
-     * @return The [AnalyzeResponse] from the API.
+     * @param request The [AnalyzeUrl] object containing the URL and analysis options.
+     * @return A [Response] containing the [AnalyzeResponse] from the API if successful, or an error response otherwise.
      */
-    override suspend fun handleAnalyze(request: AnalyzeUrl): AnalyzeResponse =
+    override suspend fun handleAnalyze(request: AnalyzeUrl): Response<AnalyzeResponse> =
         service.analyzeUrl(
             url = request.url.toString(),
             reanalyze = request.reanalyze
@@ -29,8 +32,10 @@ internal class UrlMultiAnalysisRepository(
      * Retrieves the multi-analysis result for a given URL ID.
      *
      * @param id The unique identifier for the URL analysis.
-     * @return The [UrlMultiAnalysis] model.
+     * @return A [Response] containing the [UrlMultiAnalysis] model if successful, or an error response otherwise.
      */
-    override suspend fun handleGet(id: String): UrlMultiAnalysis =
-        service.getUrlMultiAnalysis(id).convertToModel()
+    override suspend fun handleGet(id: String): Response<UrlMultiAnalysis> {
+        val response = service.getUrlMultiAnalysis(id)
+        return convertToModelIfSuccess(response) { it.convertToModel() }
+    }
 }
