@@ -45,6 +45,6 @@ internal data class UrlMultiAnalysisDto(
             avgThreatScore = averageThreatScore,
             hashValues = urlHashValues,
             analyses = analyses.map { a -> a.convertToModel() },
-            url = URI(url).toURL()
+            url = URI(url)
         )
 }
