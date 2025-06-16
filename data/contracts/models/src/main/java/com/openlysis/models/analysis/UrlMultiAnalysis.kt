@@ -1,0 +1,29 @@
+package com.openlysis.models.analysis
+
+import com.openlysis.models.common.HashValues
+import com.openlysis.models.common.Verdict
+import java.net.URL
+import java.time.Instant
+
+/**
+ * Represents the results of a multi-engine analysis performed on a URL.
+ *
+ * @property id A unique identifier for this multi-analysis.
+ * @property startedDate The exact moment when the multi-analysis process was initiated.
+ * @property status The current overall [AnalysisStatus] of the multi-analysis.
+ * @property finalVerdict The conclusive [Verdict] of the analyzed URL based on the combined results of all individual analyses.
+ * @property avgThreatScore An optional average threat score calculated from the threat scores of the individual analyses. This can be null if not applicable or if no individual analyses provided a score.
+ * @property hashValues A [HashValues] object calculated for the analyzed artifact.
+ * @property analyses A list of [Analysis] objects.
+ * @property url The URL analyzed.
+ */
+class UrlMultiAnalysis(
+    id: String,
+    startedDate: Instant,
+    status: AnalysisStatus,
+    finalVerdict: Verdict,
+    avgThreatScore: Int?,
+    hashValues: HashValues,
+    analyses: List<Analysis>,
+    val url: URL
+) : MultiAnalysis(id, startedDate, status, finalVerdict, avgThreatScore, hashValues, analyses)
