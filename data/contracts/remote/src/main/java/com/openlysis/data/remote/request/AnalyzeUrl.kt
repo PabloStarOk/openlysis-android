@@ -1,6 +1,6 @@
 package com.openlysis.data.remote.request
 
-import java.net.URL
+import java.net.URI
 
 /**
  * A request to analyze a URL.
@@ -9,6 +9,6 @@ import java.net.URL
  * @property reanalyze Whether the URL must be analyzed or it should try to fetch an existing analysis first
  */
 data class AnalyzeUrl(
-    val url: URL,
+    val url: URI,
     val reanalyze: Boolean
 )

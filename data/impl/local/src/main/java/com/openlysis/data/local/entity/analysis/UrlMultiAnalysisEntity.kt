@@ -7,14 +7,14 @@ import androidx.room.PrimaryKey
 import com.openlysis.data.local.entity.message.MessageAnalysisEntity
 import com.openlysis.models.analysis.Analysis
 import com.openlysis.models.analysis.UrlMultiAnalysis
-import java.net.URL
+import java.net.URI
 
 /**
  * Entity representing a multi-analysis result for a URL.
  *
  * @property id Unique identifier for the multi-analysis.
  * @property columns The [MultiAnalysisColumns] containing multi-analysis details and parent reference.
- * @property url The [URL] being analyzed.
+ * @property url The [URI] being analyzed.
  */
 @Entity(
     foreignKeys = [
@@ -30,7 +30,7 @@ import java.net.URL
 internal data class UrlMultiAnalysisEntity(
     @PrimaryKey val id: String,
     @Embedded val columns: MultiAnalysisColumns,
-    val url: URL
+    val url: URI
 ) {
     /**
      * Converts this entity to a [UrlMultiAnalysis] model.

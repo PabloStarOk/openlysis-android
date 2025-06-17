@@ -2,7 +2,7 @@ package com.openlysis.models.analysis
 
 import com.openlysis.models.common.HashValues
 import com.openlysis.models.common.Verdict
-import java.net.URL
+import java.net.URI
 import java.time.Instant
 
 /**
@@ -25,5 +25,5 @@ class UrlMultiAnalysis(
     avgThreatScore: Int?,
     hashValues: HashValues,
     analyses: List<Analysis>,
-    val url: URL
+    val url: URI
 ) : MultiAnalysis(id, startedDate, status, finalVerdict, avgThreatScore, hashValues, analyses)
