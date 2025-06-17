@@ -2,14 +2,13 @@ package com.openlysis.data.local
 
 import androidx.room.TypeConverter
 import java.net.URI
-import java.net.URL
 import java.time.Instant
 
 /**
- * Type converters for Room database, enabling support for [Instant] and [URL] types.
+ * Type converters for Room database, enabling support for [Instant] and [URI] types.
  *
  * - [Instant] is stored as a [Long] (epoch millis).
- * - [URL] is stored as a [String].
+ * - [URI] is stored as a [String].
  *
  * These converters are registered in [AppDatabase] via type converters.
  */
@@ -22,11 +21,11 @@ internal class Converters {
     @TypeConverter
     fun instantToTimestamp(instant: Instant): Long = instant.toEpochMilli()
 
-    /** Converts a [String] to [URL]. */
+    /** Converts a [String] to [URI]. */
     @TypeConverter
-    fun fromStringToUrl(value: String): URL = URI(value).toURL()
+    fun fromStringToUri(value: String): URI = URI(value)
 
-    /** Converts a [URL] to [String]. */
+    /** Converts a [URI] to [String]. */
     @TypeConverter
-    fun urlToString(url: URL): String = url.toString()
+    fun uriToString(uri: URI): String = uri.toString()
 }
