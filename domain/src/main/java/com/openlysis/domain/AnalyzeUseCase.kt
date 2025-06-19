@@ -3,6 +3,7 @@ package com.openlysis.domain
 import com.openlysis.data.local.LocalRepository
 import com.openlysis.data.remote.AnalysisRepository
 import com.openlysis.data.remote.error.Outcome
+import javax.inject.Inject
 
 /**
  * Use case for performing an analysis operation using a remote repository and caching the result locally.
@@ -12,10 +13,12 @@ import com.openlysis.data.remote.error.Outcome
  * @property remoteRepo The repository responsible for remote analysis operations (e.g., network calls).
  * @property localRepo The repository responsible for local storage and caching of analysis results.
  */
-class AnalyzeUseCase<TRequest, TAnalysis>(
-    private val remoteRepo: AnalysisRepository<TRequest, TAnalysis>,
-    private val localRepo: LocalRepository<TAnalysis>
-) where TRequest : Any, TAnalysis : Any {
+class AnalyzeUseCase<TRequest, TAnalysis>
+    @Inject
+    constructor(
+        private val remoteRepo: AnalysisRepository<TRequest, TAnalysis>,
+        private val localRepo: LocalRepository<TAnalysis>
+    ) where TRequest : Any, TAnalysis : Any {
     /**
      * Executes the analysis workflow:
      * - Analyzes the provided [request] remotely.

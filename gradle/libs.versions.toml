@@ -20,6 +20,7 @@ moshi = "1.15.2"
 androidToolsDesugar = "2.1.5"
 material = "1.12.0"
 room = "2.7.1"
+hilt = "2.56.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -49,6 +50,9 @@ material = { group = "com.google.android.material", name = "material", version.r
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+google-dagger-hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt"}
+google-dagger-hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt"}
+google-dagger-hilt-core = { group = "com.google.dagger", name = "hilt-core", version.ref = "hilt"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -59,3 +63,4 @@ android-library = { id = "com.android.library", version.ref = "agp" }
 ktlint-gradle = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint-gradle" }
 json-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "jsonSerializationPlugin" }
 google-devtools-ksp = { id = "com.google.devtools.ksp", version = "2.1.21-2.0.2" }
+google-dagger-hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt"}

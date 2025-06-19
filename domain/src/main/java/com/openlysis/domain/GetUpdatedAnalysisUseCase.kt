@@ -3,6 +3,7 @@ package com.openlysis.domain
 import com.openlysis.data.local.LocalRepository
 import com.openlysis.data.remote.AnalysisRepository
 import com.openlysis.data.remote.error.Outcome
+import javax.inject.Inject
 import kotlin.Any
 
 /**
@@ -12,10 +13,12 @@ import kotlin.Any
  * @property remoteRepo The repository responsible for fetching analysis results from a remote source.
  * @property localRepo The repository responsible for updating analysis results in local storage.
  */
-class GetUpdatedAnalysisUseCase<TAnalysis>(
-    private val remoteRepo: AnalysisRepository<*, TAnalysis>,
-    private val localRepo: LocalRepository<TAnalysis>
-) where TAnalysis : Any {
+class GetUpdatedAnalysisUseCase<TAnalysis>
+    @Inject
+    constructor(
+        private val remoteRepo: AnalysisRepository<*, TAnalysis>,
+        private val localRepo: LocalRepository<TAnalysis>
+    ) where TAnalysis : Any {
     /**
      * Fetches the analysis result by [id] from the remote repository and updates the local cache if successful.
      *

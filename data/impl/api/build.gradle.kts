@@ -15,7 +15,11 @@ kotlin {
 dependencies {
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter.moshi)
+
+    compileOnly(libs.google.dagger.hilt.core)
+
     ksp(libs.moshi.kotlin.codegen)
+    ksp(libs.google.dagger.hilt.compiler)
 
     implementation(projects.data.contracts.models)
     implementation(projects.data.contracts.remote)
