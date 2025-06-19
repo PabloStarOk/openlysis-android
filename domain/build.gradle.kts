@@ -1,6 +1,7 @@
 plugins {
     id("java-library")
     alias(libs.plugins.jetbrains.kotlin.jvm)
+    alias(libs.plugins.google.devtools.ksp)
 }
 
 java {
@@ -18,4 +19,8 @@ dependencies {
     implementation(projects.data.contracts.models)
     implementation(projects.data.contracts.remote)
     implementation(projects.data.contracts.local)
+
+    compileOnly(libs.google.dagger.hilt.core)
+
+    ksp(libs.google.dagger.hilt.compiler)
 }

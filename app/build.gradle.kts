@@ -1,9 +1,12 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.json.serialization)
     alias(libs.plugins.google.devtools.ksp)
+    alias(libs.plugins.google.dagger.hilt)
 }
 
 android {
@@ -22,12 +25,39 @@ android {
     }
 
     buildTypes {
+        val localProperties = Properties()
+        val localPropertiesFileName = "secret.properties"
+        val localPropertiesFile = rootProject.file(localPropertiesFileName)
+        if (localPropertiesFile.exists() && localPropertiesFile.isFile) {
+            localPropertiesFile.inputStream().use {
+                localProperties.load(it)
+            }
+        } else {
+            throw GradleException(
+                "Required configuration file '$localPropertiesFileName' not found or is not a file."
+            )
+        }
+
         release {
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
+            )
+
+            buildConfigField(
+                "String",
+                "API_BASE_URL",
+                localProperties.getProperty("API_BASE_URL_PROD")
+            )
+        }
+
+        debug {
+            buildConfigField(
+                "String",
+                "API_BASE_URL",
+                localProperties.getProperty("API_BASE_URL")
             )
         }
     }
@@ -41,6 +71,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
@@ -54,10 +85,20 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.navigation)
-    coreLibraryDesugaring(libs.android.tools.desugar)
+    implementation(libs.google.dagger.hilt)
 
     implementation(projects.core.designsystem)
     implementation(projects.feature.tools)
+    implementation(projects.data.contracts.models)
+    implementation(projects.data.contracts.remote)
+    implementation(projects.data.contracts.local)
+    implementation(projects.data.impl.api)
+    implementation(projects.data.impl.local)
+    implementation(projects.domain)
+
+    coreLibraryDesugaring(libs.android.tools.desugar)
+
+    ksp(libs.google.dagger.hilt.compiler)
 
     testImplementation(libs.junit)
 

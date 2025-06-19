@@ -48,14 +48,17 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
-    coreLibraryDesugaring(libs.android.tools.desugar)
-
-    compileOnly(libs.moshi.kotlin)
 
     implementation(projects.data.contracts.models)
     implementation(projects.data.contracts.local)
 
+    compileOnly(libs.google.dagger.hilt)
+    compileOnly(libs.moshi.kotlin)
+
     ksp(libs.androidx.room.compiler)
+    ksp(libs.google.dagger.hilt.compiler)
+
+    coreLibraryDesugaring(libs.android.tools.desugar)
 
     testImplementation(libs.junit)
 
