@@ -1,8 +1,8 @@
 package com.openlysis.domain
 
+import com.openlysis.data.analysis.core.AnalysisRepository
+import com.openlysis.data.analysis.core.error.Outcome
 import com.openlysis.data.local.LocalRepository
-import com.openlysis.data.remote.AnalysisRepository
-import com.openlysis.data.remote.error.Outcome
 import javax.inject.Inject
 import kotlin.Any
 

@@ -16,9 +16,9 @@ kotlin {
 }
 
 dependencies {
-    implementation(projects.data.contracts.models)
-    implementation(projects.data.contracts.remote)
-    implementation(projects.data.contracts.local)
+    implementation(projects.core.data.analysis.model)
+    implementation(projects.core.data.analysis.core)
+    implementation(projects.core.data.analysis.local)
 
     compileOnly(libs.google.dagger.hilt.core)
 

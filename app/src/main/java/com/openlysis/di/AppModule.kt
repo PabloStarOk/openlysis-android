@@ -1,9 +1,9 @@
 package com.openlysis.di
 
 import com.openlysis.BuildConfig
-import com.openlysis.data.api.ApiClientSettings
-import com.openlysis.data.api.ApiCredentials
-import com.openlysis.data.local.LocalStoragePreferences
+import com.openlysis.data.database.LocalStoragePreferences
+import com.openlysis.data.remote.ApiClientSettings
+import com.openlysis.data.remote.ApiCredentials
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

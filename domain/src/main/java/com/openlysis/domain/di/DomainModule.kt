@@ -1,12 +1,12 @@
 package com.openlysis.domain.di
 
-import com.openlysis.data.remote.AnalysisRepository
-import com.openlysis.data.remote.request.AnalyzeFile
-import com.openlysis.data.remote.request.AnalyzeMessage
-import com.openlysis.data.remote.request.AnalyzeUrl
-import com.openlysis.models.analysis.FileMultiAnalysis
-import com.openlysis.models.analysis.UrlMultiAnalysis
-import com.openlysis.models.message.MessageAnalysis
+import com.openlysis.data.analysis.core.AnalysisRepository
+import com.openlysis.data.analysis.core.request.AnalyzeFile
+import com.openlysis.data.analysis.core.request.AnalyzeMessage
+import com.openlysis.data.analysis.core.request.AnalyzeUrl
+import com.openlysis.data.analysis.model.analysis.FileMultiAnalysis
+import com.openlysis.data.analysis.model.analysis.UrlMultiAnalysis
+import com.openlysis.data.analysis.model.message.MessageAnalysis
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

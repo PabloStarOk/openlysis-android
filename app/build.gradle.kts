@@ -89,11 +89,11 @@ dependencies {
 
     implementation(projects.core.designsystem)
     implementation(projects.feature.tools)
-    implementation(projects.data.contracts.models)
-    implementation(projects.data.contracts.remote)
-    implementation(projects.data.contracts.local)
-    implementation(projects.data.impl.api)
-    implementation(projects.data.impl.local)
+    implementation(projects.core.data.analysis.model)
+    implementation(projects.core.data.analysis.core)
+    implementation(projects.core.data.analysis.local)
+    implementation(projects.core.data.remote)
+    implementation(projects.core.data.database)
     implementation(projects.domain)
 
     coreLibraryDesugaring(libs.android.tools.desugar)
