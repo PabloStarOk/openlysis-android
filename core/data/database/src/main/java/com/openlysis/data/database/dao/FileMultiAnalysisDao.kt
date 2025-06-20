@@ -16,23 +16,26 @@ internal interface FileMultiAnalysisDao :
     EntityDao<FileMultiAnalysisEntity>,
     QueueDao {
     /**
-     * Deletes the oldest [FileMultiAnalysisEntity] that has a parent and is not in `Queued` or `InProgress` status.
-     * The deletion is based on the minimum `createdAt` timestamp.
+     * Deletes the oldest [FileMultiAnalysisEntity] records that have a parent and are not in `Queued` or `InProgress` status.
+     *
+     * The deletion is based on the minimum `createdAt` timestamp. Only entities with `hasParent = 1` and a status other than `Queued` or `InProgress` are considered.
+     *
+     * @param limit The maximum number of entities to delete.
      */
     @Query(
         """
             DELETE FROM FileMultiAnalysisEntity
-            WHERE hasParent = 1 
-            AND lower(status) != lower("Queued")
-            AND lower(status) != lower("InProgress")
-            AND createdAt = (
-                SELECT MIN(createdAt) 
-                FROM FileMultiAnalysisEntity
-                LIMIT 1
+            WHERE id IN (
+                        SELECT id 
+                        FROM FileMultiAnalysisEntity
+                        WHERE hasParent = 1 
+                        AND lower(status) NOT IN (lower("Queued"), lower("InProgress"))
+                        ORDER BY createdAt ASC
+                        LIMIT :limit
             )
         """
     )
-    override suspend fun deleteOldest()
+    override suspend fun deleteOldest(limit: Int)
 
     /**
      * Retrieves a [FileMultiAnalysisWithAnalyses] by its ID.

@@ -16,22 +16,25 @@ internal interface MessageAnalysisDao :
     EntityDao<MessageAnalysisEntity>,
     QueueDao {
     /**
-     * Deletes the oldest [MessageAnalysisEntity] that is not in `Queued` or `InProgress` status.
-     * The deletion is based on the minimum `createdAt` timestamp.
+     * Deletes the oldest [MessageAnalysisEntity] records that are not in `Queued` or `InProgress` status.
+     *
+     * The deletion is based on the minimum `createdAt` timestamp. Only entities with a status other than `Queued` or `InProgress` are considered.
+     *
+     * @param limit The maximum number of entities to delete.
      */
     @Query(
         """
             DELETE FROM MessageAnalysisEntity
-            WHERE lower(status) != lower("Queued")
-            AND lower(status) != lower("InProgress")
-            AND createdAt = (
-                SELECT MIN(createdAt)
-                FROM MessageAnalysisEntity
-                LIMIT 1
+            WHERE id IN (
+                        SELECT id 
+                        FROM MessageAnalysisEntity
+                        WHERE lower(status) NOT IN (lower("Queued"), lower("InProgress"))
+                        ORDER BY createdAt ASC
+                        LIMIT :limit
             )
         """
     )
-    override suspend fun deleteOldest()
+    override suspend fun deleteOldest(limit: Int)
 
     /**
      * Retrieves a [MessageAnalysisWithResults] by its unique ID.

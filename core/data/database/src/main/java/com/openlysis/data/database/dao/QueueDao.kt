@@ -5,7 +5,9 @@ package com.openlysis.data.database.dao
  */
 internal interface QueueDao {
     /**
-     * Deletes the oldest entity in the queue, according to the DAO's criteria.
+     * Removes the specified number of oldest entities from the queue.
+     *
+     * @param limit The maximum number of oldest entities to remove. Defaults to 1.
      */
-    suspend fun deleteOldest()
+    suspend fun deleteOldest(limit: Int = 1)
 }

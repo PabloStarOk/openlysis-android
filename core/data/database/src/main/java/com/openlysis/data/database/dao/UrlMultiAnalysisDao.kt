@@ -16,23 +16,26 @@ internal interface UrlMultiAnalysisDao :
     EntityDao<UrlMultiAnalysisEntity>,
     QueueDao {
     /**
-     * Deletes the oldest [UrlMultiAnalysisEntity] that has a parent and is not in `Queued` or `InProgress` status.
-     * The deletion is based on the minimum `createdAt` timestamp.
+     * Deletes the oldest [UrlMultiAnalysisEntity] records that have a parent and are not in `Queued` or `InProgress` status.
+     *
+     * The deletion is based on the minimum `createdAt` timestamp. Only entities with `hasParent = 1` and a status other than `Queued` or `InProgress` are considered.
+     *
+     * @param limit The maximum number of entities to delete.
      */
     @Query(
         """
             DELETE FROM UrlMultiAnalysisEntity
-            WHERE hasParent = 1 
-            AND lower(status) != lower("Queued")
-            AND lower(status) != lower("InProgress")
-            AND createdAt = (
-                SELECT MIN(createdAt) 
-                FROM UrlMultiAnalysisEntity
-                LIMIT 1
+            WHERE id IN (
+                        SELECT id 
+                        FROM UrlMultiAnalysisEntity
+                        WHERE hasParent = 1 
+                        AND lower(status) NOT IN (lower("Queued"), lower("InProgress"))
+                        ORDER BY createdAt ASC
+                        LIMIT :limit
             )
         """
     )
-    override suspend fun deleteOldest()
+    override suspend fun deleteOldest(limit: Int)
 
     /**
      * Retrieves a [UrlMultiAnalysisWithAnalyses] by its ID.

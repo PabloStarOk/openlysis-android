@@ -16,21 +16,26 @@ internal interface PhoneMultiReputationDao :
     EntityDao<MultiReputationEntity>,
     QueueDao {
     /**
-     * Deletes the oldest [MultiReputationEntity] that has a parent.
-     * The oldest entity is determined by the minimum `createdAt` value.
+     * Deletes the oldest [MultiReputationEntity] records that have a parent and match the phone data type.
+     *
+     * The oldest entities are determined by the minimum `createdAt` value. Only entities with `dataType = "PhoneNumber"` and `hasParent = 1` are considered.
+     *
+     * @param limit The maximum number of entities to delete.
      */
     @Query(
         """
             DELETE FROM MultiReputationEntity
-            WHERE hasParent = 1 
-            AND createdAt = (
-                SELECT MIN(createdAt) 
-                FROM MultiReputationEntity
-                LIMIT 1
-            )
+            WHERE id IN (
+                        SELECT id 
+                        FROM MultiReputationEntity
+                        WHERE dataType IS "PhoneNumber" 
+                        AND hasParent = 1
+                        ORDER BY createdAt ASC
+                        LIMIT :limit
+                        )
         """
     )
-    override suspend fun deleteOldest()
+    override suspend fun deleteOldest(limit: Int)
 
     /**
      * Retrieves a [PhoneMultiReputationWithReputations] by its ID.
