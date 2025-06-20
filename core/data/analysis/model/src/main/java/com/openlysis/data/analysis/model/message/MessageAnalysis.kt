@@ -4,6 +4,7 @@ import com.openlysis.data.analysis.model.analysis.AnalysisStatus
 import com.openlysis.data.analysis.model.analysis.FileMultiAnalysis
 import com.openlysis.data.analysis.model.analysis.UrlMultiAnalysis
 import com.openlysis.data.analysis.model.common.HashValues
+import com.openlysis.data.analysis.model.common.Model
 import com.openlysis.data.analysis.model.common.Verdict
 import com.openlysis.data.analysis.model.reputation.EmailAddressReputation
 import com.openlysis.data.analysis.model.reputation.MultiReputation
@@ -24,8 +25,8 @@ import java.time.Instant
  * @property emailAddressMultiReputations A list of [MultiReputation] objects, each containing the reputation analyses for email addresses found in the message.
  * @property phoneNumberMultiReputations A list of [MultiReputation] objects, each containing the reputation analyses for phone numbers found in the message.
  */
-data class MessageAnalysis(
-    val id: String,
+class MessageAnalysis(
+    id: String,
     val startedDate: Instant,
     val message: Message,
     val hashValues: HashValues,
@@ -35,4 +36,4 @@ data class MessageAnalysis(
     val urlMultiAnalyses: List<UrlMultiAnalysis>,
     val emailAddressMultiReputations: List<MultiReputation<EmailAddressReputation>>,
     val phoneNumberMultiReputations: List<MultiReputation<PhoneNumberReputation>>
-)
+) : Model(id)

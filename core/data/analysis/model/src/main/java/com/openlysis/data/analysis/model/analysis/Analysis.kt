@@ -1,5 +1,6 @@
 package com.openlysis.data.analysis.model.analysis
 
+import com.openlysis.data.analysis.model.common.Model
 import com.openlysis.data.analysis.model.common.Verdict
 
 /**
@@ -11,10 +12,10 @@ import com.openlysis.data.analysis.model.common.Verdict
  * @property verdict The overall conclusion reached by the analysis. See [Verdict] for possible values.
  * @property threatScore A numerical score indicating the perceived level of threat assigned by the service.
  */
-data class Analysis(
-    val id: String,
+class Analysis(
+    id: String,
     val serviceName: String,
     val status: AnalysisStatus,
     val verdict: Verdict,
     val threatScore: Int?
-)
+) : Model(id)

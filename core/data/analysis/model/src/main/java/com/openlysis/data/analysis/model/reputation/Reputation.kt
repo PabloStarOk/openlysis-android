@@ -1,5 +1,6 @@
 package com.openlysis.data.analysis.model.reputation
 
+import com.openlysis.data.analysis.model.common.Model
 import com.openlysis.data.analysis.model.common.Verdict
 
 /**
@@ -10,7 +11,7 @@ import com.openlysis.data.analysis.model.common.Verdict
  * @property verdict The overall [Verdict] or classification of the data.
  */
 open class Reputation(
-    val id: String,
+    id: String,
     val serviceName: String,
     val verdict: Verdict
-)
+) : Model(id)

@@ -1,5 +1,6 @@
 package com.openlysis.data.analysis.model.reputation
 
+import com.openlysis.data.analysis.model.common.Model
 import com.openlysis.data.analysis.model.common.Verdict
 import java.time.Instant
 
@@ -14,10 +15,11 @@ import java.time.Instant
  * @property data The data related to the multi-reputation, (e.g. An email address or phone number).
  * @property reputations A list of objects derived from [Reputation].
  */
-data class MultiReputation<TReputation>(
-    val id: String,
+class MultiReputation<TReputation>(
+    id: String,
     val date: Instant,
     val finalVerdict: Verdict,
     val data: String,
     val reputations: List<TReputation>
-) where TReputation : Reputation
+) : Model(id)
+    where TReputation : Reputation

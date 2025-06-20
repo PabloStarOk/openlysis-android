@@ -1,6 +1,7 @@
 package com.openlysis.data.analysis.model.analysis
 
 import com.openlysis.data.analysis.model.common.HashValues
+import com.openlysis.data.analysis.model.common.Model
 import com.openlysis.data.analysis.model.common.Verdict
 import java.time.Instant
 
@@ -17,11 +18,11 @@ import java.time.Instant
  * @property analyses A list of [Analysis] objects.
  */
 open class MultiAnalysis(
-    val id: String,
+    id: String,
     val startedDate: Instant,
     val status: AnalysisStatus,
     val finalVerdict: Verdict,
     val avgThreatScore: Int?,
     val hashValues: HashValues,
     val analyses: List<Analysis>
-)
+) : Model(id)
