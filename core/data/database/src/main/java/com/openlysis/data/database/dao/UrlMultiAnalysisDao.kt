@@ -3,6 +3,7 @@ package com.openlysis.data.database.dao
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
+import com.openlysis.data.analysis.model.analysis.UrlMultiAnalysis
 import com.openlysis.data.database.entity.analysis.UrlMultiAnalysisEntity
 import com.openlysis.data.database.entity.analysis.UrlMultiAnalysisWithAnalyses
 
@@ -14,7 +15,8 @@ import com.openlysis.data.database.entity.analysis.UrlMultiAnalysisWithAnalyses
 @Dao
 internal interface UrlMultiAnalysisDao :
     EntityDao<UrlMultiAnalysisEntity>,
-    QueueDao {
+    QueueDao,
+    RetrievalDao<UrlMultiAnalysis> {
     /**
      * Deletes the oldest [UrlMultiAnalysisEntity] records that have a parent and are not in `Queued` or `InProgress` status.
      *
@@ -45,7 +47,7 @@ internal interface UrlMultiAnalysisDao :
      */
     @Transaction
     @Query("SELECT * FROM UrlMultiAnalysisEntity WHERE id = :id")
-    suspend fun getById(id: String): UrlMultiAnalysisWithAnalyses
+    override suspend fun getById(id: String): UrlMultiAnalysisWithAnalyses
 
     /**
      * Retrieves a paginated list of [UrlMultiAnalysisWithAnalyses].
@@ -56,7 +58,7 @@ internal interface UrlMultiAnalysisDao :
      */
     @Transaction
     @Query("SELECT * FROM UrlMultiAnalysisEntity LIMIT :size OFFSET (:size * :page)")
-    suspend fun getMany(
+    override suspend fun getMany(
         page: Int,
         size: Int
     ): List<UrlMultiAnalysisWithAnalyses>
@@ -69,7 +71,7 @@ internal interface UrlMultiAnalysisDao :
      */
     @Transaction
     @Query("SELECT * FROM UrlMultiAnalysisEntity WHERE id IN (:ids)")
-    suspend fun getManyByIds(vararg ids: String): List<UrlMultiAnalysisWithAnalyses>
+    override suspend fun getManyByIds(vararg ids: String): List<UrlMultiAnalysisWithAnalyses>
 
     /**
      * Counts the number of [UrlMultiAnalysisEntity] entries without a parent.
@@ -86,5 +88,5 @@ internal interface UrlMultiAnalysisDao :
      * @return `true` if the entity exists, `false` otherwise.
      */
     @Query("SELECT EXISTS(SELECT 1 FROM UrlMultiAnalysisEntity WHERE id = :id)")
-    suspend fun exists(id: String): Boolean
+    override suspend fun exists(id: String): Boolean
 }

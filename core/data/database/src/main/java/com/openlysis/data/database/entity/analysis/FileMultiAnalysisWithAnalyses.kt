@@ -3,6 +3,7 @@ package com.openlysis.data.database.entity.analysis
 import androidx.room.Embedded
 import androidx.room.Relation
 import com.openlysis.data.analysis.model.analysis.FileMultiAnalysis
+import com.openlysis.data.database.entity.BuildablePojo
 
 /**
  * Data class representing a [FileMultiAnalysisEntity] and its related file analyses.
@@ -17,13 +18,13 @@ internal data class FileMultiAnalysisWithAnalyses(
         entityColumn = "multiAnalysisId"
     )
     val analyses: List<FileAnalysisEntity>
-) {
+) : BuildablePojo<FileMultiAnalysis> {
     /**
      * Builds a [FileMultiAnalysis] model from this entity and its analyses.
      *
      * @return The [FileMultiAnalysis] model.
      */
-    fun buildMultiAnalysis(): FileMultiAnalysis =
+    override fun buildModel(): FileMultiAnalysis =
         multiAnalysis.convertToModel(
             analyses = analyses.map { a -> a.convertToModel() }
         )

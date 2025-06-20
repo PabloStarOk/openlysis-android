@@ -4,6 +4,7 @@ import androidx.room.Embedded
 import androidx.room.Relation
 import com.openlysis.data.analysis.model.reputation.MultiReputation
 import com.openlysis.data.analysis.model.reputation.PhoneNumberReputation
+import com.openlysis.data.database.entity.BuildablePojo
 
 /**
  * Data class representing a [MultiReputationEntity] and its related phone number reputations.
@@ -18,13 +19,13 @@ internal data class PhoneMultiReputationWithReputations(
         entityColumn = "multiReputationId"
     )
     val reputations: List<PhoneReputationEntity>
-) {
+) : BuildablePojo<MultiReputation<PhoneNumberReputation>> {
     /**
      * Builds a [MultiReputation] model from this entity and its reputations.
      *
      * @return The [MultiReputation] model for [PhoneNumberReputation].
      */
-    fun buildMultiReputation(): MultiReputation<PhoneNumberReputation> =
+    override fun buildModel(): MultiReputation<PhoneNumberReputation> =
         MultiReputation(
             id = multiReputation.id,
             date = multiReputation.evaluationDate,

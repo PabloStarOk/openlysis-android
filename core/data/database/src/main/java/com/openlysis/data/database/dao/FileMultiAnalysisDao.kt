@@ -3,6 +3,7 @@ package com.openlysis.data.database.dao
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
+import com.openlysis.data.analysis.model.analysis.FileMultiAnalysis
 import com.openlysis.data.database.entity.analysis.FileMultiAnalysisEntity
 import com.openlysis.data.database.entity.analysis.FileMultiAnalysisWithAnalyses
 
@@ -14,7 +15,8 @@ import com.openlysis.data.database.entity.analysis.FileMultiAnalysisWithAnalyses
 @Dao
 internal interface FileMultiAnalysisDao :
     EntityDao<FileMultiAnalysisEntity>,
-    QueueDao {
+    QueueDao,
+    RetrievalDao<FileMultiAnalysis> {
     /**
      * Deletes the oldest [FileMultiAnalysisEntity] records that have a parent and are not in `Queued` or `InProgress` status.
      *
@@ -45,7 +47,7 @@ internal interface FileMultiAnalysisDao :
      */
     @Transaction
     @Query("SELECT * FROM FileMultiAnalysisEntity WHERE id = :id")
-    suspend fun getById(id: String): FileMultiAnalysisWithAnalyses
+    override suspend fun getById(id: String): FileMultiAnalysisWithAnalyses
 
     /**
      * Retrieves a paginated list of [FileMultiAnalysisWithAnalyses].
@@ -56,7 +58,7 @@ internal interface FileMultiAnalysisDao :
      */
     @Transaction
     @Query("SELECT * FROM FileMultiAnalysisEntity LIMIT :size OFFSET (:size * :page)")
-    suspend fun getMany(
+    override suspend fun getMany(
         page: Int,
         size: Int
     ): List<FileMultiAnalysisWithAnalyses>
@@ -69,7 +71,7 @@ internal interface FileMultiAnalysisDao :
      */
     @Transaction
     @Query("SELECT * FROM FileMultiAnalysisEntity WHERE id IN (:ids)")
-    suspend fun getManyByIds(vararg ids: String): List<FileMultiAnalysisWithAnalyses>
+    override suspend fun getManyByIds(vararg ids: String): List<FileMultiAnalysisWithAnalyses>
 
     /**
      * Counts the number of [FileMultiAnalysisEntity] entries without a parent.
@@ -86,5 +88,5 @@ internal interface FileMultiAnalysisDao :
      * @return `true` if the entity exists, `false` otherwise.
      */
     @Query("SELECT EXISTS(SELECT 1 FROM FileMultiAnalysisEntity WHERE id = :id)")
-    suspend fun exists(id: String): Boolean
+    override suspend fun exists(id: String): Boolean
 }

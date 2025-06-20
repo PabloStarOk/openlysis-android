@@ -4,6 +4,7 @@ import androidx.room.Embedded
 import androidx.room.Relation
 import com.openlysis.data.analysis.model.reputation.EmailAddressReputation
 import com.openlysis.data.analysis.model.reputation.MultiReputation
+import com.openlysis.data.database.entity.BuildablePojo
 
 /**
  * Data class representing a [MultiReputationEntity] and its related email address reputations.
@@ -18,13 +19,13 @@ internal data class EmailMultiReputationWithReputations(
         entityColumn = "multiReputationId"
     )
     val reputations: List<EmailReputationEntity>
-) {
+) : BuildablePojo<MultiReputation<EmailAddressReputation>> {
     /**
      * Builds a [MultiReputation] model from this entity and its reputations.
      *
      * @return The [MultiReputation] model for [EmailAddressReputation].
      */
-    fun buildMultiReputation(): MultiReputation<EmailAddressReputation> =
+    override fun buildModel(): MultiReputation<EmailAddressReputation> =
         MultiReputation(
             id = multiReputation.id,
             date = multiReputation.evaluationDate,

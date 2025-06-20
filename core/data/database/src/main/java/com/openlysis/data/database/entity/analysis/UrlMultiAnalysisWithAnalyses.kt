@@ -3,6 +3,7 @@ package com.openlysis.data.database.entity.analysis
 import androidx.room.Embedded
 import androidx.room.Relation
 import com.openlysis.data.analysis.model.analysis.UrlMultiAnalysis
+import com.openlysis.data.database.entity.BuildablePojo
 
 /**
  * Data class representing a [UrlMultiAnalysisEntity] and its related URL analyses.
@@ -17,13 +18,13 @@ internal data class UrlMultiAnalysisWithAnalyses(
         entityColumn = "multiAnalysisId"
     )
     val analyses: List<UrlAnalysisEntity>
-) {
+) : BuildablePojo<UrlMultiAnalysis> {
     /**
      * Builds a [UrlMultiAnalysis] model from this entity and its analyses.
      *
      * @return The [UrlMultiAnalysis] model.
      */
-    fun buildMultiAnalysis(): UrlMultiAnalysis =
+    override fun buildModel(): UrlMultiAnalysis =
         multiAnalysis.convertToModel(
             analyses = analyses.map { a -> a.convertToModel() }
         )

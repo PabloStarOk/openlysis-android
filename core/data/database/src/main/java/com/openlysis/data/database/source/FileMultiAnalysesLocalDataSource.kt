@@ -1,8 +1,6 @@
 package com.openlysis.data.database.source
 
 import android.util.Log
-import com.openlysis.data.analysis.core.error.Outcome
-import com.openlysis.data.analysis.core.error.RepositoryError
 import com.openlysis.data.analysis.model.analysis.FileMultiAnalysis
 import com.openlysis.data.database.Debugging
 import com.openlysis.data.database.dao.FileAnalysisDao
@@ -31,7 +29,8 @@ internal class FileMultiAnalysesLocalDataSource
         private val multiAnalysisDao: FileMultiAnalysisDao
     ) : RelationalLocalDataSource<FileMultiAnalysis>(
             state = state,
-            queueDao = multiAnalysisDao
+            queueDao = multiAnalysisDao,
+            retrievalDao = multiAnalysisDao
         ) {
         /**
          * Saves a list of [FileMultiAnalysis] and their related analyses to the local database.
@@ -91,48 +90,6 @@ internal class FileMultiAnalysesLocalDataSource
                     m
                 )
             }
-        }
-
-        /**
-         * Retrieves a [FileMultiAnalysis] by its ID from the local database.
-         *
-         * @param id The unique identifier of the [FileMultiAnalysis] to retrieve.
-         * @return [Outcome.Success] with the found [FileMultiAnalysis], or [Outcome.Failure] if not found.
-         */
-        override suspend fun getById(id: String): Outcome<FileMultiAnalysis> {
-            if (!multiAnalysisDao.exists(id)) {
-                return Outcome.Failure(RepositoryError.NotFound)
-            }
-
-            val multiAnalysisWithAnalyses = multiAnalysisDao.getById(id)
-            val multiReputation = multiAnalysisWithAnalyses.buildMultiAnalysis()
-            return Outcome.Success(multiReputation)
-        }
-
-        /**
-         * Retrieves a list of [FileMultiAnalysis] by their IDs, including their related analyses.
-         *
-         * @param ids The IDs of the [FileMultiAnalysis] to retrieve.
-         * @return A list of [FileMultiAnalysis] records.
-         */
-        override suspend fun getManyByIds(vararg ids: String): List<FileMultiAnalysis> {
-            val multiAnalysisWithAnalyses = multiAnalysisDao.getManyByIds(*ids)
-            return multiAnalysisWithAnalyses.map { m -> m.buildMultiAnalysis() }
-        }
-
-        /**
-         * Retrieves a paginated list of [FileMultiAnalysis] records with their related analyses.
-         *
-         * @param page The page number (zero-based).
-         * @param size The number of items per page.
-         * @return A list of [FileMultiAnalysis] records for the specified page.
-         */
-        override suspend fun getMany(
-            page: Int,
-            size: Int
-        ): List<FileMultiAnalysis> {
-            val multiAnalysisWithAnalyses = multiAnalysisDao.getMany(page, size)
-            return multiAnalysisWithAnalyses.map { m -> m.buildMultiAnalysis() }
         }
 
         /**

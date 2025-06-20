@@ -3,6 +3,8 @@ package com.openlysis.data.database.dao
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
+import com.openlysis.data.analysis.model.reputation.MultiReputation
+import com.openlysis.data.analysis.model.reputation.PhoneNumberReputation
 import com.openlysis.data.database.entity.reputation.MultiReputationEntity
 import com.openlysis.data.database.entity.reputation.PhoneMultiReputationWithReputations
 
@@ -14,7 +16,8 @@ import com.openlysis.data.database.entity.reputation.PhoneMultiReputationWithRep
 @Dao
 internal interface PhoneMultiReputationDao :
     EntityDao<MultiReputationEntity>,
-    QueueDao {
+    QueueDao,
+    RetrievalDao<MultiReputation<PhoneNumberReputation>> {
     /**
      * Deletes the oldest [MultiReputationEntity] records that have a parent and match the phone data type.
      *
@@ -45,7 +48,7 @@ internal interface PhoneMultiReputationDao :
      */
     @Transaction
     @Query("SELECT * FROM MultiReputationEntity WHERE id = :id")
-    suspend fun getById(id: String): PhoneMultiReputationWithReputations
+    override suspend fun getById(id: String): PhoneMultiReputationWithReputations
 
     /**
      * Retrieves a paginated list of [PhoneMultiReputationWithReputations].
@@ -56,7 +59,7 @@ internal interface PhoneMultiReputationDao :
      */
     @Transaction
     @Query("SELECT * FROM MultiReputationEntity LIMIT :size OFFSET (:size * :page)")
-    suspend fun getMany(
+    override suspend fun getMany(
         page: Int,
         size: Int
     ): List<PhoneMultiReputationWithReputations>
@@ -69,7 +72,7 @@ internal interface PhoneMultiReputationDao :
      */
     @Transaction
     @Query("SELECT * FROM MultiReputationEntity WHERE id IN (:ids)")
-    suspend fun getManyByIds(vararg ids: String): List<PhoneMultiReputationWithReputations>
+    override suspend fun getManyByIds(vararg ids: String): List<PhoneMultiReputationWithReputations>
 
     /**
      * Counts the number of [MultiReputationEntity] records without a parent.
@@ -86,5 +89,5 @@ internal interface PhoneMultiReputationDao :
      * @return `true` if the entity exists, `false` otherwise.
      */
     @Query("SELECT EXISTS(SELECT 1 FROM MultiReputationEntity WHERE id = :id)")
-    suspend fun exists(id: String): Boolean
+    override suspend fun exists(id: String): Boolean
 }

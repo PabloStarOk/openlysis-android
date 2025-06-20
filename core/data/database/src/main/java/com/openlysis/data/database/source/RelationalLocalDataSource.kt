@@ -1,6 +1,9 @@
 package com.openlysis.data.database.source
 
+import com.openlysis.data.analysis.core.error.Outcome
+import com.openlysis.data.analysis.core.error.RepositoryError
 import com.openlysis.data.database.dao.QueueDao
+import com.openlysis.data.database.dao.RetrievalDao
 
 /**
  * Abstract base class for data sources that manage entities with parent-child relationships in the local database.
@@ -13,7 +16,8 @@ import com.openlysis.data.database.dao.QueueDao
  */
 internal abstract class RelationalLocalDataSource<TModel>(
     state: LocalDataSourceState,
-    queueDao: QueueDao
+    queueDao: QueueDao,
+    private val retrievalDao: RetrievalDao<TModel>
 ) : LocalDataSource<TModel>(state, queueDao)
     where TModel : Any {
     /**
@@ -38,14 +42,6 @@ internal abstract class RelationalLocalDataSource<TModel>(
         models: List<TModel>
     )
 
-    /**
-     * Retrieves a list of models by their IDs.
-     *
-     * @param ids The IDs of the models to retrieve.
-     * @return A list of models matching the given IDs.
-     */
-    internal abstract suspend fun getManyByIds(vararg ids: String): List<TModel>
-
     override suspend fun handleSave(model: TModel) {
         save(
             parentId = null,
@@ -58,5 +54,34 @@ internal abstract class RelationalLocalDataSource<TModel>(
             parentId = null,
             listOf(model)
         )
+    }
+
+    override suspend fun getById(id: String): Outcome<TModel> {
+        if (!retrievalDao.exists(id)) {
+            return Outcome.Failure(RepositoryError.NotFound)
+        }
+
+        val multiReputationWithReputations = retrievalDao.getById(id)
+        val multiReputation = multiReputationWithReputations.buildModel()
+        return Outcome.Success(multiReputation)
+    }
+
+    override suspend fun getMany(
+        page: Int,
+        size: Int
+    ): List<TModel> {
+        val multiAnalysisWithAnalyses = retrievalDao.getMany(page, size)
+        return multiAnalysisWithAnalyses.map { m -> m.buildModel() }
+    }
+
+    /**
+     * Retrieves a list of models by their IDs.
+     *
+     * @param ids The IDs of the entities to retrieve.
+     * @return A list of models corresponding to the provided IDs.
+     */
+    suspend fun getManyByIds(vararg ids: String): List<TModel> {
+        val pojoObjects = retrievalDao.getManyByIds(*ids)
+        return pojoObjects.map { p -> p.buildModel() }
     }
 }

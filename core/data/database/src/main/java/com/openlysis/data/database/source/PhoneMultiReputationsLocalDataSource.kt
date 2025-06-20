@@ -1,8 +1,6 @@
 package com.openlysis.data.database.source
 
 import android.util.Log
-import com.openlysis.data.analysis.core.error.Outcome
-import com.openlysis.data.analysis.core.error.RepositoryError
 import com.openlysis.data.analysis.model.reputation.MultiReputation
 import com.openlysis.data.analysis.model.reputation.PhoneNumberReputation
 import com.openlysis.data.database.Debugging
@@ -33,7 +31,8 @@ internal class PhoneMultiReputationsLocalDataSource
         private val multiReputationDao: PhoneMultiReputationDao
     ) : RelationalLocalDataSource<MultiReputation<PhoneNumberReputation>>(
             state,
-            queueDao = multiReputationDao
+            queueDao = multiReputationDao,
+            retrievalDao = multiReputationDao
         ) {
         /**
          * Saves a list of [MultiReputation]<[PhoneNumberReputation]> and their related reputations to the local database.
@@ -93,50 +92,6 @@ internal class PhoneMultiReputationsLocalDataSource
                     m
                 )
             }
-        }
-
-        /**
-         * Retrieves a [MultiReputation]<[PhoneNumberReputation]> by its ID.
-         *
-         * @param id The ID of the [MultiReputation]<[PhoneNumberReputation]> to retrieve.
-         * @return [Outcome.Success] with the found entity, or [Outcome.Failure] with [RepositoryError.NotFound] if not found.
-         */
-        override suspend fun getById(id: String): Outcome<MultiReputation<PhoneNumberReputation>> {
-            if (!multiReputationDao.exists(id)) {
-                return Outcome.Failure(RepositoryError.NotFound)
-            }
-
-            val multiReputationWithReputations = multiReputationDao.getById(id)
-            val multiReputation = multiReputationWithReputations.buildMultiReputation()
-            return Outcome.Success(multiReputation)
-        }
-
-        /**
-         * Retrieves a list of [MultiReputation]<[PhoneNumberReputation]> by their IDs, including their related reputations.
-         *
-         * @param ids The IDs of the [MultiReputation]<[PhoneNumberReputation]> to retrieve.
-         * @return A list of [MultiReputation]<[PhoneNumberReputation]> records.
-         */
-        override suspend fun getManyByIds(
-            vararg ids: String
-        ): List<MultiReputation<PhoneNumberReputation>> {
-            val multiReputationWithReputations = multiReputationDao.getManyByIds(*ids)
-            return multiReputationWithReputations.map { m -> m.buildMultiReputation() }
-        }
-
-        /**
-         * Retrieves a paginated list of [MultiReputation]<[PhoneNumberReputation]> records with their related reputations.
-         *
-         * @param page The page number (zero-based).
-         * @param size The number of items per page.
-         * @return A list of [MultiReputation]<[PhoneNumberReputation]> records for the specified page.
-         */
-        override suspend fun getMany(
-            page: Int,
-            size: Int
-        ): List<MultiReputation<PhoneNumberReputation>> {
-            val multiReputationWithReputations = multiReputationDao.getMany(page, size)
-            return multiReputationWithReputations.map { m -> m.buildMultiReputation() }
         }
 
         /**
