@@ -20,7 +20,7 @@ import retrofit2.http.Path
 /**
  * Retrofit interface for Openlysis API endpoints.
  */
-internal interface OpenlysisService {
+internal interface OpenlysisApi {
     /**
      * Analyzes a URL.
      *

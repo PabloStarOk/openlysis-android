@@ -33,6 +33,16 @@ internal interface EmailMultiReputationDao :
     override suspend fun deleteOldest()
 
     /**
+     * Retrieves a [EmailMultiReputationWithReputations] by its unique ID.
+     *
+     * @param id The unique identifier of the entity.
+     * @return The [EmailMultiReputationWithReputations] corresponding to the given ID.
+     */
+    @Transaction
+    @Query("SELECT * FROM MultiReputationEntity WHERE id = :id")
+    suspend fun getById(id: String): EmailMultiReputationWithReputations
+
+    /**
      * Retrieves a paginated list of [EmailMultiReputationWithReputations].
      *
      * @param page The page number (zero-based).

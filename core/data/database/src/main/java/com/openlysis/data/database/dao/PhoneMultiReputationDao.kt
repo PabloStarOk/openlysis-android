@@ -33,6 +33,16 @@ internal interface PhoneMultiReputationDao :
     override suspend fun deleteOldest()
 
     /**
+     * Retrieves a [PhoneMultiReputationWithReputations] by its ID.
+     *
+     * @param id The unique identifier of the entity.
+     * @return The [PhoneMultiReputationWithReputations] matching the given ID.
+     */
+    @Transaction
+    @Query("SELECT * FROM MultiReputationEntity WHERE id = :id")
+    suspend fun getById(id: String): PhoneMultiReputationWithReputations
+
+    /**
      * Retrieves a paginated list of [PhoneMultiReputationWithReputations].
      *
      * @param page The page number (zero-based).

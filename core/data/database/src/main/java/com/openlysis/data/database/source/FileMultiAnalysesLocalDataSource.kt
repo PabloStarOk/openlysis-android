@@ -1,6 +1,8 @@
 package com.openlysis.data.database.source
 
 import android.util.Log
+import com.openlysis.data.analysis.core.error.Outcome
+import com.openlysis.data.analysis.core.error.RepositoryError
 import com.openlysis.data.analysis.model.analysis.FileMultiAnalysis
 import com.openlysis.data.database.Debugging
 import com.openlysis.data.database.dao.FileAnalysisDao
@@ -21,7 +23,7 @@ import javax.inject.Singleton
  * @param multiAnalysisDao The [FileMultiAnalysisDao] for multi-analysis operations.
  */
 @Singleton
-internal class FileMultiAnalysisDataSource
+internal class FileMultiAnalysesLocalDataSource
     @Inject
     constructor(
         @FileMultiAnalysisDsState state: LocalDataSourceState,
@@ -92,6 +94,22 @@ internal class FileMultiAnalysisDataSource
         }
 
         /**
+         * Retrieves a [FileMultiAnalysis] by its ID from the local database.
+         *
+         * @param id The unique identifier of the [FileMultiAnalysis] to retrieve.
+         * @return [Outcome.Success] with the found [FileMultiAnalysis], or [Outcome.Failure] if not found.
+         */
+        override suspend fun getById(id: String): Outcome<FileMultiAnalysis> {
+            if (!multiAnalysisDao.exists(id)) {
+                return Outcome.Failure(RepositoryError.NotFound)
+            }
+
+            val multiAnalysisWithAnalyses = multiAnalysisDao.getById(id)
+            val multiReputation = multiAnalysisWithAnalyses.buildMultiAnalysis()
+            return Outcome.Success(multiReputation)
+        }
+
+        /**
          * Retrieves a list of [FileMultiAnalysis] by their IDs, including their related analyses.
          *
          * @param ids The IDs of the [FileMultiAnalysis] to retrieve.
@@ -156,6 +174,6 @@ internal class FileMultiAnalysisDataSource
             )
 
         private companion object {
-            private val LOG_TAG = FileMultiAnalysisDataSource::class.java.simpleName
+            private val LOG_TAG = FileMultiAnalysesLocalDataSource::class.java.simpleName
         }
     }

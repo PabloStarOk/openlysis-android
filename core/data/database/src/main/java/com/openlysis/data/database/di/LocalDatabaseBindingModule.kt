@@ -1,18 +1,18 @@
 package com.openlysis.data.database.di
 
+import com.openlysis.data.analysis.core.source.AnalysesLocalDataSource
 import com.openlysis.data.analysis.model.analysis.FileMultiAnalysis
 import com.openlysis.data.analysis.model.analysis.UrlMultiAnalysis
 import com.openlysis.data.analysis.model.message.MessageAnalysis
 import com.openlysis.data.analysis.model.reputation.EmailAddressReputation
 import com.openlysis.data.analysis.model.reputation.MultiReputation
 import com.openlysis.data.analysis.model.reputation.PhoneNumberReputation
-import com.openlysis.data.database.source.EmailMultiReputationDataSource
-import com.openlysis.data.database.source.FileMultiAnalysisDataSource
-import com.openlysis.data.database.source.MessageAnalysisDataSource
-import com.openlysis.data.database.source.PhoneMultiReputationDataSource
+import com.openlysis.data.database.source.EmailMultiReputationsLocalDataSource
+import com.openlysis.data.database.source.FileMultiAnalysesLocalDataSource
+import com.openlysis.data.database.source.MessageAnalysesLocalDataSource
+import com.openlysis.data.database.source.PhoneMultiReputationsLocalDataSource
 import com.openlysis.data.database.source.RelationalLocalDataSource
-import com.openlysis.data.database.source.UrlMultiAnalysisDataSource
-import com.openlysis.data.local.LocalRepository
+import com.openlysis.data.database.source.UrlMultiAnalysesLocalDataSource
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -21,10 +21,10 @@ import javax.inject.Singleton
 
 /**
  * Dagger Hilt module that binds concrete local data source implementations to their
- * corresponding repository and relational data source interfaces for dependency injection.
+ * corresponding data source interfaces for dependency injection.
  *
  * This module is installed in the [SingletonComponent] and enables injection of
- * [LocalRepository] and [RelationalLocalDataSource] for each supported entity type.
+ * [AnalysesLocalDataSource] and [RelationalLocalDataSource] for each supported entity type.
  */
 @Module
 @InstallIn(SingletonComponent::class)
@@ -32,54 +32,54 @@ internal abstract class LocalDatabaseBindingModule {
     @Singleton
     @Binds
     abstract fun bindLocalUrlMultiAnalysisRepo(
-        impl: UrlMultiAnalysisDataSource
-    ): LocalRepository<UrlMultiAnalysis>
+        impl: UrlMultiAnalysesLocalDataSource
+    ): AnalysesLocalDataSource<UrlMultiAnalysis>
 
     @Singleton
     @Binds
     abstract fun bindLocalFileMultiAnalysisRepo(
-        impl: FileMultiAnalysisDataSource
-    ): LocalRepository<FileMultiAnalysis>
+        impl: FileMultiAnalysesLocalDataSource
+    ): AnalysesLocalDataSource<FileMultiAnalysis>
 
     @Singleton
     @Binds
     abstract fun bindLocalMessageAnalysisRepo(
-        impl: MessageAnalysisDataSource
-    ): LocalRepository<MessageAnalysis>
+        impl: MessageAnalysesLocalDataSource
+    ): AnalysesLocalDataSource<MessageAnalysis>
 
     @Singleton
     @Binds
     abstract fun bindLocalEmailMultiReputationRepo(
-        impl: EmailMultiReputationDataSource
-    ): LocalRepository<MultiReputation<EmailAddressReputation>>
+        impl: EmailMultiReputationsLocalDataSource
+    ): AnalysesLocalDataSource<MultiReputation<EmailAddressReputation>>
 
     @Singleton
     @Binds
     abstract fun bindLocalPhoneMultiReputationRepo(
-        impl: PhoneMultiReputationDataSource
-    ): LocalRepository<MultiReputation<PhoneNumberReputation>>
+        impl: PhoneMultiReputationsLocalDataSource
+    ): AnalysesLocalDataSource<MultiReputation<PhoneNumberReputation>>
 
     @Singleton
     @Binds
     abstract fun bindRelationalUrlMultiAnalysisRepo(
-        impl: UrlMultiAnalysisDataSource
+        impl: UrlMultiAnalysesLocalDataSource
     ): RelationalLocalDataSource<UrlMultiAnalysis>
 
     @Singleton
     @Binds
     abstract fun bindRelationalFileMultiAnalysisRepo(
-        impl: FileMultiAnalysisDataSource
+        impl: FileMultiAnalysesLocalDataSource
     ): RelationalLocalDataSource<FileMultiAnalysis>
 
     @Singleton
     @Binds
     abstract fun bindRelationalMultiReputationRepo(
-        impl: EmailMultiReputationDataSource
+        impl: EmailMultiReputationsLocalDataSource
     ): RelationalLocalDataSource<MultiReputation<EmailAddressReputation>>
 
     @Singleton
     @Binds
     abstract fun bindRelationalPhoneMultiReputationRepo(
-        impl: PhoneMultiReputationDataSource
+        impl: PhoneMultiReputationsLocalDataSource
     ): RelationalLocalDataSource<MultiReputation<PhoneNumberReputation>>
 }

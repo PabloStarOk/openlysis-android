@@ -1,6 +1,8 @@
 package com.openlysis.data.database.source
 
 import android.util.Log
+import com.openlysis.data.analysis.core.error.Outcome
+import com.openlysis.data.analysis.core.error.RepositoryError
 import com.openlysis.data.analysis.model.analysis.UrlMultiAnalysis
 import com.openlysis.data.database.Debugging
 import com.openlysis.data.database.dao.UrlAnalysisDao
@@ -21,7 +23,7 @@ import javax.inject.Singleton
  * @param multiAnalysisDao The [UrlMultiAnalysisDao] for multi-analysis operations.
  */
 @Singleton
-internal class UrlMultiAnalysisDataSource
+internal class UrlMultiAnalysesLocalDataSource
     @Inject
     constructor(
         @UrlMultiAnalysisDsState state: LocalDataSourceState,
@@ -92,6 +94,22 @@ internal class UrlMultiAnalysisDataSource
         }
 
         /**
+         * Retrieves a [UrlMultiAnalysis] by its ID from the local database.
+         *
+         * @param id The unique identifier of the [UrlMultiAnalysis] to retrieve.
+         * @return [Outcome.Success] with the found [UrlMultiAnalysis], or [Outcome.Failure] if not found.
+         */
+        override suspend fun getById(id: String): Outcome<UrlMultiAnalysis> {
+            if (!multiAnalysisDao.exists(id)) {
+                return Outcome.Failure(RepositoryError.NotFound)
+            }
+
+            val multiReputationWithReputations = multiAnalysisDao.getById(id)
+            val multiReputation = multiReputationWithReputations.buildMultiAnalysis()
+            return Outcome.Success(multiReputation)
+        }
+
+        /**
          * Retrieves a list of [UrlMultiAnalysis] by their IDs, including their related analyses.
          *
          * @param ids The IDs of the [UrlMultiAnalysis] to retrieve.
@@ -156,6 +174,6 @@ internal class UrlMultiAnalysisDataSource
             )
 
         private companion object {
-            private val LOG_TAG = UrlMultiAnalysisDataSource::class.java.simpleName
+            private val LOG_TAG = UrlMultiAnalysesLocalDataSource::class.java.simpleName
         }
     }

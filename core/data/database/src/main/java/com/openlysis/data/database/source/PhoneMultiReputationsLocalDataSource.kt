@@ -1,6 +1,8 @@
 package com.openlysis.data.database.source
 
 import android.util.Log
+import com.openlysis.data.analysis.core.error.Outcome
+import com.openlysis.data.analysis.core.error.RepositoryError
 import com.openlysis.data.analysis.model.reputation.MultiReputation
 import com.openlysis.data.analysis.model.reputation.PhoneNumberReputation
 import com.openlysis.data.database.Debugging
@@ -23,7 +25,7 @@ import javax.inject.Singleton
  * @param multiReputationDao The [PhoneMultiReputationDao] for multi-reputation operations.
  */
 @Singleton
-internal class PhoneMultiReputationDataSource
+internal class PhoneMultiReputationsLocalDataSource
     @Inject
     constructor(
         @PhoneMultiReputationDsState state: LocalDataSourceState,
@@ -94,6 +96,22 @@ internal class PhoneMultiReputationDataSource
         }
 
         /**
+         * Retrieves a [MultiReputation]<[PhoneNumberReputation]> by its ID.
+         *
+         * @param id The ID of the [MultiReputation]<[PhoneNumberReputation]> to retrieve.
+         * @return [Outcome.Success] with the found entity, or [Outcome.Failure] with [RepositoryError.NotFound] if not found.
+         */
+        override suspend fun getById(id: String): Outcome<MultiReputation<PhoneNumberReputation>> {
+            if (!multiReputationDao.exists(id)) {
+                return Outcome.Failure(RepositoryError.NotFound)
+            }
+
+            val multiReputationWithReputations = multiReputationDao.getById(id)
+            val multiReputation = multiReputationWithReputations.buildMultiReputation()
+            return Outcome.Success(multiReputation)
+        }
+
+        /**
          * Retrieves a list of [MultiReputation]<[PhoneNumberReputation]> by their IDs, including their related reputations.
          *
          * @param ids The IDs of the [MultiReputation]<[PhoneNumberReputation]> to retrieve.
@@ -161,6 +179,6 @@ internal class PhoneMultiReputationDataSource
             )
 
         private companion object {
-            private val LOG_TAG = PhoneMultiReputationDataSource::class.java.simpleName
+            private val LOG_TAG = PhoneMultiReputationsLocalDataSource::class.java.simpleName
         }
     }

@@ -1,10 +1,10 @@
-package com.openlysis.data.remote.repository
+package com.openlysis.data.remote.source
 
-import com.openlysis.data.analysis.core.AnalysisRepository
-import com.openlysis.data.analysis.core.error.ApiError
 import com.openlysis.data.analysis.core.error.Outcome
+import com.openlysis.data.analysis.core.error.RepositoryError
 import com.openlysis.data.analysis.core.response.AnalyzeResponse
-import com.openlysis.data.remote.OpenlysisService
+import com.openlysis.data.analysis.core.source.AnalysesRemoteDataSource
+import com.openlysis.data.remote.OpenlysisApi
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -19,24 +19,36 @@ import java.net.UnknownHostException
 import kotlin.coroutines.cancellation.CancellationException
 
 /**
- * Base repository for analysis operations, providing common API call handling and utility methods.
+ * Abstract base data source for analyses operations.
  *
- * @param TRequest The type of the request object for analysis.
- * @param TModel The type of the model returned by the repository.
- * @property service The OpenlysisService used to perform network operations.
+ * @param TRequest The type of the request object for analysis operations.
+ * @param TModel The type of the model returned by analysis operations.
+ * @property api The Retrofit service used to perform remote API calls.
  */
-internal abstract class BaseAnalysisRepository<TRequest, TModel>(
-    protected val service: OpenlysisService
-) : AnalysisRepository<TRequest, TModel> where TRequest : Any, TModel : Any {
+internal abstract class BaseAnalysesRemoteDataSource<TRequest, TModel>(
+    protected val api: OpenlysisApi
+) : AnalysesRemoteDataSource<TRequest, TModel> where TRequest : Any, TModel : Any {
     override suspend fun analyze(request: TRequest): Outcome<AnalyzeResponse> =
         callApiSafely {
             handleAnalyze(request)
         }
 
-    override suspend fun get(id: String): Outcome<TModel> =
+    override suspend fun getById(id: String): Outcome<TModel> =
         callApiSafely {
             handleGet(id)
         }
+
+    override suspend fun getMany(
+        page: Int,
+        size: Int
+    ): List<TModel> {
+        val outcome = callApiSafely<List<TModel>> { handleGetMany(page, size) }
+        if (outcome is Outcome.Success) {
+            return outcome.model
+        }
+
+        return emptyList()
+    }
 
     /**
      * Handles the analysis request for the given input.
@@ -53,6 +65,18 @@ internal abstract class BaseAnalysisRepository<TRequest, TModel>(
      * @return A [Response] containing a [TModel] if successful, or an error response otherwise.
      */
     protected abstract suspend fun handleGet(id: String): Response<TModel>
+
+    /**
+     * Retrieves a list of model instances for the specified page and size.
+     *
+     * @param page The page number to retrieve.
+     * @param size The number of items per page.
+     * @return An [Outcome] containing a list of [TModel] if successful, or an error otherwise.
+     */
+    protected abstract suspend fun handleGetMany(
+        page: Int,
+        size: Int
+    ): Response<List<TModel>>
 
     /**
      * Creates a [MultipartBody.Part] from a [File] for use in multipart HTTP requests.
@@ -106,7 +130,7 @@ internal abstract class BaseAnalysisRepository<TRequest, TModel>(
      * Executes the given API call safely, catching common network and HTTP exceptions.
      *
      * @param apiCall The suspend function representing the API call to execute.
-     * @return An [Outcome] containing the successful result if successful, or an [ApiError] otherwise.
+     * @return An [Outcome] containing the successful result if successful, or a [RepositoryError] otherwise.
      */
     private suspend fun <TResult> callApiSafely(
         apiCall: suspend () -> Response<TResult>
@@ -118,22 +142,22 @@ internal abstract class BaseAnalysisRepository<TRequest, TModel>(
             } else {
                 val error =
                     when (response.code()) {
-                        400 -> ApiError.BadRequest
-                        401, 403 -> ApiError.AccessDenied
-                        404 -> ApiError.NotFound
-                        503 -> ApiError.Unavailable
-                        in 500..599 -> ApiError.Server
-                        else -> ApiError.Unknown
+                        400 -> RepositoryError.BadRequest
+                        401, 403 -> RepositoryError.AccessDenied
+                        404 -> RepositoryError.NotFound
+                        503 -> RepositoryError.Unavailable
+                        in 500..599 -> RepositoryError.Server
+                        else -> RepositoryError.Unknown
                     }
                 Outcome.Failure(error)
             }
         } catch (_: ConnectException) {
-            Outcome.Failure(ApiError.ServerUnreachable)
+            Outcome.Failure(RepositoryError.ServerUnreachable)
         } catch (_: UnknownHostException) {
-            Outcome.Failure(ApiError.ServerUnreachable)
+            Outcome.Failure(RepositoryError.ServerUnreachable)
         } catch (_: IOException) {
-            Outcome.Failure(ApiError.Network)
+            Outcome.Failure(RepositoryError.Network)
         } catch (_: CancellationException) {
-            Outcome.Failure(ApiError.OperationCanceled)
+            Outcome.Failure(RepositoryError.OperationCanceled)
         }
 }

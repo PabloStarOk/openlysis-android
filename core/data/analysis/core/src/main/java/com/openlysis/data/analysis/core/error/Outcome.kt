@@ -21,6 +21,6 @@ sealed class Outcome<out TModel> where TModel : Any {
      * @param error The error describing the failure.
      */
     data class Failure(
-        val error: ApiError
+        val error: RepositoryError
     ) : Outcome<Nothing>()
 }

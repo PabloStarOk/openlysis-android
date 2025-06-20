@@ -15,7 +15,10 @@ kotlin {
 
 dependencies {
     compileOnly(libs.moshi.kotlin)
+    compileOnly(libs.google.dagger.hilt.core)
+
     ksp(libs.moshi.kotlin.codegen)
+    ksp(libs.google.dagger.hilt.compiler)
 
     implementation(projects.core.data.analysis.model)
 }

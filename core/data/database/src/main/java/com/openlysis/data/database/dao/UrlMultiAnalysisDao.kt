@@ -35,6 +35,16 @@ internal interface UrlMultiAnalysisDao :
     override suspend fun deleteOldest()
 
     /**
+     * Retrieves a [UrlMultiAnalysisWithAnalyses] by its ID.
+     *
+     * @param id The unique identifier of the entity.
+     * @return The [UrlMultiAnalysisWithAnalyses] matching the given ID.
+     */
+    @Transaction
+    @Query("SELECT * FROM UrlMultiAnalysisEntity WHERE id = :id")
+    suspend fun getById(id: String): UrlMultiAnalysisWithAnalyses
+
+    /**
      * Retrieves a paginated list of [UrlMultiAnalysisWithAnalyses].
      *
      * @param page The page number (zero-based).

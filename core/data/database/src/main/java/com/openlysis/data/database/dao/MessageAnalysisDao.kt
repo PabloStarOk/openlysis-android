@@ -34,6 +34,16 @@ internal interface MessageAnalysisDao :
     override suspend fun deleteOldest()
 
     /**
+     * Retrieves a [MessageAnalysisWithResults] by its unique ID.
+     *
+     * @param id The unique identifier of the entity.
+     * @return The [MessageAnalysisWithResults] corresponding to the given ID.
+     */
+    @Transaction
+    @Query("SELECT * FROM MessageAnalysisEntity WHERE id = :id")
+    suspend fun getById(id: String): MessageAnalysisWithResults
+
+    /**
      * Retrieves a paginated list of [MessageAnalysisWithResults].
      *
      * @param page The page number (zero-based).

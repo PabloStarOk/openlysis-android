@@ -91,10 +91,8 @@ dependencies {
     implementation(projects.feature.tools)
     implementation(projects.core.data.analysis.model)
     implementation(projects.core.data.analysis.core)
-    implementation(projects.core.data.analysis.local)
     implementation(projects.core.data.remote)
     implementation(projects.core.data.database)
-    implementation(projects.domain)
 
     coreLibraryDesugaring(libs.android.tools.desugar)
 

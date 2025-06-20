@@ -1,25 +1,25 @@
-package com.openlysis.data.remote.repository
+package com.openlysis.data.remote.source
 
 import com.openlysis.data.analysis.core.request.AnalyzeMessage
 import com.openlysis.data.analysis.core.response.AnalyzeResponse
 import com.openlysis.data.analysis.model.message.MessageAnalysis
-import com.openlysis.data.remote.OpenlysisService
+import com.openlysis.data.remote.OpenlysisApi
 import com.openlysis.data.remote.constant.ApiFields
 import retrofit2.Response
 import javax.inject.Inject
 
 /**
- * Repository implementation for handling message analysis operations.
+ * Data source implementation for handling message analysis operations.
  *
  * Provides methods to analyze messages (with optional attachments) and retrieve analysis results from the remote API.
  *
- * @param service The [OpenlysisService] used to perform network operations.
+ * @param api The [OpenlysisApi] used to perform network operations.
  */
-internal class MessageAnalysisRepository
+internal class MessageAnalysesRemoteDataSource
     @Inject
     constructor(
-        service: OpenlysisService
-    ) : BaseAnalysisRepository<AnalyzeMessage, MessageAnalysis>(service) {
+        api: OpenlysisApi
+    ) : BaseAnalysesRemoteDataSource<AnalyzeMessage, MessageAnalysis>(api) {
         /**
          * Analyzes a message by preparing its attachments and sending the analysis request.
          *
@@ -53,7 +53,7 @@ internal class MessageAnalysisRepository
                         Pair(a.file.name, a.password as String)
                     }
 
-            return service.analyzeMessage(
+            return api.analyzeMessage(
                 messageType =
                     request.message.type.name
                         .asPlainRequestBody(),
@@ -74,7 +74,14 @@ internal class MessageAnalysisRepository
          * @return A [Response] containing the [MessageAnalysis] model if successful, or an error response otherwise.
          */
         override suspend fun handleGet(id: String): Response<MessageAnalysis> {
-            val response = service.getMessageAnalysis(id)
+            val response = api.getMessageAnalysis(id)
             return convertToModelIfSuccess(response) { it.convertToModel() }
+        }
+
+        override suspend fun handleGetMany(
+            page: Int,
+            size: Int
+        ): Response<List<MessageAnalysis>> {
+            TODO("Not yet implemented")
         }
     }

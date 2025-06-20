@@ -50,7 +50,7 @@ dependencies {
     implementation(libs.androidx.room.ktx)
 
     implementation(projects.core.data.analysis.model)
-    implementation(projects.core.data.analysis.local)
+    implementation(projects.core.data.analysis.core)
 
     compileOnly(libs.google.dagger.hilt)
     compileOnly(libs.moshi.kotlin)

@@ -1,24 +1,24 @@
-package com.openlysis.data.remote.repository
+package com.openlysis.data.remote.source
 
 import com.openlysis.data.analysis.core.request.AnalyzeUrl
 import com.openlysis.data.analysis.core.response.AnalyzeResponse
 import com.openlysis.data.analysis.model.analysis.UrlMultiAnalysis
-import com.openlysis.data.remote.OpenlysisService
+import com.openlysis.data.remote.OpenlysisApi
 import retrofit2.Response
 import javax.inject.Inject
 
 /**
- * Repository implementation for handling URL multi-analysis operations.
+ * Data source implementation for handling URL multi-analysis operations.
  *
  * Provides methods to analyze URLs and retrieve multi-analysis results from the remote API.
  *
- * @param service The [OpenlysisService] used to perform network operations.
+ * @param api The [OpenlysisApi] used to perform network operations.
  */
-internal class UrlMultiAnalysisRepository
+internal class UrlMultiAnalysesRemoteDataSource
     @Inject
     constructor(
-        service: OpenlysisService
-    ) : BaseAnalysisRepository<AnalyzeUrl, UrlMultiAnalysis>(service) {
+        api: OpenlysisApi
+    ) : BaseAnalysesRemoteDataSource<AnalyzeUrl, UrlMultiAnalysis>(api) {
         /**
          * Analyzes the given URL using the provided [AnalyzeUrl] request.
          *
@@ -26,7 +26,7 @@ internal class UrlMultiAnalysisRepository
          * @return A [Response] containing the [AnalyzeResponse] from the API if successful, or an error response otherwise.
          */
         override suspend fun handleAnalyze(request: AnalyzeUrl): Response<AnalyzeResponse> =
-            service.analyzeUrl(
+            api.analyzeUrl(
                 url = request.url.toString(),
                 reanalyze = request.reanalyze
             )
@@ -38,7 +38,14 @@ internal class UrlMultiAnalysisRepository
          * @return A [Response] containing the [UrlMultiAnalysis] model if successful, or an error response otherwise.
          */
         override suspend fun handleGet(id: String): Response<UrlMultiAnalysis> {
-            val response = service.getUrlMultiAnalysis(id)
+            val response = api.getUrlMultiAnalysis(id)
             return convertToModelIfSuccess(response) { it.convertToModel() }
+        }
+
+        override suspend fun handleGetMany(
+            page: Int,
+            size: Int
+        ): Response<List<UrlMultiAnalysis>> {
+            TODO("Not yet implemented")
         }
     }

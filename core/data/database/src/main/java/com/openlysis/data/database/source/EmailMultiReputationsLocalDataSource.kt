@@ -1,6 +1,8 @@
 package com.openlysis.data.database.source
 
 import android.util.Log
+import com.openlysis.data.analysis.core.error.Outcome
+import com.openlysis.data.analysis.core.error.RepositoryError
 import com.openlysis.data.analysis.model.reputation.EmailAddressReputation
 import com.openlysis.data.analysis.model.reputation.MultiReputation
 import com.openlysis.data.database.Debugging
@@ -23,7 +25,7 @@ import javax.inject.Singleton
  * @param multiReputationDao The [EmailMultiReputationDao] for multi-reputation operations.
  */
 @Singleton
-internal class EmailMultiReputationDataSource
+internal class EmailMultiReputationsLocalDataSource
     @Inject
     constructor(
         @EmailMultiReputationDsState state: LocalDataSourceState,
@@ -94,6 +96,22 @@ internal class EmailMultiReputationDataSource
         }
 
         /**
+         * Retrieves a [MultiReputation]<[EmailAddressReputation]> by its ID.
+         *
+         * @param id The ID of the [MultiReputation]<[EmailAddressReputation]> to retrieve.
+         * @return [Outcome.Success] with the found entity, or [Outcome.Failure] with [RepositoryError.NotFound] if not found.
+         */
+        override suspend fun getById(id: String): Outcome<MultiReputation<EmailAddressReputation>> {
+            if (!multiReputationDao.exists(id)) {
+                return Outcome.Failure(RepositoryError.NotFound)
+            }
+
+            val multiReputationWithReputations = multiReputationDao.getById(id)
+            val multiReputation = multiReputationWithReputations.buildMultiReputation()
+            return Outcome.Success(multiReputation)
+        }
+
+        /**
          * Retrieves a list of [MultiReputation]<[EmailAddressReputation]> by their IDs, including their related reputations.
          *
          * @param ids The IDs of the [MultiReputation]<[EmailAddressReputation]> to retrieve.
@@ -105,6 +123,15 @@ internal class EmailMultiReputationDataSource
             val multiReputationWithReputations = multiReputationDao.getManyByIds(*ids)
             return multiReputationWithReputations.map { m -> m.buildMultiReputation() }
         }
+
+        /**
+         * Checks if a MultiReputation\<EmailAddressReputation\> entity exists in the database by its ID.
+         *
+         * @param model The ID of the MultiReputation entity.
+         * @return `true` if the entity exists, `false` otherwise.
+         */
+        override suspend fun exists(model: MultiReputation<EmailAddressReputation>): Boolean =
+            multiReputationDao.exists(model.id)
 
         /**
          * Retrieves a paginated list of [MultiReputation]<[EmailAddressReputation]> records with their related reputations.
@@ -120,15 +147,6 @@ internal class EmailMultiReputationDataSource
             val multiReputationWithReputations = multiReputationDao.getMany(page, size)
             return multiReputationWithReputations.map { m -> m.buildMultiReputation() }
         }
-
-        /**
-         * Checks if a [MultiReputation]<[EmailAddressReputation]> exists in the local database.
-         *
-         * @param model The [MultiReputation]<[EmailAddressReputation]> to check.
-         * @return `true` if the entity exists, `false` otherwise.
-         */
-        override suspend fun exists(model: MultiReputation<EmailAddressReputation>): Boolean =
-            multiReputationDao.exists(model.id)
 
         /**
          * Converts models to their corresponding [EmailReputationEntity] and [MultiReputationEntity] arrays.
@@ -161,6 +179,6 @@ internal class EmailMultiReputationDataSource
             )
 
         private companion object {
-            private val LOG_TAG = EmailMultiReputationDataSource::class.java.simpleName
+            private val LOG_TAG = EmailMultiReputationsLocalDataSource::class.java.simpleName
         }
     }

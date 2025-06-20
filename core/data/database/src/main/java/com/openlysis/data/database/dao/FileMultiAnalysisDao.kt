@@ -35,6 +35,16 @@ internal interface FileMultiAnalysisDao :
     override suspend fun deleteOldest()
 
     /**
+     * Retrieves a [FileMultiAnalysisWithAnalyses] by its ID.
+     *
+     * @param id The unique identifier of the entity.
+     * @return The [FileMultiAnalysisWithAnalyses] corresponding to the given ID.
+     */
+    @Transaction
+    @Query("SELECT * FROM FileMultiAnalysisEntity WHERE id = :id")
+    suspend fun getById(id: String): FileMultiAnalysisWithAnalyses
+
+    /**
      * Retrieves a paginated list of [FileMultiAnalysisWithAnalyses].
      *
      * @param page The page number (zero-based).

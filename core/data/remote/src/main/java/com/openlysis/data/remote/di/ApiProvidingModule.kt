@@ -2,7 +2,7 @@ package com.openlysis.data.remote.di
 
 import com.openlysis.data.remote.ApiClientSettings
 import com.openlysis.data.remote.ApiCredentials
-import com.openlysis.data.remote.OpenlysisService
+import com.openlysis.data.remote.OpenlysisApi
 import com.openlysis.data.remote.interceptor.ApiKeyHeaderInterceptor
 import dagger.Module
 import dagger.Provides
@@ -16,7 +16,7 @@ import javax.inject.Singleton
  * Dagger Hilt module that provides API-related dependencies for remote data access.
  *
  * This module is installed in the [SingletonComponent] and is responsible for creating
- * and providing the [OpenlysisService] Retrofit interface, configured with authentication
+ * and providing the [OpenlysisApi] Retrofit interface, configured with authentication
  * and base URL settings.
  */
 @Module
@@ -27,7 +27,7 @@ internal object ApiProvidingModule {
     fun provideOpenlysisService(
         apiClientSettings: ApiClientSettings,
         apiCredentials: ApiCredentials
-    ): OpenlysisService {
+    ): OpenlysisApi {
         val client =
             OkHttpClient
                 .Builder()
@@ -39,6 +39,6 @@ internal object ApiProvidingModule {
             .baseUrl(apiClientSettings.baseUrl)
             .client(client)
             .build()
-            .create(OpenlysisService::class.java)
+            .create(OpenlysisApi::class.java)
     }
 }

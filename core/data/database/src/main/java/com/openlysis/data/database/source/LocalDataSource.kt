@@ -1,8 +1,8 @@
 package com.openlysis.data.database.source
 
 import android.util.Log
+import com.openlysis.data.analysis.core.source.AnalysesLocalDataSource
 import com.openlysis.data.database.dao.QueueDao
-import com.openlysis.data.local.LocalRepository
 
 /**
  * Abstract base class for local data sources that manage entities in the local database.
@@ -11,12 +11,12 @@ import com.openlysis.data.local.LocalRepository
  * @property state The [LocalDataSourceState] tracking entity limits.
  * @property queueDao The [QueueDao] for queue-like deletion operations.
  *
- * Implements [LocalRepository] for basic save and update operations, and enforces entity limit logic.
+ * Implements [AnalysesLocalDataSource] for save and update operations, and enforces entity limit logic.
  */
 internal abstract class LocalDataSource<TModel>(
     private val state: LocalDataSourceState,
     private val queueDao: QueueDao
-) : LocalRepository<TModel>
+) : AnalysesLocalDataSource<TModel>
     where TModel : Any {
     /**
      * Saves a model to the local database, deleting the oldest entity if the limit is reached.
@@ -77,14 +77,6 @@ internal abstract class LocalDataSource<TModel>(
      * @param model The model to update.
      */
     internal abstract suspend fun handleUpdate(model: TModel)
-
-    /**
-     * Checks if a model already exists in the local database.
-     *
-     * @param model The model to check.
-     * @return `true` if the model exists, `false` otherwise.
-     */
-    internal abstract suspend fun exists(model: TModel): Boolean
 
     companion object {
         private val LOG_TAG = LocalDataSource::class.java.simpleName

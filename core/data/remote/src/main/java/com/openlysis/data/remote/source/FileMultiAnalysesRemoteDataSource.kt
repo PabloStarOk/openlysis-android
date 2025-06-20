@@ -1,33 +1,33 @@
-package com.openlysis.data.remote.repository
+package com.openlysis.data.remote.source
 
 import com.openlysis.data.analysis.core.request.AnalyzeFile
 import com.openlysis.data.analysis.core.response.AnalyzeResponse
 import com.openlysis.data.analysis.model.analysis.FileMultiAnalysis
-import com.openlysis.data.remote.OpenlysisService
+import com.openlysis.data.remote.OpenlysisApi
 import com.openlysis.data.remote.constant.ApiFields
 import retrofit2.Response
 import javax.inject.Inject
 
 /**
- * Repository implementation for handling file multi-analysis operations.
+ * Data source implementation for handling file multi-analysis operations.
  *
  * Provides methods to analyze files and retrieve multi-analysis results from the remote API.
  *
- * @param service The [OpenlysisService] used to perform network operations.
+ * @param api The [OpenlysisApi] used to perform network operations.
  */
-internal class FileMultiAnalysisRepository
+internal class FileMultiAnalysesRemoteDataSource
     @Inject
     constructor(
-        service: OpenlysisService
-    ) : BaseAnalysisRepository<AnalyzeFile, FileMultiAnalysis>(service) {
+        api: OpenlysisApi
+    ) : BaseAnalysesRemoteDataSource<AnalyzeFile, FileMultiAnalysis>(api) {
         /**
-         * Analyzes a file by sending it to the remote service.
+         * Analyzes a file by sending it to the API.
          *
          * @param request The [AnalyzeFile] request containing the file and analysis parameters.
          * @return A [Response] containing the [AnalyzeResponse] from the API if successful, or an error response otherwise.
          */
         override suspend fun handleAnalyze(request: AnalyzeFile): Response<AnalyzeResponse> =
-            service.analyzeFile(
+            api.analyzeFile(
                 file =
                     request.attachment.file.asFormDataPart(
                         name = ApiFields.FILE,
@@ -44,7 +44,14 @@ internal class FileMultiAnalysisRepository
          * @return A [Response] containing the [FileMultiAnalysis] model if successful, or an error response otherwise.
          */
         override suspend fun handleGet(id: String): Response<FileMultiAnalysis> {
-            val response = service.getFileMultiAnalysis(id)
+            val response = api.getFileMultiAnalysis(id)
             return convertToModelIfSuccess(response) { it.convertToModel() }
+        }
+
+        override suspend fun handleGetMany(
+            page: Int,
+            size: Int
+        ): Response<List<FileMultiAnalysis>> {
+            TODO("Not yet implemented")
         }
     }

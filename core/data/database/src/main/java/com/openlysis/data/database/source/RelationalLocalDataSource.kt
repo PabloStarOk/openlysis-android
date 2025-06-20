@@ -5,11 +5,11 @@ import com.openlysis.data.database.dao.QueueDao
 /**
  * Abstract base class for data sources that manage entities with parent-child relationships in the local database.
  *
+ * Extends [LocalDataSource] and provides abstract methods for saving, updating, and retrieving entities by parent ID.
+ *
  * @param TModel The type of model managed by this data source.
  * @param state The [LocalDataSourceState] tracking entity limits.
  * @param queueDao The [QueueDao] for queue-like deletion operations.
- *
- * Extends [LocalDataSource] and provides abstract methods for saving, updating, and retrieving entities by parent ID.
  */
 internal abstract class RelationalLocalDataSource<TModel>(
     state: LocalDataSourceState,
