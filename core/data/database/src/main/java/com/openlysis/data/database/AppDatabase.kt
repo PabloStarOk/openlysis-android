@@ -49,7 +49,8 @@ import com.openlysis.data.local.BuildConfig
         MultiReputationEntity::class,
         MessageAnalysisEntity::class
     ],
-    version = BuildConfig.DB_VERSION
+    version = BuildConfig.DB_VERSION,
+    exportSchema = true
 )
 @TypeConverters(Converters::class)
 internal abstract class AppDatabase : RoomDatabase() {

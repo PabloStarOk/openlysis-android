@@ -64,3 +64,4 @@ ktlint-gradle = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint-gr
 json-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "jsonSerializationPlugin" }
 google-devtools-ksp = { id = "com.google.devtools.ksp", version = "2.1.21-2.0.2" }
 google-dagger-hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt"}
+androidx-room = { id = "androidx.room", version.ref = "room" }
