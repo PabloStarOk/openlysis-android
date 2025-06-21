@@ -93,15 +93,6 @@ internal class FileMultiAnalysesLocalDataSource
         }
 
         /**
-         * Checks if a [FileMultiAnalysis] exists in the local database.
-         *
-         * @param model The [FileMultiAnalysis] to check.
-         * @return `true` if the entity exists, `false` otherwise.
-         */
-        override suspend fun exists(model: FileMultiAnalysis): Boolean =
-            multiAnalysisDao.exists(model.id)
-
-        /**
          * Converts models to their corresponding [FileAnalysisEntity] and [FileMultiAnalysisEntity] arrays.
          *
          * @param parentId The parent entity ID, or `null` if not applicable.

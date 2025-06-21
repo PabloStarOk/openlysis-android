@@ -1,22 +1,27 @@
 package com.openlysis.data.database.source
 
 import android.util.Log
+import com.openlysis.data.analysis.core.error.Outcome
+import com.openlysis.data.analysis.core.error.RepositoryError
 import com.openlysis.data.analysis.core.source.AnalysesLocalDataSource
 import com.openlysis.data.analysis.model.common.Model
+import com.openlysis.data.database.dao.ExistsDao
 import com.openlysis.data.database.dao.QueueDao
 
 /**
  * Abstract base class for local data sources that manage entities in the local database.
  *
+ * Implements [AnalysesLocalDataSource] for save and update operations, and enforces entity limit logic.
+ *
  * @param TModel The type of model managed by this data source.
  * @property state The [LocalDataSourceState] tracking entity limits.
  * @property queueDao The [QueueDao] for queue-like deletion operations.
- *
- * Implements [AnalysesLocalDataSource] for save and update operations, and enforces entity limit logic.
+ * @property existsDao The [ExistsDao] used to check for the existence of entities.
  */
 internal abstract class LocalDataSource<TModel>(
     private val state: LocalDataSourceState,
-    private val queueDao: QueueDao
+    private val queueDao: QueueDao,
+    private val existsDao: ExistsDao
 ) : AnalysesLocalDataSource<TModel>
     where TModel : Model {
     /**
@@ -25,7 +30,7 @@ internal abstract class LocalDataSource<TModel>(
      * @param model The model to save.
      */
     override suspend fun save(model: TModel) {
-        if (exists(model)) {
+        if (existsDao.exists(model.id)) {
             Log.e(
                 LOG_TAG,
                 "Trying to add an entity that already exists."
@@ -54,7 +59,7 @@ internal abstract class LocalDataSource<TModel>(
      * @param model The model to update.
      */
     override suspend fun update(model: TModel) {
-        if (!exists(model)) {
+        if (!existsDao.exists(model.id)) {
             Log.w(
                 LOG_TAG,
                 "Trying to update an entity that does not exist."
@@ -64,6 +69,27 @@ internal abstract class LocalDataSource<TModel>(
 
         handleUpdate(model)
     }
+
+    /**
+     * Retrieves a model by its ID.
+     *
+     * @param id The unique identifier of the model.
+     * @return [Outcome] containing the model if found, or [Outcome.Failure] with [RepositoryError.NotFound] if not found.
+     */
+    override suspend fun getById(id: String): Outcome<TModel> {
+        if (existsDao.exists(id)) {
+            return Outcome.Failure(RepositoryError.NotFound)
+        }
+        return Outcome.Success(handleGetById(id))
+    }
+
+    /**
+     * Checks if a model with the given ID exists in the local database.
+     *
+     * @param model The model whose existence is to be checked.
+     * @return `true` if the model exists, `false` otherwise.
+     */
+    override suspend fun exists(model: TModel): Boolean = existsDao.exists(model.id)
 
     /**
      * Handles the actual save logic for the model. Must be implemented by subclasses.
@@ -78,6 +104,14 @@ internal abstract class LocalDataSource<TModel>(
      * @param model The model to update.
      */
     internal abstract suspend fun handleUpdate(model: TModel)
+
+    /**
+     * Retrieves a model by its ID from the local database.
+     *
+     * @param id The unique identifier of the model to retrieve.
+     * @return The model corresponding to the given ID.
+     */
+    internal abstract suspend fun handleGetById(id: String): TModel
 
     companion object {
         private val LOG_TAG = LocalDataSource::class.java.simpleName

@@ -14,6 +14,7 @@ import com.openlysis.data.database.entity.message.MessageAnalysisWithResults
 @Dao
 internal interface MessageAnalysisDao :
     EntityDao<MessageAnalysisEntity>,
+    ExistsDao,
     QueueDao {
     /**
      * Deletes the oldest [MessageAnalysisEntity] records that are not in `Queued` or `InProgress` status.
@@ -75,5 +76,5 @@ internal interface MessageAnalysisDao :
      * @return `true` if the entity exists, `false` otherwise.
      */
     @Query("SELECT EXISTS(SELECT 1 FROM MessageAnalysisEntity WHERE id = :id)")
-    suspend fun exists(id: String): Boolean
+    override suspend fun exists(id: String): Boolean
 }

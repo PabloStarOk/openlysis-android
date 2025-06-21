@@ -1,8 +1,6 @@
 package com.openlysis.data.database.source
 
 import android.util.Log
-import com.openlysis.data.analysis.core.error.Outcome
-import com.openlysis.data.analysis.core.error.RepositoryError
 import com.openlysis.data.analysis.model.analysis.FileMultiAnalysis
 import com.openlysis.data.analysis.model.analysis.UrlMultiAnalysis
 import com.openlysis.data.analysis.model.message.MessageAnalysis
@@ -43,7 +41,8 @@ internal class MessageAnalysesLocalDataSource
         private val analysisDao: MessageAnalysisDao
     ) : LocalDataSource<MessageAnalysis>(
             state,
-            queueDao = analysisDao
+            queueDao = analysisDao,
+            existsDao = analysisDao
         ) {
         /**
          * Saves a [MessageAnalysis] and its related analyses to the local database.
@@ -126,19 +125,14 @@ internal class MessageAnalysesLocalDataSource
         }
 
         /**
-         * Retrieves a [MessageAnalysis] by its unique identifier.
+         * Retrieves a [MessageAnalysis] by its unique ID.
          *
-         * @param id The unique identifier of the [MessageAnalysis].
-         * @return [Outcome.Success] containing the [MessageAnalysis] if found, or [Outcome.Failure] with [RepositoryError.NotFound] if not found.
+         * @param id The unique identifier of the [MessageAnalysis] to retrieve.
+         * @return The [MessageAnalysis] object with all related analyses and reputations loaded.
          */
-        override suspend fun getById(id: String): Outcome<MessageAnalysis> {
-            if (!analysisDao.exists(id)) {
-                return Outcome.Failure(RepositoryError.NotFound)
-            }
-
+        override suspend fun handleGetById(id: String): MessageAnalysis {
             val messageAnalysisWithResults = analysisDao.getById(id)
-            val messageAnalysis = buildMessageAnalysis(withResults = messageAnalysisWithResults)
-            return Outcome.Success(messageAnalysis)
+            return buildMessageAnalysis(withResults = messageAnalysisWithResults)
         }
 
         /**
@@ -155,14 +149,6 @@ internal class MessageAnalysesLocalDataSource
             val analysesWithResults = analysisDao.getMany(page, size)
             return analysesWithResults.map { m -> buildMessageAnalysis(withResults = m) }
         }
-
-        /**
-         * Checks if a [MessageAnalysis] exists in the local database.
-         *
-         * @param model The [MessageAnalysis] to check.
-         * @return `true` if the entity exists, `false` otherwise.
-         */
-        override suspend fun exists(model: MessageAnalysis): Boolean = analysisDao.exists(model.id)
 
         /**
          * Builds a [MessageAnalysis] object from a [MessageAnalysisWithResults] entity,

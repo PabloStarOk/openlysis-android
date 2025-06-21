@@ -53,8 +53,12 @@ internal class DefaultAnalysesRepository<TRequest, TModel>
         val outcome = remoteDs.getById(id)
 
         if (outcome is Outcome.Success) {
-            // TODO: Verify if model already exists.
-            localDs.update(outcome.model)
+            val model = outcome.model
+            if (localDs.exists(model)) {
+                localDs.update(model)
+            } else {
+                localDs.save(model)
+            }
         }
 
         return outcome

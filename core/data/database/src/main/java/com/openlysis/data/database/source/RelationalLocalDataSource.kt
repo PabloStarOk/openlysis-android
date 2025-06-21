@@ -1,7 +1,5 @@
 package com.openlysis.data.database.source
 
-import com.openlysis.data.analysis.core.error.Outcome
-import com.openlysis.data.analysis.core.error.RepositoryError
 import com.openlysis.data.analysis.model.common.Model
 import com.openlysis.data.database.dao.QueueDao
 import com.openlysis.data.database.dao.RetrievalDao
@@ -19,7 +17,11 @@ internal abstract class RelationalLocalDataSource<TModel>(
     state: LocalDataSourceState,
     queueDao: QueueDao,
     private val retrievalDao: RetrievalDao<TModel>
-) : LocalDataSource<TModel>(state, queueDao)
+) : LocalDataSource<TModel>(
+        state = state,
+        queueDao = queueDao,
+        existsDao = retrievalDao
+    )
     where TModel : Model {
     /**
      * Saves a list of models with an optional parent ID.
@@ -43,6 +45,11 @@ internal abstract class RelationalLocalDataSource<TModel>(
         models: List<TModel>
     )
 
+    /**
+     * Handles saving a single model by delegating to [save] with a null parent ID.
+     *
+     * @param model The model instance to save.
+     */
     override suspend fun handleSave(model: TModel) {
         save(
             parentId = null,
@@ -50,6 +57,11 @@ internal abstract class RelationalLocalDataSource<TModel>(
         )
     }
 
+    /**
+     * Handles updating a single model by delegating to [update] with a null parent ID.
+     *
+     * @param model The model instance to update.
+     */
     override suspend fun handleUpdate(model: TModel) {
         update(
             parentId = null,
@@ -57,16 +69,21 @@ internal abstract class RelationalLocalDataSource<TModel>(
         )
     }
 
-    override suspend fun getById(id: String): Outcome<TModel> {
-        if (!retrievalDao.exists(id)) {
-            return Outcome.Failure(RepositoryError.NotFound)
-        }
+    /**
+     * Retrieves a [TModel] by its unique ID.
+     *
+     * @param id The unique identifier of the [TModel] to retrieve.
+     * @return The [TModel] object with all related analyses and reputations loaded.
+     */
+    override suspend fun handleGetById(id: String): TModel = retrievalDao.getById(id).buildModel()
 
-        val multiReputationWithReputations = retrievalDao.getById(id)
-        val multiReputation = multiReputationWithReputations.buildModel()
-        return Outcome.Success(multiReputation)
-    }
-
+    /**
+     * Retrieves a paginated list of models.
+     *
+     * @param page The page number to retrieve.
+     * @param size The number of items per page.
+     * @return A list of models for the specified page and size.
+     */
     override suspend fun getMany(
         page: Int,
         size: Int

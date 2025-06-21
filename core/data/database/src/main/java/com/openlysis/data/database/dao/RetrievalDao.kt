@@ -7,7 +7,8 @@ import com.openlysis.data.database.entity.BuildablePojo
  *
  * @param TModel The type of the model to be retrieved.
  */
-internal interface RetrievalDao<TModel> where TModel : Any {
+internal interface RetrievalDao<TModel> : ExistsDao
+    where TModel : Any {
     /**
      * Retrieves a single entity by its unique identifier.
      *
@@ -35,12 +36,4 @@ internal interface RetrievalDao<TModel> where TModel : Any {
      * @return A list of entities wrapped in [BuildablePojo].
      */
     suspend fun getManyByIds(vararg ids: String): List<BuildablePojo<TModel>>
-
-    /**
-     * Checks if an entity exists by its unique identifier.
-     *
-     * @param id The unique identifier of the entity.
-     * @return `true` if the entity exists, `false` otherwise.
-     */
-    suspend fun exists(id: String): Boolean
 }

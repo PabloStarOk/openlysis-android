@@ -95,15 +95,6 @@ internal class PhoneMultiReputationsLocalDataSource
         }
 
         /**
-         * Checks if a [MultiReputation]<[PhoneNumberReputation]> exists in the local database.
-         *
-         * @param model The [MultiReputation]<[PhoneNumberReputation]> to check.
-         * @return `true` if the entity exists, `false` otherwise.
-         */
-        override suspend fun exists(model: MultiReputation<PhoneNumberReputation>): Boolean =
-            multiReputationDao.exists(model.id)
-
-        /**
          * Converts models to their corresponding [PhoneReputationEntity] and [MultiReputationEntity] arrays.
          *
          * @param parentId The parent entity ID, or `null` if not applicable.

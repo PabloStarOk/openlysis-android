@@ -95,15 +95,6 @@ internal class EmailMultiReputationsLocalDataSource
         }
 
         /**
-         * Checks if a MultiReputation\<EmailAddressReputation\> entity exists in the database by its ID.
-         *
-         * @param model The ID of the MultiReputation entity.
-         * @return `true` if the entity exists, `false` otherwise.
-         */
-        override suspend fun exists(model: MultiReputation<EmailAddressReputation>): Boolean =
-            multiReputationDao.exists(model.id)
-
-        /**
          * Converts models to their corresponding [EmailReputationEntity] and [MultiReputationEntity] arrays.
          *
          * @param parentId The parent entity ID, or `null` if not applicable.

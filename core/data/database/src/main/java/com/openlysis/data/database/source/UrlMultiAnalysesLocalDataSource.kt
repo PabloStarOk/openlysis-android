@@ -93,15 +93,6 @@ internal class UrlMultiAnalysesLocalDataSource
         }
 
         /**
-         * Checks if a [UrlMultiAnalysis] exists in the local database.
-         *
-         * @param model The [UrlMultiAnalysis] to check.
-         * @return `true` if the entity exists, `false` otherwise.
-         */
-        override suspend fun exists(model: UrlMultiAnalysis): Boolean =
-            multiAnalysisDao.exists(model.id)
-
-        /**
          * Converts models to their corresponding [UrlAnalysisEntity] and [UrlMultiAnalysisEntity] arrays.
          *
          * @param parentId The parent entity ID, or `null` if not applicable.
