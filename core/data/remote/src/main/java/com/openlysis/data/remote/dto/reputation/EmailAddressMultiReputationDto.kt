@@ -31,7 +31,7 @@ internal data class EmailAddressMultiReputationDto(
     internal fun convertToModel(): MultiReputation<EmailAddressReputation> =
         MultiReputation<EmailAddressReputation>(
             id = id,
-            date = Instant.parse(evaluationDate),
+            evaluationDate = Instant.parse(evaluationDate),
             finalVerdict = Verdict.parse(finalVerdict),
             data = emailAddress,
             reputations = reputations.map { r -> r.convertToModel() }

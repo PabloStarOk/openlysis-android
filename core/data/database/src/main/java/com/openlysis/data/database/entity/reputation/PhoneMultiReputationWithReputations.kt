@@ -28,7 +28,7 @@ internal data class PhoneMultiReputationWithReputations(
     override fun buildModel(): MultiReputation<PhoneNumberReputation> =
         MultiReputation(
             id = multiReputation.id,
-            date = multiReputation.evaluationDate,
+            evaluationDate = multiReputation.evaluationDate,
             finalVerdict = multiReputation.finalVerdict,
             data = multiReputation.data,
             reputations = reputations.map { r -> r.convertToModel() }

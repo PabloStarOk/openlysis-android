@@ -10,14 +10,14 @@ import java.time.Instant
  *
  * @param TReputation The specific type of reputation data being held. This type must be a subclass of [Reputation].
  * @property id A unique identifier for this multi-reputation analysis.
- * @property date The timestamp indicating when this multi-reputation analysis was performed.
+ * @property evaluationDate The timestamp indicating when this multi-reputation evaluation was performed.
  * @property finalVerdict The conclusive [Verdict] derived from the combined reputation sources.
  * @property data The data related to the multi-reputation, (e.g. An email address or phone number).
  * @property reputations A list of objects derived from [Reputation].
  */
 class MultiReputation<TReputation>(
     id: String,
-    val date: Instant,
+    val evaluationDate: Instant,
     val finalVerdict: Verdict,
     val data: String,
     val reputations: List<TReputation>

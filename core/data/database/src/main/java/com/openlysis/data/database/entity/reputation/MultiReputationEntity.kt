@@ -54,7 +54,7 @@ internal data class MultiReputationEntity(
             where TReputation : Reputation =
         MultiReputation(
             id = id,
-            date = evaluationDate,
+            evaluationDate = evaluationDate,
             finalVerdict = finalVerdict,
             data = data,
             reputations = reputations
@@ -78,7 +78,7 @@ internal data class MultiReputationEntity(
             MultiReputationEntity(
                 id = model.id,
                 dataType = dataType,
-                evaluationDate = model.date,
+                evaluationDate = model.evaluationDate,
                 finalVerdict = model.finalVerdict,
                 data = model.data,
                 messageAnalysisId = messageAnalysisId,

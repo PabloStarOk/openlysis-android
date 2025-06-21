@@ -31,7 +31,7 @@ internal data class PhoneNumberMultiReputationDto(
     internal fun convertToModel(): MultiReputation<PhoneNumberReputation> =
         MultiReputation<PhoneNumberReputation>(
             id = id,
-            date = Instant.parse(evaluationDate),
+            evaluationDate = Instant.parse(evaluationDate),
             finalVerdict = Verdict.parse(finalVerdict),
             data = phoneNumber,
             reputations = reputations.map { r -> r.convertToModel() }

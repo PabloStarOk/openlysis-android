@@ -209,7 +209,7 @@ internal object Debugging {
     private fun getMultiReputationLog(reputation: MultiReputation<*>): String {
         val repLogBuilder = StringBuilder()
         repLogBuilder.appendLine("\tID: ${reputation.id}")
-        repLogBuilder.appendLine("\tDate: ${reputation.date}")
+        repLogBuilder.appendLine("\tDate: ${reputation.evaluationDate}")
         repLogBuilder.appendLine("\tFinal verdict: ${reputation.finalVerdict}")
         repLogBuilder.appendLine("\tData: ${reputation.data}")
         repLogBuilder.appendLine("\tReputations: [")
