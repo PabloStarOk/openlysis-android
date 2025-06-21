@@ -2,6 +2,7 @@ package com.openlysis.data.analysis.core.source
 
 import com.openlysis.data.analysis.core.error.Outcome
 import com.openlysis.data.analysis.core.response.AnalyzeResponse
+import com.openlysis.data.analysis.model.common.Model
 
 /**
  * A remote data source to perform and retrieve analyses.
@@ -10,7 +11,7 @@ import com.openlysis.data.analysis.core.response.AnalyzeResponse
  * @param TModel The type of the model returned by data retrieval methods.
  */
 interface AnalysesRemoteDataSource<TRequest, TModel>
-    where TRequest : Any, TModel : Any {
+    where TRequest : Any, TModel : Model {
     /**
      * Starts an analysis with the given request.
      *

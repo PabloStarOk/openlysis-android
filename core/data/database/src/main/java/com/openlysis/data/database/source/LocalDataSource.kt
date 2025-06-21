@@ -2,6 +2,7 @@ package com.openlysis.data.database.source
 
 import android.util.Log
 import com.openlysis.data.analysis.core.source.AnalysesLocalDataSource
+import com.openlysis.data.analysis.model.common.Model
 import com.openlysis.data.database.dao.QueueDao
 
 /**
@@ -17,7 +18,7 @@ internal abstract class LocalDataSource<TModel>(
     private val state: LocalDataSourceState,
     private val queueDao: QueueDao
 ) : AnalysesLocalDataSource<TModel>
-    where TModel : Any {
+    where TModel : Model {
     /**
      * Saves a model to the local database, deleting the oldest entity if the limit is reached.
      *

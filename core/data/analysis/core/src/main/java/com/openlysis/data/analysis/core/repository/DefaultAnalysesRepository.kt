@@ -3,6 +3,7 @@ package com.openlysis.data.analysis.core.repository
 import com.openlysis.data.analysis.core.error.Outcome
 import com.openlysis.data.analysis.core.source.AnalysesLocalDataSource
 import com.openlysis.data.analysis.core.source.AnalysesRemoteDataSource
+import com.openlysis.data.analysis.model.common.Model
 import javax.inject.Inject
 
 /**
@@ -20,7 +21,7 @@ internal class DefaultAnalysesRepository<TRequest, TModel>
         private val localDs: AnalysesLocalDataSource<TModel>,
         private val remoteDs: AnalysesRemoteDataSource<TRequest, TModel>
     ) : AnalysesRepository<TRequest, TModel>
-    where TRequest : Any, TModel : Any {
+    where TRequest : Any, TModel : Model {
     override suspend fun analyze(request: TRequest): Outcome<TModel> {
         val outcome = remoteDs.analyze(request)
         var id = ""

@@ -2,6 +2,7 @@ package com.openlysis.data.database.source
 
 import com.openlysis.data.analysis.core.error.Outcome
 import com.openlysis.data.analysis.core.error.RepositoryError
+import com.openlysis.data.analysis.model.common.Model
 import com.openlysis.data.database.dao.QueueDao
 import com.openlysis.data.database.dao.RetrievalDao
 
@@ -19,7 +20,7 @@ internal abstract class RelationalLocalDataSource<TModel>(
     queueDao: QueueDao,
     private val retrievalDao: RetrievalDao<TModel>
 ) : LocalDataSource<TModel>(state, queueDao)
-    where TModel : Any {
+    where TModel : Model {
     /**
      * Saves a list of models with an optional parent ID.
      *

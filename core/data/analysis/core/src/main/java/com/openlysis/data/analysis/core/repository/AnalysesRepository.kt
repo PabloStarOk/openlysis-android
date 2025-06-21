@@ -1,6 +1,7 @@
 package com.openlysis.data.analysis.core.repository
 
 import com.openlysis.data.analysis.core.error.Outcome
+import com.openlysis.data.analysis.model.common.Model
 
 /**
  * Repository interface for analyzing data and retrieving analysis results.
@@ -10,7 +11,7 @@ import com.openlysis.data.analysis.core.error.Outcome
  */
 interface AnalysesRepository<TRequest, TModel>
     where TRequest : Any,
-          TModel : Any {
+          TModel : Model {
     /**
      * Analyzes the provided request and returns the analysis result.
      *

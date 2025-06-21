@@ -4,6 +4,7 @@ import com.openlysis.data.analysis.core.error.Outcome
 import com.openlysis.data.analysis.core.error.RepositoryError
 import com.openlysis.data.analysis.core.response.AnalyzeResponse
 import com.openlysis.data.analysis.core.source.AnalysesRemoteDataSource
+import com.openlysis.data.analysis.model.common.Model
 import com.openlysis.data.remote.OpenlysisApi
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
@@ -27,7 +28,7 @@ import kotlin.coroutines.cancellation.CancellationException
  */
 internal abstract class BaseAnalysesRemoteDataSource<TRequest, TModel>(
     protected val api: OpenlysisApi
-) : AnalysesRemoteDataSource<TRequest, TModel> where TRequest : Any, TModel : Any {
+) : AnalysesRemoteDataSource<TRequest, TModel> where TRequest : Any, TModel : Model {
     override suspend fun analyze(request: TRequest): Outcome<AnalyzeResponse> =
         callApiSafely {
             handleAnalyze(request)

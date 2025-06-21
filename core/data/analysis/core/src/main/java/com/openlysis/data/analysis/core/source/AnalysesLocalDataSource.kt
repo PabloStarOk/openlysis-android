@@ -1,13 +1,14 @@
 package com.openlysis.data.analysis.core.source
 
 import com.openlysis.data.analysis.core.error.Outcome
+import com.openlysis.data.analysis.model.common.Model
 
 /**
  * Interface for local data source operations on analysis models.
  *
  * @param TModel The type of the model to be persisted and retrieved.
  */
-interface AnalysesLocalDataSource<TModel> where TModel : Any {
+interface AnalysesLocalDataSource<TModel> where TModel : Model {
     /**
      * Saves a model to the local data source.
      *
