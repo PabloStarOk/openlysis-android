@@ -2,6 +2,7 @@ package com.openlysis.data.database.entity.reputation
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.openlysis.data.analysis.model.common.Verdict
 import com.openlysis.data.analysis.model.reputation.MultiReputation
@@ -30,7 +31,8 @@ import java.time.Instant
             onUpdate = ForeignKey.CASCADE,
             onDelete = ForeignKey.CASCADE
         )
-    ]
+    ],
+    indices = [Index("messageAnalysisId")]
 )
 internal data class MultiReputationEntity(
     @PrimaryKey val id: String,

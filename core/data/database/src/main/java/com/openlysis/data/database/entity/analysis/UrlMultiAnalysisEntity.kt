@@ -3,6 +3,7 @@ package com.openlysis.data.database.entity.analysis
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.openlysis.data.analysis.model.analysis.Analysis
 import com.openlysis.data.analysis.model.analysis.UrlMultiAnalysis
@@ -25,7 +26,8 @@ import java.net.URI
             onUpdate = ForeignKey.CASCADE,
             onDelete = ForeignKey.CASCADE
         )
-    ]
+    ],
+    indices = [Index("messageAnalysisId")]
 )
 internal data class UrlMultiAnalysisEntity(
     @PrimaryKey val id: String,

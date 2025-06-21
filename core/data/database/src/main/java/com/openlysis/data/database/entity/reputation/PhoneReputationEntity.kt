@@ -2,6 +2,7 @@ package com.openlysis.data.database.entity.reputation
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.openlysis.data.analysis.model.common.Verdict
 import com.openlysis.data.analysis.model.reputation.PhoneNumberReputation
@@ -27,7 +28,8 @@ import com.openlysis.data.analysis.model.reputation.PhoneNumberReputation
             onUpdate = ForeignKey.CASCADE,
             onDelete = ForeignKey.CASCADE
         )
-    ]
+    ],
+    indices = [Index("multiReputationId")]
 )
 internal data class PhoneReputationEntity(
     @PrimaryKey val id: String,
