@@ -11,4 +11,5 @@ internal object ApiEndpoints {
     const val GET_URL_MULTI_ANALYSIS = "urls/analyses/{id}"
     const val GET_FILE_MULTI_ANALYSIS = "files/analyses/{id}"
     const val GET_MESSAGE_ANALYSIS = "messages/analyses/{id}"
+    const val GET_ANALYSES = "users/analyses"
 }

@@ -42,10 +42,26 @@ internal class UrlMultiAnalysesRemoteDataSource
             return convertToModelIfSuccess(response) { it.convertToModel() }
         }
 
+        /**
+         * Retrieves a paginated list of URL multi-analysis results.
+         *
+         * @param page The page number to retrieve.
+         * @param size The number of items per page.
+         * @return A [Response] containing a list of [UrlMultiAnalysis] models if successful, or an error response otherwise.
+         */
         override suspend fun handleGetMany(
             page: Int,
             size: Int
         ): Response<List<UrlMultiAnalysis>> {
-            TODO("Not yet implemented")
+            val response =
+                api.getUrlMultiAnalyses(
+                    page = page,
+                    pageSize = size
+                )
+            return convertToModelIfSuccess(response) {
+                it.analyses.map { a ->
+                    a.convertToModel()
+                }
+            }
         }
     }

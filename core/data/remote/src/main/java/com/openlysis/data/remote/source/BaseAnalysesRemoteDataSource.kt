@@ -42,14 +42,10 @@ internal abstract class BaseAnalysesRemoteDataSource<TRequest, TModel>(
     override suspend fun getMany(
         page: Int,
         size: Int
-    ): List<TModel> {
-        val outcome = callApiSafely<List<TModel>> { handleGetMany(page, size) }
-        if (outcome is Outcome.Success) {
-            return outcome.model
+    ): Outcome<List<TModel>> =
+        callApiSafely {
+            handleGetMany(page, size)
         }
-
-        return emptyList()
-    }
 
     /**
      * Handles the analysis request for the given input.

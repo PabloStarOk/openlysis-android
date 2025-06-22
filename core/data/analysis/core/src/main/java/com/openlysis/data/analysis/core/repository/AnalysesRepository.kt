@@ -43,7 +43,8 @@ interface AnalysesRepository<TRequest, TModel>
      * Retrieves a paginated list of models.
      *
      * @param page The page number to retrieve.
-     * @return A list of models of type [TModel] for the specified page.
+     * @return An [Outcome] containing a list of models of type [TModel] for the specified page.
+     *         If the outcome is a failure, it will contain an error.
      */
-    suspend fun getManyPaged(page: Int): List<TModel>
+    suspend fun getManyPaged(page: Int): Outcome<List<TModel>>
 }

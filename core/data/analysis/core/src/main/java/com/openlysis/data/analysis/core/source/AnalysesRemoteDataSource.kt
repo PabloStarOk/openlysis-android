@@ -38,5 +38,5 @@ interface AnalysesRemoteDataSource<TRequest, TModel>
     suspend fun getMany(
         page: Int,
         size: Int
-    ): List<TModel>
+    ): Outcome<List<TModel>>
 }

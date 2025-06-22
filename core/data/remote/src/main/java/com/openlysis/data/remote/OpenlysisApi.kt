@@ -4,7 +4,11 @@ import com.openlysis.data.analysis.core.response.AnalyzeResponse
 import com.openlysis.data.remote.constant.ApiEndpoints
 import com.openlysis.data.remote.constant.ApiFields
 import com.openlysis.data.remote.dto.analysis.FileMultiAnalysisDto
+import com.openlysis.data.remote.dto.analysis.GetFileMultiAnalysesDto
+import com.openlysis.data.remote.dto.analysis.GetUrlMultiAnalysesDto
 import com.openlysis.data.remote.dto.analysis.UrlMultiAnalysisDto
+import com.openlysis.data.remote.dto.common.AnalysisType
+import com.openlysis.data.remote.dto.message.GetMessageAnalysesDto
 import com.openlysis.data.remote.dto.message.MessageAnalysisDto
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -16,6 +20,7 @@ import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 /**
  * Retrofit interface for Openlysis API endpoints.
@@ -109,4 +114,46 @@ internal interface OpenlysisApi {
     suspend fun getMessageAnalysis(
         @Path(ApiFields.ANALYSIS_ID) id: String
     ): Response<MessageAnalysisDto>
+
+    /**
+     * Retrieves a paginated list of [UrlMultiAnalysisDto] objects.
+     *
+     * @param page The page number to retrieve.
+     * @param pageSize The number of items per page.
+     * @param type The type of analysis to retrieve which must be fixed to url.
+     */
+    @GET(ApiEndpoints.GET_ANALYSES)
+    suspend fun getUrlMultiAnalyses(
+        @Query(ApiFields.PAGE) page: Int,
+        @Query(ApiFields.PAGE_SIZE) pageSize: Int,
+        @Query(ApiFields.ANALYSIS_TYPE) type: AnalysisType = AnalysisType.Url
+    ): Response<GetUrlMultiAnalysesDto>
+
+    /**
+     * Retrieves a paginated list of [FileMultiAnalysisDto] objects.
+     *
+     * @param page The page number to retrieve.
+     * @param pageSize The number of items per page.
+     * @param type The type of analysis to retrieve which must be fixed to file.
+     */
+    @GET(ApiEndpoints.GET_ANALYSES)
+    suspend fun getFileMultiAnalyses(
+        @Query(ApiFields.PAGE) page: Int,
+        @Query(ApiFields.PAGE_SIZE) pageSize: Int,
+        @Query(ApiFields.ANALYSIS_TYPE) type: AnalysisType = AnalysisType.File
+    ): Response<GetFileMultiAnalysesDto>
+
+    /**
+     * Retrieves a paginated list of [MessageAnalysisDto] objects.
+     *
+     * @param page The page number to retrieve.
+     * @param pageSize The number of items per page.
+     * @param type The type of analysis to retrieve which must be fixed to message.
+     */
+    @GET(ApiEndpoints.GET_ANALYSES)
+    suspend fun getMessageAnalyses(
+        @Query(ApiFields.PAGE) page: Int,
+        @Query(ApiFields.PAGE_SIZE) pageSize: Int,
+        @Query(ApiFields.ANALYSIS_TYPE) type: AnalysisType = AnalysisType.Message
+    ): Response<GetMessageAnalysesDto>
 }

@@ -23,4 +23,9 @@ internal object ApiFields {
     const val MESSAGE_FILES = "attachedFiles"
     const val MESSAGE_PASSWORDS = "attachedFilesPasswords"
     const val MESSAGE_COUNTRY_CODE = "countryCode"
+
+    // Get analyses
+    const val ANALYSIS_TYPE = "type"
+    const val PAGE = "page"
+    const val PAGE_SIZE = "pageSize"
 }

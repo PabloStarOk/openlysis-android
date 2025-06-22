@@ -5,6 +5,7 @@ import com.openlysis.data.analysis.core.response.AnalyzeResponse
 import com.openlysis.data.analysis.model.analysis.FileMultiAnalysis
 import com.openlysis.data.remote.OpenlysisApi
 import com.openlysis.data.remote.constant.ApiFields
+import com.openlysis.data.remote.dto.common.AnalysisType
 import retrofit2.Response
 import javax.inject.Inject
 
@@ -48,10 +49,27 @@ internal class FileMultiAnalysesRemoteDataSource
             return convertToModelIfSuccess(response) { it.convertToModel() }
         }
 
+        /**
+         * Retrieves a paginated list of file multi-analysis results.
+         *
+         * @param page The page number to retrieve.
+         * @param size The number of items per page.
+         * @return A [Response] containing a list of [FileMultiAnalysis] models if successful, or an error response otherwise.
+         */
         override suspend fun handleGetMany(
             page: Int,
             size: Int
         ): Response<List<FileMultiAnalysis>> {
-            TODO("Not yet implemented")
+            val response =
+                api.getFileMultiAnalyses(
+                    type = AnalysisType.File,
+                    page = page,
+                    pageSize = size
+                )
+            return convertToModelIfSuccess(response) {
+                it.analyses.map { a ->
+                    a.convertToModel()
+                }
+            }
         }
     }

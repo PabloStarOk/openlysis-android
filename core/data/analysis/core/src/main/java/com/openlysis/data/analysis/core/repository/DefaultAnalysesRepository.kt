@@ -64,16 +64,20 @@ internal class DefaultAnalysesRepository<TRequest, TModel>
         return outcome
     }
 
-    override suspend fun getManyPaged(page: Int): List<TModel> {
+    override suspend fun getManyPaged(page: Int): Outcome<List<TModel>> {
         val pageSize = settings.paginationSize
         val localResults = localDs.getMany(page, pageSize)
         if (localResults.size == pageSize) {
-            return localResults
+            return Outcome.Success(localResults)
         }
 
         val missingResults = pageSize - localResults.size
-        val remoteResults = remoteDs.getMany(page, missingResults)
+        val remoteResultsOutcome = remoteDs.getMany(page, missingResults)
 
-        return localResults.plus(remoteResults)
+        return if (remoteResultsOutcome is Outcome.Success) {
+            Outcome.Success(localResults.plus(remoteResultsOutcome.model))
+        } else {
+            remoteResultsOutcome
+        }
     }
 }

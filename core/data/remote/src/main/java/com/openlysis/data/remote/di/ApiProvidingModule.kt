@@ -10,6 +10,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
+import retrofit2.converter.moshi.MoshiConverterFactory
 import javax.inject.Singleton
 
 /**
@@ -37,6 +38,7 @@ internal object ApiProvidingModule {
         return Retrofit
             .Builder()
             .baseUrl(apiClientSettings.baseUrl)
+            .addConverterFactory(MoshiConverterFactory.create())
             .client(client)
             .build()
             .create(OpenlysisApi::class.java)
