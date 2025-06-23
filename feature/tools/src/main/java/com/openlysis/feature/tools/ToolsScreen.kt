@@ -11,7 +11,7 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -41,7 +41,7 @@ internal fun ToolsScreen(
 ) {
     val scrollState = rememberScrollState()
     val modalState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    var activeCategory by remember { mutableStateOf<ToolCategory>(ToolCategory.None) }
+    var activeCategory by rememberSaveable { mutableStateOf<ToolCategory>(ToolCategory.None) }
 
     Column(
         verticalArrangement = Arrangement.spacedBy(LocalAppSpacing.current.value800),
