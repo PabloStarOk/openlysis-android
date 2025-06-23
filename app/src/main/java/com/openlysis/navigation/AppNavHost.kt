@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.openlysis.feature.tools.navigation.ToolsNestedGraphRoute
+import com.openlysis.feature.tools.navigation.ToolsRoute
 import com.openlysis.feature.tools.navigation.toolsScreen
 import com.openlysis.ui.AppState
 
@@ -26,7 +26,7 @@ internal fun AppNavHost(
 ) {
     NavHost(
         navController = appState.navController,
-        startDestination = ToolsNestedGraphRoute,
+        startDestination = ToolsRoute,
         modifier = modifier
     ) {
         toolsScreen(

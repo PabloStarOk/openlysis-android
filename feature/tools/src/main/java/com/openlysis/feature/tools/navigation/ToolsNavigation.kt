@@ -14,13 +14,7 @@ import com.openlysis.feature.tools.data.ToolsDataSource
 import kotlinx.serialization.Serializable
 
 /**
- * Route to the tools nested graph.
- */
-@Serializable
-object ToolsNestedGraphRoute
-
-/**
- * Route for accessing the tools main screen of the nested graph.
+ * Route for accessing the tools screen.
  */
 @Serializable
 object ToolsRoute
@@ -32,7 +26,7 @@ fun NavController.navigateToTools(navOptions: NavOptions) =
     navigate(ToolsRoute, navOptions = navOptions)
 
 /**
- * Adds the tool screen as a nested graph to the navigation.
+ * Adds the tool screen to the navigation graph.
  */
 fun NavGraphBuilder.toolsScreen(
     enterTransition: (
@@ -52,16 +46,12 @@ fun NavGraphBuilder.toolsScreen(
     -> @JvmSuppressWildcards ExitTransition?
     ) = exitTransition
 ) {
-    navigation<ToolsNestedGraphRoute> (
-        startDestination = ToolsRoute
+    composable<ToolsRoute>(
+        enterTransition = enterTransition,
+        exitTransition = exitTransition,
+        popEnterTransition = popEnterTransition,
+        popExitTransition = popExitTransition
     ) {
-        composable<ToolsRoute>(
-            enterTransition = enterTransition,
-            exitTransition = exitTransition,
-            popEnterTransition = popEnterTransition,
-            popExitTransition = popExitTransition
-        ) {
-            ToolsScreen(ToolsDataSource())
-        }
+        ToolsScreen(ToolsDataSource())
     }
 }
