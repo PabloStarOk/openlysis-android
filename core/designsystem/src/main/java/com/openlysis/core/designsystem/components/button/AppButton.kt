@@ -120,7 +120,7 @@ fun AppButton(
 @Preview(showSystemUi = true)
 @Composable
 private fun PrimaryButtonPreview() {
-    OpenlysisTheme(darkTheme = false) {
+    OpenlysisTheme(darkTheme = true) {
         AppButton(
             type = ButtonType.Primary,
             size = SizeType.Default,
