@@ -57,30 +57,31 @@ fun AppButton(
     icon: ImageVector? = null,
     iconAlt: String? = null
 ) {
-    val type = ButtonTypeColorsMap.getValue(type)
+    val colorMap = ButtonTypeColorsMap.getValue(type)
     val size = ButtonSizeTypeMap.getValue(size)
     val ripple =
         ripple(
             bounded = true,
-            color = type.getRippleColor(LocalAppColorScheme.current)
+            color = colorMap.getRippleColor(LocalAppColorScheme.current)
         )
 
     Surface(
-        color = type.getBackgroundColor(LocalAppColorScheme.current),
+        color = colorMap.getBackgroundColor(LocalAppColorScheme.current),
         shape = RoundedCornerShape(LocalAppRadius.current.value100),
         modifier =
             modifier
                 .clip(RoundedCornerShape(LocalAppRadius.current.value100))
                 .border(
                     width = 1.dp,
-                    color = type.getBorderColor(LocalAppColorScheme.current),
+                    color = colorMap.getBorderColor(LocalAppColorScheme.current),
                     shape = RoundedCornerShape(LocalAppRadius.current.value100)
                 ).heightIn(min = size.height, max = size.height)
                 .clickable(
                     onClick = onClick,
                     interactionSource = remember { MutableInteractionSource() },
                     indication = ripple,
-                    role = Role.Button
+                    role = Role.Button,
+                    enabled = type.enabled
                 )
     ) {
         Row(
@@ -99,7 +100,7 @@ fun AppButton(
                 Icon(
                     imageVector = icon,
                     contentDescription = iconAlt,
-                    tint = type.getForegroundColor(LocalAppColorScheme.current),
+                    tint = colorMap.getForegroundColor(LocalAppColorScheme.current),
                     modifier = Modifier.size(size.iconSize)
                 )
             }
@@ -107,7 +108,7 @@ fun AppButton(
             if (displayLabel && !label.isNullOrBlank()) {
                 Text(
                     text = label,
-                    color = type.getForegroundColor(LocalAppColorScheme.current),
+                    color = colorMap.getForegroundColor(LocalAppColorScheme.current),
                     style = size.getTextStyle(LocalAppTypography.current),
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 1
