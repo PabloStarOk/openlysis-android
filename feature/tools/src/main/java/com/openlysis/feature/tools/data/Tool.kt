@@ -19,7 +19,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
  *                             This is used by screen readers to describe the icon.
  * @property onClick A lambda function that will be executed when the tool is clicked.
  */
-internal class Tool(
+internal data class Tool(
     @StringRes val nameResource: Int,
     @StringRes val descriptionResource: Int,
     @DrawableRes val iconResource: Int,

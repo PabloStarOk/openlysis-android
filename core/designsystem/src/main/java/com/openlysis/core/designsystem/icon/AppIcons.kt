@@ -47,4 +47,13 @@ object AppIcons {
 
     val Cross: ImageVector
         @Composable get() = ImageVector.vectorResource(R.drawable.x_icon)
+
+    val Plus: ImageVector
+        @Composable get() = ImageVector.vectorResource(R.drawable.plus_icon)
+
+    val Eye: ImageVector
+        @Composable get() = ImageVector.vectorResource(R.drawable.eye_icon)
+
+    val EyeOff: ImageVector
+        @Composable get() = ImageVector.vectorResource(R.drawable.eye_off_icon)
 }

@@ -17,4 +17,26 @@
     <string name="sms_messages_tool_icon_alt">Icono de un mensaje de texto SMS.</string>
     <string name="file_tool_icon_alt">Icono de un archivo.</string>
     <string name="url_tool_icon_alt">Icono de un enlace.</string>
+
+    <string name="analyze_button_label">Analizar</string>
+    <string name="analyze_button_icon_alt">Ícono de analizar</string>
+
+    <string name="analyze_message_sender_input_label">Remitente</string>
+    <string name="analyze_message_subject_input_label">Asunto</string>
+    <string name="analyze_message_content_input_label">Contenido</string>
+
+    <string name="attached_file_header_icon_alt">Ícono de archivo</string>
+    <string name="attached_file_detach_button_icon_alt">Ícono para quitar archivo</string>
+    <string name="attached_file_password_input_label">Contraseña</string>
+    <string name="attached_file_show_password_button_icon_alt">Ícono para mostrar contraseña</string>
+    <string name="attached_file_hide_password_button_icon_alt">Ícono para ocultar contraseña</string>
+
+    <string name="attach_file_warning_alert">Nunca añadas archivos privados o confidenciales.</string>
+    <string name="attach_file_button_label">Agregar archivo</string>
+    <string name="attach_file_button_icon_alt">Icono para agregar archivo</string>
+
+    <string name="email_message_tool_modal_title">Analizar Correo Electrónico</string>
+    <string name="email_message_tool_modal_description">Ingresa la información del mensaje o selecciona uno desde la bandeja de una de tus cuentas.</string>
+    <string name="email_message_tool_modal_file_title">Archivos Adjuntos</string>
+    <string name="email_message_tool_modal_file_description">Añade archivos relacionados con el mensaje para analizarlos.</string>
 </resources>

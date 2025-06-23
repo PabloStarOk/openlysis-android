@@ -17,4 +17,26 @@
     <string name="sms_messages_tool_icon_alt">SMS icon.</string>
     <string name="file_tool_icon_alt">File icon.</string>
     <string name="url_tool_icon_alt">URL icon.</string>
+
+    <string name="analyze_button_label">Analyze</string>
+    <string name="analyze_button_icon_alt">Analyze icon</string>
+
+    <string name="analyze_message_sender_input_label">Sender</string>
+    <string name="analyze_message_subject_input_label">Subject</string>
+    <string name="analyze_message_content_input_label">Content</string>
+
+    <string name="attached_file_header_icon_alt">File icon</string>
+    <string name="attached_file_detach_button_icon_alt">Detach file icon</string>
+    <string name="attached_file_password_input_label">Password</string>
+    <string name="attached_file_show_password_button_icon_alt">Show password icon</string>
+    <string name="attached_file_hide_password_button_icon_alt">Hide password icon</string>
+
+    <string name="attach_file_warning_alert">Never add private or confidential files.</string>
+    <string name="attach_file_button_label">Add File</string>
+    <string name="attach_file_button_icon_alt">Add file icon</string>
+
+    <string name="email_message_tool_modal_title">Analyze Email</string>
+    <string name="email_message_tool_modal_description">Enter an email’s details or select one from your inbox.</string>
+    <string name="email_message_tool_modal_file_title">Attached Files</string>
+    <string name="email_message_tool_modal_file_description">Add files from the email to include in the analysis.</string>
 </resources>
