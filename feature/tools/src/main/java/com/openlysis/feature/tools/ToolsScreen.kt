@@ -23,6 +23,7 @@ import com.openlysis.core.designsystem.theme.OpenlysisTheme
 import com.openlysis.core.designsystem.theme.size.LocalAppSpacing
 import com.openlysis.feature.tools.components.ToolCard
 import com.openlysis.feature.tools.data.Tool
+import com.openlysis.feature.tools.data.ToolCategory
 import com.openlysis.feature.tools.data.ToolsDataSource
 import com.openlysis.feature.tools.data.ToolsRepository
 
@@ -39,11 +40,8 @@ internal fun ToolsScreen(
     modifier: Modifier = Modifier
 ) {
     val scrollState = rememberScrollState()
-    val modalState =
-        rememberModalBottomSheetState(
-            skipPartiallyExpanded = true
-        )
-    var showEmailToolModal by remember { mutableStateOf(false) }
+    val modalState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    var activeCategory by remember { mutableStateOf<ToolCategory>(ToolCategory.None) }
 
     Column(
         verticalArrangement = Arrangement.spacedBy(LocalAppSpacing.current.value800),
@@ -58,9 +56,7 @@ internal fun ToolsScreen(
                 repository.getMessageAnalysisTools().forEach { tool ->
                     MapToolCard(
                         tool = tool,
-                        onClick = {
-                            showEmailToolModal = true
-                        }
+                        onClick = { activeCategory = tool.category }
                     )
                 }
             }
@@ -72,18 +68,23 @@ internal fun ToolsScreen(
                 repository.getDataAnalysisTools().forEach { tool ->
                     MapToolCard(
                         tool = tool,
-                        onClick = { }
+                        onClick = { activeCategory = tool.category }
                     )
                 }
             }
         )
     }
 
-    if (showEmailToolModal) {
-        AnalyzeEmailModal(
-            onDismissRequest = { showEmailToolModal = false },
-            state = modalState
-        )
+    when (activeCategory) {
+        ToolCategory.None -> { }
+        ToolCategory.Email ->
+            AnalyzeEmailModal(
+                onDismissRequest = { activeCategory = ToolCategory.None },
+                state = modalState
+            )
+        ToolCategory.Sms -> { }
+        ToolCategory.Url -> { }
+        ToolCategory.File -> { }
     }
 }
 
