@@ -80,7 +80,7 @@ internal fun ToolsScreen(
         ToolCategory.Email ->
             AnalyzeEmailModal(
                 onDismissRequest = { activeCategory = ToolCategory.None },
-                state = modalState
+                modalState = modalState
             )
         ToolCategory.Sms -> { }
         ToolCategory.Url -> { }

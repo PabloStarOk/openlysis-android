@@ -65,3 +65,4 @@ json-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version
 google-devtools-ksp = { id = "com.google.devtools.ksp", version = "2.1.21-2.0.2" }
 google-dagger-hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt"}
 androidx-room = { id = "androidx.room", version.ref = "room" }
+kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize" }

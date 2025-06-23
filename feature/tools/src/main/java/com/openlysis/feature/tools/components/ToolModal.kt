@@ -50,10 +50,18 @@ internal fun ToolModal(
     state: SheetState,
     submitButtonLabel: String,
     submitButtonIconAlt: String,
+    submitEnabled: Boolean,
     modifier: Modifier = Modifier,
     content: @Composable ColumnScope.() -> Unit
 ) {
     val scrollState = rememberScrollState()
+    val submitButtonType =
+        if (submitEnabled) {
+            ButtonType.Primary
+        } else {
+            ButtonType.PrimaryDisabled
+        }
+
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
         sheetState = state,
@@ -104,7 +112,7 @@ internal fun ToolModal(
                         )
             ) {
                 AppButton(
-                    type = ButtonType.Primary,
+                    type = submitButtonType,
                     size = SizeType.Default,
                     onClick = onSubmitClick,
                     displayLabel = true,
@@ -129,6 +137,7 @@ private fun ToolModalPreview() {
             onDismissRequest = { },
             submitButtonLabel = "Test",
             submitButtonIconAlt = "Test",
+            submitEnabled = true,
             state =
                 SheetState(
                     skipPartiallyExpanded = true,

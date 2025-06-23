@@ -2,10 +2,10 @@ package com.openlysis.feature.tools.components
 
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -18,26 +18,21 @@ import com.openlysis.feature.tools.R
 /**
  * Section for entering message details in a modal, including sender, subject (if email), and content fields.
  *
- * @param onSenderChange Callback when the sender input changes.
- * @param onContentChange Callback when the content input changes.
+ * @param state State holder for the message fields
  * @param title The title of the section.
  * @param description The description of the section.
  * @param isEmail Whether the message is an email (shows subject field if true).
  * @param modifier Modifier for styling.
- * @param onSubjectChange Optional callback when the subject input changes.
  */
 @Composable
 internal fun MessageModalSection(
-    onSenderChange: (String) -> Unit,
-    onContentChange: (String) -> Unit,
+    state: MutableState<MessageModalSectionState>,
     title: String,
     description: String,
     isEmail: Boolean,
-    modifier: Modifier = Modifier,
-    onSubjectChange: ((String) -> Unit)? = null
+    modifier: Modifier = Modifier
 ) {
-    var senderValue by rememberSaveable { mutableStateOf("") }
-    var contentValue by rememberSaveable { mutableStateOf("") }
+    var stateValue by state
     val senderKeyboardOptions =
         remember {
             KeyboardOptions(keyboardType = if (isEmail) KeyboardType.Email else KeyboardType.Text)
@@ -53,34 +48,24 @@ internal fun MessageModalSection(
         modifier = modifier
     ) {
         TextInput(
-            senderValue,
-            onValueChange = { nv ->
-                senderValue = nv
-                onSenderChange(nv)
-            },
+            stateValue.sender,
+            onValueChange = { stateValue = stateValue.copy(sender = it) },
             label = stringResource(R.string.analyze_message_sender_input_label),
             keyboardOptions = senderKeyboardOptions
         )
 
         if (isEmail) {
-            var subjectValue by rememberSaveable { mutableStateOf("") }
             TextInput(
-                subjectValue,
-                onValueChange = { nv ->
-                    subjectValue = nv
-                    onSubjectChange?.invoke(nv)
-                },
+                stateValue.subject ?: "",
+                onValueChange = { stateValue = stateValue.copy(subject = it) },
                 label = stringResource(R.string.analyze_message_subject_input_label),
                 keyboardOptions = textKeyboardOptions
             )
         }
 
         TextInput(
-            contentValue,
-            onValueChange = { nv ->
-                contentValue = nv
-                onContentChange(nv)
-            },
+            stateValue.content,
+            onValueChange = { stateValue = stateValue.copy(content = it) },
             label = stringResource(R.string.analyze_message_content_input_label),
             keyboardOptions = textKeyboardOptions,
             singleLine = false
@@ -93,8 +78,7 @@ internal fun MessageModalSection(
 private fun MessageModalSectionPreview() {
     OpenlysisTheme(darkTheme = false) {
         MessageModalSection(
-            onSenderChange = { },
-            onContentChange = { },
+            state = remember { mutableStateOf(MessageModalSectionState()) },
             title = "Test Title",
             description = "This is a description.",
             isEmail = true
