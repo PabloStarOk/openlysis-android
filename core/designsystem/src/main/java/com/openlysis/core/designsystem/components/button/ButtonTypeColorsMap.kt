@@ -11,7 +11,7 @@ internal val ButtonTypeColorsMap =
             ButtonType.Primary,
             ButtonTypeColors(
                 getBackgroundColor = { scheme -> scheme.background.brand.primary },
-                getBorderColor = { scheme -> scheme.border.brand.primary },
+                getBorderColor = { Color.Unspecified },
                 getForegroundColor = { scheme -> scheme.text.brand.onPrimary },
                 getRippleColor = { scheme -> scheme.background.brand.primaryActive }
             )
