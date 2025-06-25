@@ -2,6 +2,7 @@ package com.openlysis.feature.tools.data
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.vector.ImageVector
 
 /**
@@ -19,6 +20,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
  *                             This is used by screen readers to describe the icon.
  * @property category The [ToolCategory] representing the category of the tool.
  */
+@Immutable
 internal data class Tool(
     @StringRes val nameResource: Int,
     @StringRes val descriptionResource: Int,
