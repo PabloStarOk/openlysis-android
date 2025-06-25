@@ -13,7 +13,7 @@ import com.openlysis.core.designsystem.theme.size.LocalAppSpacing
 import com.openlysis.core.designsystem.theme.type.LocalAppTypography
 
 /**
- * Section for a titled and described area in a [ToolModal], with custom content.
+ * Section for a titled and described area in an analysis tool, with custom content.
  *
  * @param title The title of the section.
  * @param description The description of the section.
@@ -21,7 +21,7 @@ import com.openlysis.core.designsystem.theme.type.LocalAppTypography
  * @param content The content to display inside the section.
  */
 @Composable
-internal fun ToolModalSection(
+internal fun ToolSection(
     title: String,
     description: String,
     modifier: Modifier = Modifier,
@@ -52,9 +52,9 @@ internal fun ToolModalSection(
 
 @Preview(showSystemUi = true)
 @Composable
-private fun ToolModalSectionPreview() {
+private fun ToolSectionPreview() {
     OpenlysisTheme(darkTheme = false) {
-        ToolModalSection(
+        ToolSection(
             title = "Example Title",
             description = "This is an description."
         ) {

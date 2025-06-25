@@ -37,7 +37,7 @@ internal fun rememberAnalyzeEmailModalState(
             mutableStateListOf<AttachedFileData>()
         }
 
-    val messageState = rememberSaveable { mutableStateOf(MessageModalSectionState()) }
+    val messageState = rememberSaveable { mutableStateOf(MessageSectionState()) }
 
     return remember {
         AnalyzeEmailModalState(
@@ -61,7 +61,7 @@ internal class AnalyzeEmailModalState(
     private val snapshotAttachedFiles: SnapshotStateList<AttachedFileData>,
     private val messageUiNotifier: MessageUiNotifier,
     val fileAttachmentSettings: FileAttachmentSettings,
-    val messageState: MutableState<MessageModalSectionState>
+    val messageState: MutableState<MessageSectionState>
 ) {
     val attachedFiles: List<AttachedFileData>
         get() = snapshotAttachedFiles

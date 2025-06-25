@@ -15,8 +15,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
 import com.openlysis.core.designsystem.theme.OpenlysisTheme
 import com.openlysis.feature.tools.components.AnalyzeEmailModalState
-import com.openlysis.feature.tools.components.AttachFilesModalSection
-import com.openlysis.feature.tools.components.MessageModalSection
+import com.openlysis.feature.tools.components.AttachFilesSection
+import com.openlysis.feature.tools.components.MessageSection
 import com.openlysis.feature.tools.components.ToolModal
 import com.openlysis.feature.tools.components.rememberAnalyzeEmailModalState
 import com.openlysis.feature.tools.data.FileAttachmentSettings
@@ -65,14 +65,14 @@ internal fun AnalyzeEmailModal(
         modifier = modifier
     ) {
         // TODO: Add functionality to select an email from the inbox instead of filling information manually.
-        MessageModalSection(
+        MessageSection(
             state = toolState.messageState,
             title = stringResource(R.string.email_message_tool_modal_title),
             description = stringResource(R.string.email_message_tool_modal_description),
             isEmail = true
         )
 
-        AttachFilesModalSection(
+        AttachFilesSection(
             attachedFiles = toolState.attachedFiles,
             onFileAttach = { toolState.addAttachedFile(it) },
             onFileDetach = { toolState.removeAttachedFile(it) },

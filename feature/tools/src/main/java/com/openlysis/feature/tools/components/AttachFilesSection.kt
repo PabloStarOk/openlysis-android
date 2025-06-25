@@ -43,7 +43,7 @@ import com.openlysis.feature.tools.data.FileAttachmentSettings
  * @param modifier Modifier for styling.
  */
 @Composable
-internal fun AttachFilesModalSection(
+internal fun AttachFilesSection(
     attachedFiles: List<AttachedFileData>,
     onFileAttach: (AttachedFileData) -> Unit,
     onFileDetach: (AttachedFileData) -> Unit,
@@ -80,7 +80,7 @@ internal fun AttachFilesModalSection(
             fileSizeInMb
         )
 
-    ToolModalSection(
+    ToolSection(
         title = title,
         description = description,
         modifier = modifier.animateContentSize()
@@ -161,9 +161,9 @@ private fun getFileDataFromUri(
 
 @Preview(showSystemUi = true)
 @Composable
-private fun AttachFilesModalSectionPreview() {
+private fun AttachFilesSectionPreview() {
     OpenlysisTheme(darkTheme = false) {
-        AttachFilesModalSection(
+        AttachFilesSection(
             attachedFiles =
                 remember {
                     listOf(

@@ -16,7 +16,7 @@ import com.openlysis.core.designsystem.theme.OpenlysisTheme
 import com.openlysis.feature.tools.R
 
 /**
- * Section for entering message details in a modal, including sender, subject (if email), and content fields.
+ * Section for entering message details for a message analysis tool. Includes sender, subject (if email), and content.
  *
  * @param state State holder for the message fields
  * @param title The title of the section.
@@ -25,8 +25,8 @@ import com.openlysis.feature.tools.R
  * @param modifier Modifier for styling.
  */
 @Composable
-internal fun MessageModalSection(
-    state: MutableState<MessageModalSectionState>,
+internal fun MessageSection(
+    state: MutableState<MessageSectionState>,
     title: String,
     description: String,
     isEmail: Boolean,
@@ -42,7 +42,7 @@ internal fun MessageModalSection(
             KeyboardOptions(keyboardType = KeyboardType.Text)
         }
 
-    ToolModalSection(
+    ToolSection(
         title = title,
         description = description,
         modifier = modifier
@@ -75,10 +75,10 @@ internal fun MessageModalSection(
 
 @Preview(showSystemUi = true)
 @Composable
-private fun MessageModalSectionPreview() {
+private fun MessageSectionPreview() {
     OpenlysisTheme(darkTheme = false) {
-        MessageModalSection(
-            state = remember { mutableStateOf(MessageModalSectionState()) },
+        MessageSection(
+            state = remember { mutableStateOf(MessageSectionState()) },
             title = "Test Title",
             description = "This is a description.",
             isEmail = true
