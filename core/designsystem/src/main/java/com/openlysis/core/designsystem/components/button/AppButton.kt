@@ -5,9 +5,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Settings
@@ -75,7 +76,8 @@ fun AppButton(
                     width = 1.dp,
                     color = type.getBorderColor(LocalAppColorScheme.current),
                     shape = RoundedCornerShape(LocalAppRadius.current.value100)
-                ).heightIn(min = size.height, max = size.height)
+                ).height(size.height)
+                .widthIn(min = size.height) // Min. aspect ratio
                 .clickable(
                     onClick = onClick,
                     interactionSource = remember { MutableInteractionSource() },
