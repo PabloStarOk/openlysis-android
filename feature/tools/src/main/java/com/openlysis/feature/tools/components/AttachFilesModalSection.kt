@@ -3,7 +3,6 @@ package com.openlysis.feature.tools.components
 import android.content.ContentResolver
 import android.net.Uri
 import android.provider.OpenableColumns
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.animateContentSize
@@ -26,7 +25,6 @@ import com.openlysis.core.designsystem.theme.LocalAppColorScheme
 import com.openlysis.core.designsystem.theme.OpenlysisTheme
 import com.openlysis.core.designsystem.theme.size.LocalAppSpacing
 import com.openlysis.core.designsystem.theme.type.LocalAppTypography
-import com.openlysis.feature.tools.MessageUiNotifier
 import com.openlysis.feature.tools.R
 import com.openlysis.feature.tools.data.AttachedFileData
 import com.openlysis.feature.tools.data.FileAttachmentSettings
@@ -41,7 +39,6 @@ import com.openlysis.feature.tools.data.FileAttachmentSettings
  * @param enabled Whether file attachment is enabled.
  * @param title The title of the section.
  * @param description The description of the section.
- * @param messageUiNotifier Notifier for UI messages.
  * @param settings Settings to configure and show file attachment limitations.
  * @param modifier Modifier for styling.
  */
@@ -54,7 +51,6 @@ internal fun AttachFilesModalSection(
     enabled: Boolean,
     title: String,
     description: String,
-    messageUiNotifier: MessageUiNotifier,
     settings: FileAttachmentSettings,
     modifier: Modifier = Modifier
 ) {
@@ -62,10 +58,7 @@ internal fun AttachFilesModalSection(
     val getContentContract = remember { ActivityResultContracts.GetContent() }
     val selectFileLauncher =
         rememberLauncherForActivityResult(getContentContract) {
-            if (it == null) {
-                Log.e(LOG_TAG, "URI of a file was null when trying to attach a file for analysis.")
-                messageUiNotifier.showMessage(R.string.error_file_uri_null)
-            } else {
+            if (it != null) {
                 val fileData = getFileDataFromUri(it, contentResolver)
                 onFileAttach(fileData)
             }
@@ -166,15 +159,9 @@ private fun getFileDataFromUri(
     )
 }
 
-/**
- * Tag used for logging within the AttachFilesModalSection component.
- */
-private const val LOG_TAG = "AttachFilesModalSection"
-
 @Preview(showSystemUi = true)
 @Composable
 private fun AttachFilesModalSectionPreview() {
-    val context = LocalContext.current
     OpenlysisTheme(darkTheme = false) {
         AttachFilesModalSection(
             attachedFiles =
@@ -189,7 +176,6 @@ private fun AttachFilesModalSectionPreview() {
             enabled = true,
             title = "Test title",
             description = "This is a description",
-            messageUiNotifier = MessageUiNotifier(context),
             settings = FileAttachmentSettings(maxFilesAmount = 1, maxFileSize = 1048576)
         )
     }

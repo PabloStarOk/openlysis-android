@@ -82,7 +82,6 @@ internal fun AnalyzeEmailModal(
             enabled = attachFilesEnabled,
             title = stringResource(R.string.email_message_tool_modal_file_title),
             description = stringResource(R.string.email_message_tool_modal_file_description),
-            messageUiNotifier = messageUiNotifier,
             settings = toolState.fileAttachmentSettings
         )
     }
