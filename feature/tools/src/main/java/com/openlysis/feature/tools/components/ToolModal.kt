@@ -1,5 +1,6 @@
 package com.openlysis.feature.tools.components
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -87,6 +88,7 @@ internal fun ToolModal(
                 verticalArrangement = Arrangement.spacedBy(LocalAppSpacing.current.value800),
                 modifier =
                     Modifier
+                        .animateContentSize()
                         .verticalScroll(state = scrollState)
                         .padding(
                             vertical = LocalAppSpacing.current.value200,

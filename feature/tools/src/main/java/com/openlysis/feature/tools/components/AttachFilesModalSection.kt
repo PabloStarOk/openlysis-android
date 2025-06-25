@@ -1,7 +1,16 @@
 package com.openlysis.feature.tools.components
 
+import android.content.ContentResolver
+import android.net.Uri
+import android.provider.OpenableColumns
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.animateContentSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.openlysis.core.designsystem.components.alert.Alert
@@ -11,40 +20,81 @@ import com.openlysis.core.designsystem.components.button.ButtonType
 import com.openlysis.core.designsystem.icon.AppIcons
 import com.openlysis.core.designsystem.modifier.SizeType
 import com.openlysis.core.designsystem.theme.OpenlysisTheme
+import com.openlysis.feature.tools.MessageUiNotifier
 import com.openlysis.feature.tools.R
+import com.openlysis.feature.tools.data.AttachedFileData
 
 /**
- * Section for attaching files in a tool modal, including an alert and attach button.
+ * Section for attaching files to be analyzed.
  *
+ * @param attachedFiles List of files currently attached.
+ * @param onFileAttach Callback when a file is attached.
+ * @param onFileDetach Callback when a file is detached.
+ * @param onFilePasswordChange Callback when a file password is changed.
+ * @param enabled Whether file attachment is enabled.
  * @param title The title of the section.
  * @param description The description of the section.
+ * @param messageUiNotifier Notifier for UI messages.
  * @param modifier Modifier for styling.
+ * @param mimeTypeFilter MIME type filter for file selection. Defaults to any.
  */
 @Composable
 internal fun AttachFilesModalSection(
+    attachedFiles: List<AttachedFileData>,
+    onFileAttach: (AttachedFileData) -> Unit,
+    onFileDetach: (AttachedFileData) -> Unit,
+    onFilePasswordChange: (AttachedFileData, String) -> Unit,
+    enabled: Boolean,
     title: String,
     description: String,
-    modifier: Modifier = Modifier
+    messageUiNotifier: MessageUiNotifier,
+    modifier: Modifier = Modifier,
+    mimeTypeFilter: String = "*/*"
 ) {
-    // TODO: Add functionality to attach files.
-    // TODO: Use settings to configure the max amount of files that can be attached.
-    // TODO: Use settings to configure the max size of a file that can be attached.
-    // TODO: If max amount of attached files is reached, disable attach button.
-    // TODO: If a file is too large, display error.
+    val contentResolver = LocalContext.current.contentResolver
+    val getContentContract = remember { ActivityResultContracts.GetContent() }
+    val selectFileLauncher =
+        rememberLauncherForActivityResult(getContentContract) {
+            if (it == null) {
+                Log.e(LOG_TAG, "URI of a file was null when trying to attach a file for analysis.")
+                messageUiNotifier.showMessage(R.string.error_file_uri_null)
+            } else {
+                val fileData = getFileDataFromUri(it, contentResolver)
+                onFileAttach(fileData)
+            }
+        }
+    val addButtonType =
+        remember(enabled) {
+            if (enabled) {
+                ButtonType.Positive
+            } else {
+                ButtonType.PrimaryDisabled
+            }
+        }
+
     ToolModalSection(
         title = title,
         description = description,
-        modifier = modifier
+        modifier = modifier.animateContentSize()
     ) {
+        attachedFiles.forEach {
+            AttachedFile(
+                onDetachClick = { onFileDetach(it) },
+                onPasswordChange = { p -> onFilePasswordChange(it, p) },
+                passwordValue = it.password,
+                filename = it.displayName
+            )
+        }
+
         Alert(
             type = AlertType.Warning,
             text = stringResource(R.string.attach_file_warning_alert)
         )
 
         AppButton(
-            type = ButtonType.Positive,
+            type = addButtonType,
             size = SizeType.Default,
-            onClick = { },
+            onClick = { selectFileLauncher.launch(mimeTypeFilter) },
             displayLabel = true,
             label = stringResource(R.string.attach_file_button_label),
             displayIcon = true,
@@ -54,13 +104,67 @@ internal fun AttachFilesModalSection(
     }
 }
 
+/**
+ * Retrieves file data from the given Uri using the provided ContentResolver.
+ *
+ * @param fileUri The Uri of the file to extract data from.
+ * @param contentResolver The ContentResolver to query file metadata.
+ * @return An AttachedFileData object containing the file's Uri, display name, and size.
+ */
+private fun getFileDataFromUri(
+    fileUri: Uri,
+    contentResolver: ContentResolver
+): AttachedFileData {
+    val cursor = contentResolver.query(fileUri, null, null, null, null)
+
+    var displayName = ""
+    var fileSize: Long = -1
+    cursor?.use {
+        if (it.moveToFirst()) {
+            val index = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+            displayName = it.getString(index)
+
+            val sizeIndex: Int = it.getColumnIndex(OpenableColumns.SIZE)
+            fileSize =
+                if (!it.isNull(sizeIndex)) {
+                    it.getLong(sizeIndex)
+                } else {
+                    -1
+                }
+        }
+    }
+
+    return AttachedFileData(
+        uri = fileUri,
+        displayName = displayName,
+        size = fileSize
+    )
+}
+
+/**
+ * Tag used for logging within the AttachFilesModalSection component.
+ */
+private const val LOG_TAG = "AttachFilesModalSection"
+
 @Preview(showSystemUi = true)
 @Composable
 private fun AttachFilesModalSectionPreview() {
+    val context = LocalContext.current
     OpenlysisTheme(darkTheme = false) {
         AttachFilesModalSection(
+            attachedFiles =
+                remember {
+                    listOf(
+                        AttachedFileData(uri = Uri.EMPTY, displayName = "file-test.pdf", size = 1)
+                    )
+                },
+            onFileAttach = { },
+            onFileDetach = { },
+            onFilePasswordChange = { _, _ -> },
+            enabled = true,
             title = "Test title",
-            description = "This is a description"
+            description = "This is a description",
+            messageUiNotifier = MessageUiNotifier(context)
         )
     }
 }

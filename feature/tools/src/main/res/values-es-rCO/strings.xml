@@ -39,4 +39,9 @@
     <string name="email_message_tool_modal_description">Ingresa la información del mensaje o selecciona uno desde la bandeja de una de tus cuentas.</string>
     <string name="email_message_tool_modal_file_title">Archivos Adjuntos</string>
     <string name="email_message_tool_modal_file_description">Añade archivos relacionados con el mensaje para analizarlos.</string>
+
+    <string name="info_file_already_attached">Este archivo ya está adjunto.</string>
+    <string name="error_file_uri_null">No se pudo agregar el archivo debido a un error inesperado.</string>
+    <string name="error_file_too_large">El tamaño del archivo debe ser igual o menor a %.1f %s.</string>
+    <string name="error_file_size_zero">No se pudo agregar el archivo porque no contiene información.</string>
 </resources>

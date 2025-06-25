@@ -41,6 +41,7 @@ import com.openlysis.feature.tools.R
  *
  * @param onDetachClick Callback when the detach button is clicked.
  * @param onPasswordChange Callback when the password input changes.
+ * @param passwordValue The value of the password to display on the UI.
  * @param filename The name of the attached file.
  * @param modifier Modifier for styling.
  */
@@ -48,6 +49,7 @@ import com.openlysis.feature.tools.R
 internal fun AttachedFile(
     onDetachClick: () -> Unit,
     onPasswordChange: (String) -> Unit,
+    passwordValue: String?,
     filename: String,
     modifier: Modifier = Modifier
 ) {
@@ -56,7 +58,6 @@ internal fun AttachedFile(
     var inputVisualTransformation by remember {
         mutableStateOf<VisualTransformation>(passwordVisualTransformation)
     }
-    var passwordValue by remember { mutableStateOf("") }
     var showPassword by remember { mutableStateOf(true) }
 
     val togglePasswordTransformationIcon = if (showPassword) AppIcons.Eye else AppIcons.EyeOff
@@ -109,11 +110,8 @@ internal fun AttachedFile(
             )
         }
         TextInput(
-            value = passwordValue,
-            onValueChange = { newPassword ->
-                passwordValue = newPassword
-                onPasswordChange(newPassword)
-            },
+            value = passwordValue ?: "",
+            onValueChange = { onPasswordChange(it) },
             label = stringResource(R.string.attached_file_password_input_label),
             trailingButton = {
                 AppButton(
@@ -145,8 +143,9 @@ private fun AttachedFilePreview() {
     OpenlysisTheme(darkTheme = false) {
         AttachedFile(
             onDetachClick = { },
-            filename = "test.pdf",
-            onPasswordChange = { }
+            onPasswordChange = { },
+            passwordValue = "mySuperSecretPassword1234",
+            filename = "test.pdf"
         )
     }
 }

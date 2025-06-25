@@ -11,10 +11,12 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -22,6 +24,8 @@ import com.openlysis.core.designsystem.components.SectionTitle
 import com.openlysis.core.designsystem.theme.OpenlysisTheme
 import com.openlysis.core.designsystem.theme.size.LocalAppSpacing
 import com.openlysis.feature.tools.components.ToolCard
+import com.openlysis.feature.tools.components.rememberAnalyzeEmailModalState
+import com.openlysis.feature.tools.data.FileAttachmentSettings
 import com.openlysis.feature.tools.data.Tool
 import com.openlysis.feature.tools.data.ToolCategory
 import com.openlysis.feature.tools.data.ToolsDataSource
@@ -39,9 +43,16 @@ internal fun ToolsScreen(
     repository: ToolsRepository,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
     val scrollState = rememberScrollState()
     val modalState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var activeCategory by rememberSaveable { mutableStateOf<ToolCategory>(ToolCategory.None) }
+    val messageUiNotifier = remember { MessageUiNotifier(context) }
+    val fileAttachmentSettings =
+        FileAttachmentSettings( // TODO: Retrieve from view model.
+            maxFilesAmount = 5,
+            maxFileSize = 52428800 // 50 MB
+        )
 
     Column(
         verticalArrangement = Arrangement.spacedBy(LocalAppSpacing.current.value800),
@@ -77,11 +88,19 @@ internal fun ToolsScreen(
 
     when (activeCategory) {
         ToolCategory.None -> { }
-        ToolCategory.Email ->
+        ToolCategory.Email -> {
+            val state =
+                rememberAnalyzeEmailModalState(
+                    messageUiNotifier = messageUiNotifier,
+                    fileAttachmentSettings = fileAttachmentSettings
+                )
             AnalyzeEmailModal(
                 onDismissRequest = { activeCategory = ToolCategory.None },
-                modalState = modalState
+                toolState = state,
+                modalState = modalState,
+                messageUiNotifier = messageUiNotifier
             )
+        }
         ToolCategory.Sms -> { }
         ToolCategory.Url -> { }
         ToolCategory.File -> { }
