@@ -27,11 +27,12 @@
 
     <string name="attached_file_header_icon_alt">File icon</string>
     <string name="attached_file_detach_button_icon_alt">Detach file icon</string>
-    <string name="attached_file_password_input_label">Password</string>
+    <string name="attached_file_password_input_label">Optional password</string>
     <string name="attached_file_show_password_button_icon_alt">Show password icon</string>
     <string name="attached_file_hide_password_button_icon_alt">Hide password icon</string>
 
-    <string name="attach_file_warning_alert">Never add private or confidential files.</string>
+    <string name="attach_file_warning_alert">For privacy, never attach private or confidential files.</string>
+    <string name="attach_file_limit_message">You can attach up to %d files, each up to %.1f MB in size.</string>
     <string name="attach_file_button_label">Add File</string>
     <string name="attach_file_button_icon_alt">Add file icon</string>
 

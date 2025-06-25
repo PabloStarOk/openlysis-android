@@ -7,6 +7,9 @@ import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -19,10 +22,14 @@ import com.openlysis.core.designsystem.components.button.AppButton
 import com.openlysis.core.designsystem.components.button.ButtonType
 import com.openlysis.core.designsystem.icon.AppIcons
 import com.openlysis.core.designsystem.modifier.SizeType
+import com.openlysis.core.designsystem.theme.LocalAppColorScheme
 import com.openlysis.core.designsystem.theme.OpenlysisTheme
+import com.openlysis.core.designsystem.theme.size.LocalAppSpacing
+import com.openlysis.core.designsystem.theme.type.LocalAppTypography
 import com.openlysis.feature.tools.MessageUiNotifier
 import com.openlysis.feature.tools.R
 import com.openlysis.feature.tools.data.AttachedFileData
+import com.openlysis.feature.tools.data.FileAttachmentSettings
 
 /**
  * Section for attaching files to be analyzed.
@@ -35,8 +42,8 @@ import com.openlysis.feature.tools.data.AttachedFileData
  * @param title The title of the section.
  * @param description The description of the section.
  * @param messageUiNotifier Notifier for UI messages.
+ * @param settings Settings to configure and show file attachment limitations.
  * @param modifier Modifier for styling.
- * @param mimeTypeFilter MIME type filter for file selection. Defaults to any.
  */
 @Composable
 internal fun AttachFilesModalSection(
@@ -48,8 +55,8 @@ internal fun AttachFilesModalSection(
     title: String,
     description: String,
     messageUiNotifier: MessageUiNotifier,
-    modifier: Modifier = Modifier,
-    mimeTypeFilter: String = "*/*"
+    settings: FileAttachmentSettings,
+    modifier: Modifier = Modifier
 ) {
     val contentResolver = LocalContext.current.contentResolver
     val getContentContract = remember { ActivityResultContracts.GetContent() }
@@ -72,6 +79,14 @@ internal fun AttachFilesModalSection(
             }
         }
 
+    val fileSizeInMb = settings.maxFileSize.toFloat() / (1024 * 1024)
+    val limitMessage =
+        stringResource(
+            R.string.attach_file_limit_message,
+            settings.maxFilesAmount,
+            fileSizeInMb
+        )
+
     ToolModalSection(
         title = title,
         description = description,
@@ -91,16 +106,26 @@ internal fun AttachFilesModalSection(
             text = stringResource(R.string.attach_file_warning_alert)
         )
 
-        AppButton(
-            type = addButtonType,
-            size = SizeType.Default,
-            onClick = { selectFileLauncher.launch(mimeTypeFilter) },
-            displayLabel = true,
-            label = stringResource(R.string.attach_file_button_label),
-            displayIcon = true,
-            icon = AppIcons.Plus,
-            iconAlt = stringResource(R.string.attach_file_button_icon_alt)
-        )
+        Column(
+            verticalArrangement = Arrangement.spacedBy(LocalAppSpacing.current.value200)
+        ) {
+            Text(
+                text = limitMessage,
+                style = LocalAppTypography.current.bodySmall,
+                color = LocalAppColorScheme.current.text.default.secondary
+            )
+
+            AppButton(
+                type = addButtonType,
+                size = SizeType.Default,
+                onClick = { selectFileLauncher.launch(settings.mimeTypeFilter) },
+                displayLabel = true,
+                label = stringResource(R.string.attach_file_button_label),
+                displayIcon = true,
+                icon = AppIcons.Plus,
+                iconAlt = stringResource(R.string.attach_file_button_icon_alt)
+            )
+        }
     }
 }
 
@@ -164,7 +189,8 @@ private fun AttachFilesModalSectionPreview() {
             enabled = true,
             title = "Test title",
             description = "This is a description",
-            messageUiNotifier = MessageUiNotifier(context)
+            messageUiNotifier = MessageUiNotifier(context),
+            settings = FileAttachmentSettings(maxFilesAmount = 1, maxFileSize = 1048576)
         )
     }
 }

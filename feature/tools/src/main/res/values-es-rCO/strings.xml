@@ -27,11 +27,12 @@
 
     <string name="attached_file_header_icon_alt">Ícono de archivo</string>
     <string name="attached_file_detach_button_icon_alt">Ícono para quitar archivo</string>
-    <string name="attached_file_password_input_label">Contraseña</string>
+    <string name="attached_file_password_input_label">Contraseña opcional</string>
     <string name="attached_file_show_password_button_icon_alt">Ícono para mostrar contraseña</string>
     <string name="attached_file_hide_password_button_icon_alt">Ícono para ocultar contraseña</string>
 
-    <string name="attach_file_warning_alert">Nunca añadas archivos privados o confidenciales.</string>
+    <string name="attach_file_warning_alert">Por privacidad, nunca adjuntes archivos privados o confidenciales.</string>
+    <string name="attach_file_limit_message">Puedes añadir hasta %d archivos, de %.1f MB cada uno como máximo.</string>
     <string name="attach_file_button_label">Agregar archivo</string>
     <string name="attach_file_button_icon_alt">Icono para agregar archivo</string>
 

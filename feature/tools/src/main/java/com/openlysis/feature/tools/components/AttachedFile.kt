@@ -101,7 +101,7 @@ internal fun AttachedFile(
             )
             AppButton(
                 type = ButtonType.Danger,
-                size = SizeType.Small,
+                size = SizeType.ExtraSmall,
                 onClick = onDetachClick,
                 displayLabel = false,
                 displayIcon = true,
