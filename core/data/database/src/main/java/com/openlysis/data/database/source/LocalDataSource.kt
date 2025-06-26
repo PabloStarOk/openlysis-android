@@ -1,10 +1,10 @@
 package com.openlysis.data.database.source
 
 import android.util.Log
-import com.openlysis.data.analysis.core.error.Outcome
 import com.openlysis.data.analysis.core.error.RepositoryError
 import com.openlysis.data.analysis.core.source.AnalysesLocalDataSource
 import com.openlysis.data.analysis.model.common.Model
+import com.openlysis.data.analysis.model.common.Outcome
 import com.openlysis.data.database.dao.ExistsDao
 import com.openlysis.data.database.dao.QueueDao
 
