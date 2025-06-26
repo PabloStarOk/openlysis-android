@@ -29,11 +29,7 @@ internal class FileMultiAnalysesRemoteDataSource
          */
         override suspend fun handleAnalyze(request: AnalyzeFile): Response<AnalyzeResponse> =
             api.analyzeFile(
-                file =
-                    request.attachment.file.asFormDataPart(
-                        name = ApiFields.FILE,
-                        mimeType = request.attachment.mimeType
-                    ),
+                file = request.attachment.asFormDataPart(fieldName = ApiFields.FILE),
                 password = request.attachment.password?.asPlainRequestBody(),
                 reanalyze = request.reanalyze
             )
