@@ -23,7 +23,7 @@ internal enum class TopLevelDestination(
     val route: KClass<*>
 ) {
     Tools(
-        iconResId = AppIconsIds.Tools,
+        iconResId = AppIconsIds.Search,
         iconAltResId = R.string.nav_bar_tools_icon_alt,
         navBarItemLabelResId = R.string.nav_bar_tools_label,
         route = ToolsRoute::class
