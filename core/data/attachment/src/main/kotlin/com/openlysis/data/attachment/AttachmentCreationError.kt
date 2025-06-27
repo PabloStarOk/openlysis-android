@@ -1,33 +1,52 @@
 package com.openlysis.data.attachment
 
+import android.net.Uri
 import com.openlysis.data.analysis.model.common.AnalysisError
 import java.io.FileNotFoundException
 
 /**
- * Represents various errors that can occur during attachment creation process.
+ * Represents various errors that can occur during the attachment creation process.
+ *
+ * @property uri The URI of the file that caused the attachment creation to fail.
  */
-sealed interface AttachmentCreationError : AnalysisError {
+sealed class AttachmentCreationError(
+    open val uri: Uri
+) : AnalysisError {
     /**
-     * Error indicating that the input stream provided is null.
+     * Error indicating that the input stream for reading the file content is null.
+     *
+     * @property uri The URI of the file that could not be opened for reading.
      */
-    data object NullInputStream : AttachmentCreationError
+    data class NullInputStream(
+        override val uri: Uri
+    ) : AttachmentCreationError(uri)
 
     /**
-     * Error indicating that the file metadata cursor is null, which does not allow to retrieve the required information to analyze the file.
+     * Error indicating that the file metadata cursor is null.
+     *
+     * @property uri The URI of the file whose metadata could not be retrieved.
      */
-    data object NullMetadataCursor : AttachmentCreationError
+    data class NullMetadataCursor(
+        override val uri: Uri
+    ) : AttachmentCreationError(uri)
 
     /**
-     * Error indicating that the file metadata cursor is empty, which does not allow to retrieve the required information to analyze the file.
+     * Error indicating that the file metadata cursor is empty.
+     *
+     * @property uri The URI of the file whose metadata cursor is empty.
      */
-    data object EmptyMetadataCursor : AttachmentCreationError
+    data class EmptyMetadataCursor(
+        override val uri: Uri
+    ) : AttachmentCreationError(uri)
 
     /**
      * Error indicating that the specified file could not be found in the filesystem.
      *
-     * @property exception The underlying FileNotFound exception that was thrown
+     * @property uri The URI of the file that could not be found.
+     * @property exception The underlying FileNotFoundException that was thrown.
      */
     data class FileNotFound(
+        override val uri: Uri,
         val exception: FileNotFoundException
-    ) : AttachmentCreationError
+    ) : AttachmentCreationError(uri)
 }

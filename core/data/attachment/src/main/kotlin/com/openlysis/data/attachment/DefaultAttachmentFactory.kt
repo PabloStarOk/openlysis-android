@@ -28,9 +28,9 @@ internal class DefaultAttachmentFactory(
         val inputStream: InputStream
         try {
             inputStream = contentResolver.openInputStream(uri)
-                ?: return Outcome.Failure(AttachmentCreationError.NullInputStream)
+                ?: return Outcome.Failure(AttachmentCreationError.NullInputStream(uri))
         } catch (e: FileNotFoundException) {
-            return Outcome.Failure(AttachmentCreationError.FileNotFound(e))
+            return Outcome.Failure(AttachmentCreationError.FileNotFound(uri, e))
         }
 
         val cursor =
@@ -43,14 +43,14 @@ internal class DefaultAttachmentFactory(
             )
 
         if (cursor == null) {
-            return Outcome.Failure(AttachmentCreationError.NullMetadataCursor)
+            return Outcome.Failure(AttachmentCreationError.NullMetadataCursor(uri))
         }
 
         val displayName: String
         val fileSize: Long
         cursor.use {
             if (!it.moveToFirst()) {
-                return Outcome.Failure(AttachmentCreationError.EmptyMetadataCursor)
+                return Outcome.Failure(AttachmentCreationError.EmptyMetadataCursor(uri))
             }
 
             val nameIndex = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)
