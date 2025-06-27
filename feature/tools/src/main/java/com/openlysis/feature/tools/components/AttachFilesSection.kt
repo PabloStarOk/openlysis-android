@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.database.getLongOrNull
 import com.openlysis.core.designsystem.components.alert.Alert
 import com.openlysis.core.designsystem.components.alert.AlertType
 import com.openlysis.core.designsystem.components.button.AppButton
@@ -133,23 +134,26 @@ private fun getFileDataFromUri(
     fileUri: Uri,
     contentResolver: ContentResolver
 ): AttachedFileData {
-    val cursor = contentResolver.query(fileUri, null, null, null, null)
+    val cursor =
+        contentResolver.query(
+            fileUri,
+            arrayOf(OpenableColumns.DISPLAY_NAME, OpenableColumns.SIZE),
+            null,
+            null,
+            null
+        )
 
     var displayName = ""
     var fileSize: Long = -1
     cursor?.use {
-        if (it.moveToFirst()) {
-            val index = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)
-            displayName = it.getString(index)
-
-            val sizeIndex: Int = it.getColumnIndex(OpenableColumns.SIZE)
-            fileSize =
-                if (!it.isNull(sizeIndex)) {
-                    it.getLong(sizeIndex)
-                } else {
-                    -1
-                }
+        if (!it.moveToFirst()) {
+            return@use
         }
+
+        val nameIndex = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+        val sizeIndex = it.getColumnIndex(OpenableColumns.SIZE)
+        displayName = it.getString(nameIndex)
+        fileSize = it.getLongOrNull(sizeIndex) ?: -1
     }
 
     return AttachedFileData(
