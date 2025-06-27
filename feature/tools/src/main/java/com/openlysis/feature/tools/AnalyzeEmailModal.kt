@@ -17,22 +17,26 @@ import com.openlysis.core.designsystem.theme.OpenlysisTheme
 import com.openlysis.feature.tools.components.AnalyzeEmailModalState
 import com.openlysis.feature.tools.components.AttachFilesSection
 import com.openlysis.feature.tools.components.MessageSection
+import com.openlysis.feature.tools.components.MessageSectionState
 import com.openlysis.feature.tools.components.ToolModal
 import com.openlysis.feature.tools.components.rememberAnalyzeEmailModalState
+import com.openlysis.feature.tools.data.AttachedFileData
 import com.openlysis.feature.tools.data.FileAttachmentSettings
 
 /**
  * A modal for analyzing an email, allowing the user to input sender, subject, content, and attach files.
  *
+ * @param onSubmitClick Called when the submit button is clicked, with the current message state and attached files.
  * @param onDismissRequest Called when the modal should be dismissed.
- * @param toolState The state holder for the email analysis modal.
- * @param modalState The state of the bottom sheet modal.
- * @param messageUiNotifier Notifier for displaying UI messages.
- * @param modifier Modifier for styling.
+ * @param toolState The state holder for the email analysis modal, containing message and file attachment states.
+ * @param modalState The state of the bottom sheet modal, controlling its appearance and behavior.
+ * @param messageUiNotifier Notifier for displaying UI messages and handling user feedback.
+ * @param modifier Modifier for styling the modal's layout and appearance.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun AnalyzeEmailModal(
+    onSubmitClick: (MessageSectionState, List<AttachedFileData>) -> Unit,
     onDismissRequest: () -> Unit,
     toolState: AnalyzeEmailModalState,
     modalState: SheetState,
@@ -56,7 +60,9 @@ internal fun AnalyzeEmailModal(
         }
 
     ToolModal(
-        onSubmitClick = { }, // TODO: Add submit functionality.
+        onSubmitClick = {
+            onSubmitClick(toolState.messageState.value, toolState.attachedFiles)
+        },
         onDismissRequest = onDismissRequest,
         submitButtonLabel = stringResource(R.string.analyze_button_label),
         submitButtonIconAlt = stringResource(R.string.analyze_button_icon_alt),
@@ -96,6 +102,7 @@ private fun DialogPreview() {
 
     OpenlysisTheme(darkTheme = false) {
         AnalyzeEmailModal(
+            onSubmitClick = { _, _ -> },
             onDismissRequest = { },
             toolState =
                 rememberAnalyzeEmailModalState(

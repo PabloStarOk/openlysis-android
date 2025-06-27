@@ -30,6 +30,10 @@ internal fun AppNavHost(
         modifier = modifier
     ) {
         toolsScreen(
+            onMessageAnalysisStart = {
+                appState.navController.navigate(TemporaryResults)
+                // TODO: Implement navigation to display and update results of this new analysis.
+            },
             enterTransition = {
                 slideIntoContainer(
                     towards = AnimatedContentTransitionScope.SlideDirection.Right,

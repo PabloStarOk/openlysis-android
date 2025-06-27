@@ -45,4 +45,14 @@
     <string name="error_file_uri_null">No se pudo agregar el archivo debido a un error inesperado.</string>
     <string name="error_file_too_large">El tamaño del archivo debe ser igual o menor a %.1f %s.</string>
     <string name="error_file_size_zero">No se pudo agregar el archivo porque no contiene información.</string>
+
+    <string name="error_analysis_repository_generic">Ocurrió un error inesperado. Por favor, inténtalo de nuevo.</string>
+    <string name="error_analysis_repository_bad_request">Ocurrió un error de validación. Verifica que los datos ingresados sean correctos.</string>
+    <string name="error_analysis_repository_server">Ocurrió un error en el servidor. Por favor, inténtalo más tarde.</string>
+    <string name="error_analysis_repository_network">Ocurrió un error de red. Verifica tu conexión e inténtalo de nuevo.</string>
+    <string name="error_analysis_repository_unreachable_server">El servidor no está disponible. Por favor, inténtalo más tarde.</string>
+    <string name="error_analysis_repository_unavailable">Este servicio no está disponible en este momento. Por favor, inténtalo más tarde.</string>
+    <string name="error_analysis_repository_operation_canceled">La operación fue cancelada. Inténtalo de nuevo si es necesario.</string>
+    <string name="error_analysis_repository_unknown">Ocurrió un error desconocido. Por favor, inténtalo de nuevo.</string>
+    <string name="error_attachment_creation">El análisis no pudo iniciarse porque un archivo no pudo ser leído.</string>
 </resources>

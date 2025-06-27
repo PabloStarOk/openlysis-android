@@ -26,7 +26,7 @@ android {
 
     buildTypes {
         val localProperties = Properties()
-        val localPropertiesFilenames = arrayOf("secret.properties")
+        val localPropertiesFilenames = arrayOf("secret.properties", "settings.properties")
         localPropertiesFilenames.forEach {
             val file = rootProject.file(it)
             if (file.exists() && file.isFile) {
@@ -53,6 +53,18 @@ android {
                 "API_BASE_URL",
                 localProperties.getProperty("API_BASE_URL_PROD")
             )
+
+            buildConfigField(
+                "Integer",
+                "MAX_ATTACHMENT_FILES",
+                localProperties.getProperty("MAX_ATTACHMENT_FILES_PROD")
+            )
+
+            buildConfigField(
+                "Long",
+                "MAX_ATTACHMENT_FILE_SIZE_BYTES",
+                localProperties.getProperty("MAX_ATTACHMENT_FILE_SIZE_BYTES_PROD")
+            )
         }
 
         debug {
@@ -60,6 +72,18 @@ android {
                 "String",
                 "API_BASE_URL",
                 localProperties.getProperty("API_BASE_URL")
+            )
+
+            buildConfigField(
+                "Integer",
+                "MAX_ATTACHMENT_FILES",
+                localProperties.getProperty("MAX_ATTACHMENT_FILES")
+            )
+
+            buildConfigField(
+                "Long",
+                "MAX_ATTACHMENT_FILE_SIZE_BYTES",
+                localProperties.getProperty("MAX_ATTACHMENT_FILE_SIZE_BYTES")
             )
         }
     }

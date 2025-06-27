@@ -20,39 +20,37 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.openlysis.core.designsystem.components.SectionTitle
 import com.openlysis.core.designsystem.theme.OpenlysisTheme
 import com.openlysis.core.designsystem.theme.size.LocalAppSpacing
+import com.openlysis.data.analysis.model.message.MessageAnalysis
 import com.openlysis.feature.tools.components.ToolCard
 import com.openlysis.feature.tools.components.rememberAnalyzeEmailModalState
-import com.openlysis.feature.tools.data.FileAttachmentSettings
 import com.openlysis.feature.tools.data.Tool
 import com.openlysis.feature.tools.data.ToolCategory
-import com.openlysis.feature.tools.data.ToolsDataSource
-import com.openlysis.feature.tools.data.ToolsRepository
 
 /**
- * Display the analysis tools screen.
+ * Display the analysis tools screen with sections for message and data analysis tools.
+ * Users can select different analysis tools like email, SMS, URL, and file analysis.
  *
- * @param repository The [ToolsRepository] providing the data for the various tool sections.
+ * @param onMessageAnalysisStart Callback triggered when message analysis is initiated.
  * @param modifier Optional [Modifier] to apply to the top-level layout container.
+ * @param viewModel The view model handling the business logic and data operations.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun ToolsScreen(
-    repository: ToolsRepository,
-    modifier: Modifier = Modifier
+    onMessageAnalysisStart: (MessageAnalysis) -> Unit,
+    modifier: Modifier = Modifier,
+    viewModel: ToolsScreenViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
     val scrollState = rememberScrollState()
     val modalState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var activeCategory by rememberSaveable { mutableStateOf<ToolCategory>(ToolCategory.None) }
     val messageUiNotifier = remember { MessageUiNotifier(context) }
-    val fileAttachmentSettings =
-        FileAttachmentSettings( // TODO: Retrieve from view model.
-            maxFilesAmount = 5,
-            maxFileSize = 52428800 // 50 MB
-        )
+    val errorHandler = remember { AnalysisErrorUiHandler(messageUiNotifier) }
 
     Column(
         verticalArrangement = Arrangement.spacedBy(LocalAppSpacing.current.value800),
@@ -64,7 +62,7 @@ internal fun ToolsScreen(
         SectionScaffold(
             title = stringResource(R.string.message_analysis_tools_section_title),
             content = {
-                repository.getMessageAnalysisTools().forEach { tool ->
+                viewModel.toolsRepository.getMessageAnalysisTools().forEach { tool ->
                     MapToolCard(
                         tool = tool,
                         onClick = { activeCategory = tool.category }
@@ -76,7 +74,7 @@ internal fun ToolsScreen(
         SectionScaffold(
             title = stringResource(R.string.other_analysis_tools_section_title),
             content = {
-                repository.getDataAnalysisTools().forEach { tool ->
+                viewModel.toolsRepository.getDataAnalysisTools().forEach { tool ->
                     MapToolCard(
                         tool = tool,
                         onClick = { activeCategory = tool.category }
@@ -92,9 +90,19 @@ internal fun ToolsScreen(
             val state =
                 rememberAnalyzeEmailModalState(
                     messageUiNotifier = messageUiNotifier,
-                    fileAttachmentSettings = fileAttachmentSettings
+                    fileAttachmentSettings = viewModel.fileAttachmentSettings
                 )
             AnalyzeEmailModal(
+                onSubmitClick = { state, files ->
+                    viewModel.startEmailAnalysis(
+                        messageState = state,
+                        attachedFiles = files,
+                        onSuccess = {
+                            onMessageAnalysisStart(it)
+                        },
+                        onError = { errorHandler.handle(it) }
+                    )
+                },
                 onDismissRequest = { activeCategory = ToolCategory.None },
                 toolState = state,
                 modalState = modalState,
@@ -152,6 +160,8 @@ private fun MapToolCard(
 @Composable
 private fun ToolsScreenPreview() {
     OpenlysisTheme(darkTheme = false) {
-        ToolsScreen(ToolsDataSource())
+        ToolsScreen(
+            onMessageAnalysisStart = { }
+        )
     }
 }

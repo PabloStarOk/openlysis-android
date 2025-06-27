@@ -3,13 +3,15 @@ package com.openlysis.feature.tools.navigation
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import com.openlysis.data.analysis.model.message.MessageAnalysis
 import com.openlysis.feature.tools.ToolsScreen
-import com.openlysis.feature.tools.data.ToolsDataSource
+import com.openlysis.feature.tools.ToolsScreenViewModel
 import kotlinx.serialization.Serializable
 
 /**
@@ -25,9 +27,16 @@ fun NavController.navigateToTools(navOptions: NavOptions) =
     navigate(ToolsRoute, navOptions = navOptions)
 
 /**
- * Adds the tool screen to the navigation graph.
+ * Adds the tools screen to the navigation graph with specified transitions.
+ *
+ * @param onMessageAnalysisStart Callback triggered when message analysis is started
+ * @param enterTransition Animation played when the screen enters
+ * @param exitTransition Animation played when the screen exits
+ * @param popEnterTransition Animation played when the screen re-enters after pop (defaults to enterTransition)
+ * @param popExitTransition Animation played when the screen is popped (defaults to exitTransition)
  */
 fun NavGraphBuilder.toolsScreen(
+    onMessageAnalysisStart: (MessageAnalysis) -> Unit,
     enterTransition: (
     AnimatedContentTransitionScope<NavBackStackEntry>.()
     -> @JvmSuppressWildcards EnterTransition?
@@ -51,6 +60,9 @@ fun NavGraphBuilder.toolsScreen(
         popEnterTransition = popEnterTransition,
         popExitTransition = popExitTransition
     ) {
-        ToolsScreen(ToolsDataSource())
+        ToolsScreen(
+            onMessageAnalysisStart = onMessageAnalysisStart,
+            viewModel = hiltViewModel<ToolsScreenViewModel>()
+        )
     }
 }

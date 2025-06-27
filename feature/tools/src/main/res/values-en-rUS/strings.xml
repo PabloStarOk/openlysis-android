@@ -45,4 +45,14 @@
     <string name="error_file_uri_null">File could not be added due to an unexpected error.</string>
     <string name="error_file_too_large">The file size must be less than or equal to %.1f %s.</string>
     <string name="error_file_size_zero">File could not be added because has not data.</string>
+
+    <string name="error_analysis_repository_generic">An unexpected error occurred. Please try again.</string>
+    <string name="error_analysis_repository_bad_request">A validation error occurred. Please verify the data you entered is correct.</string>
+    <string name="error_analysis_repository_server">A server error occurred. Please try again later.</string>
+    <string name="error_analysis_repository_network">A network error occurred. Please check your connection and try again.</string>
+    <string name="error_analysis_repository_unreachable_server">The server is unavailable. Please try again later.</string>
+    <string name="error_analysis_repository_unavailable">This service is currently unavailable. Please try again later.</string>
+    <string name="error_analysis_repository_operation_canceled">The operation was canceled. Please try again if needed.</string>
+    <string name="error_analysis_repository_unknown">An unknown error occurred. Please try again.</string>
+    <string name="error_attachment_creation">The analysis could not start because a file could not be read.</string>
 </resources>

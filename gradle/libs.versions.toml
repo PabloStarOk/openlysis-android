@@ -21,6 +21,7 @@ androidToolsDesugar = "2.1.5"
 material = "1.12.0"
 room = "2.7.1"
 hilt = "2.56.2"
+androidXHilt = "1.2.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -53,6 +54,7 @@ androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = 
 google-dagger-hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt"}
 google-dagger-hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt"}
 google-dagger-hilt-core = { group = "com.google.dagger", name = "hilt-core", version.ref = "hilt"}
+androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "androidXHilt"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
