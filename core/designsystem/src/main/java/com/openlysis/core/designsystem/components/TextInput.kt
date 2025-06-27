@@ -2,12 +2,16 @@ package com.openlysis.core.designsystem.components
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -26,6 +30,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.openlysis.core.designsystem.theme.LocalAppColorScheme
 import com.openlysis.core.designsystem.theme.OpenlysisTheme
 import com.openlysis.core.designsystem.theme.color.AppColorScheme
@@ -64,6 +69,7 @@ fun TextInput(
     singleLine: Boolean = true
 ) {
     val appColorScheme = LocalAppColorScheme.current
+    val appTypography = LocalAppTypography.current
     val appRadius = LocalAppRadius.current
     val interactionSource = remember { MutableInteractionSource() }
     val isFocused by interactionSource.collectIsFocusedAsState()
@@ -82,10 +88,30 @@ fun TextInput(
         }
     )
 
+    val labelFontSize by animateFloatAsState(
+        targetValue =
+            if (isFocused || value.isNotEmpty()) {
+                appTypography.bodySmall.fontSize.value
+            } else {
+                appTypography.bodyBase.fontSize.value
+            },
+        animationSpec = tween(200, easing = FastOutSlowInEasing)
+    )
+
+    val labelStyle =
+        remember(appTypography, value, isFocused, labelFontSize) {
+            if (isFocused || value.isNotEmpty()) {
+                appTypography.bodySmall.copy(fontSize = labelFontSize.sp)
+            } else {
+                appTypography.bodyBase.copy(fontSize = labelFontSize.sp)
+            }
+        }
+
     val textFieldModifier =
         remember(appRadius, borderColor) {
             Modifier
                 .fillMaxWidth()
+                .heightIn(min = 58.dp)
                 .clip(RoundedCornerShape(appRadius.value100))
                 .border(
                     width = 1.dp,
@@ -106,7 +132,7 @@ fun TextInput(
             modifier = textFieldModifier,
             value = value,
             onValueChange = onValueChange,
-            label = { Text(text = label) },
+            label = { Text(text = label, style = labelStyle) },
             visualTransformation = visualTransformation,
             keyboardOptions = keyboardOptions,
             keyboardActions = keyboardActions,
