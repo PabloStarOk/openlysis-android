@@ -120,7 +120,7 @@ internal fun ToolModal(
                     displayLabel = true,
                     label = submitButtonLabel,
                     displayIcon = true,
-                    icon = AppIcons.Tools,
+                    icon = AppIcons.Search,
                     iconAlt = submitButtonIconAlt,
                     modifier = Modifier.fillMaxWidth()
                 )
