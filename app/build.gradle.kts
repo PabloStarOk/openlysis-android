@@ -26,16 +26,18 @@ android {
 
     buildTypes {
         val localProperties = Properties()
-        val localPropertiesFileName = "secret.properties"
-        val localPropertiesFile = rootProject.file(localPropertiesFileName)
-        if (localPropertiesFile.exists() && localPropertiesFile.isFile) {
-            localPropertiesFile.inputStream().use {
-                localProperties.load(it)
+        val localPropertiesFilenames = arrayOf("secret.properties")
+        localPropertiesFilenames.forEach {
+            val file = rootProject.file(it)
+            if (file.exists() && file.isFile) {
+                file.inputStream().use { inputStream ->
+                    localProperties.load(inputStream)
+                }
+            } else {
+                throw GradleException(
+                    "Required configuration file '$it' not found or is not a file."
+                )
             }
-        } else {
-            throw GradleException(
-                "Required configuration file '$localPropertiesFileName' not found or is not a file."
-            )
         }
 
         release {
