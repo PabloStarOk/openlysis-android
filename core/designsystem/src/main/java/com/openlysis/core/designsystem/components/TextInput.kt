@@ -7,9 +7,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -26,7 +24,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.openlysis.core.designsystem.theme.LocalAppColorScheme
@@ -45,12 +42,11 @@ import com.openlysis.core.designsystem.theme.type.LocalAppTypography
  * @param isError A boolean value that indicates whether the text input field is in an error state.
  * @param enabled A boolean value that indicates whether the text input field is enabled.
  * @param trailingButton A composable function that displays a trailing button in the text input field.
+ * @param supportingText A composable function that displays supporting text below the text input field.
  * @param visualTransformation A [VisualTransformation] to apply to the text input field.
  * @param keyboardOptions A [KeyboardOptions] to apply to the text input field.
  * @param keyboardActions A [KeyboardActions] to apply to the text input field.
  * @param singleLine A boolean value that indicates whether the text input field should be single-line.
- * @param errorMessage The error message to display below the text input field when [isError] is true.
- * @param errorMessageMaxLines The maximum number of lines to display for the error message.
  */
 @Composable
 fun TextInput(
@@ -61,12 +57,11 @@ fun TextInput(
     isError: Boolean = false,
     enabled: Boolean = true,
     trailingButton: (@Composable () -> Unit)? = null,
+    supportingText: (@Composable () -> Unit)? = null,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
-    singleLine: Boolean = true,
-    errorMessage: String = "",
-    errorMessageMaxLines: Int = 2
+    singleLine: Boolean = true
 ) {
     val appColorScheme = LocalAppColorScheme.current
     val appRadius = LocalAppRadius.current
@@ -122,26 +117,8 @@ fun TextInput(
             interactionSource = interactionSource
         )
 
-        Row(
-            modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .heightIn(
-                        min =
-                            LocalAppTypography.current.bodySmall.lineHeight.value.dp *
-                                errorMessageMaxLines
-                    )
-        ) {
-            if (isError && errorMessage.isNotBlank()) {
-                Text(
-                    text = errorMessage,
-                    style = LocalAppTypography.current.bodySmall,
-                    color = LocalAppColorScheme.current.text.danger.secondary,
-                    overflow = TextOverflow.Ellipsis,
-                    maxLines = errorMessageMaxLines,
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
+        if (supportingText != null) {
+            supportingText()
         }
     }
 }
