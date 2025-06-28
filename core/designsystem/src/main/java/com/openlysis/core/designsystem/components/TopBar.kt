@@ -24,8 +24,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.openlysis.core.designsystem.R
 import com.openlysis.core.designsystem.components.button.AppButton
 import com.openlysis.core.designsystem.components.button.ButtonType
@@ -42,18 +40,16 @@ import com.openlysis.core.designsystem.theme.type.LocalAppTypography
  * Represents a top bar for a single screen.
  *
  * @param title The title to be displayed in the top bar.
- * @param navController The navigation controller for handling back navigation.
+ * @param onBackClick The action to be performed when the back button of the [TopBar] is clicked.
  * @param modifier The modifier to be applied to the top bar.
- * @param onBackButtonClick The action to be performed when the back button is clicked. Defaults to popping the back stack.
  * @param hasDropdownMenu Whether to display the dropdown menu. Defaults to false.
  * @param dropdownItems An array of [DropdownMenuItemData] to be displayed in the dropdown menu. Defaults to an empty array.
  */
 @Composable
 fun TopBar(
+    onBackClick: () -> Unit,
     title: String,
-    navController: NavController,
     modifier: Modifier = Modifier,
-    onBackButtonClick: () -> Unit = { navController.popBackStack() },
     hasDropdownMenu: Boolean = false,
     dropdownItems: Array<DropdownMenuItemData> = arrayOf<DropdownMenuItemData>()
 ) {
@@ -78,7 +74,7 @@ fun TopBar(
             AppButton(
                 type = ButtonType.Tertiary,
                 size = SizeType.Default,
-                onClick = onBackButtonClick,
+                onClick = onBackClick,
                 displayLabel = false,
                 displayIcon = true,
                 icon = AppIcons.Back,
@@ -119,8 +115,8 @@ fun TopBar(
 private fun TopBarPreview() {
     OpenlysisTheme(darkTheme = false) {
         TopBar(
+            onBackClick = { },
             title = "Title preview",
-            navController = rememberNavController(),
             hasDropdownMenu = true,
             dropdownItems =
                 arrayOf<DropdownMenuItemData>(
