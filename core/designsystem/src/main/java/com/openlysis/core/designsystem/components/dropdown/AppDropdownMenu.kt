@@ -22,17 +22,20 @@ import com.openlysis.core.designsystem.theme.LocalAppColorScheme
 import com.openlysis.core.designsystem.theme.radius.LocalAppRadius
 
 /**
- * Represents a dropdown menu.
+ * Represents a dropdown menu with a button trigger and customizable items.
  *
- * @param dropdownItems An array of `DropdownMenuItemData` objects, each representing an item in the dropdown menu.
- * @param expanded A boolean indicating whether the dropdown menu is currently visible (expanded) or hidden.
  * @param onExpand A lambda function that is invoked when the user clicks the button to expand the menu.
  * This function should typically update the `expanded` state.
  * @param onDismissRequest A lambda function that is invoked when the user requests to dismiss the menu
  * (e.g., by clicking outside the menu or pressing the escape key).
  * This function should typically update the `expanded` state to `false`.
- * @param modifier Optional [Modifier] to be applied to the root `Column` of the dropdown menu.
- * Defaults to `Modifier`.
+ * @param buttonType The visual style of the trigger button, defined by [ButtonType].
+ * @param expanded A boolean indicating whether the dropdown menu is currently visible (expanded) or hidden.
+ * @param dropdownItems A list of [DropdownMenuItemData] objects, each representing an item in the dropdown menu.
+ * @param modifier Optional [Modifier] to be applied to the root [Column] of the dropdown menu.
+ * Defaults to [Modifier].
+ * @param buttonSize The size variant of the trigger button, defined by [SizeType].
+ * Defaults to [SizeType.Default].
  */
 @Composable
 fun AppDropdownMenu(
@@ -40,7 +43,7 @@ fun AppDropdownMenu(
     onDismissRequest: () -> Unit,
     buttonType: ButtonType,
     expanded: Boolean,
-    dropdownItems: Array<DropdownMenuItemData>,
+    dropdownItems: List<DropdownMenuItemData>,
     modifier: Modifier = Modifier,
     buttonSize: SizeType = SizeType.Default
 ) {
