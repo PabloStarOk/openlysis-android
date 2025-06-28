@@ -1,4 +1,4 @@
-package com.openlysis.core.designsystem.components
+package com.openlysis.core.designsystem.components.bar
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -37,21 +37,18 @@ import com.openlysis.core.designsystem.theme.size.LocalAppSpacing
 import com.openlysis.core.designsystem.theme.type.LocalAppTypography
 
 /**
- * Represents a top bar for a single screen.
+ * A top bar.
  *
- * @param title The title to be displayed in the top bar.
  * @param onBackClick The action to be performed when the back button of the [TopBar] is clicked.
- * @param modifier The modifier to be applied to the top bar.
- * @param hasDropdownMenu Whether to display the dropdown menu. Defaults to false.
- * @param dropdownItems An array of [DropdownMenuItemData] to be displayed in the dropdown menu. Defaults to an empty array.
+ * @param state The state object containing the title, menu visibility flag, and menu items for the top bar.
+ * @param modifier The modifier to be applied to the top bar for customizing its layout and appearance.
+ *                Defaults to [Modifier].
  */
 @Composable
 fun TopBar(
     onBackClick: () -> Unit,
-    title: String,
-    modifier: Modifier = Modifier,
-    hasDropdownMenu: Boolean = false,
-    dropdownItems: Array<DropdownMenuItemData> = arrayOf<DropdownMenuItemData>()
+    state: TopBarState,
+    modifier: Modifier = Modifier
 ) {
     Column(
         modifier =
@@ -81,21 +78,21 @@ fun TopBar(
                 iconAlt = stringResource(R.string.top_bar_back_icon_description)
             )
             Text(
-                text = title,
+                text = state.title,
                 style = LocalAppTypography.current.title5,
                 color = LocalAppColorScheme.current.text.brand.primary,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
                 modifier = Modifier.weight(weight = 1f, fill = true)
             )
-            if (hasDropdownMenu) {
+            if (state.hasMenu && state.menuItems != null) {
                 var isMenuExpanded by remember { mutableStateOf(false) }
                 AppDropdownMenu(
                     onExpand = { isMenuExpanded = true },
                     onDismissRequest = { isMenuExpanded = false },
                     expanded = isMenuExpanded,
                     buttonType = ButtonType.Tertiary,
-                    dropdownItems = dropdownItems
+                    dropdownItems = state.menuItems
                 )
             }
         }
@@ -116,22 +113,25 @@ private fun TopBarPreview() {
     OpenlysisTheme(darkTheme = false) {
         TopBar(
             onBackClick = { },
-            title = "Title preview",
-            hasDropdownMenu = true,
-            dropdownItems =
-                arrayOf<DropdownMenuItemData>(
-                    DropdownMenuItemData(
-                        onClick = { },
-                        label = "Do something",
-                        icon = Icons.Outlined.Settings,
-                        iconAlt = "Settings icon."
-                    ),
-                    DropdownMenuItemData(
-                        onClick = { },
-                        label = "Do something different",
-                        icon = Icons.Outlined.Build,
-                        iconAlt = "Settings icon."
-                    )
+            state =
+                TopBarState(
+                    title = "Title preview",
+                    hasMenu = true,
+                    menuItems =
+                        listOf<DropdownMenuItemData>(
+                            DropdownMenuItemData(
+                                onClick = { },
+                                label = "Do something",
+                                icon = Icons.Outlined.Settings,
+                                iconAlt = "Settings icon."
+                            ),
+                            DropdownMenuItemData(
+                                onClick = { },
+                                label = "Do something different",
+                                icon = Icons.Outlined.Build,
+                                iconAlt = "Settings icon."
+                            )
+                        )
                 )
         )
     }
