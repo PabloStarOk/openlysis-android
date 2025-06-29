@@ -13,7 +13,7 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 @Stable
-internal data class MessageSectionState(
+internal data class MessageState(
     val sender: String = "",
     val subject: String? = null,
     val content: String = ""

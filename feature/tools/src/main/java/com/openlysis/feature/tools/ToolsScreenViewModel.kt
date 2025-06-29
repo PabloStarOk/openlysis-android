@@ -11,7 +11,7 @@ import com.openlysis.data.analysis.model.common.Outcome
 import com.openlysis.data.analysis.model.message.MessageAnalysis
 import com.openlysis.data.analysis.model.message.MessageType
 import com.openlysis.data.attachment.AttachmentFactory
-import com.openlysis.feature.tools.components.MessageSectionState
+import com.openlysis.feature.tools.components.MessageState
 import com.openlysis.feature.tools.data.AnalysisSettings
 import com.openlysis.feature.tools.data.AttachedFileData
 import com.openlysis.feature.tools.data.FileAttachmentSettings
@@ -49,7 +49,7 @@ internal class ToolsScreenViewModel
          * @param onError Callback invoked when an error occurs during analysis, providing the [AnalysisError] details
          */
         fun startEmailAnalysis(
-            messageState: MessageSectionState,
+            messageState: MessageState,
             attachedFiles: List<AttachedFileData>?,
             onSuccess: (MessageAnalysis) -> Unit,
             onError: (AnalysisError) -> Unit

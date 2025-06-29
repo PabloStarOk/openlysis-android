@@ -84,6 +84,9 @@ internal fun EmailAnalysisToolScreen(
         // TODO: Add functionality to select an email from the inbox instead of filling information manually.
         MessageSection(
             state = state.messageState,
+            onSenderChange = state::updateSender,
+            onSubjectChange = state::updateSubject,
+            onContentChange = state::updateContent,
             title = stringResource(R.string.email_message_tool_section_title),
             description = stringResource(R.string.email_message_tool_section_description),
             isEmail = true

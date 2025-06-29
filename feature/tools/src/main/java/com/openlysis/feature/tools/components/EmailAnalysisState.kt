@@ -37,7 +37,7 @@ internal fun rememberEmailAnalysisState(
             mutableStateListOf<AttachedFileData>()
         }
 
-    val messageState = rememberSaveable { mutableStateOf(MessageSectionState()) }
+    val messageState = rememberSaveable { mutableStateOf(MessageState()) }
 
     return remember {
         EmailAnalysisState(
@@ -61,10 +61,37 @@ internal class EmailAnalysisState(
     private val snapshotAttachedFiles: SnapshotStateList<AttachedFileData>,
     private val messageUiNotifier: MessageUiNotifier,
     val fileAttachmentSettings: FileAttachmentSettings,
-    val messageState: MutableState<MessageSectionState>
+    val messageState: MutableState<MessageState>
 ) {
     val attachedFiles: List<AttachedFileData>
         get() = snapshotAttachedFiles
+
+    /**
+     * Updates the sender's email address in the message state.
+     *
+     * @param newValue The new sender email address to be set
+     */
+    fun updateSender(newValue: String) {
+        messageState.value = messageState.value.copy(sender = newValue)
+    }
+
+    /**
+     * Updates the subject line in the message state.
+     *
+     * @param newValue The new subject text to be set
+     */
+    fun updateSubject(newValue: String) {
+        messageState.value = messageState.value.copy(subject = newValue)
+    }
+
+    /**
+     * Updates the message content/body in the message state.
+     *
+     * @param newValue The new content text to be set
+     */
+    fun updateContent(newValue: String) {
+        messageState.value = messageState.value.copy(content = newValue)
+    }
 
     /**
      * Adds a new attached file to the list if it passes validation checks.
