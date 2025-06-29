@@ -15,17 +15,17 @@ import com.openlysis.feature.tools.data.AttachedFileData
 import com.openlysis.feature.tools.data.FileAttachmentSettings
 
 /**
- * Remembers and provides an instance of [AnalyzeEmailModalState] for the Analyze Email modal.
+ * Creates and remembers an [EmailAnalysisState] instance that manages email analysis functionality.
  *
- * @param messageUiNotifier A [MessageUiNotifier] to notify message or errors.
- * @param fileAttachmentSettings Configuration for file attachment constraints.
- * @return A remembered [AnalyzeEmailModalState] instance.
+ * @param messageUiNotifier Handler for displaying UI messages and notifications
+ * @param fileAttachmentSettings Configuration settings for file attachment restrictions
+ * @return A new or existing [EmailAnalysisState] instance
  */
 @Composable
-internal fun rememberAnalyzeEmailModalState(
+internal fun rememberEmailAnalysisState(
     messageUiNotifier: MessageUiNotifier,
     fileAttachmentSettings: FileAttachmentSettings
-): AnalyzeEmailModalState {
+): EmailAnalysisState {
     val snapshotAttachedFiles =
         rememberSaveable(
             saver =
@@ -40,7 +40,7 @@ internal fun rememberAnalyzeEmailModalState(
     val messageState = rememberSaveable { mutableStateOf(MessageSectionState()) }
 
     return remember {
-        AnalyzeEmailModalState(
+        EmailAnalysisState(
             snapshotAttachedFiles = snapshotAttachedFiles,
             messageUiNotifier = messageUiNotifier,
             fileAttachmentSettings = fileAttachmentSettings,
@@ -50,14 +50,14 @@ internal fun rememberAnalyzeEmailModalState(
 }
 
 /**
- * State holder for the Analyze Email modal.
+ * Manages the state for email analysis functionality, including attached files and messaging.
  *
- * @property snapshotAttachedFiles The list of currently attached files, observable for UI updates.
- * @property messageUiNotifier Notifies the UI about messages or errors.
- * @property fileAttachmentSettings Configuration for file attachment constraints.
- * @property messageState State for the message section of the modal.
+ * @property snapshotAttachedFiles List of currently attached files that maintains state across recomposition
+ * @property messageUiNotifier Handler for displaying UI messages and notifications
+ * @property fileAttachmentSettings Configuration for file attachment restrictions
+ * @property messageState Current state of the message section UI
  */
-internal class AnalyzeEmailModalState(
+internal class EmailAnalysisState(
     private val snapshotAttachedFiles: SnapshotStateList<AttachedFileData>,
     private val messageUiNotifier: MessageUiNotifier,
     val fileAttachmentSettings: FileAttachmentSettings,
@@ -86,7 +86,7 @@ internal class AnalyzeEmailModalState(
         }
 
         if (file.size > fileAttachmentSettings.maxFileSize) {
-            val maxInMb = convertFileSizeToMb(fileAttachmentSettings.maxFileSize)
+            val maxInMb = convertFileSizeToMb()
             val mbUnit = "MB"
             messageUiNotifier.showMessage(R.string.error_file_too_large, maxInMb, mbUnit)
             return
@@ -125,9 +125,8 @@ internal class AnalyzeEmailModalState(
     /**
      * Converts a file size in bytes to megabytes (MB).
      *
-     * @param sizeInBytes The file size in bytes.
      * @return The file size in megabytes as a Float.
      */
-    private fun convertFileSizeToMb(sizeInBytes: Long): Float =
+    private fun convertFileSizeToMb(): Float =
         fileAttachmentSettings.maxFileSize.toFloat() / (1024f * 1024f)
 }

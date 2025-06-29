@@ -36,10 +36,11 @@
     <string name="attach_file_button_label">Agregar archivo</string>
     <string name="attach_file_button_icon_alt">Icono para agregar archivo</string>
 
-    <string name="email_message_tool_modal_title">Analizar Correo Electrónico</string>
-    <string name="email_message_tool_modal_description">Ingresa la información del mensaje o selecciona uno desde la bandeja de una de tus cuentas.</string>
-    <string name="email_message_tool_modal_file_title">Archivos Adjuntos</string>
-    <string name="email_message_tool_modal_file_description">Añade archivos relacionados con el mensaje para analizarlos.</string>
+    <string name="email_message_tool_screen_title">Analizar Correo Electrónico</string>
+    <string name="email_message_tool_section_title">Mensaje de Correo Electrónico</string>
+    <string name="email_message_tool_section_description">Ingresa la información del mensaje o selecciona uno desde la bandeja de una de tus cuentas.</string>
+    <string name="email_message_tool_file_section_title">Archivos Adjuntos</string>
+    <string name="email_message_tool_file_section_description">Adjunta archivos relacionados con el mensaje para analizarlos.</string>
 
     <string name="info_file_already_attached">Este archivo ya está adjunto.</string>
     <string name="error_file_uri_null">No se pudo agregar el archivo debido a un error inesperado.</string>

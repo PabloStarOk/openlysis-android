@@ -2,11 +2,16 @@ package com.openlysis.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.navigation.NavDestination
+import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.openlysis.core.designsystem.components.bar.TopBarState
+import com.openlysis.navigation.TopLevelDestination
 
 /**
  * Creates and remembers an instance of [AppState].
@@ -36,4 +41,29 @@ internal class AppState(
                 navController.currentBackStackEntryAsState()
             return currentEntry.value?.destination
         }
+
+    val currentTopLevelDestination: TopLevelDestination?
+        @Composable get() =
+            TopLevelDestination.entries.firstOrNull {
+                currentDestination?.hasRoute(it.route) == true
+            }
+
+    private val topBarMutableState =
+        mutableStateOf(
+            TopBarState(
+                title = "",
+                hasMenu = false
+            )
+        )
+
+    val topBarState: State<TopBarState> = topBarMutableState
+
+    /**
+     * Updates the state of the top bar with the provided new state.
+     *
+     * @param newState The new [TopBarState] to be applied to the top bar.
+     */
+    fun updateTopBarState(newState: TopBarState) {
+        topBarMutableState.value = newState
+    }
 }

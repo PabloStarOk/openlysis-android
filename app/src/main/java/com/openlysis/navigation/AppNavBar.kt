@@ -11,6 +11,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination.Companion.hasRoute
+import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.navOptions
 import com.openlysis.core.designsystem.theme.LocalAppColorScheme
 import com.openlysis.core.designsystem.theme.size.LocalAppSpacing
@@ -52,7 +53,10 @@ internal fun AppNavBar(
                     horizontal = LocalAppSpacing.current.value300
                 )
     ) {
-        val isToolsSelected = currentDest?.hasRoute(TopLevelDestination.Tools.route) == true
+        val isToolsSelected =
+            currentDest?.hierarchy?.any {
+                it.hasRoute(TopLevelDestination.Tools.baseRoute)
+            } == true
         AppNavBarItem(
             onClick = { navController.navigateToTools(navOptions) },
             icon = ImageVector.vectorResource(TopLevelDestination.Tools.iconResId),
@@ -63,7 +67,7 @@ internal fun AppNavBar(
             modifier = Modifier.weight(1f)
         )
 
-        val isResultsSelected = currentDest?.hasRoute(TopLevelDestination.Results.route) == true
+        val isResultsSelected = currentDest?.hasRoute(TopLevelDestination.Results.baseRoute) == true
         AppNavBarItem(
             onClick = { navController.navigate(TemporaryResults) },
             icon = ImageVector.vectorResource(TopLevelDestination.Results.iconResId),
@@ -74,7 +78,8 @@ internal fun AppNavBar(
             modifier = Modifier.weight(1f)
         )
 
-        val isSettingsSelected = currentDest?.hasRoute(TopLevelDestination.Settings.route) == true
+        val isSettingsSelected =
+            currentDest?.hasRoute(TopLevelDestination.Settings.baseRoute) == true
         AppNavBarItem(
             onClick = { navController.navigate(TemporarySettings) },
             icon = ImageVector.vectorResource(TopLevelDestination.Settings.iconResId),

@@ -36,10 +36,11 @@
     <string name="attach_file_button_label">Add File</string>
     <string name="attach_file_button_icon_alt">Add file icon</string>
 
-    <string name="email_message_tool_modal_title">Analyze Email</string>
-    <string name="email_message_tool_modal_description">Enter an email’s details or select one from your inbox.</string>
-    <string name="email_message_tool_modal_file_title">Attached Files</string>
-    <string name="email_message_tool_modal_file_description">Add files from the email to include in the analysis.</string>
+    <string name="email_message_tool_screen_title">Analyze Email</string>
+    <string name="email_message_tool_section_title">Email Message</string>
+    <string name="email_message_tool_section_description">Enter an email’s details or select one from your inbox.</string>
+    <string name="email_message_tool_file_section_title">Attached Files</string>
+    <string name="email_message_tool_file_section_description">Add files from the email to include in the analysis.</string>
 
     <string name="info_file_already_attached">This file is already attached.</string>
     <string name="error_file_uri_null">File could not be added due to an unexpected error.</string>
