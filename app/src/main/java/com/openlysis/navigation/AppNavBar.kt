@@ -12,10 +12,8 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.navOptions
 import com.openlysis.core.designsystem.theme.LocalAppColorScheme
 import com.openlysis.core.designsystem.theme.size.LocalAppSpacing
-import com.openlysis.feature.tools.navigation.navigateToTools
 import com.openlysis.ui.AppState
 
 /**
@@ -29,14 +27,8 @@ internal fun AppNavBar(
     appState: AppState,
     modifier: Modifier = Modifier
 ) {
-    val navController = appState.navController
     val currentDest = appState.currentDestination
     val appColorScheme = LocalAppColorScheme.current.border.default.primary
-    val navOptions =
-        navOptions {
-            launchSingleTop = true
-            restoreState = true
-        }
     NavigationBar(
         containerColor = LocalAppColorScheme.current.background.default.primary,
         modifier =
@@ -58,7 +50,7 @@ internal fun AppNavBar(
                 it.hasRoute(TopLevelDestination.Tools.baseRoute)
             } == true
         AppNavBarItem(
-            onClick = { navController.navigateToTools(navOptions) },
+            onClick = { appState.navigateToTopLevelDestination(TopLevelDestination.Tools) },
             icon = ImageVector.vectorResource(TopLevelDestination.Tools.iconResId),
             iconAlt = stringResource(TopLevelDestination.Tools.iconAltResId),
             label = stringResource(TopLevelDestination.Tools.navBarItemLabelResId),
@@ -69,7 +61,7 @@ internal fun AppNavBar(
 
         val isResultsSelected = currentDest?.hasRoute(TopLevelDestination.Results.baseRoute) == true
         AppNavBarItem(
-            onClick = { navController.navigate(TemporaryResults) },
+            onClick = { appState.navigateToTopLevelDestination(TopLevelDestination.Results) },
             icon = ImageVector.vectorResource(TopLevelDestination.Results.iconResId),
             iconAlt = stringResource(TopLevelDestination.Results.iconAltResId),
             label = stringResource(TopLevelDestination.Results.navBarItemLabelResId),
@@ -81,7 +73,7 @@ internal fun AppNavBar(
         val isSettingsSelected =
             currentDest?.hasRoute(TopLevelDestination.Settings.baseRoute) == true
         AppNavBarItem(
-            onClick = { navController.navigate(TemporarySettings) },
+            onClick = { appState.navigateToTopLevelDestination(TopLevelDestination.Settings) },
             icon = ImageVector.vectorResource(TopLevelDestination.Settings.iconResId),
             iconAlt = stringResource(TopLevelDestination.Settings.iconAltResId),
             label = stringResource(TopLevelDestination.Settings.navBarItemLabelResId),

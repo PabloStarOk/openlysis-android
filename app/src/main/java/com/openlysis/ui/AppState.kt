@@ -8,9 +8,14 @@ import androidx.compose.runtime.remember
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
+import androidx.navigation.NavOptions
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navOptions
 import com.openlysis.core.designsystem.components.bar.TopBarState
+import com.openlysis.feature.tools.navigation.navigateToTools
+import com.openlysis.navigation.TemporaryResults
+import com.openlysis.navigation.TemporarySettings
 import com.openlysis.navigation.TopLevelDestination
 
 /**
@@ -48,6 +53,12 @@ internal class AppState(
                 currentDestination?.hasRoute(it.route) == true
             }
 
+    val navOptions: NavOptions =
+        navOptions {
+            launchSingleTop = true
+            restoreState = true
+        }
+
     private val topBarMutableState =
         mutableStateOf(
             TopBarState(
@@ -65,5 +76,18 @@ internal class AppState(
      */
     fun updateTopBarState(newState: TopBarState) {
         topBarMutableState.value = newState
+    }
+
+    /**
+     * Navigates to a top-level destination in the app.
+     *
+     * @param destination The [TopLevelDestination] to navigate to, which can be Tools, Results, or Settings.
+     */
+    fun navigateToTopLevelDestination(destination: TopLevelDestination) {
+        when (destination) {
+            TopLevelDestination.Tools -> navController.navigateToTools(navOptions)
+            TopLevelDestination.Results -> navController.navigate(TemporaryResults)
+            TopLevelDestination.Settings -> navController.navigate(TemporarySettings)
+        }
     }
 }
