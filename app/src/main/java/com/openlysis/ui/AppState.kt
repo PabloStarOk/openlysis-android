@@ -53,6 +53,8 @@ internal class AppState(
                 currentDestination?.hasRoute(it.route) == true
             }
 
+    val topLevelDestinations: List<TopLevelDestination> = TopLevelDestination.entries
+
     val navOptions: NavOptions =
         navOptions {
             launchSingleTop = true
