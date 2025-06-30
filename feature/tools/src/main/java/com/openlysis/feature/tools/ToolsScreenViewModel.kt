@@ -3,9 +3,11 @@ package com.openlysis.feature.tools
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.openlysis.data.analysis.core.repository.AnalysesRepository
+import com.openlysis.data.analysis.core.request.AnalyzeFile
 import com.openlysis.data.analysis.core.request.AnalyzeMessage
 import com.openlysis.data.analysis.core.request.Attachment
 import com.openlysis.data.analysis.core.request.Message
+import com.openlysis.data.analysis.model.analysis.FileMultiAnalysis
 import com.openlysis.data.analysis.model.common.AnalysisError
 import com.openlysis.data.analysis.model.common.Outcome
 import com.openlysis.data.analysis.model.message.MessageAnalysis
@@ -22,10 +24,11 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
- * ViewModel responsible for managing email analysis functionality in the tools screen.
+ * ViewModel responsible for managing message, file and URL analyses functionality in the tools screen.
  *
  * @property attachmentFactory Factory for creating [Attachment] objects from [AttachedFileData] objects
  * @property messageAnalysisRepo Repository for analyzing email messages
+ * @property fileAnalysisRepo Repository for analyzing individual files
  * @property fileAttachmentSettings Settings for file attachments configuration
  * @property analysisSettings Settings for analysis configuration
  */
@@ -35,6 +38,7 @@ internal class ToolsScreenViewModel
     constructor(
         private val attachmentFactory: AttachmentFactory,
         private val messageAnalysisRepo: AnalysesRepository<AnalyzeMessage, MessageAnalysis>,
+        private val fileAnalysisRepo: AnalysesRepository<AnalyzeFile, FileMultiAnalysis>,
         val fileAttachmentSettings: FileAttachmentSettings,
         val analysisSettings: AnalysisSettings
     ) : ViewModel() {
@@ -100,6 +104,52 @@ internal class ToolsScreenViewModel
                     for (closeable in attachments) {
                         closeable.close()
                     }
+                }
+            }
+        }
+
+        /**
+         * Initiates the analysis of a single file.
+         *
+         * @param attachedFile Data object containing the URI and password (if any) of the file to analyze
+         * @param onSuccess Callback function to handle successful analysis with FileMultiAnalysis result
+         * @param onError Callback function to handle analysis errors with AnalysisError
+         */
+        fun startFileAnalysis(
+            attachedFile: AttachedFileData,
+            onSuccess: (FileMultiAnalysis) -> Unit,
+            onError: (AnalysisError) -> Unit
+        ) {
+            val outcome =
+                attachmentFactory.create(
+                    attachedFile.uri,
+                    attachedFile.password
+                )
+
+            val attachment =
+                when (outcome) {
+                    is Outcome.Success -> outcome.value
+                    is Outcome.Failure -> {
+                        onError(outcome.error)
+                        return
+                    }
+                }
+
+            val request =
+                AnalyzeFile(
+                    attachment = attachment,
+                    reanalyze = analysisSettings.reanalyzeFiles
+                )
+
+            viewModelScope.launch {
+                try {
+                    val outcome = fileAnalysisRepo.analyze(request)
+                    when (outcome) {
+                        is Outcome.Success -> onSuccess(outcome.value)
+                        is Outcome.Failure -> onError(outcome.error)
+                    }
+                } finally {
+                    attachment.close()
                 }
             }
         }

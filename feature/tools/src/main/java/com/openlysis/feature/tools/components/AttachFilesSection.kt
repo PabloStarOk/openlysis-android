@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.database.getLongOrNull
@@ -74,11 +75,17 @@ internal fun AttachFilesSection(
         }
 
     val fileSizeInMb = settings.maxFileSize.toFloat() / (1024 * 1024)
+    val limitMessageArgs =
+        if (settings.maxFilesAmount > 1) {
+            arrayOf<Any>(settings.maxFilesAmount, fileSizeInMb)
+        } else {
+            arrayOf(fileSizeInMb)
+        }
     val limitMessage =
-        stringResource(
-            R.string.attach_file_limit_message,
+        pluralStringResource(
+            R.plurals.attach_file_limit_message,
             settings.maxFilesAmount,
-            fileSizeInMb
+            *limitMessageArgs
         )
 
     ToolSection(

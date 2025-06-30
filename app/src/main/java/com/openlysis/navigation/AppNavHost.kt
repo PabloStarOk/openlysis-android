@@ -39,6 +39,10 @@ internal fun AppNavHost(
                 navController.navigate(TemporaryResults)
                 // TODO: Implement navigation to display and update results of this new analysis.
             },
+            onFileAnalysisStart = {
+                navController.navigate(TemporaryResults)
+                // TODO: Implement navigation to display and update results of this new analysis.
+            },
             enterTransition = {
                 val toNestedGraph =
                     this.initialState.destination.parent?.hierarchy?.any {

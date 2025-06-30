@@ -13,8 +13,10 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.openlysis.core.designsystem.components.bar.TopBarState
+import com.openlysis.data.analysis.model.analysis.FileMultiAnalysis
 import com.openlysis.data.analysis.model.message.MessageAnalysis
 import com.openlysis.feature.tools.EmailAnalysisToolScreen
+import com.openlysis.feature.tools.FileAnalysisToolScreen
 import com.openlysis.feature.tools.SmsAnalysisToolScreen
 import com.openlysis.feature.tools.ToolsScreen
 import com.openlysis.feature.tools.ToolsScreenViewModel
@@ -48,6 +50,13 @@ data object EmailAnalysisToolRoute
 data object SmsAnalysisToolRoute
 
 /**
+ * Route for accessing the file analysis tool screen, which provides functionality
+ * for analyzing files and documents within the tools navigation graph.
+ */
+@Serializable
+data object FileAnalysisToolRoute
+
+/**
  * Provides functionality to navigate to the tools screen.
  */
 fun NavController.navigateToTools(navOptions: NavOptions) =
@@ -67,6 +76,7 @@ fun NavController.navigateToTools(navOptions: NavOptions) =
 fun NavGraphBuilder.toolsScreen(
     navController: NavController,
     onMessageAnalysisStart: (MessageAnalysis) -> Unit,
+    onFileAnalysisStart: (FileMultiAnalysis) -> Unit,
     onTopBarUpdate: (TopBarState) -> Unit,
     enterTransition: (
     AnimatedContentTransitionScope<NavBackStackEntry>.()
@@ -97,8 +107,8 @@ fun NavGraphBuilder.toolsScreen(
                     when (it) {
                         ToolCategory.Email -> navController.navigate(EmailAnalysisToolRoute)
                         ToolCategory.Sms -> navController.navigate(SmsAnalysisToolRoute)
+                        ToolCategory.File -> navController.navigate(FileAnalysisToolRoute)
                         ToolCategory.Url -> TODO()
-                        ToolCategory.File -> TODO()
                     }
                 },
                 viewModel = getSharedViewModel(backStackEntry, navController)
@@ -117,6 +127,14 @@ fun NavGraphBuilder.toolsScreen(
             SmsAnalysisToolScreen(
                 viewModel = getSharedViewModel(backStackEntry, navController),
                 onAnalysisStart = onMessageAnalysisStart,
+                onTopBarUpdate = onTopBarUpdate
+            )
+        }
+
+        composable<FileAnalysisToolRoute> { backStackEntry ->
+            FileAnalysisToolScreen(
+                viewModel = getSharedViewModel(backStackEntry, navController),
+                onAnalysisStart = onFileAnalysisStart,
                 onTopBarUpdate = onTopBarUpdate
             )
         }

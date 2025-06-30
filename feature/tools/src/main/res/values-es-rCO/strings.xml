@@ -32,7 +32,10 @@
     <string name="attached_file_hide_password_button_icon_alt">Ícono para ocultar contraseña</string>
 
     <string name="attach_file_warning_alert">Por privacidad, nunca adjuntes archivos privados o confidenciales.</string>
-    <string name="attach_file_limit_message">Puedes añadir hasta %d archivos, de %.1f MB cada uno como máximo.</string>
+    <plurals name="attach_file_limit_message">
+        <item quantity="one">Puedes añadir un archivo de hasta %.1f MB de tamaño.</item>
+        <item quantity="other">Puedes añadir hasta %d archivos, de %.1f MB cada uno como máximo.</item>
+    </plurals>
     <string name="attach_file_button_label">Agregar archivo</string>
     <string name="attach_file_button_icon_alt">Icono para agregar archivo</string>
 
@@ -45,6 +48,10 @@
     <string name="sms_message_tool_screen_title">Analizar SMS</string>
     <string name="sms_message_tool_section_title">Mensaje de Texto SMS</string>
     <string name="sms_message_tool_section_description">Ingresa la información del mensaje o selecciona uno desde la bandeja SMS de tu dispositivo.</string>
+
+    <string name="file_tool_screen_title">Analizar Archivo</string>
+    <string name="file_tool_section_title">Archivo</string>
+    <string name="file_tool_section_description">Adjunta el archivo que deseas escanear.</string>
 
     <string name="info_file_already_attached">Este archivo ya está adjunto.</string>
     <string name="error_file_uri_null">No se pudo agregar el archivo debido a un error inesperado.</string>
