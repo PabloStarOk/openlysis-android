@@ -48,7 +48,7 @@ internal fun EmailAnalysisToolScreen(
             }
         }
     val attachFilesEnabled by
-        remember(state.attachedFiles, state.fileAttachmentSettings.maxFilesAmount) {
+        remember(state.attachedFiles) {
             derivedStateOf {
                 state.attachedFiles.size < state.fileAttachmentSettings.maxFilesAmount
             }
