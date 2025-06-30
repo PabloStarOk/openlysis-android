@@ -41,14 +41,16 @@ internal class ToolsScreenViewModel
         val toolsRepository: ToolsRepository = ToolsDataSource()
 
         /**
-         * Initiates the analysis of an email message with optional attachments.
+         * Initiates the analysis of a message with optional attachments.
          *
-         * @param messageState The state containing email message details (sender, subject, content)
-         * @param attachedFiles Optional list of files attached to the email
-         * @param onSuccess Callback invoked when analysis completes successfully, providing the [MessageAnalysis] result
-         * @param onError Callback invoked when an error occurs during analysis, providing the [AnalysisError] details
+         * @param type The type of message to be analyzed
+         * @param messageState Current state of the message containing sender, subject and content
+         * @param attachedFiles Optional list of files attached to the message
+         * @param onSuccess Callback function to handle successful analysis with MessageAnalysis result
+         * @param onError Callback function to handle analysis errors with AnalysisError
          */
-        fun startEmailAnalysis(
+        fun startMessageAnalysis(
+            type: MessageType,
             messageState: MessageState,
             attachedFiles: List<AttachedFileData>?,
             onSuccess: (MessageAnalysis) -> Unit,
@@ -73,7 +75,7 @@ internal class ToolsScreenViewModel
 
             val message =
                 Message(
-                    type = MessageType.Email,
+                    type = type,
                     sender = messageState.sender,
                     subject = messageState.subject,
                     content = messageState.content,

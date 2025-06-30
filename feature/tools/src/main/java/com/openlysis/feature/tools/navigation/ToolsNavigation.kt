@@ -15,6 +15,7 @@ import androidx.navigation.navigation
 import com.openlysis.core.designsystem.components.bar.TopBarState
 import com.openlysis.data.analysis.model.message.MessageAnalysis
 import com.openlysis.feature.tools.EmailAnalysisToolScreen
+import com.openlysis.feature.tools.SmsAnalysisToolScreen
 import com.openlysis.feature.tools.ToolsScreen
 import com.openlysis.feature.tools.ToolsScreenViewModel
 import com.openlysis.feature.tools.data.ToolCategory
@@ -38,6 +39,13 @@ data object ToolsRoute
  */
 @Serializable
 data object EmailAnalysisToolRoute
+
+/**
+ * Route for accessing the SMS analysis tool screen, which provides functionality
+ * for analyzing SMS messages within the tools navigation graph.
+ */
+@Serializable
+data object SmsAnalysisToolRoute
 
 /**
  * Provides functionality to navigate to the tools screen.
@@ -88,7 +96,7 @@ fun NavGraphBuilder.toolsScreen(
                 onToolClick = {
                     when (it) {
                         ToolCategory.Email -> navController.navigate(EmailAnalysisToolRoute)
-                        ToolCategory.Sms -> TODO()
+                        ToolCategory.Sms -> navController.navigate(SmsAnalysisToolRoute)
                         ToolCategory.Url -> TODO()
                         ToolCategory.File -> TODO()
                     }
@@ -99,6 +107,14 @@ fun NavGraphBuilder.toolsScreen(
 
         composable<EmailAnalysisToolRoute> { backStackEntry ->
             EmailAnalysisToolScreen(
+                viewModel = getSharedViewModel(backStackEntry, navController),
+                onAnalysisStart = onMessageAnalysisStart,
+                onTopBarUpdate = onTopBarUpdate
+            )
+        }
+
+        composable<SmsAnalysisToolRoute> { backStackEntry ->
+            SmsAnalysisToolScreen(
                 viewModel = getSharedViewModel(backStackEntry, navController),
                 onAnalysisStart = onMessageAnalysisStart,
                 onTopBarUpdate = onTopBarUpdate

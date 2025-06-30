@@ -42,6 +42,10 @@
     <string name="email_message_tool_file_section_title">Archivos Adjuntos</string>
     <string name="email_message_tool_file_section_description">Adjunta archivos relacionados con el mensaje para analizarlos.</string>
 
+    <string name="sms_message_tool_screen_title">Analizar SMS</string>
+    <string name="sms_message_tool_section_title">Mensaje de Texto SMS</string>
+    <string name="sms_message_tool_section_description">Ingresa la información del mensaje o selecciona uno desde la bandeja SMS de tu dispositivo.</string>
+
     <string name="info_file_already_attached">Este archivo ya está adjunto.</string>
     <string name="error_file_uri_null">No se pudo agregar el archivo debido a un error inesperado.</string>
     <string name="error_file_too_large">El tamaño del archivo debe ser igual o menor a %.1f %s.</string>

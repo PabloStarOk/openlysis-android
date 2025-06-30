@@ -1,7 +1,6 @@
 package com.openlysis.feature.tools
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -13,6 +12,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.openlysis.core.designsystem.components.bar.TopBarState
 import com.openlysis.core.designsystem.theme.OpenlysisTheme
 import com.openlysis.data.analysis.model.message.MessageAnalysis
+import com.openlysis.data.analysis.model.message.MessageType
 import com.openlysis.feature.tools.components.AttachFilesSection
 import com.openlysis.feature.tools.components.MessageSection
 import com.openlysis.feature.tools.components.ToolScreenScaffold
@@ -33,16 +33,6 @@ internal fun EmailAnalysisToolScreen(
     onTopBarUpdate: (TopBarState) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val topBarTitle = stringResource(R.string.email_message_tool_screen_title)
-    LaunchedEffect(Unit) {
-        onTopBarUpdate(
-            TopBarState(
-                title = topBarTitle,
-                hasMenu = false
-            )
-        )
-    }
-
     val context = LocalContext.current
     val messageUiNotifier = remember { MessageUiNotifier(context) }
     val errorHandler = remember { AnalysisErrorUiHandler(messageUiNotifier) }
@@ -54,10 +44,7 @@ internal fun EmailAnalysisToolScreen(
     val submitEnabled by
         remember(state.messageState) {
             derivedStateOf {
-                state.messageState.value.sender
-                    .isNotEmpty() &&
-                    state.messageState.value.content
-                        .isNotEmpty()
+                state.messageState.value.submitEnabled
             }
         }
     val attachFilesEnabled by
@@ -69,13 +56,16 @@ internal fun EmailAnalysisToolScreen(
 
     ToolScreenScaffold(
         onSubmitClick = {
-            viewModel.startEmailAnalysis(
+            viewModel.startMessageAnalysis(
+                type = MessageType.Email,
                 messageState = state.messageState.value,
                 attachedFiles = state.attachedFiles,
                 onSuccess = onAnalysisStart,
                 onError = errorHandler::handle
             )
         },
+        screenTitle = stringResource(R.string.email_message_tool_screen_title),
+        onTopBarUpdate = onTopBarUpdate,
         submitButtonLabel = stringResource(R.string.analyze_button_label),
         submitButtonIconAlt = stringResource(R.string.analyze_button_icon_alt),
         submitEnabled = submitEnabled,

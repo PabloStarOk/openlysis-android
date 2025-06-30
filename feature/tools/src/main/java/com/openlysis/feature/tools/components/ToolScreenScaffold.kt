@@ -11,9 +11,11 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.openlysis.core.designsystem.components.bar.TopBarState
 import com.openlysis.core.designsystem.components.button.AppButton
 import com.openlysis.core.designsystem.components.button.ButtonType
 import com.openlysis.core.designsystem.icon.AppIcons
@@ -26,6 +28,8 @@ import com.openlysis.core.designsystem.theme.size.LocalAppSpacing
  * A scaffold for tool screens. This composable provides a consistent layout structure for tool-related screens
  * with a scrollable content area and a bottom submit button.
  *
+ * @param screenTitle The title to display in the top bar.
+ * @param onTopBarUpdate Callback to update the top bar state.
  * @param onSubmitClick Callback when the submit button is clicked.
  * @param submitButtonLabel The label for the submit button.
  * @param submitButtonIconAlt The content description for the submit button icon.
@@ -35,6 +39,8 @@ import com.openlysis.core.designsystem.theme.size.LocalAppSpacing
  */
 @Composable
 internal fun ToolScreenScaffold(
+    screenTitle: String,
+    onTopBarUpdate: (TopBarState) -> Unit,
     onSubmitClick: () -> Unit,
     submitButtonLabel: String,
     submitButtonIconAlt: String,
@@ -42,6 +48,15 @@ internal fun ToolScreenScaffold(
     modifier: Modifier = Modifier,
     content: @Composable ColumnScope.() -> Unit
 ) {
+    LaunchedEffect(Unit) {
+        onTopBarUpdate(
+            TopBarState(
+                title = screenTitle,
+                hasMenu = false
+            )
+        )
+    }
+
     val scrollState = rememberScrollState()
     val submitButtonType =
         if (submitEnabled) {
@@ -98,6 +113,8 @@ internal fun ToolScreenScaffold(
 private fun ToolScreenScaffoldPreview() {
     OpenlysisTheme(darkTheme = false) {
         ToolScreenScaffold(
+            screenTitle = "Test Title",
+            onTopBarUpdate = { },
             onSubmitClick = { },
             submitButtonLabel = "Test",
             submitButtonIconAlt = "Test",
