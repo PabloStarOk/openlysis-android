@@ -14,12 +14,14 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.openlysis.core.designsystem.components.bar.TopBarState
 import com.openlysis.data.analysis.model.analysis.FileMultiAnalysis
+import com.openlysis.data.analysis.model.analysis.UrlMultiAnalysis
 import com.openlysis.data.analysis.model.message.MessageAnalysis
 import com.openlysis.feature.tools.EmailAnalysisToolScreen
 import com.openlysis.feature.tools.FileAnalysisToolScreen
 import com.openlysis.feature.tools.SmsAnalysisToolScreen
 import com.openlysis.feature.tools.ToolsScreen
 import com.openlysis.feature.tools.ToolsScreenViewModel
+import com.openlysis.feature.tools.UrlAnalysisToolScreen
 import com.openlysis.feature.tools.data.ToolCategory
 import kotlinx.serialization.Serializable
 
@@ -57,6 +59,13 @@ data object SmsAnalysisToolRoute
 data object FileAnalysisToolRoute
 
 /**
+ * Route for accessing the URL analysis tool screen, which provides functionality
+ * for analyzing web URLs and links within the tools navigation graph.
+ */
+@Serializable
+data object UrlAnalysisToolRoute
+
+/**
  * Provides functionality to navigate to the tools screen.
  */
 fun NavController.navigateToTools(navOptions: NavOptions) =
@@ -67,6 +76,8 @@ fun NavController.navigateToTools(navOptions: NavOptions) =
  *
  * @param navController The navigation controller for handling navigation events
  * @param onMessageAnalysisStart Callback triggered when message analysis is started
+ * @param onFileAnalysisStart Callback triggered when file analysis is started
+ * @param onUrlAnalysisStart Callback triggered when URL analysis is started
  * @param onTopBarUpdate Callback to update the top bar state
  * @param enterTransition Animation played when the screen enters
  * @param exitTransition Animation played when the screen exits
@@ -77,6 +88,7 @@ fun NavGraphBuilder.toolsScreen(
     navController: NavController,
     onMessageAnalysisStart: (MessageAnalysis) -> Unit,
     onFileAnalysisStart: (FileMultiAnalysis) -> Unit,
+    onUrlAnalysisStart: (UrlMultiAnalysis) -> Unit,
     onTopBarUpdate: (TopBarState) -> Unit,
     enterTransition: (
     AnimatedContentTransitionScope<NavBackStackEntry>.()
@@ -108,7 +120,7 @@ fun NavGraphBuilder.toolsScreen(
                         ToolCategory.Email -> navController.navigate(EmailAnalysisToolRoute)
                         ToolCategory.Sms -> navController.navigate(SmsAnalysisToolRoute)
                         ToolCategory.File -> navController.navigate(FileAnalysisToolRoute)
-                        ToolCategory.Url -> TODO()
+                        ToolCategory.Url -> navController.navigate(UrlAnalysisToolRoute)
                     }
                 },
                 viewModel = getSharedViewModel(backStackEntry, navController)
@@ -135,6 +147,14 @@ fun NavGraphBuilder.toolsScreen(
             FileAnalysisToolScreen(
                 viewModel = getSharedViewModel(backStackEntry, navController),
                 onAnalysisStart = onFileAnalysisStart,
+                onTopBarUpdate = onTopBarUpdate
+            )
+        }
+
+        composable<UrlAnalysisToolRoute> { backStackEntry ->
+            UrlAnalysisToolScreen(
+                viewModel = getSharedViewModel(backStackEntry, navController),
+                onAnalysisStart = onUrlAnalysisStart,
                 onTopBarUpdate = onTopBarUpdate
             )
         }

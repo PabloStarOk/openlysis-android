@@ -53,6 +53,12 @@
     <string name="file_tool_section_title">File</string>
     <string name="file_tool_section_description">Attach the file you want to analyze.</string>
 
+    <string name="url_tool_screen_title">Analyze URL</string>
+    <string name="url_tool_section_title">URL</string>
+    <string name="url_tool_section_description">Enter the URL you want to analyze.</string>
+    <string name="url_tool_input_label">URL</string>
+    <string name="url_tool_input_invalid_url">The URL is invalid, make sure to include at least the domain (example.com).</string>
+
     <string name="info_file_already_attached">This file is already attached.</string>
     <string name="error_file_uri_null">File could not be added due to an unexpected error.</string>
     <string name="error_file_too_large">The file size must be less than or equal to %.1f %s.</string>

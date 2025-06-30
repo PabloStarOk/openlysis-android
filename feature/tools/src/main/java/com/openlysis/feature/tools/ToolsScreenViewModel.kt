@@ -5,9 +5,11 @@ import androidx.lifecycle.viewModelScope
 import com.openlysis.data.analysis.core.repository.AnalysesRepository
 import com.openlysis.data.analysis.core.request.AnalyzeFile
 import com.openlysis.data.analysis.core.request.AnalyzeMessage
+import com.openlysis.data.analysis.core.request.AnalyzeUrl
 import com.openlysis.data.analysis.core.request.Attachment
 import com.openlysis.data.analysis.core.request.Message
 import com.openlysis.data.analysis.model.analysis.FileMultiAnalysis
+import com.openlysis.data.analysis.model.analysis.UrlMultiAnalysis
 import com.openlysis.data.analysis.model.common.AnalysisError
 import com.openlysis.data.analysis.model.common.Outcome
 import com.openlysis.data.analysis.model.message.MessageAnalysis
@@ -21,6 +23,8 @@ import com.openlysis.feature.tools.data.ToolsDataSource
 import com.openlysis.feature.tools.data.ToolsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.net.URI
+import java.net.URISyntaxException
 import javax.inject.Inject
 
 /**
@@ -29,6 +33,7 @@ import javax.inject.Inject
  * @property attachmentFactory Factory for creating [Attachment] objects from [AttachedFileData] objects
  * @property messageAnalysisRepo Repository for analyzing email messages
  * @property fileAnalysisRepo Repository for analyzing individual files
+ * @property urlAnalysisRepo Repository for analyzing URLs
  * @property fileAttachmentSettings Settings for file attachments configuration
  * @property analysisSettings Settings for analysis configuration
  */
@@ -39,10 +44,17 @@ internal class ToolsScreenViewModel
         private val attachmentFactory: AttachmentFactory,
         private val messageAnalysisRepo: AnalysesRepository<AnalyzeMessage, MessageAnalysis>,
         private val fileAnalysisRepo: AnalysesRepository<AnalyzeFile, FileMultiAnalysis>,
+        private val urlAnalysisRepo: AnalysesRepository<AnalyzeUrl, UrlMultiAnalysis>,
         val fileAttachmentSettings: FileAttachmentSettings,
         val analysisSettings: AnalysisSettings
     ) : ViewModel() {
         val toolsRepository: ToolsRepository = ToolsDataSource()
+
+        private val urlValidationRegex =
+            Regex(
+                "^(?:https?|ftp|sftp|gopher|ws|wss)://(?:(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\\.)+[a-zA-Z]{2,6}|\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3})(?::\\d+)?(?:/\\S*)?$|^(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\\.)+[a-zA-Z]{2,6}(?::\\d+)?(?:/\\S*)?$",
+                options = setOf(RegexOption.IGNORE_CASE)
+            )
 
         /**
          * Initiates the analysis of a message with optional attachments.
@@ -157,6 +169,53 @@ internal class ToolsScreenViewModel
                 } finally {
                     attachment.close()
                 }
+            }
+        }
+
+        /**
+         * Initiates the analysis of a URL.
+         *
+         * @param url The URI to be analyzed
+         * @param onSuccess Callback function to handle successful analysis with UrlMultiAnalysis result
+         * @param onError Callback function to handle analysis errors with AnalysisError
+         */
+        fun startUrlAnalysis(
+            url: URI,
+            onSuccess: (UrlMultiAnalysis) -> Unit,
+            onError: (AnalysisError) -> Unit
+        ) {
+            val request =
+                AnalyzeUrl(
+                    url = url,
+                    reanalyze = analysisSettings.reanalyzeUrls
+                )
+
+            viewModelScope.launch {
+                val outcome = urlAnalysisRepo.analyze(request)
+                when (outcome) {
+                    is Outcome.Success -> onSuccess(outcome.value)
+                    is Outcome.Failure -> onError(outcome.error)
+                }
+            }
+        }
+
+        /**
+         * Validates and converts a raw URL string into a URI object.
+         * First checks if the URL matches a predefined regex pattern, then attempts to create a URI.
+         *
+         * @param rawUrl The URL string to validate and convert
+         * @return A valid [URI] object if the URL is valid and can be parsed, null otherwise
+         */
+        fun getUrlIfValid(rawUrl: String): URI? {
+            if (!urlValidationRegex.matches(rawUrl)) {
+                return null
+            }
+
+            try {
+                val url = URI(rawUrl)
+                return url
+            } catch (_: URISyntaxException) {
+                return null
             }
         }
     }

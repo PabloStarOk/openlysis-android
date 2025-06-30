@@ -53,6 +53,12 @@
     <string name="file_tool_section_title">Archivo</string>
     <string name="file_tool_section_description">Adjunta el archivo que deseas escanear.</string>
 
+    <string name="url_tool_screen_title">Analizar URL</string>
+    <string name="url_tool_section_title">URL</string>
+    <string name="url_tool_section_description">Ingresa la URL que deseas analizar.</string>
+    <string name="url_tool_input_label">URL</string>
+    <string name="url_tool_input_invalid_url">La URL es invalida, asegurate de incluir al menos el dominio (ejemplo.com).</string>
+
     <string name="info_file_already_attached">Este archivo ya está adjunto.</string>
     <string name="error_file_uri_null">No se pudo agregar el archivo debido a un error inesperado.</string>
     <string name="error_file_too_large">El tamaño del archivo debe ser igual o menor a %.1f %s.</string>
