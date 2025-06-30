@@ -8,6 +8,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import com.openlysis.core.designsystem.components.TextInput
@@ -40,7 +41,10 @@ internal fun MessageSection(
     val stateValue by state
     val senderKeyboardOptions =
         remember {
-            KeyboardOptions(keyboardType = if (isEmail) KeyboardType.Email else KeyboardType.Text)
+            KeyboardOptions(
+                keyboardType = if (isEmail) KeyboardType.Email else KeyboardType.Text,
+                imeAction = ImeAction.Next
+            )
         }
     val textKeyboardOptions =
         remember {
@@ -64,7 +68,7 @@ internal fun MessageSection(
                 value = stateValue.subject ?: "",
                 onValueChange = onSubjectChange ?: { },
                 label = stringResource(R.string.analyze_message_subject_input_label),
-                keyboardOptions = textKeyboardOptions
+                keyboardOptions = textKeyboardOptions.copy(imeAction = ImeAction.Next)
             )
         }
 
