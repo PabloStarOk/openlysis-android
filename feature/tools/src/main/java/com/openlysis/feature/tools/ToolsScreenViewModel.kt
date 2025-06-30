@@ -86,10 +86,16 @@ internal class ToolsScreenViewModel
                     attachments = attachments
                 )
 
+            val defaultReanalyze =
+                when (type) {
+                    MessageType.Email -> analysisSettings.reanalyzeEmails
+                    MessageType.Sms -> analysisSettings.reanalyzeSms
+                }
+
             val request =
                 AnalyzeMessage(
                     message = message,
-                    reanalyze = analysisSettings.reanalyzeEmails,
+                    reanalyze = defaultReanalyze,
                     countryCode = analysisSettings.defaultCountryCode
                 )
 
