@@ -69,7 +69,24 @@ internal fun FileAnalysisToolScreen(
     ) {
         AttachFilesSection(
             attachedFiles = attachedFiles,
-            onFileAttach = { attachedFiles.add(it) },
+            onFileAttach = {
+                val maxFileSizeInMb = fileAttachmentSettings.maxFileSize.toFloat() / (1024 * 1024)
+                if (it.size < 1) {
+                    messageUiNotifier.showMessage(R.string.error_file_size_zero)
+                    return@AttachFilesSection
+                }
+
+                if (it.size > fileAttachmentSettings.maxFileSize) {
+                    messageUiNotifier.showMessage(
+                        R.string.error_file_too_large,
+                        maxFileSizeInMb,
+                        "MB"
+                    )
+                    return@AttachFilesSection
+                }
+
+                attachedFiles.add(it)
+            },
             onFileDetach = { attachedFiles.removeAt(0) },
             onFilePasswordChange = { _, password ->
                 attachedFiles[0] = attachedFiles[0].copy(password = password)
