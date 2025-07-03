@@ -32,4 +32,14 @@ object AppIconsIds {
     @DrawableRes val Menu = R.drawable.menu_icon
 
     @DrawableRes val Cross = R.drawable.x_icon
+
+    @DrawableRes val Plus = R.drawable.plus_icon
+
+    @DrawableRes val Eye = R.drawable.eye_icon
+
+    @DrawableRes val EyeOff = R.drawable.eye_off_icon
+
+    @DrawableRes val Retry = R.drawable.retry_icon
+
+    @DrawableRes val Open = R.drawable.open_icon
 }

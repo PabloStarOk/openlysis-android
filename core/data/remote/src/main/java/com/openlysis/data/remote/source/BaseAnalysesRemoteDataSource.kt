@@ -1,19 +1,19 @@
 package com.openlysis.data.remote.source
 
-import com.openlysis.data.analysis.core.error.Outcome
 import com.openlysis.data.analysis.core.error.RepositoryError
+import com.openlysis.data.analysis.core.request.Attachment
 import com.openlysis.data.analysis.core.response.AnalyzeResponse
 import com.openlysis.data.analysis.core.source.AnalysesRemoteDataSource
 import com.openlysis.data.analysis.model.common.Model
+import com.openlysis.data.analysis.model.common.Outcome
+import com.openlysis.data.remote.AttachmentRequestBody
 import com.openlysis.data.remote.OpenlysisApi
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.ResponseBody.Companion.toResponseBody
 import retrofit2.Response
-import java.io.File
 import java.io.IOException
 import java.net.ConnectException
 import java.net.UnknownHostException
@@ -76,20 +76,17 @@ internal abstract class BaseAnalysesRemoteDataSource<TRequest, TModel>(
     ): Response<List<TModel>>
 
     /**
-     * Creates a [MultipartBody.Part] from a [File] for use in multipart HTTP requests.
+     * Converts an [Attachment] to a [MultipartBody.Part] for use in multipart form data requests.
      *
-     * @param name The form field name for the file part.
-     * @param mimeType The MIME type of the file.
-     * @return A [MultipartBody.Part] representing the file.
+     * @param fieldName The name of the form field.
+     * @receiver The [Attachment] to be converted.
+     * @return A [MultipartBody.Part] representing the attachment as form data.
      */
-    protected fun File.asFormDataPart(
-        name: String,
-        mimeType: String
-    ): MultipartBody.Part =
+    protected fun Attachment.asFormDataPart(fieldName: String): MultipartBody.Part =
         MultipartBody.Part.createFormData(
-            name,
+            fieldName,
             this.name,
-            this.asRequestBody(mimeType.toMediaType())
+            AttachmentRequestBody(this)
         )
 
     /**

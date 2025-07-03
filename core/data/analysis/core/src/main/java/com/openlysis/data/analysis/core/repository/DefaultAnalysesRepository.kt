@@ -1,9 +1,9 @@
 package com.openlysis.data.analysis.core.repository
 
-import com.openlysis.data.analysis.core.error.Outcome
 import com.openlysis.data.analysis.core.source.AnalysesLocalDataSource
 import com.openlysis.data.analysis.core.source.AnalysesRemoteDataSource
 import com.openlysis.data.analysis.model.common.Model
+import com.openlysis.data.analysis.model.common.Outcome
 import javax.inject.Inject
 
 /**
@@ -26,7 +26,7 @@ internal class DefaultAnalysesRepository<TRequest, TModel>
         val outcome = remoteDs.analyze(request)
         var id = ""
         if (outcome is Outcome.Success) {
-            id = outcome.model.id
+            id = outcome.value.id
         } else if (outcome is Outcome.Failure) {
             return outcome
         }
@@ -34,7 +34,7 @@ internal class DefaultAnalysesRepository<TRequest, TModel>
         val initialResultsOutcome = remoteDs.getById(id)
 
         if (initialResultsOutcome is Outcome.Success) {
-            localDs.save(initialResultsOutcome.model)
+            localDs.save(initialResultsOutcome.value)
         }
 
         return initialResultsOutcome
@@ -53,7 +53,7 @@ internal class DefaultAnalysesRepository<TRequest, TModel>
         val outcome = remoteDs.getById(id)
 
         if (outcome is Outcome.Success) {
-            val model = outcome.model
+            val model = outcome.value
             if (localDs.exists(model)) {
                 localDs.update(model)
             } else {
@@ -75,7 +75,7 @@ internal class DefaultAnalysesRepository<TRequest, TModel>
         val remoteResultsOutcome = remoteDs.getMany(page, missingResults)
 
         return if (remoteResultsOutcome is Outcome.Success) {
-            Outcome.Success(localResults.plus(remoteResultsOutcome.model))
+            Outcome.Success(localResults.plus(remoteResultsOutcome.value))
         } else {
             remoteResultsOutcome
         }

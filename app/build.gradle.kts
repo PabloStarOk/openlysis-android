@@ -26,16 +26,18 @@ android {
 
     buildTypes {
         val localProperties = Properties()
-        val localPropertiesFileName = "secret.properties"
-        val localPropertiesFile = rootProject.file(localPropertiesFileName)
-        if (localPropertiesFile.exists() && localPropertiesFile.isFile) {
-            localPropertiesFile.inputStream().use {
-                localProperties.load(it)
+        val localPropertiesFilenames = arrayOf("secret.properties", "settings.properties")
+        localPropertiesFilenames.forEach {
+            val file = rootProject.file(it)
+            if (file.exists() && file.isFile) {
+                file.inputStream().use { inputStream ->
+                    localProperties.load(inputStream)
+                }
+            } else {
+                throw GradleException(
+                    "Required configuration file '$it' not found or is not a file."
+                )
             }
-        } else {
-            throw GradleException(
-                "Required configuration file '$localPropertiesFileName' not found or is not a file."
-            )
         }
 
         release {
@@ -51,6 +53,18 @@ android {
                 "API_BASE_URL",
                 localProperties.getProperty("API_BASE_URL_PROD")
             )
+
+            buildConfigField(
+                "Integer",
+                "MAX_ATTACHMENT_FILES",
+                localProperties.getProperty("MAX_ATTACHMENT_FILES_PROD")
+            )
+
+            buildConfigField(
+                "Long",
+                "MAX_ATTACHMENT_FILE_SIZE_BYTES",
+                localProperties.getProperty("MAX_ATTACHMENT_FILE_SIZE_BYTES_PROD")
+            )
         }
 
         debug {
@@ -58,6 +72,18 @@ android {
                 "String",
                 "API_BASE_URL",
                 localProperties.getProperty("API_BASE_URL")
+            )
+
+            buildConfigField(
+                "Integer",
+                "MAX_ATTACHMENT_FILES",
+                localProperties.getProperty("MAX_ATTACHMENT_FILES")
+            )
+
+            buildConfigField(
+                "Long",
+                "MAX_ATTACHMENT_FILE_SIZE_BYTES",
+                localProperties.getProperty("MAX_ATTACHMENT_FILE_SIZE_BYTES")
             )
         }
     }

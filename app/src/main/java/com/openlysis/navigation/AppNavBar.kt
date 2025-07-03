@@ -10,12 +10,13 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
-import androidx.navigation.navOptions
+import androidx.navigation.NavDestination.Companion.hierarchy
 import com.openlysis.core.designsystem.theme.LocalAppColorScheme
 import com.openlysis.core.designsystem.theme.size.LocalAppSpacing
-import com.openlysis.feature.tools.navigation.navigateToTools
 import com.openlysis.ui.AppState
+import kotlin.reflect.KClass
 
 /**
  * App navigation bar with navigation items.
@@ -28,14 +29,8 @@ internal fun AppNavBar(
     appState: AppState,
     modifier: Modifier = Modifier
 ) {
-    val navController = appState.navController
     val currentDest = appState.currentDestination
     val appColorScheme = LocalAppColorScheme.current.border.default.primary
-    val navOptions =
-        navOptions {
-            launchSingleTop = true
-            restoreState = true
-        }
     NavigationBar(
         containerColor = LocalAppColorScheme.current.background.default.primary,
         modifier =
@@ -52,37 +47,22 @@ internal fun AppNavBar(
                     horizontal = LocalAppSpacing.current.value300
                 )
     ) {
-        val isToolsSelected = currentDest?.hasRoute(TopLevelDestination.Tools.route) == true
-        AppNavBarItem(
-            onClick = { navController.navigateToTools(navOptions) },
-            icon = ImageVector.vectorResource(TopLevelDestination.Tools.iconResId),
-            iconAlt = stringResource(TopLevelDestination.Tools.iconAltResId),
-            label = stringResource(TopLevelDestination.Tools.navBarItemLabelResId),
-            selected = isToolsSelected,
-            enabled = !isToolsSelected,
-            modifier = Modifier.weight(1f)
-        )
-
-        val isResultsSelected = currentDest?.hasRoute(TopLevelDestination.Results.route) == true
-        AppNavBarItem(
-            onClick = { navController.navigate(TemporaryResults) },
-            icon = ImageVector.vectorResource(TopLevelDestination.Results.iconResId),
-            iconAlt = stringResource(TopLevelDestination.Results.iconAltResId),
-            label = stringResource(TopLevelDestination.Results.navBarItemLabelResId),
-            selected = isResultsSelected,
-            enabled = !isResultsSelected,
-            modifier = Modifier.weight(1f)
-        )
-
-        val isSettingsSelected = currentDest?.hasRoute(TopLevelDestination.Settings.route) == true
-        AppNavBarItem(
-            onClick = { navController.navigate(TemporarySettings) },
-            icon = ImageVector.vectorResource(TopLevelDestination.Settings.iconResId),
-            iconAlt = stringResource(TopLevelDestination.Settings.iconAltResId),
-            label = stringResource(TopLevelDestination.Settings.navBarItemLabelResId),
-            selected = isSettingsSelected,
-            enabled = !isSettingsSelected,
-            modifier = Modifier.weight(1f)
-        )
+        appState.topLevelDestinations.forEach { destination ->
+            val isSelected = currentDest.isRouteInHierarchy(destination.baseRoute)
+            AppNavBarItem(
+                onClick = { appState.navigateToTopLevelDestination(destination) },
+                icon = ImageVector.vectorResource(destination.iconResId),
+                iconAlt = stringResource(destination.iconAltResId),
+                label = stringResource(destination.navBarItemLabelResId),
+                selected = isSelected,
+                enabled = !isSelected,
+                modifier = Modifier.weight(1f)
+            )
+        }
     }
 }
+
+private fun NavDestination?.isRouteInHierarchy(route: KClass<*>) =
+    this?.hierarchy?.any {
+        it.hasRoute(route)
+    } == true

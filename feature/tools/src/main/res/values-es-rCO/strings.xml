@@ -6,15 +6,86 @@
     <string name="email_message_tool_name">Correo Electrónico</string>
     <string name="sms_message_tool_name">Mensaje de Texto SMS</string>
     <string name="file_tool_name">Archivo</string>
-    <string name="url_tool_name">Enlace</string>
+    <string name="url_tool_name">URL</string>
 
     <string name="email_message_tool_description">Analiza un mensaje de correo electrónico de una de tus bandejas.</string>
     <string name="sms_message_tool_description">Analiza un mensaje de texto SMS de tu dispositivo móvil.</string>
     <string name="file_tool_description">Analiza un archivo.</string>
-    <string name="url_tool_description">Analiza un enlace.</string>
+    <string name="url_tool_description">Analiza una URL.</string>
 
     <string name="email_messages_tool_icon_alt">Icono de un correo electrónico.</string>
     <string name="sms_messages_tool_icon_alt">Icono de un mensaje de texto SMS.</string>
     <string name="file_tool_icon_alt">Icono de un archivo.</string>
     <string name="url_tool_icon_alt">Icono de un enlace.</string>
+
+    <string name="analyze_button_label">Analizar</string>
+    <string name="analyze_button_icon_alt">Ícono de analizar</string>
+
+    <string name="analyze_message_sender_input_label">Remitente</string>
+    <string name="analyze_message_subject_input_label">Asunto</string>
+    <string name="analyze_message_content_input_label">Contenido</string>
+
+    <string name="attached_file_header_icon_alt">Ícono de archivo</string>
+    <string name="attached_file_detach_button_icon_alt">Ícono para quitar archivo</string>
+    <string name="attached_file_password_input_label">Contraseña opcional</string>
+    <string name="attached_file_show_password_button_icon_alt">Ícono para mostrar contraseña</string>
+    <string name="attached_file_hide_password_button_icon_alt">Ícono para ocultar contraseña</string>
+
+    <string name="attach_file_warning_alert">Por privacidad, nunca adjuntes archivos privados o confidenciales.</string>
+    <plurals name="attach_file_limit_message">
+        <item quantity="one">Puedes añadir un archivo de hasta %.1f MB de tamaño.</item>
+        <item quantity="other">Puedes añadir hasta %d archivos, de %.1f MB cada uno como máximo.</item>
+    </plurals>
+    <string name="attach_file_button_label">Agregar archivo</string>
+    <string name="attach_file_button_icon_alt">Icono para agregar archivo</string>
+
+    <string name="email_message_tool_screen_title">Analizar Correo Electrónico</string>
+    <string name="email_message_tool_section_title">Mensaje de Correo Electrónico</string>
+    <string name="email_message_tool_section_description">Ingresa la información del mensaje o selecciona uno desde la bandeja de una de tus cuentas.</string>
+    <string name="email_message_tool_file_section_title">Archivos Adjuntos</string>
+    <string name="email_message_tool_file_section_description">Adjunta archivos relacionados con el mensaje para analizarlos.</string>
+
+    <string name="sms_message_tool_screen_title">Analizar SMS</string>
+    <string name="sms_message_tool_section_title">Mensaje de Texto SMS</string>
+    <string name="sms_message_tool_section_description">Ingresa la información del mensaje o selecciona uno desde la bandeja SMS de tu dispositivo.</string>
+
+    <string name="file_tool_screen_title">Analizar Archivo</string>
+    <string name="file_tool_section_title">Archivo</string>
+    <string name="file_tool_section_description">Adjunta el archivo que deseas escanear.</string>
+
+    <string name="url_tool_screen_title">Analizar URL</string>
+    <string name="url_tool_section_title">URL</string>
+    <string name="url_tool_section_description">Ingresa la URL que deseas analizar.</string>
+    <string name="url_tool_input_label">URL</string>
+    <string name="url_tool_input_invalid_url">La URL es invalida, asegurate de incluir al menos el dominio (ejemplo.com).</string>
+
+    <string name="analysis_request_state_dialog_in_progress_icon_alt">Indicador de progreso giratorio</string>
+    <string name="analysis_request_state_dialog_error_icon_alt">Icono de error, símbolo X</string>
+    <string name="analysis_request_state_dialog_success_icon_alt">Icono de éxito, marca de verificación</string>
+    <string name="analysis_request_state_dialog_in_progress_description">Iniciando análisis</string>
+    <string name="analysis_request_state_dialog_success_description">Análisis iniciado correctamente</string>
+    <string name="analysis_request_state_dialog_waiting_time_description">Cancelable en %s</string>
+    <string name="analysis_request_state_dialog_cancel_button_label">Cancelar</string>
+    <string name="analysis_request_state_dialog_cancel_button_icon_alt">Icono de cancelar, símbolo X</string>
+    <string name="analysis_request_state_dialog_go_button_label">Ir al análisis</string>
+    <string name="analysis_request_state_dialog_go_button_icon_alt">Icono de enlace externo, flecha diagonal hacia arriba y derecha</string>
+    <string name="analysis_request_state_dialog_retry_button_label">Reintentar</string>
+    <string name="analysis_request_state_dialog_retry_button_icon_alt">Icono de reintentar, flecha circular</string>
+    <string name="analysis_request_state_dialog_back_button_label">Volver</string>
+    <string name="analysis_request_state_dialog_back_button_icon_alt">Icono de retroceder, flecha hacia la izquierda</string>
+
+    <string name="info_file_already_attached">Este archivo ya está adjunto.</string>
+    <string name="error_file_uri_null">No se pudo agregar el archivo debido a un error inesperado.</string>
+    <string name="error_file_too_large">El tamaño del archivo debe ser igual o menor a %.1f %s.</string>
+    <string name="error_file_size_zero">No se pudo agregar el archivo porque no contiene información.</string>
+
+    <string name="error_analysis_repository_generic">Ocurrió un error inesperado. Por favor, inténtalo de nuevo.</string>
+    <string name="error_analysis_repository_bad_request">Ocurrió un error de validación. Verifica que los datos ingresados sean correctos.</string>
+    <string name="error_analysis_repository_server">Ocurrió un error en el servidor. Por favor, inténtalo más tarde.</string>
+    <string name="error_analysis_repository_network">Ocurrió un error de red. Verifica tu conexión e inténtalo de nuevo.</string>
+    <string name="error_analysis_repository_unreachable_server">El servidor no está disponible. Por favor, inténtalo más tarde.</string>
+    <string name="error_analysis_repository_unavailable">Este servicio no está disponible en este momento. Por favor, inténtalo más tarde.</string>
+    <string name="error_analysis_repository_operation_canceled">La operación fue cancelada. Inténtalo de nuevo si es necesario.</string>
+    <string name="error_analysis_repository_unknown">Ocurrió un error desconocido. Por favor, inténtalo de nuevo.</string>
+    <string name="error_attachment_creation">El análisis no pudo iniciarse porque un archivo no pudo ser leído.</string>
 </resources>

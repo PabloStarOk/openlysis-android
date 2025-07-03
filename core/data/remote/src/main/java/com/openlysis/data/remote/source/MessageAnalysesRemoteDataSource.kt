@@ -24,35 +24,27 @@ internal class MessageAnalysesRemoteDataSource
         /**
          * Analyzes a message by preparing its attachments and sending the analysis request.
          *
-         * Filters valid attachments, prepares files as multipart form data, and associates passwords
-         * with their corresponding files if provided. Then, calls the service to analyze the message.
+         * This method filters out empty attachments (size <= 0), prepares valid attachments as multipart
+         * form data, and creates a password mapping for password-protected files. The prepared data is
+         * then sent to the remote API for analysis.
          *
          * @param request The [AnalyzeMessage] containing the message and its attachments to analyze.
          * @return A [Response] containing the [AnalyzeResponse] from the API if successful, or an error response otherwise.
+         * @throws Exception if network request fails or API returns an error.
          */
         override suspend fun handleAnalyze(request: AnalyzeMessage): Response<AnalyzeResponse> {
             val validAttachments =
-                request.message.attachments?.filter { a ->
-                    a.file.isFile && a.file.length() > 0
-                }
+                request.message.attachments?.filter { a -> a.size > 0 }
 
             val files =
-                validAttachments
-                    ?.filter { a ->
-                        a.file.isFile && a.file.length() > 0
-                    }?.map { a ->
-                        a.file.asFormDataPart(
-                            name = ApiFields.MESSAGE_FILES,
-                            mimeType = a.mimeType
-                        )
-                    }
+                validAttachments?.map {
+                    it.asFormDataPart(fieldName = ApiFields.MESSAGE_FILES)
+                }
 
             val passwords =
                 validAttachments
-                    ?.filter { a -> a.password?.isNotEmpty() == true }
-                    ?.associate { a ->
-                        Pair(a.file.name, a.password as String)
-                    }
+                    ?.filter { it.password?.isNotEmpty() == true }
+                    ?.associate { Pair(it.name, it.password as String) }
 
             return api.analyzeMessage(
                 messageType =

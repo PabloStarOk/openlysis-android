@@ -12,50 +12,58 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.openlysis.core.designsystem.components.SectionTitle
 import com.openlysis.core.designsystem.theme.OpenlysisTheme
 import com.openlysis.core.designsystem.theme.size.LocalAppSpacing
 import com.openlysis.feature.tools.components.ToolCard
 import com.openlysis.feature.tools.data.Tool
-import com.openlysis.feature.tools.data.ToolsDataSource
-import com.openlysis.feature.tools.data.ToolsRepository
+import com.openlysis.feature.tools.data.ToolCategory
 
 /**
- * Display the analysis tools screen.
+ * Display the analysis tools screen with sections for message and data analysis tools.
+ * Users can select different analysis tools like email, SMS, URL, and file analysis.
  *
- * @param repository The [ToolsRepository] providing the data for the various tool sections.
- * @param modifier Optional [Modifier] to apply to the top-level layout container.
+ * @param onToolClick Callback invoked when a tool card is clicked, with the corresponding [ToolCategory]
+ * @param modifier Optional [Modifier] to apply to the top-level layout container
+ * @param viewModel The view model handling the business logic and data operations
  */
 @Composable
 internal fun ToolsScreen(
-    repository: ToolsRepository,
-    modifier: Modifier = Modifier
+    onToolClick: (ToolCategory) -> Unit,
+    modifier: Modifier = Modifier,
+    viewModel: ToolsScreenViewModel = hiltViewModel()
 ) {
+    val scrollState = rememberScrollState()
     Column(
         verticalArrangement = Arrangement.spacedBy(LocalAppSpacing.current.value800),
         modifier =
             modifier
                 .padding(LocalAppSpacing.current.value400)
-                .verticalScroll(rememberScrollState())
+                .verticalScroll(scrollState)
     ) {
         SectionScaffold(
             title = stringResource(R.string.message_analysis_tools_section_title),
             content = {
-                repository.getMessageAnalysisTools().forEach { tool ->
-                    MapToolCard(tool)
+                viewModel.toolsRepository.getMessageAnalysisTools().forEach {
+                    MapToolCard(
+                        tool = it,
+                        onClick = { onToolClick(it.category) }
+                    )
                 }
-            },
-            modifier = modifier
+            }
         )
 
         SectionScaffold(
             title = stringResource(R.string.other_analysis_tools_section_title),
             content = {
-                repository.getDataAnalysisTools().forEach { tool ->
-                    MapToolCard(tool)
+                viewModel.toolsRepository.getDataAnalysisTools().forEach {
+                    MapToolCard(
+                        tool = it,
+                        onClick = { onToolClick(it.category) }
+                    )
                 }
-            },
-            modifier = modifier
+            }
         )
     }
 }
@@ -88,6 +96,7 @@ private fun SectionScaffold(
 @Composable
 private fun MapToolCard(
     tool: Tool,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     ToolCard(
@@ -95,7 +104,7 @@ private fun MapToolCard(
         description = stringResource(tool.descriptionResource),
         icon = ImageVector.vectorResource(tool.iconResource),
         iconAlt = stringResource(tool.iconAltResource),
-        onClick = tool.onClick,
+        onClick = onClick,
         modifier = modifier
     )
 }
@@ -104,6 +113,8 @@ private fun MapToolCard(
 @Composable
 private fun ToolsScreenPreview() {
     OpenlysisTheme(darkTheme = false) {
-        ToolsScreen(ToolsDataSource())
+        ToolsScreen(
+            onToolClick = { }
+        )
     }
 }

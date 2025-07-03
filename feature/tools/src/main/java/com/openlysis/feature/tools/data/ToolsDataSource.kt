@@ -14,14 +14,14 @@ internal class ToolsDataSource : ToolsRepository {
                 descriptionResource = R.string.email_message_tool_description,
                 iconResource = AppIconsIds.Mail,
                 iconAltResource = R.string.email_messages_tool_icon_alt,
-                onClick = { }
+                category = ToolCategory.Email
             ),
             Tool(
                 nameResource = R.string.sms_message_tool_name,
                 descriptionResource = R.string.sms_message_tool_description,
                 iconResource = AppIconsIds.Sms,
                 iconAltResource = R.string.sms_messages_tool_icon_alt,
-                onClick = { }
+                category = ToolCategory.Sms
             )
         )
 
@@ -32,14 +32,14 @@ internal class ToolsDataSource : ToolsRepository {
                 descriptionResource = R.string.file_tool_description,
                 iconResource = AppIconsIds.File,
                 iconAltResource = R.string.file_tool_icon_alt,
-                onClick = { }
+                category = ToolCategory.File
             ),
             Tool(
                 nameResource = R.string.url_tool_name,
                 descriptionResource = R.string.url_tool_description,
                 iconResource = AppIconsIds.Link,
                 iconAltResource = R.string.url_tool_icon_alt,
-                onClick = { }
+                category = ToolCategory.Url
             )
         )
 

@@ -2,6 +2,7 @@ package com.openlysis.feature.tools.data
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.vector.ImageVector
 
 /**
@@ -17,12 +18,13 @@ import androidx.compose.ui.graphics.vector.ImageVector
  * @property iconResource The [ImageVector] representing the visual icon of the tool.
  * @property iconAltResource A string resource ID for the accessibility description of the icon.
  *                             This is used by screen readers to describe the icon.
- * @property onClick A lambda function that will be executed when the tool is clicked.
+ * @property category The [ToolCategory] representing the category of the tool.
  */
-internal class Tool(
+@Immutable
+internal data class Tool(
     @StringRes val nameResource: Int,
     @StringRes val descriptionResource: Int,
     @DrawableRes val iconResource: Int,
     @StringRes val iconAltResource: Int,
-    val onClick: () -> Unit
+    val category: ToolCategory
 )

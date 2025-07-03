@@ -17,4 +17,75 @@
     <string name="sms_messages_tool_icon_alt">SMS icon.</string>
     <string name="file_tool_icon_alt">File icon.</string>
     <string name="url_tool_icon_alt">URL icon.</string>
+
+    <string name="analyze_button_label">Analyze</string>
+    <string name="analyze_button_icon_alt">Analyze icon</string>
+
+    <string name="analyze_message_sender_input_label">Sender</string>
+    <string name="analyze_message_subject_input_label">Subject</string>
+    <string name="analyze_message_content_input_label">Content</string>
+
+    <string name="attached_file_header_icon_alt">File icon</string>
+    <string name="attached_file_detach_button_icon_alt">Detach file icon</string>
+    <string name="attached_file_password_input_label">Optional password</string>
+    <string name="attached_file_show_password_button_icon_alt">Show password icon</string>
+    <string name="attached_file_hide_password_button_icon_alt">Hide password icon</string>
+
+    <string name="attach_file_warning_alert">For privacy, never attach private or confidential files.</string>
+    <plurals name="attach_file_limit_message">
+        <item quantity="one">You can attach a file up to %.1f MB in size.</item>
+        <item quantity="other">You can attach up to %d files, each up to %.1f MB in size.</item>
+    </plurals>
+    <string name="attach_file_button_label">Add File</string>
+    <string name="attach_file_button_icon_alt">Add file icon</string>
+
+    <string name="email_message_tool_screen_title">Analyze Email</string>
+    <string name="email_message_tool_section_title">Email Message</string>
+    <string name="email_message_tool_section_description">Enter an email’s details or select one from your inbox.</string>
+    <string name="email_message_tool_file_section_title">Attached Files</string>
+    <string name="email_message_tool_file_section_description">Add files from the email to include in the analysis.</string>
+
+    <string name="sms_message_tool_screen_title">Analyze SMS</string>
+    <string name="sms_message_tool_section_title">SMS Message</string>
+    <string name="sms_message_tool_section_description">Enter the message details or select one from your device\'s SMS inbox.</string>
+
+    <string name="file_tool_screen_title">Analyze File</string>
+    <string name="file_tool_section_title">File</string>
+    <string name="file_tool_section_description">Attach the file you want to analyze.</string>
+
+    <string name="url_tool_screen_title">Analyze URL</string>
+    <string name="url_tool_section_title">URL</string>
+    <string name="url_tool_section_description">Enter the URL you want to analyze.</string>
+    <string name="url_tool_input_label">URL</string>
+    <string name="url_tool_input_invalid_url">The URL is invalid, make sure to include at least the domain (example.com).</string>
+
+    <string name="analysis_request_state_dialog_in_progress_icon_alt">Loading spinner</string>
+    <string name="analysis_request_state_dialog_error_icon_alt">Error icon, X symbol</string>
+    <string name="analysis_request_state_dialog_success_icon_alt">Success icon, checkmark</string>
+    <string name="analysis_request_state_dialog_in_progress_description">Starting analysis</string>
+    <string name="analysis_request_state_dialog_success_description">Analysis started successfully</string>
+    <string name="analysis_request_state_dialog_waiting_time_description">Cancelable in %s</string>
+    <string name="analysis_request_state_dialog_cancel_button_label">Cancel</string>
+    <string name="analysis_request_state_dialog_cancel_button_icon_alt">Cancel icon, X symbol</string>
+    <string name="analysis_request_state_dialog_go_button_label">Go to analysis</string>
+    <string name="analysis_request_state_dialog_go_button_icon_alt">External link icon, diagonal arrow pointing up and right</string>
+    <string name="analysis_request_state_dialog_retry_button_label">Retry</string>
+    <string name="analysis_request_state_dialog_retry_button_icon_alt">Retry icon, circular arrow</string>
+    <string name="analysis_request_state_dialog_back_button_label">Back</string>
+    <string name="analysis_request_state_dialog_back_button_icon_alt">Back icon, left-pointing arrow</string>
+
+    <string name="info_file_already_attached">This file is already attached.</string>
+    <string name="error_file_uri_null">File could not be added due to an unexpected error.</string>
+    <string name="error_file_too_large">The file size must be less than or equal to %.1f %s.</string>
+    <string name="error_file_size_zero">File could not be added because has not data.</string>
+
+    <string name="error_analysis_repository_generic">An unexpected error occurred. Please try again.</string>
+    <string name="error_analysis_repository_bad_request">A validation error occurred. Please verify the data you entered is correct.</string>
+    <string name="error_analysis_repository_server">A server error occurred. Please try again later.</string>
+    <string name="error_analysis_repository_network">A network error occurred. Please check your connection and try again.</string>
+    <string name="error_analysis_repository_unreachable_server">The server is unavailable. Please try again later.</string>
+    <string name="error_analysis_repository_unavailable">This service is currently unavailable. Please try again later.</string>
+    <string name="error_analysis_repository_operation_canceled">The operation was canceled. Please try again if needed.</string>
+    <string name="error_analysis_repository_unknown">An unknown error occurred. Please try again.</string>
+    <string name="error_attachment_creation">The analysis could not start because a file could not be read.</string>
 </resources>
