@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.openlysis.core.designsystem.R
@@ -38,7 +39,6 @@ import com.openlysis.core.designsystem.theme.type.LocalAppTypography
  * @param onConfirm A callback function that is invoked when the user confirms the dialog.
  * @param onCancel A callback function that is invoked when the user cancels the dialog.
  * @param modifier A [Modifier] for this composable.
- * @param additionalContent A composable function that provides additional content to be displayed in the dialog.
  * @param displayAlert A boolean indicating whether to display an alert in the dialog.
  * @param alertType The type of alert to display.
  * @param alertText The text to display in the alert.
@@ -50,7 +50,6 @@ fun ConfirmationDialog(
     onConfirm: () -> Unit,
     onCancel: () -> Unit,
     modifier: Modifier = Modifier,
-    additionalContent: @Composable () -> Unit = { },
     displayAlert: Boolean = false,
     alertType: AlertType = AlertType.Warning,
     alertText: String = ""
@@ -59,7 +58,7 @@ fun ConfirmationDialog(
         onDismissRequest = onCancel
     ) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(LocalAppSpacing.current.value800),
+            verticalArrangement = Arrangement.spacedBy(LocalAppSpacing.current.value600),
             modifier =
                 modifier
                     .clip(RoundedCornerShape(LocalAppRadius.current.value100))
@@ -88,8 +87,6 @@ fun ConfirmationDialog(
                 )
             }
 
-            additionalContent()
-
             Column(
                 verticalArrangement = Arrangement.spacedBy(LocalAppSpacing.current.value400)
             ) {
@@ -103,31 +100,33 @@ fun ConfirmationDialog(
 
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(LocalAppSpacing.current.value400),
+                    horizontalArrangement =
+                        Arrangement.spacedBy(
+                            space = LocalAppSpacing.current.value300,
+                            alignment = Alignment.End
+                        ),
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     AppButton(
                         type = ButtonType.Secondary,
-                        size = SizeType.Default,
-                        onClick = onConfirm,
-                        displayLabel = true,
-                        displayIcon = true,
-                        label = stringResource(R.string.confirmation_dialog_accept),
-                        icon = AppIcons.Check,
-                        iconAlt = stringResource(R.string.confirmation_dialog_accept_icon_alt),
-                        modifier = Modifier.weight(1f)
-                    )
-
-                    AppButton(
-                        type = ButtonType.Secondary,
-                        size = SizeType.Default,
+                        size = SizeType.Small,
                         onClick = onCancel,
                         displayLabel = true,
                         displayIcon = true,
                         label = stringResource(R.string.confirmation_dialog_cancel),
                         icon = AppIcons.Cross,
-                        iconAlt = stringResource(R.string.confirmation_dialog_cancel_icon_alt),
-                        modifier = Modifier.weight(1f)
+                        iconAlt = stringResource(R.string.confirmation_dialog_cancel_icon_alt)
+                    )
+
+                    AppButton(
+                        type = ButtonType.Primary,
+                        size = SizeType.Small,
+                        onClick = onConfirm,
+                        displayLabel = true,
+                        displayIcon = true,
+                        label = stringResource(R.string.confirmation_dialog_accept),
+                        icon = AppIcons.Check,
+                        iconAlt = stringResource(R.string.confirmation_dialog_accept_icon_alt)
                     )
                 }
             }
@@ -135,16 +134,16 @@ fun ConfirmationDialog(
     }
 }
 
+@PreviewLightDark
 @Preview(showSystemUi = true)
 @Composable
 private fun ConfirmationDialogPreview() {
-    OpenlysisTheme(darkTheme = false) {
+    OpenlysisTheme {
         ConfirmationDialog(
             title = "Example",
             description = "This is an example.",
             onConfirm = { },
             onCancel = { },
-            additionalContent = { Text(text = "This is additional data.") },
             displayAlert = true,
             alertType = AlertType.Warning,
             alertText = "This is a confirmation dialog."
