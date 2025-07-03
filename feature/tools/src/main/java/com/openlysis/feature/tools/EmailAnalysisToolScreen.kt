@@ -70,7 +70,7 @@ internal fun EmailAnalysisToolScreen(
                 onAnalysisStart(value.initialValue)
             }
         },
-        onCancelRequest = { TODO() },
+        onCancelRequest = viewModel::cancelCurrentRequest,
         analysisRequestState = analysisRequestState,
         screenTitle = stringResource(R.string.email_message_tool_screen_title),
         onTopBarUpdate = onTopBarUpdate,

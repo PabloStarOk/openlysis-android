@@ -64,7 +64,7 @@ internal fun FileAnalysisToolScreen(
                 onAnalysisStart(value.initialValue)
             }
         },
-        onCancelRequest = { TODO() },
+        onCancelRequest = viewModel::cancelCurrentRequest,
         analysisRequestState = analysisRequestState,
         screenTitle = stringResource(R.string.file_tool_screen_title),
         onTopBarUpdate = onTopBarUpdate,

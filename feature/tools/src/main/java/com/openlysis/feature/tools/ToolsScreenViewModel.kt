@@ -22,6 +22,7 @@ import com.openlysis.feature.tools.data.FileAttachmentSettings
 import com.openlysis.feature.tools.data.ToolsDataSource
 import com.openlysis.feature.tools.data.ToolsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -62,6 +63,8 @@ internal class ToolsScreenViewModel
 
         private val _currentAnalysisRequest =
             MutableStateFlow<AnalysisRequestState>(AnalysisRequestState.None)
+
+        private var currentAnalysisRequestJob: Job? = null
 
         val currentAnalysisRequest: StateFlow<AnalysisRequestState> =
             _currentAnalysisRequest
@@ -125,21 +128,24 @@ internal class ToolsScreenViewModel
                     countryCode = analysisSettings.defaultCountryCode
                 )
 
-            viewModelScope.launch {
-                try {
-                    val outcome = messageAnalysisRepo.analyze(request)
-                    _currentAnalysisRequest.value =
-                        when (outcome) {
-                            is Outcome.Success ->
-                                AnalysisRequestState.Success.Message(outcome.value)
-                            is Outcome.Failure -> AnalysisRequestState.Failure(outcome.error)
+            currentAnalysisRequestJob =
+                viewModelScope.launch {
+                    try {
+                        val outcome = messageAnalysisRepo.analyze(request)
+                        _currentAnalysisRequest.value =
+                            when (outcome) {
+                                is Outcome.Success ->
+                                    AnalysisRequestState.Success.Message(outcome.value)
+
+                                is Outcome.Failure -> AnalysisRequestState.Failure(outcome.error)
+                            }
+                    } finally {
+                        for (closeable in attachments) {
+                            closeable.close()
                         }
-                } finally {
-                    for (closeable in attachments) {
-                        closeable.close()
                     }
                 }
-            }
+            currentAnalysisRequestJob?.invokeOnCompletion { currentAnalysisRequestJob = null }
         }
 
         /**
@@ -172,18 +178,24 @@ internal class ToolsScreenViewModel
                     reanalyze = analysisSettings.reanalyzeFiles
                 )
 
-            viewModelScope.launch {
-                try {
-                    val outcome = fileAnalysisRepo.analyze(request)
-                    _currentAnalysisRequest.value =
-                        when (outcome) {
-                            is Outcome.Success -> AnalysisRequestState.Success.File(outcome.value)
-                            is Outcome.Failure -> AnalysisRequestState.Failure(outcome.error)
-                        }
-                } finally {
-                    attachment.close()
+            currentAnalysisRequestJob =
+                viewModelScope.launch {
+                    try {
+                        val outcome = fileAnalysisRepo.analyze(request)
+                        _currentAnalysisRequest.value =
+                            when (outcome) {
+                                is Outcome.Success ->
+                                    AnalysisRequestState.Success.File(
+                                        outcome.value
+                                    )
+
+                                is Outcome.Failure -> AnalysisRequestState.Failure(outcome.error)
+                            }
+                    } finally {
+                        attachment.close()
+                    }
                 }
-            }
+            currentAnalysisRequestJob?.invokeOnCompletion { currentAnalysisRequestJob = null }
         }
 
         /**
@@ -201,14 +213,25 @@ internal class ToolsScreenViewModel
                     reanalyze = analysisSettings.reanalyzeUrls
                 )
 
-            viewModelScope.launch {
-                val outcome = urlAnalysisRepo.analyze(request)
-                _currentAnalysisRequest.value =
-                    when (outcome) {
-                        is Outcome.Success -> AnalysisRequestState.Success.Url(outcome.value)
-                        is Outcome.Failure -> AnalysisRequestState.Failure(outcome.error)
-                    }
-            }
+            currentAnalysisRequestJob =
+                viewModelScope.launch {
+                    val outcome = urlAnalysisRepo.analyze(request)
+                    _currentAnalysisRequest.value =
+                        when (outcome) {
+                            is Outcome.Success -> AnalysisRequestState.Success.Url(outcome.value)
+                            is Outcome.Failure -> AnalysisRequestState.Failure(outcome.error)
+                        }
+                }
+
+            currentAnalysisRequestJob?.invokeOnCompletion { currentAnalysisRequestJob = null }
+        }
+
+        /**
+         * Cancels the currently running analysis request if one exists.
+         */
+        fun cancelCurrentRequest() {
+            currentAnalysisRequestJob?.cancel()
+            _currentAnalysisRequest.value = AnalysisRequestState.None
         }
 
         /**

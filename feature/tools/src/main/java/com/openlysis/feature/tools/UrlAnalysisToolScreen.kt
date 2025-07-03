@@ -70,7 +70,7 @@ internal fun UrlAnalysisToolScreen(
                 onAnalysisStart(value.initialValue)
             }
         },
-        onCancelRequest = { TODO() },
+        onCancelRequest = viewModel::cancelCurrentRequest,
         analysisRequestState = analysisRequestState,
         screenTitle = stringResource(R.string.url_tool_screen_title),
         onTopBarUpdate = onTopBarUpdate,
