@@ -59,6 +59,21 @@
     <string name="url_tool_input_label">URL</string>
     <string name="url_tool_input_invalid_url">La URL es invalida, asegurate de incluir al menos el dominio (ejemplo.com).</string>
 
+    <string name="analysis_request_state_dialog_in_progress_icon_alt">Indicador de progreso giratorio</string>
+    <string name="analysis_request_state_dialog_error_icon_alt">Icono de error, símbolo X</string>
+    <string name="analysis_request_state_dialog_success_icon_alt">Icono de éxito, marca de verificación</string>
+    <string name="analysis_request_state_dialog_in_progress_description">Iniciando análisis</string>
+    <string name="analysis_request_state_dialog_success_description">Análisis iniciado correctamente</string>
+    <string name="analysis_request_state_dialog_waiting_time_description">Cancelable en %s</string>
+    <string name="analysis_request_state_dialog_cancel_button_label">Cancelar</string>
+    <string name="analysis_request_state_dialog_cancel_button_icon_alt">Icono de cancelar, símbolo X</string>
+    <string name="analysis_request_state_dialog_go_button_label">Ir al análisis</string>
+    <string name="analysis_request_state_dialog_go_button_icon_alt">Icono de enlace externo, flecha diagonal hacia arriba y derecha</string>
+    <string name="analysis_request_state_dialog_retry_button_label">Reintentar</string>
+    <string name="analysis_request_state_dialog_retry_button_icon_alt">Icono de reintentar, flecha circular</string>
+    <string name="analysis_request_state_dialog_back_button_label">Volver</string>
+    <string name="analysis_request_state_dialog_back_button_icon_alt">Icono de retroceder, flecha hacia la izquierda</string>
+
     <string name="info_file_already_attached">Este archivo ya está adjunto.</string>
     <string name="error_file_uri_null">No se pudo agregar el archivo debido a un error inesperado.</string>
     <string name="error_file_too_large">El tamaño del archivo debe ser igual o menor a %.1f %s.</string>

@@ -7,14 +7,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.openlysis.core.designsystem.components.bar.TopBarState
 import com.openlysis.data.analysis.model.message.MessageAnalysis
 import com.openlysis.data.analysis.model.message.MessageType
 import com.openlysis.feature.tools.components.MessageSection
 import com.openlysis.feature.tools.components.MessageState
 import com.openlysis.feature.tools.components.ToolScreenScaffold
+import com.openlysis.feature.tools.data.AnalysisRequestState
 
 /**
  * Composable screen for SMS analysis tool.
@@ -31,9 +32,6 @@ internal fun SmsAnalysisToolScreen(
     onTopBarUpdate: (TopBarState) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val context = LocalContext.current
-    val messageUiNotifier = remember { MessageUiNotifier(context) }
-    val errorHandler = remember { AnalysisErrorUiHandler(messageUiNotifier) }
     val state = rememberSaveable { mutableStateOf(MessageState()) }
     val submitEnabled by
         remember(state) {
@@ -41,17 +39,24 @@ internal fun SmsAnalysisToolScreen(
                 state.value.submitEnabled
             }
         }
+    val analysisRequestState = viewModel.currentAnalysisRequest.collectAsStateWithLifecycle()
 
     ToolScreenScaffold(
-        onSubmitClick = {
+        onSubmitRequest = {
             viewModel.startMessageAnalysis(
                 type = MessageType.Sms,
                 messageState = state.value,
-                attachedFiles = null,
-                onSuccess = onAnalysisStart,
-                onError = errorHandler::handle
+                attachedFiles = null
             )
         },
+        onGoToAnalysisRequest = {
+            if (analysisRequestState.value is AnalysisRequestState.Success.Message) {
+                val value = analysisRequestState.value as AnalysisRequestState.Success.Message
+                onAnalysisStart(value.initialValue)
+            }
+        },
+        onCancelRequest = { TODO() },
+        analysisRequestState = analysisRequestState,
         screenTitle = stringResource(R.string.sms_message_tool_screen_title),
         onTopBarUpdate = onTopBarUpdate,
         submitButtonLabel = stringResource(R.string.analyze_button_label),

@@ -11,10 +11,12 @@ import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.openlysis.core.designsystem.components.bar.TopBarState
 import com.openlysis.data.analysis.model.analysis.FileMultiAnalysis
 import com.openlysis.feature.tools.components.AttachFilesSection
 import com.openlysis.feature.tools.components.ToolScreenScaffold
+import com.openlysis.feature.tools.data.AnalysisRequestState
 import com.openlysis.feature.tools.data.AttachedFileData
 
 /**
@@ -34,7 +36,6 @@ internal fun FileAnalysisToolScreen(
 ) {
     val context = LocalContext.current
     val messageUiNotifier = remember { MessageUiNotifier(context) }
-    val errorHandler = remember { AnalysisErrorUiHandler(messageUiNotifier) }
     val fileAttachmentSettings = viewModel.fileAttachmentSettings.copy(maxFilesAmount = 1)
     val attachedFiles =
         rememberSaveable(
@@ -51,15 +52,20 @@ internal fun FileAnalysisToolScreen(
             attachedFiles.isNotEmpty()
         }
     }
+    val analysisRequestState = viewModel.currentAnalysisRequest.collectAsStateWithLifecycle()
 
     ToolScreenScaffold(
-        onSubmitClick = {
-            viewModel.startFileAnalysis(
-                attachedFile = attachedFiles.first(),
-                onSuccess = onAnalysisStart,
-                onError = errorHandler::handle
-            )
+        onSubmitRequest = {
+            viewModel.startFileAnalysis(attachedFile = attachedFiles.first())
         },
+        onGoToAnalysisRequest = {
+            if (analysisRequestState.value is AnalysisRequestState.Success.File) {
+                val value = analysisRequestState.value as AnalysisRequestState.Success.File
+                onAnalysisStart(value.initialValue)
+            }
+        },
+        onCancelRequest = { TODO() },
+        analysisRequestState = analysisRequestState,
         screenTitle = stringResource(R.string.file_tool_screen_title),
         onTopBarUpdate = onTopBarUpdate,
         submitEnabled = isFileAttached,

@@ -38,4 +38,8 @@ object AppIconsIds {
     @DrawableRes val Eye = R.drawable.eye_icon
 
     @DrawableRes val EyeOff = R.drawable.eye_off_icon
+
+    @DrawableRes val Retry = R.drawable.retry_icon
+
+    @DrawableRes val Open = R.drawable.open_icon
 }

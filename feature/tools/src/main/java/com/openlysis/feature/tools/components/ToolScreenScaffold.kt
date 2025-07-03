@@ -12,6 +12,12 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -23,30 +29,39 @@ import com.openlysis.core.designsystem.modifier.SizeType
 import com.openlysis.core.designsystem.theme.LocalAppColorScheme
 import com.openlysis.core.designsystem.theme.OpenlysisTheme
 import com.openlysis.core.designsystem.theme.size.LocalAppSpacing
+import com.openlysis.feature.tools.data.AnalysisRequestState
 
 /**
  * A scaffold for tool screens. This composable provides a consistent layout structure for tool-related screens
  * with a scrollable content area and a bottom submit button.
  *
+ * @param onTopBarUpdate Callback to update the top bar of the current screen.
+ * @param onSubmitRequest Callback when the user requests to start the analysis.
+ * @param onGoToAnalysisRequest Callback when the user wants to navigate to the analysis.
+ * @param onCancelRequest Callback when the user cancels the analysis request.
+ * @param analysisRequestState State holding the current analysis request status.
  * @param screenTitle The title to display in the top bar.
- * @param onTopBarUpdate Callback to update the top bar state.
- * @param onSubmitClick Callback when the submit button is clicked.
  * @param submitButtonLabel The label for the submit button.
  * @param submitButtonIconAlt The content description for the submit button icon.
  * @param submitEnabled Controls whether the submit button is enabled or disabled.
  * @param modifier Modifier for styling (defaults to [Modifier]).
+ * @param canSubmit Optional callback to determine if submission is allowed.
  * @param content The content to display inside the scrollable area of the scaffold.
  */
 @Composable
 internal fun ToolScreenScaffold(
-    screenTitle: String,
     onTopBarUpdate: (TopBarState) -> Unit,
-    onSubmitClick: () -> Unit,
+    onSubmitRequest: () -> Unit,
+    onGoToAnalysisRequest: () -> Unit,
+    onCancelRequest: () -> Unit,
+    analysisRequestState: State<AnalysisRequestState>,
+    screenTitle: String,
     submitButtonLabel: String,
     submitButtonIconAlt: String,
     submitEnabled: Boolean,
     modifier: Modifier = Modifier,
-    content: @Composable ColumnScope.() -> Unit
+    canSubmit: (() -> Boolean)? = null,
+    content: @Composable ColumnScope.(requestSubmit: () -> Unit) -> Unit
 ) {
     LaunchedEffect(Unit) {
         onTopBarUpdate(
@@ -64,6 +79,17 @@ internal fun ToolScreenScaffold(
         } else {
             ButtonType.PrimaryDisabled
         }
+    var showRequestStateDialog by rememberSaveable {
+        mutableStateOf(false)
+    }
+
+    val onSubmit = {
+        if (canSubmit == null || canSubmit()) {
+            onSubmitRequest()
+            showRequestStateDialog = true
+        }
+    }
+
     Column {
         Column(
             verticalArrangement = Arrangement.spacedBy(LocalAppSpacing.current.value800),
@@ -76,7 +102,7 @@ internal fun ToolScreenScaffold(
                         horizontal = LocalAppSpacing.current.value600
                     ).weight(1f)
         ) {
-            content()
+            content(onSubmit)
         }
 
         HorizontalDivider(
@@ -96,7 +122,7 @@ internal fun ToolScreenScaffold(
             AppButton(
                 type = submitButtonType,
                 size = SizeType.Default,
-                onClick = onSubmitClick,
+                onClick = onSubmit,
                 displayLabel = true,
                 label = submitButtonLabel,
                 displayIcon = true,
@@ -106,6 +132,24 @@ internal fun ToolScreenScaffold(
             )
         }
     }
+
+    if (showRequestStateDialog) {
+        AnalysisRequestStateDialog(
+            state = analysisRequestState,
+            onGoToAnalysisRequest = {
+                if (analysisRequestState.value is AnalysisRequestState.Success) {
+                    showRequestStateDialog = false
+                    onGoToAnalysisRequest()
+                }
+            },
+            onCancelRequest = {
+                showRequestStateDialog = false
+                onCancelRequest()
+            },
+            onRetryRequest = onSubmitRequest,
+            onDismissRequest = { showRequestStateDialog = false }
+        )
+    }
 }
 
 @Preview(showSystemUi = false)
@@ -113,9 +157,12 @@ internal fun ToolScreenScaffold(
 private fun ToolScreenScaffoldPreview() {
     OpenlysisTheme(darkTheme = false) {
         ToolScreenScaffold(
-            screenTitle = "Test Title",
             onTopBarUpdate = { },
-            onSubmitClick = { },
+            onSubmitRequest = { },
+            onGoToAnalysisRequest = { },
+            onCancelRequest = { },
+            analysisRequestState = remember { mutableStateOf(AnalysisRequestState.None) },
+            screenTitle = "Test Title",
             submitButtonLabel = "Test",
             submitButtonIconAlt = "Test",
             submitEnabled = true

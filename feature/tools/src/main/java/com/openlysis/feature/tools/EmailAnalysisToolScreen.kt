@@ -9,6 +9,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.openlysis.core.designsystem.components.bar.TopBarState
 import com.openlysis.core.designsystem.theme.OpenlysisTheme
 import com.openlysis.data.analysis.model.message.MessageAnalysis
@@ -17,6 +18,7 @@ import com.openlysis.feature.tools.components.AttachFilesSection
 import com.openlysis.feature.tools.components.MessageSection
 import com.openlysis.feature.tools.components.ToolScreenScaffold
 import com.openlysis.feature.tools.components.rememberEmailAnalysisState
+import com.openlysis.feature.tools.data.AnalysisRequestState
 
 /**
  * Composable screen for email analysis tool that allows users to input email details and attachments.
@@ -35,7 +37,6 @@ internal fun EmailAnalysisToolScreen(
 ) {
     val context = LocalContext.current
     val messageUiNotifier = remember { MessageUiNotifier(context) }
-    val errorHandler = remember { AnalysisErrorUiHandler(messageUiNotifier) }
     val state =
         rememberEmailAnalysisState(
             messageUiNotifier = messageUiNotifier,
@@ -53,17 +54,24 @@ internal fun EmailAnalysisToolScreen(
                 state.attachedFiles.size < state.fileAttachmentSettings.maxFilesAmount
             }
         }
+    val analysisRequestState = viewModel.currentAnalysisRequest.collectAsStateWithLifecycle()
 
     ToolScreenScaffold(
-        onSubmitClick = {
+        onSubmitRequest = {
             viewModel.startMessageAnalysis(
                 type = MessageType.Email,
                 messageState = state.messageState.value,
-                attachedFiles = state.attachedFiles,
-                onSuccess = onAnalysisStart,
-                onError = errorHandler::handle
+                attachedFiles = state.attachedFiles
             )
         },
+        onGoToAnalysisRequest = {
+            if (analysisRequestState.value is AnalysisRequestState.Success.Message) {
+                val value = analysisRequestState.value as AnalysisRequestState.Success.Message
+                onAnalysisStart(value.initialValue)
+            }
+        },
+        onCancelRequest = { TODO() },
+        analysisRequestState = analysisRequestState,
         screenTitle = stringResource(R.string.email_message_tool_screen_title),
         onTopBarUpdate = onTopBarUpdate,
         submitButtonLabel = stringResource(R.string.analyze_button_label),

@@ -10,18 +10,22 @@ import com.openlysis.data.analysis.core.request.Attachment
 import com.openlysis.data.analysis.core.request.Message
 import com.openlysis.data.analysis.model.analysis.FileMultiAnalysis
 import com.openlysis.data.analysis.model.analysis.UrlMultiAnalysis
-import com.openlysis.data.analysis.model.common.AnalysisError
 import com.openlysis.data.analysis.model.common.Outcome
 import com.openlysis.data.analysis.model.message.MessageAnalysis
 import com.openlysis.data.analysis.model.message.MessageType
 import com.openlysis.data.attachment.AttachmentFactory
 import com.openlysis.feature.tools.components.MessageState
+import com.openlysis.feature.tools.data.AnalysisRequestState
 import com.openlysis.feature.tools.data.AnalysisSettings
 import com.openlysis.feature.tools.data.AttachedFileData
 import com.openlysis.feature.tools.data.FileAttachmentSettings
 import com.openlysis.feature.tools.data.ToolsDataSource
 import com.openlysis.feature.tools.data.ToolsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.net.URI
 import java.net.URISyntaxException
@@ -56,22 +60,32 @@ internal class ToolsScreenViewModel
                 options = setOf(RegexOption.IGNORE_CASE)
             )
 
+        private val _currentAnalysisRequest =
+            MutableStateFlow<AnalysisRequestState>(AnalysisRequestState.None)
+
+        val currentAnalysisRequest: StateFlow<AnalysisRequestState> =
+            _currentAnalysisRequest
+                .stateIn(
+                    scope = viewModelScope,
+                    started = SharingStarted.WhileSubscribed(5_000),
+                    initialValue = AnalysisRequestState.None
+                )
+
         /**
          * Initiates the analysis of a message with optional attachments.
+         *
+         * The result of the analysis request can be observed from [currentAnalysisRequest].
          *
          * @param type The type of message to be analyzed
          * @param messageState Current state of the message containing sender, subject and content
          * @param attachedFiles Optional list of files attached to the message
-         * @param onSuccess Callback function to handle successful analysis with MessageAnalysis result
-         * @param onError Callback function to handle analysis errors with AnalysisError
          */
         fun startMessageAnalysis(
             type: MessageType,
             messageState: MessageState,
-            attachedFiles: List<AttachedFileData>?,
-            onSuccess: (MessageAnalysis) -> Unit,
-            onError: (AnalysisError) -> Unit
+            attachedFiles: List<AttachedFileData>?
         ) {
+            _currentAnalysisRequest.value = AnalysisRequestState.InProgress
             val attachments = mutableListOf<Attachment>()
             attachedFiles?.forEach {
                 val outcome =
@@ -83,7 +97,7 @@ internal class ToolsScreenViewModel
                 when (outcome) {
                     is Outcome.Success -> attachments.add(outcome.value)
                     is Outcome.Failure -> {
-                        onError(outcome.error)
+                        _currentAnalysisRequest.value = AnalysisRequestState.Failure(outcome.error)
                         return
                     }
                 }
@@ -114,10 +128,12 @@ internal class ToolsScreenViewModel
             viewModelScope.launch {
                 try {
                     val outcome = messageAnalysisRepo.analyze(request)
-                    when (outcome) {
-                        is Outcome.Success -> onSuccess(outcome.value)
-                        is Outcome.Failure -> onError(outcome.error)
-                    }
+                    _currentAnalysisRequest.value =
+                        when (outcome) {
+                            is Outcome.Success ->
+                                AnalysisRequestState.Success.Message(outcome.value)
+                            is Outcome.Failure -> AnalysisRequestState.Failure(outcome.error)
+                        }
                 } finally {
                     for (closeable in attachments) {
                         closeable.close()
@@ -129,15 +145,12 @@ internal class ToolsScreenViewModel
         /**
          * Initiates the analysis of a single file.
          *
+         * The result of the analysis request can be observed from [currentAnalysisRequest].
+         *
          * @param attachedFile Data object containing the URI and password (if any) of the file to analyze
-         * @param onSuccess Callback function to handle successful analysis with FileMultiAnalysis result
-         * @param onError Callback function to handle analysis errors with AnalysisError
          */
-        fun startFileAnalysis(
-            attachedFile: AttachedFileData,
-            onSuccess: (FileMultiAnalysis) -> Unit,
-            onError: (AnalysisError) -> Unit
-        ) {
+        fun startFileAnalysis(attachedFile: AttachedFileData) {
+            _currentAnalysisRequest.value = AnalysisRequestState.InProgress
             val outcome =
                 attachmentFactory.create(
                     attachedFile.uri,
@@ -148,7 +161,7 @@ internal class ToolsScreenViewModel
                 when (outcome) {
                     is Outcome.Success -> outcome.value
                     is Outcome.Failure -> {
-                        onError(outcome.error)
+                        _currentAnalysisRequest.value = AnalysisRequestState.Failure(outcome.error)
                         return
                     }
                 }
@@ -162,10 +175,11 @@ internal class ToolsScreenViewModel
             viewModelScope.launch {
                 try {
                     val outcome = fileAnalysisRepo.analyze(request)
-                    when (outcome) {
-                        is Outcome.Success -> onSuccess(outcome.value)
-                        is Outcome.Failure -> onError(outcome.error)
-                    }
+                    _currentAnalysisRequest.value =
+                        when (outcome) {
+                            is Outcome.Success -> AnalysisRequestState.Success.File(outcome.value)
+                            is Outcome.Failure -> AnalysisRequestState.Failure(outcome.error)
+                        }
                 } finally {
                     attachment.close()
                 }
@@ -175,15 +189,12 @@ internal class ToolsScreenViewModel
         /**
          * Initiates the analysis of a URL.
          *
+         * The result of the analysis request can be observed from [currentAnalysisRequest].
+         *
          * @param url The URI to be analyzed
-         * @param onSuccess Callback function to handle successful analysis with UrlMultiAnalysis result
-         * @param onError Callback function to handle analysis errors with AnalysisError
          */
-        fun startUrlAnalysis(
-            url: URI,
-            onSuccess: (UrlMultiAnalysis) -> Unit,
-            onError: (AnalysisError) -> Unit
-        ) {
+        fun startUrlAnalysis(url: URI) {
+            _currentAnalysisRequest.value = AnalysisRequestState.InProgress
             val request =
                 AnalyzeUrl(
                     url = url,
@@ -192,10 +203,11 @@ internal class ToolsScreenViewModel
 
             viewModelScope.launch {
                 val outcome = urlAnalysisRepo.analyze(request)
-                when (outcome) {
-                    is Outcome.Success -> onSuccess(outcome.value)
-                    is Outcome.Failure -> onError(outcome.error)
-                }
+                _currentAnalysisRequest.value =
+                    when (outcome) {
+                        is Outcome.Success -> AnalysisRequestState.Success.Url(outcome.value)
+                        is Outcome.Failure -> AnalysisRequestState.Failure(outcome.error)
+                    }
             }
         }
 

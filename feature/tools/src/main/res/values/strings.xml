@@ -59,6 +59,21 @@
     <string name="url_tool_input_label">URL</string>
     <string name="url_tool_input_invalid_url">The URL is invalid, make sure to include at least the domain (example.com).</string>
 
+    <string name="analysis_request_state_dialog_in_progress_icon_alt">Loading spinner</string>
+    <string name="analysis_request_state_dialog_error_icon_alt">Error icon, X symbol</string>
+    <string name="analysis_request_state_dialog_success_icon_alt">Success icon, checkmark</string>
+    <string name="analysis_request_state_dialog_in_progress_description">Starting analysis</string>
+    <string name="analysis_request_state_dialog_success_description">Analysis started successfully</string>
+    <string name="analysis_request_state_dialog_waiting_time_description">Cancelable in %s</string>
+    <string name="analysis_request_state_dialog_cancel_button_label">Cancel</string>
+    <string name="analysis_request_state_dialog_cancel_button_icon_alt">Cancel icon, X symbol</string>
+    <string name="analysis_request_state_dialog_go_button_label">Go to analysis</string>
+    <string name="analysis_request_state_dialog_go_button_icon_alt">External link icon, diagonal arrow pointing up and right</string>
+    <string name="analysis_request_state_dialog_retry_button_label">Retry</string>
+    <string name="analysis_request_state_dialog_retry_button_icon_alt">Retry icon, circular arrow</string>
+    <string name="analysis_request_state_dialog_back_button_label">Back</string>
+    <string name="analysis_request_state_dialog_back_button_icon_alt">Back icon, left-pointing arrow</string>
+
     <string name="info_file_already_attached">This file is already attached.</string>
     <string name="error_file_uri_null">File could not be added due to an unexpected error.</string>
     <string name="error_file_too_large">The file size must be less than or equal to %.1f %s.</string>

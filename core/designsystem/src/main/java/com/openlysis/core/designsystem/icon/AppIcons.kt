@@ -56,4 +56,10 @@ object AppIcons {
 
     val EyeOff: ImageVector
         @Composable get() = ImageVector.vectorResource(R.drawable.eye_off_icon)
+
+    val Retry: ImageVector
+        @Composable get() = ImageVector.vectorResource(R.drawable.retry_icon)
+
+    val Open: ImageVector
+        @Composable get() = ImageVector.vectorResource(R.drawable.open_icon)
 }
