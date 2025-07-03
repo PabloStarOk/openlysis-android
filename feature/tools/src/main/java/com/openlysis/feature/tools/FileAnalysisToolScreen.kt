@@ -3,11 +3,7 @@ package com.openlysis.feature.tools
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.listSaver
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -16,8 +12,8 @@ import com.openlysis.core.designsystem.components.bar.TopBarState
 import com.openlysis.data.analysis.model.analysis.FileMultiAnalysis
 import com.openlysis.feature.tools.components.AttachFilesSection
 import com.openlysis.feature.tools.components.ToolScreenScaffold
+import com.openlysis.feature.tools.components.rememberAttachFilesState
 import com.openlysis.feature.tools.data.AnalysisRequestState
-import com.openlysis.feature.tools.data.AttachedFileData
 
 /**
  * Composable screen for file analysis tool.
@@ -37,26 +33,17 @@ internal fun FileAnalysisToolScreen(
     val context = LocalContext.current
     val messageUiNotifier = remember { MessageUiNotifier(context) }
     val fileAttachmentSettings = viewModel.fileAttachmentSettings.copy(maxFilesAmount = 1)
-    val attachedFiles =
-        rememberSaveable(
-            saver =
-                listSaver(
-                    save = { it.toList() },
-                    restore = { it.toMutableStateList() }
-                )
-        ) {
-            mutableStateListOf<AttachedFileData>()
-        }
-    val isFileAttached by remember(attachedFiles) {
+    val attachFilesState = rememberAttachFilesState(fileAttachmentSettings, messageUiNotifier)
+    val isFileAttached by remember(attachFilesState) {
         derivedStateOf {
-            attachedFiles.isNotEmpty()
+            attachFilesState.attachedFiles.isNotEmpty()
         }
     }
     val analysisRequestState = viewModel.currentAnalysisRequest.collectAsStateWithLifecycle()
 
     ToolScreenScaffold(
         onSubmitRequest = {
-            viewModel.startFileAnalysis(attachedFile = attachedFiles.first())
+            viewModel.startFileAnalysis(attachedFile = attachFilesState.attachedFiles.first())
         },
         onGoToAnalysisRequest = {
             if (analysisRequestState.value is AnalysisRequestState.Success.File) {
@@ -74,29 +61,10 @@ internal fun FileAnalysisToolScreen(
         modifier = modifier
     ) {
         AttachFilesSection(
-            attachedFiles = attachedFiles,
-            onFileAttach = {
-                val maxFileSizeInMb = fileAttachmentSettings.maxFileSize.toFloat() / (1024 * 1024)
-                if (it.size < 1) {
-                    messageUiNotifier.showMessage(R.string.error_file_size_zero)
-                    return@AttachFilesSection
-                }
-
-                if (it.size > fileAttachmentSettings.maxFileSize) {
-                    messageUiNotifier.showMessage(
-                        R.string.error_file_too_large,
-                        maxFileSizeInMb,
-                        "MB"
-                    )
-                    return@AttachFilesSection
-                }
-
-                attachedFiles.add(it)
-            },
-            onFileDetach = { attachedFiles.removeAt(0) },
-            onFilePasswordChange = { _, password ->
-                attachedFiles[0] = attachedFiles[0].copy(password = password)
-            },
+            attachedFiles = attachFilesState.attachedFiles,
+            onFileAttach = attachFilesState::attachFile,
+            onFileDetach = attachFilesState::detachFile,
+            onFilePasswordChange = attachFilesState::updateFilePassword,
             enabled = !isFileAttached,
             title = stringResource(R.string.file_tool_section_title),
             description = stringResource(R.string.file_tool_section_description),

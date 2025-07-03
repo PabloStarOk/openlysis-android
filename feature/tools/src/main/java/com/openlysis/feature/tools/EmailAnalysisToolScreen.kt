@@ -3,7 +3,9 @@ package com.openlysis.feature.tools
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -16,8 +18,9 @@ import com.openlysis.data.analysis.model.message.MessageAnalysis
 import com.openlysis.data.analysis.model.message.MessageType
 import com.openlysis.feature.tools.components.AttachFilesSection
 import com.openlysis.feature.tools.components.MessageSection
+import com.openlysis.feature.tools.components.MessageState
 import com.openlysis.feature.tools.components.ToolScreenScaffold
-import com.openlysis.feature.tools.components.rememberEmailAnalysisState
+import com.openlysis.feature.tools.components.rememberAttachFilesState
 import com.openlysis.feature.tools.data.AnalysisRequestState
 
 /**
@@ -37,21 +40,22 @@ internal fun EmailAnalysisToolScreen(
 ) {
     val context = LocalContext.current
     val messageUiNotifier = remember { MessageUiNotifier(context) }
-    val state =
-        rememberEmailAnalysisState(
-            messageUiNotifier = messageUiNotifier,
-            fileAttachmentSettings = viewModel.fileAttachmentSettings
+    val messageState = rememberSaveable { mutableStateOf(MessageState()) }
+    val attachFilesState =
+        rememberAttachFilesState(
+            settings = viewModel.fileAttachmentSettings,
+            messageUiNotifier = messageUiNotifier
         )
     val submitEnabled by
-        remember(state.messageState) {
+        remember(messageState) {
             derivedStateOf {
-                state.messageState.value.submitEnabled
+                messageState.value.submitEnabled
             }
         }
     val attachFilesEnabled by
-        remember(state.attachedFiles) {
+        remember(attachFilesState) {
             derivedStateOf {
-                state.attachedFiles.size < state.fileAttachmentSettings.maxFilesAmount
+                attachFilesState.attachmentEnabled
             }
         }
     val analysisRequestState = viewModel.currentAnalysisRequest.collectAsStateWithLifecycle()
@@ -60,8 +64,8 @@ internal fun EmailAnalysisToolScreen(
         onSubmitRequest = {
             viewModel.startMessageAnalysis(
                 type = MessageType.Email,
-                messageState = state.messageState.value,
-                attachedFiles = state.attachedFiles
+                messageState = messageState.value,
+                attachedFiles = attachFilesState.attachedFiles
             )
         },
         onGoToAnalysisRequest = {
@@ -81,24 +85,24 @@ internal fun EmailAnalysisToolScreen(
     ) {
         // TODO: Add functionality to select an email from the inbox instead of filling information manually.
         MessageSection(
-            state = state.messageState,
-            onSenderChange = state::updateSender,
-            onSubjectChange = state::updateSubject,
-            onContentChange = state::updateContent,
+            state = messageState,
+            onSenderChange = { messageState.value = messageState.value.copy(sender = it) },
+            onSubjectChange = { messageState.value = messageState.value.copy(subject = it) },
+            onContentChange = { messageState.value = messageState.value.copy(content = it) },
             title = stringResource(R.string.email_message_tool_section_title),
             description = stringResource(R.string.email_message_tool_section_description),
             isEmail = true
         )
 
         AttachFilesSection(
-            attachedFiles = state.attachedFiles,
-            onFileAttach = state::addAttachedFile,
-            onFileDetach = state::removeAttachedFile,
-            onFilePasswordChange = state::updateAttachedFilePassword,
+            attachedFiles = attachFilesState.attachedFiles,
+            onFileAttach = attachFilesState::attachFile,
+            onFileDetach = attachFilesState::detachFile,
+            onFilePasswordChange = attachFilesState::updateFilePassword,
             enabled = attachFilesEnabled,
             title = stringResource(R.string.email_message_tool_file_section_title),
             description = stringResource(R.string.email_message_tool_file_section_description),
-            settings = state.fileAttachmentSettings
+            settings = viewModel.fileAttachmentSettings
         )
     }
 }
