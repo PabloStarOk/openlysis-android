@@ -1,6 +1,7 @@
 package com.openlysis.feature.tools.components
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
@@ -92,7 +93,6 @@ internal fun AnalysisRequestStateDialog(
                 enableCancelDelaySeconds = enableCancelDelaySeconds
             )
         }
-
     val appColorScheme = LocalAppColorScheme.current
     val descriptionColor =
         remember(requestState, appColorScheme) {
@@ -100,6 +100,14 @@ internal fun AnalysisRequestStateDialog(
                 is AnalysisRequestState.Failure -> appColorScheme.text.danger.secondary
                 else -> appColorScheme.text.default.primary
             }
+        }
+    val showWaitingTime =
+        remember(requestState, enableCancel) {
+            !enableCancel &&
+                (
+                    requestState is AnalysisRequestState.InProgress ||
+                        requestState is AnalysisRequestState.None
+                )
         }
 
     Dialog(
@@ -156,9 +164,7 @@ internal fun AnalysisRequestStateDialog(
                         modifier = Modifier.fillMaxWidth()
                     )
 
-                    if (requestState is AnalysisRequestState.InProgress ||
-                        requestState is AnalysisRequestState.None
-                    ) {
+                    AnimatedVisibility(visible = showWaitingTime) {
                         CountdownText(
                             onStart = { enableCancel = false },
                             onComplete = { enableCancel = true },
