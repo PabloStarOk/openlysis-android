@@ -1,8 +1,11 @@
 package com.openlysis.feature.tools.navigation
 
 import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.AnimatedContentTransitionScope.SlideDirection
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -127,7 +130,17 @@ fun NavGraphBuilder.toolsScreen(
             )
         }
 
-        composable<EmailAnalysisToolRoute> { backStackEntry ->
+        composable<EmailAnalysisToolRoute>(
+            enterTransition = {
+                slideIntoContainer(towards = SlideDirection.Down) +
+                    fadeIn()
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    towards = SlideDirection.Up
+                ) + fadeOut()
+            }
+        ) { backStackEntry ->
             EmailAnalysisToolScreen(
                 viewModel = getSharedViewModel(backStackEntry, navController),
                 onAnalysisStart = onMessageAnalysisStart,
@@ -135,7 +148,17 @@ fun NavGraphBuilder.toolsScreen(
             )
         }
 
-        composable<SmsAnalysisToolRoute> { backStackEntry ->
+        composable<SmsAnalysisToolRoute>(
+            enterTransition = {
+                slideIntoContainer(towards = SlideDirection.Down) +
+                    fadeIn()
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    towards = SlideDirection.Up
+                ) + fadeOut()
+            }
+        ) { backStackEntry ->
             SmsAnalysisToolScreen(
                 viewModel = getSharedViewModel(backStackEntry, navController),
                 onAnalysisStart = onMessageAnalysisStart,
@@ -143,7 +166,17 @@ fun NavGraphBuilder.toolsScreen(
             )
         }
 
-        composable<FileAnalysisToolRoute> { backStackEntry ->
+        composable<FileAnalysisToolRoute>(
+            enterTransition = {
+                slideIntoContainer(towards = SlideDirection.Down) +
+                    fadeIn()
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    towards = SlideDirection.Up
+                ) + fadeOut()
+            }
+        ) { backStackEntry ->
             FileAnalysisToolScreen(
                 viewModel = getSharedViewModel(backStackEntry, navController),
                 onAnalysisStart = onFileAnalysisStart,
@@ -151,7 +184,17 @@ fun NavGraphBuilder.toolsScreen(
             )
         }
 
-        composable<UrlAnalysisToolRoute> { backStackEntry ->
+        composable<UrlAnalysisToolRoute>(
+            enterTransition = {
+                slideIntoContainer(towards = SlideDirection.Down) +
+                    fadeIn()
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    towards = SlideDirection.Up
+                ) + fadeOut()
+            }
+        ) { backStackEntry ->
             UrlAnalysisToolScreen(
                 viewModel = getSharedViewModel(backStackEntry, navController),
                 onAnalysisStart = onUrlAnalysisStart,

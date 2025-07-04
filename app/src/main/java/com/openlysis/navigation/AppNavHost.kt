@@ -3,6 +3,8 @@ package com.openlysis.navigation
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.EaseInOut
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -48,14 +50,15 @@ internal fun AppNavHost(
                 // TODO: Implement navigation to display and update results of this new analysis.
             },
             enterTransition = {
-                val toNestedGraph =
+                val fromNestedGraph =
                     this.initialState.destination.parent?.hierarchy?.any {
                         it.hasRoute(
                             route = ToolsBaseRoute::class
                         )
                     } == true
-                if (toNestedGraph) {
-                    null
+                if (fromNestedGraph) {
+                    slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Up) +
+                        fadeIn()
                 } else {
                     slideIntoContainer(
                         towards = AnimatedContentTransitionScope.SlideDirection.Right,
@@ -75,7 +78,8 @@ internal fun AppNavHost(
                         )
                     } == true
                 if (toNestedGraph) {
-                    null
+                    slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Down) +
+                        fadeOut()
                 } else {
                     slideOutOfContainer(
                         towards = AnimatedContentTransitionScope.SlideDirection.Left,
