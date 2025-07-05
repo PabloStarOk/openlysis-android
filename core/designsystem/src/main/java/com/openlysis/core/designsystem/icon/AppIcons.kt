@@ -62,4 +62,7 @@ object AppIcons {
 
     val Open: ImageVector
         @Composable get() = ImageVector.vectorResource(R.drawable.open_icon)
+
+    val ArrowRight
+        @Composable get() = ImageVector.vectorResource(R.drawable.arrow_right_icon)
 }

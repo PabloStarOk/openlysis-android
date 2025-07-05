@@ -1,6 +1,6 @@
 package com.openlysis.navigation
 
-import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.AnimatedContentTransitionScope.SlideDirection
 import androidx.compose.animation.core.EaseInOut
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -9,10 +9,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavDestination.Companion.hasRoute
-import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.openlysis.feature.results.navigation.ResultsBaseRoute
+import com.openlysis.feature.results.navigation.resultsScreen
 import com.openlysis.feature.tools.navigation.ToolsBaseRoute
+import com.openlysis.feature.tools.navigation.ToolsRoute
 import com.openlysis.feature.tools.navigation.toolsScreen
 import com.openlysis.ui.AppState
 
@@ -38,64 +40,95 @@ internal fun AppNavHost(
             navController = navController,
             onTopBarUpdate = appState::updateTopBarState,
             onMessageAnalysisStart = {
-                navController.navigate(TemporaryResults)
+                navController.navigate(ResultsBaseRoute)
                 // TODO: Implement navigation to display and update results of this new analysis.
             },
             onFileAnalysisStart = {
-                navController.navigate(TemporaryResults)
+                navController.navigate(ResultsBaseRoute)
                 // TODO: Implement navigation to display and update results of this new analysis.
             },
             onUrlAnalysisStart = {
-                navController.navigate(TemporaryResults)
+                navController.navigate(ResultsBaseRoute)
                 // TODO: Implement navigation to display and update results of this new analysis.
             },
             enterTransition = {
-                val fromNestedGraph =
-                    this.initialState.destination.parent?.hierarchy?.any {
-                        it.hasRoute(
-                            route = ToolsBaseRoute::class
-                        )
-                    } == true
-                if (fromNestedGraph) {
-                    slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Up) +
-                        fadeIn()
-                } else {
+                val isTopLevelDest = appState.isTopLevelDestination(this.initialState.destination)
+                if (isTopLevelDest) {
                     slideIntoContainer(
-                        towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                        towards = SlideDirection.Right,
                         animationSpec =
                             tween(
                                 durationMillis = 300,
                                 easing = EaseInOut
                             )
                     )
+                } else {
+                    slideIntoContainer(SlideDirection.Up) + fadeIn()
                 }
             },
             exitTransition = {
-                val toNestedGraph =
-                    this.targetState.destination.parent?.hierarchy?.any {
-                        it.hasRoute(
-                            route = ToolsBaseRoute::class
-                        )
-                    } == true
-                if (toNestedGraph) {
-                    slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Down) +
-                        fadeOut()
-                } else {
+                val isTopLevelDest = appState.isTopLevelDestination(this.targetState.destination)
+                if (isTopLevelDest) {
                     slideOutOfContainer(
-                        towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                        towards = SlideDirection.Left,
                         animationSpec =
                             tween(
                                 durationMillis = 300,
                                 easing = EaseInOut
                             )
                     )
+                } else {
+                    slideOutOfContainer(SlideDirection.Down) + fadeOut()
                 }
             }
         )
 
-        composable<TemporaryResults> {
-            Text(text = "Results screen.")
-        }
+        resultsScreen(
+            enterTransition = {
+                val isTopLevelDest = appState.isTopLevelDestination(this.initialState.destination)
+                if (isTopLevelDest) {
+                    val toTools = this.initialState.destination.hasRoute(ToolsRoute::class)
+                    val direction =
+                        if (toTools) {
+                            SlideDirection.Left
+                        } else {
+                            SlideDirection.Right
+                        }
+                    slideIntoContainer(
+                        towards = direction,
+                        animationSpec =
+                            tween(
+                                durationMillis = 300,
+                                easing = EaseInOut
+                            )
+                    )
+                } else {
+                    slideIntoContainer(SlideDirection.Up) + fadeIn()
+                }
+            },
+            exitTransition = {
+                val isTopLevelDest = appState.isTopLevelDestination(this.targetState.destination)
+                if (isTopLevelDest) {
+                    val toTools = this.targetState.destination.hasRoute(ToolsRoute::class)
+                    val direction =
+                        if (toTools) {
+                            SlideDirection.Right
+                        } else {
+                            SlideDirection.Left
+                        }
+                    slideOutOfContainer(
+                        towards = direction,
+                        animationSpec =
+                            tween(
+                                durationMillis = 300,
+                                easing = EaseInOut
+                            )
+                    )
+                } else {
+                    slideOutOfContainer(SlideDirection.Down) + fadeOut()
+                }
+            }
+        )
 
         composable<TemporarySettings> {
             Text(text = "Settings screen.")

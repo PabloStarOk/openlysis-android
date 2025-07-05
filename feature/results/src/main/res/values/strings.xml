@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="verdict_stats_label">Stats</string>
+    <string name="verdict_stats_clean_label">Clean</string>
+    <string name="verdict_stats_suspicious_label">Suspicious</string>
+    <string name="verdict_stats_malicious_label">Malicious</string>
+    <string name="verdict_stats_unknown_label">Unknown</string>
+
+    <string name="analysis_results_section_card_icon_alt">Arrow pointing right.</string>
+
+    <string name="results_screen_emails_card_title">Emails</string>
+    <string name="results_screen_sms_card_title">SMS Text Messages</string>
+    <string name="results_screen_files_card_title">Files</string>
+    <string name="results_screen_urls_card_title">URLs</string>
+    <string name="results_screen_emails_card_description">Review the results of your email analyses.</string>
+    <string name="results_screen_sms_card_description">Review the results of your SMS text message analyses.</string>
+    <string name="results_screen_files_card_description">Review the results of your file analyses.</string>
+    <string name="results_screen_urls_card_description">Review the results of your URL analyses.</string>
+</resources>

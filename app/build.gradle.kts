@@ -115,6 +115,7 @@ dependencies {
 
     implementation(projects.core.designsystem)
     implementation(projects.feature.tools)
+    implementation(projects.feature.results)
     implementation(projects.core.data.analysis.model)
     implementation(projects.core.data.analysis.core)
     implementation(projects.core.data.remote)

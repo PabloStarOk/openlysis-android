@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="verdict_stats_label">Estadísticas</string>
+    <string name="verdict_stats_clean_label">Limpios</string>
+    <string name="verdict_stats_suspicious_label">Sospechosos</string>
+    <string name="verdict_stats_malicious_label">Maliciosos</string>
+    <string name="verdict_stats_unknown_label">Desconocidos</string>
+    
+    <string name="analysis_results_section_card_icon_alt">Flecha apuntando a la derecha.</string>
+    
+    <string name="results_screen_emails_card_title">Correos Electrónicos</string>
+    <string name="results_screen_sms_card_title">Mensajes de Texto SMS</string>
+    <string name="results_screen_files_card_title">Archivos</string>
+    <string name="results_screen_urls_card_title">URLs</string>
+    <string name="results_screen_emails_card_description">Revisa los resultados de tus análisis de los correos electrónicos.</string>
+    <string name="results_screen_sms_card_description">Revisa los resultados de tus análisis de los mensajes de texto SMS.</string>
+    <string name="results_screen_files_card_description">Revisa los resultados de tus análisis de archivos.</string>
+    <string name="results_screen_urls_card_description">Revisa los resultados de tus análisis de URLs.</string>
+</resources>

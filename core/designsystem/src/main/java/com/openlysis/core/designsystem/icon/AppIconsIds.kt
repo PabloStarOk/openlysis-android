@@ -42,4 +42,6 @@ object AppIconsIds {
     @DrawableRes val Retry = R.drawable.retry_icon
 
     @DrawableRes val Open = R.drawable.open_icon
+
+    @DrawableRes val ArrowRight = R.drawable.arrow_right_icon
 }
