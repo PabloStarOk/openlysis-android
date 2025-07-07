@@ -1,7 +1,6 @@
 package com.openlysis.data.analysis.core.di
 
 import com.openlysis.data.analysis.core.repository.AnalysesRepository
-import com.openlysis.data.analysis.core.repository.AnalysesRepositorySettings
 import com.openlysis.data.analysis.core.repository.DefaultAnalysesRepository
 import com.openlysis.data.analysis.core.request.AnalyzeMessage
 import com.openlysis.data.analysis.core.source.AnalysesLocalDataSource
@@ -24,13 +23,11 @@ internal object AnalysisProvidingModule {
     @Singleton
     @Provides
     fun provideEmailAnalysesRepository(
-        settings: AnalysesRepositorySettings,
         localDs: AnalysesLocalDataSource<MessageAnalysis>,
         @EmailAnalysesRemoteDataSource remoteDs:
             AnalysesRemoteDataSource<AnalyzeMessage, MessageAnalysis>
     ): AnalysesRepository<AnalyzeMessage, MessageAnalysis> =
         DefaultAnalysesRepository(
-            settings = settings,
             localDs = localDs,
             remoteDs = remoteDs
         )
@@ -39,13 +36,11 @@ internal object AnalysisProvidingModule {
     @Singleton
     @Provides
     fun provideSmsAnalysesRepository(
-        settings: AnalysesRepositorySettings,
         localDs: AnalysesLocalDataSource<MessageAnalysis>,
         @SmsAnalysesRemoteDataSource remoteDs:
             AnalysesRemoteDataSource<AnalyzeMessage, MessageAnalysis>
     ): AnalysesRepository<AnalyzeMessage, MessageAnalysis> =
         DefaultAnalysesRepository(
-            settings = settings,
             localDs = localDs,
             remoteDs = remoteDs
         )
