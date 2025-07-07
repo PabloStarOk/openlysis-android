@@ -2,6 +2,8 @@ package com.openlysis.feature.results
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.openlysis.data.analysis.core.di.EmailAnalysesRepository
+import com.openlysis.data.analysis.core.di.SmsAnalysesRepository
 import com.openlysis.data.analysis.core.repository.AnalysesRepository
 import com.openlysis.data.analysis.core.request.AnalyzeFile
 import com.openlysis.data.analysis.core.request.AnalyzeMessage
@@ -12,7 +14,6 @@ import com.openlysis.data.analysis.model.analysis.UrlMultiAnalysis
 import com.openlysis.data.analysis.model.common.Outcome
 import com.openlysis.data.analysis.model.common.Verdict
 import com.openlysis.data.analysis.model.message.MessageAnalysis
-import com.openlysis.data.analysis.model.message.MessageType
 import com.openlysis.feature.results.components.VerdictStatsState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,11 +22,13 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.collections.count
 
 /**
  * ViewModel for the initial results screen.
  *
- * @property messageAnalysisRepo Repository for message-based analyses
+ * @property emailAnalysisRepo Repository for email-based analyses
+ * @property smsAnalysisRepo Repository for SMS-based analyses
  * @property fileAnalysisRepo Repository for file-based analyses
  * @property urlAnalysisRepo Repository for URL-based analyses
  */
@@ -33,7 +36,10 @@ import javax.inject.Inject
 internal class ResultsScreenViewModel
     @Inject
     constructor(
-        private val messageAnalysisRepo: AnalysesRepository<AnalyzeMessage, MessageAnalysis>,
+        @EmailAnalysesRepository private val emailAnalysisRepo:
+            AnalysesRepository<AnalyzeMessage, MessageAnalysis>,
+        @SmsAnalysesRepository private val smsAnalysisRepo:
+            AnalysesRepository<AnalyzeMessage, MessageAnalysis>,
         private val fileAnalysisRepo: AnalysesRepository<AnalyzeFile, FileMultiAnalysis>,
         private val urlAnalysisRepo: AnalysesRepository<AnalyzeUrl, UrlMultiAnalysis>
     ) : ViewModel() {
@@ -53,10 +59,10 @@ internal class ResultsScreenViewModel
          */
         fun loadEmailVerdictStats() {
             viewModelScope.launch {
-                val outcome = messageAnalysisRepo.getManyPaged(1)
+                val outcome = emailAnalysisRepo.getManyPaged(1)
                 _emailAnalysisStats.value =
                     when (outcome) {
-                        is Outcome.Success -> outcome.value.countVerdictStats(MessageType.Email)
+                        is Outcome.Success -> outcome.value.messageCountVerdictStats()
                         is Outcome.Failure -> VerdictStatsState.Zero
                     }
             }
@@ -67,10 +73,10 @@ internal class ResultsScreenViewModel
          */
         fun loadSmsVerdictStats() {
             viewModelScope.launch {
-                val outcome = messageAnalysisRepo.getManyPaged(1)
+                val outcome = smsAnalysisRepo.getManyPaged(1)
                 _smsAnalysisStats.value =
                     when (outcome) {
-                        is Outcome.Success -> outcome.value.countVerdictStats(MessageType.Sms)
+                        is Outcome.Success -> outcome.value.messageCountVerdictStats()
                         is Outcome.Failure -> VerdictStatsState.Zero
                     }
             }
@@ -84,7 +90,7 @@ internal class ResultsScreenViewModel
                 val outcome = fileAnalysisRepo.getManyPaged(1)
                 _fileAnalysisStats.value =
                     when (outcome) {
-                        is Outcome.Success -> outcome.value.countVerdictStats()
+                        is Outcome.Success -> outcome.value.multiCountVerdictStats()
                         is Outcome.Failure -> VerdictStatsState.Zero
                     }
             }
@@ -98,66 +104,48 @@ internal class ResultsScreenViewModel
                 val outcome = urlAnalysisRepo.getManyPaged(1)
                 _urlAnalysisStats.value =
                     when (outcome) {
-                        is Outcome.Success -> outcome.value.countVerdictStats()
+                        is Outcome.Success -> outcome.value.multiCountVerdictStats()
                         is Outcome.Failure -> VerdictStatsState.Zero
                     }
             }
         }
 
         /**
-         * Counts verdict statistics for a list of message analyses filtered by message type.
+         * Counts verdict statistics for a list of message analyses.
          *
-         * @param messageType The type of message to filter analyses by
-         * @return [VerdictStatsState] containing counts of different verdicts for the filtered analyses
+         * @return [VerdictStatsState] containing counts of different verdicts for the analyses
          */
-        private fun List<MessageAnalysis>.countVerdictStats(
-            messageType: MessageType
-        ): VerdictStatsState {
-            val analyses =
-                this.filter {
-                    it.message.type == messageType
+        private fun List<MessageAnalysis>.messageCountVerdictStats(): VerdictStatsState =
+            countVerdictStats(
+                map {
+                    it.verdict
                 }
-            return VerdictStatsState(
-                cleanVerdicts =
-                    analyses.count {
-                        it.verdict == Verdict.Undetected
-                    },
-                suspiciousVerdicts =
-                    analyses.count { it.verdict == Verdict.Suspicious },
-                maliciousVerdicts =
-                    analyses.count {
-                        it.verdict ==
-                            Verdict.Malicious
-                    },
-                unknownVerdicts =
-                    analyses.count {
-                        it.verdict == Verdict.Unknown
-                    }
             )
-        }
 
         /**
          * Counts verdict statistics for a list of multi-analyses (URLs or files).
          *
          * @return [VerdictStatsState] containing counts of different final verdicts for the analyses
          */
-        private fun List<MultiAnalysis>.countVerdictStats(): VerdictStatsState =
+        private fun List<MultiAnalysis>.multiCountVerdictStats(): VerdictStatsState =
+            countVerdictStats(map { it.finalVerdict })
+
+        /**
+         * Calculates statistics for different verdict types from a list of verdicts.
+         *
+         * @param verdicts List of [Verdict] objects to analyze
+         * @return [VerdictStatsState] containing counts for each verdict type:
+         *         - cleanVerdicts: count of Undetected verdicts
+         *         - suspiciousVerdicts: count of Suspicious verdicts
+         *         - maliciousVerdicts: count of Malicious verdicts
+         *         - unknownVerdicts: count of Unknown verdicts
+         */
+        private fun countVerdictStats(verdicts: List<Verdict>): VerdictStatsState =
             VerdictStatsState(
-                cleanVerdicts =
-                    this.count {
-                        it.finalVerdict == Verdict.Undetected
-                    },
-                suspiciousVerdicts =
-                    this.count { it.finalVerdict == Verdict.Suspicious },
-                maliciousVerdicts =
-                    this.count {
-                        it.finalVerdict ==
-                            Verdict.Malicious
-                    },
-                unknownVerdicts =
-                    this.count {
-                        it.finalVerdict == Verdict.Unknown
-                    }
+                cleanVerdicts = verdicts.count { it == Verdict.Undetected },
+                suspiciousVerdicts = verdicts.count { it == Verdict.Suspicious },
+                maliciousVerdicts = verdicts.count { it == Verdict.Malicious },
+                unknownVerdicts = verdicts.count { it == Verdict.Unknown }
             )
 
         /**
