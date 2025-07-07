@@ -1,7 +1,6 @@
 package com.openlysis.di
 
 import com.openlysis.BuildConfig
-import com.openlysis.data.analysis.core.repository.AnalysesRepositorySettings
 import com.openlysis.data.database.LocalStoragePreferences
 import com.openlysis.data.remote.ApiClientSettings
 import com.openlysis.data.remote.ApiCredentials
@@ -33,11 +32,6 @@ internal object AppModule {
             }
         return ApiClientSettings(baseUrl = URI(url).toURL())
     }
-
-    @Singleton
-    @Provides
-    fun provideAnalysesRepositorySettings(): AnalysesRepositorySettings =
-        AnalysesRepositorySettings(paginationSize = 10)
 
     // TODO: Implement repository for encrypted API credentials.
     @Singleton

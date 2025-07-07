@@ -17,7 +17,6 @@ import javax.inject.Inject
 internal class DefaultAnalysesRepository<TRequest, TModel>
     @Inject
     constructor(
-        private val settings: AnalysesRepositorySettings,
         private val localDs: AnalysesLocalDataSource<TModel>,
         private val remoteDs: AnalysesRemoteDataSource<TRequest, TModel>
     ) : AnalysesRepository<TRequest, TModel>
@@ -64,8 +63,10 @@ internal class DefaultAnalysesRepository<TRequest, TModel>
         return outcome
     }
 
-    override suspend fun getManyPaged(page: Int): Outcome<List<TModel>> {
-        val pageSize = settings.paginationSize
+    override suspend fun getManyPaged(
+        page: Int,
+        pageSize: Int
+    ): Outcome<List<TModel>> {
         val localResults = localDs.getMany(page, pageSize)
         if (localResults.size == pageSize) {
             return Outcome.Success(localResults)
