@@ -43,6 +43,9 @@ internal class ResultsScreenViewModel
         private val fileAnalysisRepo: AnalysesRepository<AnalyzeFile, FileMultiAnalysis>,
         private val urlAnalysisRepo: AnalysesRepository<AnalyzeUrl, UrlMultiAnalysis>
     ) : ViewModel() {
+        private val pageStats = 1
+        private val pageSize = 20
+
         private val _emailAnalysisStats =
             MutableStateFlow<VerdictStatsState>(VerdictStatsState.Zero)
         private val _smsAnalysisStats = MutableStateFlow<VerdictStatsState>(VerdictStatsState.Zero)
@@ -59,7 +62,7 @@ internal class ResultsScreenViewModel
          */
         fun loadEmailVerdictStats() {
             viewModelScope.launch {
-                val outcome = emailAnalysisRepo.getManyPaged(1)
+                val outcome = emailAnalysisRepo.getManyPaged(pageStats, pageSize)
                 _emailAnalysisStats.value =
                     when (outcome) {
                         is Outcome.Success -> outcome.value.messageCountVerdictStats()
@@ -73,7 +76,7 @@ internal class ResultsScreenViewModel
          */
         fun loadSmsVerdictStats() {
             viewModelScope.launch {
-                val outcome = smsAnalysisRepo.getManyPaged(1)
+                val outcome = smsAnalysisRepo.getManyPaged(pageStats, pageSize)
                 _smsAnalysisStats.value =
                     when (outcome) {
                         is Outcome.Success -> outcome.value.messageCountVerdictStats()
@@ -87,7 +90,7 @@ internal class ResultsScreenViewModel
          */
         fun loadFileVerdictStats() {
             viewModelScope.launch {
-                val outcome = fileAnalysisRepo.getManyPaged(1)
+                val outcome = fileAnalysisRepo.getManyPaged(pageStats, pageSize)
                 _fileAnalysisStats.value =
                     when (outcome) {
                         is Outcome.Success -> outcome.value.multiCountVerdictStats()
@@ -101,7 +104,7 @@ internal class ResultsScreenViewModel
          */
         fun loadUrlVerdictStats() {
             viewModelScope.launch {
-                val outcome = urlAnalysisRepo.getManyPaged(1)
+                val outcome = urlAnalysisRepo.getManyPaged(pageStats, pageSize)
                 _urlAnalysisStats.value =
                     when (outcome) {
                         is Outcome.Success -> outcome.value.multiCountVerdictStats()
