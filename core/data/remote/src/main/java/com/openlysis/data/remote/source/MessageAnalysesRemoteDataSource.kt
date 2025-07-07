@@ -14,11 +14,13 @@ import javax.inject.Inject
  *
  * Provides methods to analyze messages (with optional attachments) and retrieve analysis results from the remote API.
  *
+ * @param analysisType Type of analysis of the data source, must be email or SMS.
  * @param api The [OpenlysisApi] used to perform network operations.
  */
 internal class MessageAnalysesRemoteDataSource
     @Inject
     constructor(
+        private val analysisType: AnalysisType,
         api: OpenlysisApi
     ) : BaseAnalysesRemoteDataSource<AnalyzeMessage, MessageAnalysis>(api) {
         /**
@@ -84,7 +86,7 @@ internal class MessageAnalysesRemoteDataSource
         ): Response<List<MessageAnalysis>> {
             val response =
                 api.getMessageAnalyses(
-                    type = AnalysisType.Message,
+                    type = analysisType,
                     page = page,
                     pageSize = size
                 )

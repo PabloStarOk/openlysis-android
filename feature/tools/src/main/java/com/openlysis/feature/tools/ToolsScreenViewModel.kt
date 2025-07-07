@@ -2,6 +2,8 @@ package com.openlysis.feature.tools
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.openlysis.data.analysis.core.di.EmailAnalysesRepository
+import com.openlysis.data.analysis.core.di.SmsAnalysesRepository
 import com.openlysis.data.analysis.core.repository.AnalysesRepository
 import com.openlysis.data.analysis.core.request.AnalyzeFile
 import com.openlysis.data.analysis.core.request.AnalyzeMessage
@@ -36,7 +38,8 @@ import javax.inject.Inject
  * ViewModel responsible for managing message, file and URL analyses functionality in the tools screen.
  *
  * @property attachmentFactory Factory for creating [Attachment] objects from [AttachedFileData] objects
- * @property messageAnalysisRepo Repository for analyzing email messages
+ * @property emailAnalysisRepo Repository for analyzing email messages
+ * @property smsAnalysisRepo Repository for analyzing SMS messages
  * @property fileAnalysisRepo Repository for analyzing individual files
  * @property urlAnalysisRepo Repository for analyzing URLs
  * @property fileAttachmentSettings Settings for file attachments configuration
@@ -47,7 +50,10 @@ internal class ToolsScreenViewModel
     @Inject
     constructor(
         private val attachmentFactory: AttachmentFactory,
-        private val messageAnalysisRepo: AnalysesRepository<AnalyzeMessage, MessageAnalysis>,
+        @EmailAnalysesRepository private val emailAnalysisRepo:
+            AnalysesRepository<AnalyzeMessage, MessageAnalysis>,
+        @SmsAnalysesRepository private val smsAnalysisRepo:
+            AnalysesRepository<AnalyzeMessage, MessageAnalysis>,
         private val fileAnalysisRepo: AnalysesRepository<AnalyzeFile, FileMultiAnalysis>,
         private val urlAnalysisRepo: AnalysesRepository<AnalyzeUrl, UrlMultiAnalysis>,
         val fileAttachmentSettings: FileAttachmentSettings,
@@ -131,7 +137,11 @@ internal class ToolsScreenViewModel
             currentAnalysisRequestJob =
                 viewModelScope.launch {
                     try {
-                        val outcome = messageAnalysisRepo.analyze(request)
+                        val outcome =
+                            when (type) {
+                                MessageType.Email -> emailAnalysisRepo.analyze(request)
+                                MessageType.Sms -> smsAnalysisRepo.analyze(request)
+                            }
                         _currentAnalysisRequest.value =
                             when (outcome) {
                                 is Outcome.Success ->
