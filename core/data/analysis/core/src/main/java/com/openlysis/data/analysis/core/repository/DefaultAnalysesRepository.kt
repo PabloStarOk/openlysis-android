@@ -71,11 +71,21 @@ internal class DefaultAnalysesRepository<TRequest, TModel>
             return Outcome.Success(localResults)
         }
 
-        val missingResults = pageSize - localResults.size
-        val remoteResultsOutcome = remoteDs.getMany(page, missingResults)
+        val remoteResultsOutcome = remoteDs.getMany(page, pageSize)
 
         return if (remoteResultsOutcome is Outcome.Success) {
-            Outcome.Success(localResults.plus(remoteResultsOutcome.value))
+            val remoteResults = remoteResultsOutcome.value
+            val missingAmount = pageSize - localResults.size
+
+            val localIds = localResults.map { it.id }.toSet()
+            val additionalResults =
+                remoteResults
+                    .filterNot { it.id in localIds }
+                    .take(missingAmount)
+
+            Outcome.Success(localResults + additionalResults)
+        } else if (localResults.isNotEmpty()) {
+            Outcome.Success(localResults)
         } else {
             remoteResultsOutcome
         }
