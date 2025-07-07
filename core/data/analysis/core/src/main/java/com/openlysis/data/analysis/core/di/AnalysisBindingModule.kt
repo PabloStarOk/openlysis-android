@@ -3,11 +3,9 @@ package com.openlysis.data.analysis.core.di
 import com.openlysis.data.analysis.core.repository.AnalysesRepository
 import com.openlysis.data.analysis.core.repository.DefaultAnalysesRepository
 import com.openlysis.data.analysis.core.request.AnalyzeFile
-import com.openlysis.data.analysis.core.request.AnalyzeMessage
 import com.openlysis.data.analysis.core.request.AnalyzeUrl
 import com.openlysis.data.analysis.model.analysis.FileMultiAnalysis
 import com.openlysis.data.analysis.model.analysis.UrlMultiAnalysis
-import com.openlysis.data.analysis.model.message.MessageAnalysis
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -33,10 +31,4 @@ internal abstract class AnalysisBindingModule {
     abstract fun bindFileMultiAnalysesRepository(
         impl: DefaultAnalysesRepository<AnalyzeFile, FileMultiAnalysis>
     ): AnalysesRepository<AnalyzeFile, FileMultiAnalysis>
-
-    @Singleton
-    @Binds
-    abstract fun bindMessageAnalysesRepository(
-        impl: DefaultAnalysesRepository<AnalyzeMessage, MessageAnalysis>
-    ): AnalysesRepository<AnalyzeMessage, MessageAnalysis>
 }

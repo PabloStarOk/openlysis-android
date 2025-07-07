@@ -148,12 +148,12 @@ internal interface OpenlysisApi {
      *
      * @param page The page number to retrieve.
      * @param pageSize The number of items per page.
-     * @param type The type of analysis to retrieve which must be fixed to message.
+     * @param type The type of analysis to retrieve which must be email or SMS.
      */
     @GET(ApiEndpoints.GET_ANALYSES)
     suspend fun getMessageAnalyses(
         @Query(ApiFields.PAGE) page: Int,
         @Query(ApiFields.PAGE_SIZE) pageSize: Int,
-        @Query(ApiFields.ANALYSIS_TYPE) type: AnalysisType = AnalysisType.Message
+        @Query(ApiFields.ANALYSIS_TYPE) type: AnalysisType
     ): Response<GetMessageAnalysesDto>
 }

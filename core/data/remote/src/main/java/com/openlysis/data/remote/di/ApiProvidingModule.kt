@@ -1,9 +1,16 @@
 package com.openlysis.data.remote.di
 
+import com.openlysis.data.analysis.core.di.EmailAnalysesRemoteDataSource
+import com.openlysis.data.analysis.core.di.SmsAnalysesRemoteDataSource
+import com.openlysis.data.analysis.core.request.AnalyzeMessage
+import com.openlysis.data.analysis.core.source.AnalysesRemoteDataSource
+import com.openlysis.data.analysis.model.message.MessageAnalysis
 import com.openlysis.data.remote.ApiClientSettings
 import com.openlysis.data.remote.ApiCredentials
 import com.openlysis.data.remote.OpenlysisApi
+import com.openlysis.data.remote.dto.common.AnalysisType
 import com.openlysis.data.remote.interceptor.ApiKeyHeaderInterceptor
+import com.openlysis.data.remote.source.MessageAnalysesRemoteDataSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,7 +25,8 @@ import javax.inject.Singleton
  *
  * This module is installed in the [SingletonComponent] and is responsible for creating
  * and providing the [OpenlysisApi] Retrofit interface, configured with authentication
- * and base URL settings.
+ * and base URL settings. It also provides different implementations for messages analyses
+ * data sources.
  */
 @Module
 @InstallIn(SingletonComponent::class)
@@ -43,4 +51,26 @@ internal object ApiProvidingModule {
             .build()
             .create(OpenlysisApi::class.java)
     }
+
+    @EmailAnalysesRemoteDataSource
+    @Singleton
+    @Provides
+    fun provideEmailAnalysisRepo(
+        api: OpenlysisApi
+    ): AnalysesRemoteDataSource<AnalyzeMessage, MessageAnalysis> =
+        MessageAnalysesRemoteDataSource(
+            analysisType = AnalysisType.Email,
+            api = api
+        )
+
+    @SmsAnalysesRemoteDataSource
+    @Singleton
+    @Provides
+    fun provideSmsAnalysisRepo(
+        api: OpenlysisApi
+    ): AnalysesRemoteDataSource<AnalyzeMessage, MessageAnalysis> =
+        MessageAnalysesRemoteDataSource(
+            analysisType = AnalysisType.Sms,
+            api = api
+        )
 }

@@ -2,14 +2,11 @@ package com.openlysis.data.remote.di
 
 import com.openlysis.data.analysis.core.repository.AnalysesRepository
 import com.openlysis.data.analysis.core.request.AnalyzeFile
-import com.openlysis.data.analysis.core.request.AnalyzeMessage
 import com.openlysis.data.analysis.core.request.AnalyzeUrl
 import com.openlysis.data.analysis.core.source.AnalysesRemoteDataSource
 import com.openlysis.data.analysis.model.analysis.FileMultiAnalysis
 import com.openlysis.data.analysis.model.analysis.UrlMultiAnalysis
-import com.openlysis.data.analysis.model.message.MessageAnalysis
 import com.openlysis.data.remote.source.FileMultiAnalysesRemoteDataSource
-import com.openlysis.data.remote.source.MessageAnalysesRemoteDataSource
 import com.openlysis.data.remote.source.UrlMultiAnalysesRemoteDataSource
 import dagger.Binds
 import dagger.Module
@@ -38,10 +35,4 @@ internal abstract class ApiBindingModule {
     abstract fun bindFileMultiAnalysisRepo(
         impl: FileMultiAnalysesRemoteDataSource
     ): AnalysesRemoteDataSource<AnalyzeFile, FileMultiAnalysis>
-
-    @Singleton
-    @Binds
-    abstract fun bindMessageAnalysisRepo(
-        impl: MessageAnalysesRemoteDataSource
-    ): AnalysesRemoteDataSource<AnalyzeMessage, MessageAnalysis>
 }
