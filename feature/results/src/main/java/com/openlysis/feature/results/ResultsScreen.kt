@@ -7,6 +7,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -32,18 +36,16 @@ internal fun ResultsScreen(
     onUrlResultsClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    LaunchedEffect(Unit) {
-        viewModel.loadEmailVerdictStats()
-        viewModel.loadSmsVerdictStats()
-        viewModel.loadFileVerdictStats()
-        viewModel.loadUrlVerdictStats()
+    var initialized by rememberSaveable { mutableStateOf(false) }
+    if (!initialized) {
+        LaunchedEffect(Unit) {
+            initialized = true
+            viewModel.loadStats()
+        }
     }
 
     val verticalScroll = rememberScrollState()
-    val emailAnalysisStats = viewModel.emailAnalysisStats.collectAsStateWithLifecycle()
-    val smsAnalysisStats = viewModel.smsAnalysisStats.collectAsStateWithLifecycle()
-    val fileAnalysisStats = viewModel.fileAnalysisStats.collectAsStateWithLifecycle()
-    val urlAnalysisStats = viewModel.urlAnalysisStats.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     Column(
         verticalArrangement = Arrangement.spacedBy(LocalAppSpacing.current.value800),
@@ -56,28 +58,28 @@ internal fun ResultsScreen(
             onClick = onEmailResultsClick,
             title = stringResource(R.string.results_screen_emails_card_title),
             description = stringResource(R.string.results_screen_emails_card_description),
-            verdictStatsState = emailAnalysisStats.value
+            verdictStatsState = uiState.emailAnalysesStats
         )
 
         AnalysisResultsCard(
             onClick = onSmsResultsClick,
             title = stringResource(R.string.results_screen_sms_card_title),
             description = stringResource(R.string.results_screen_sms_card_description),
-            verdictStatsState = smsAnalysisStats.value
+            verdictStatsState = uiState.smsAnalysesStats
         )
 
         AnalysisResultsCard(
             onClick = onFileResultsClick,
             title = stringResource(R.string.results_screen_files_card_title),
             description = stringResource(R.string.results_screen_files_card_description),
-            verdictStatsState = fileAnalysisStats.value
+            verdictStatsState = uiState.fileAnalysesStats
         )
 
         AnalysisResultsCard(
             onClick = onUrlResultsClick,
             title = stringResource(R.string.results_screen_urls_card_title),
             description = stringResource(R.string.results_screen_urls_card_description),
-            verdictStatsState = urlAnalysisStats.value
+            verdictStatsState = uiState.urlAnalysesStats
         )
     }
 }

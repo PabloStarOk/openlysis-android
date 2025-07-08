@@ -17,9 +17,7 @@ import com.openlysis.data.analysis.model.message.MessageAnalysis
 import com.openlysis.feature.results.components.VerdictStatsState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -45,70 +43,54 @@ internal class ResultsScreenViewModel
         private val pageStats = 1
         private val pageSize = 10
 
-        private val _emailAnalysisStats =
-            MutableStateFlow<VerdictStatsState>(VerdictStatsState.Zero)
-        private val _smsAnalysisStats = MutableStateFlow<VerdictStatsState>(VerdictStatsState.Zero)
-        private val _fileAnalysisStats = MutableStateFlow<VerdictStatsState>(VerdictStatsState.Zero)
-        private val _urlAnalysisStats = MutableStateFlow<VerdictStatsState>(VerdictStatsState.Zero)
-
-        val emailAnalysisStats: StateFlow<VerdictStatsState> = _emailAnalysisStats.stateInDefault()
-        val smsAnalysisStats: StateFlow<VerdictStatsState> = _smsAnalysisStats.stateInDefault()
-        val fileAnalysisStats: StateFlow<VerdictStatsState> = _fileAnalysisStats.stateInDefault()
-        val urlAnalysisStats: StateFlow<VerdictStatsState> = _urlAnalysisStats.stateInDefault()
+        private val _uiState = MutableStateFlow<ResultsUiState>(ResultsUiState())
+        val uiState = _uiState.asStateFlow()
 
         /**
-         * Loads and updates email verdict statistics.
+         * Loads and aggregates analysis statistics from various repositories.
+         *
+         * Fetches paginated analysis results for emails, SMS messages, files, and URLs.
+         * Processes the outcomes to calculate verdict statistics for each type.
+         * Updates the UI state with the calculated statistics.
          */
-        fun loadEmailVerdictStats() {
+        fun loadStats() {
             viewModelScope.launch {
-                val outcome = emailAnalysisRepo.getManyPaged(pageStats, pageSize)
-                _emailAnalysisStats.value =
-                    when (outcome) {
-                        is Outcome.Success -> outcome.value.messageCountVerdictStats()
-                        is Outcome.Failure -> VerdictStatsState.Zero
-                    }
-            }
-        }
+                val emailOutcome = emailAnalysisRepo.getManyPaged(pageStats, pageSize)
+                val smsOutcome = smsAnalysisRepo.getManyPaged(pageStats, pageSize)
+                val fileOutcome = fileAnalysisRepo.getManyPaged(pageStats, pageSize)
+                val urlOutcome = urlAnalysisRepo.getManyPaged(pageStats, pageSize)
 
-        /**
-         * Loads and updates SMS verdict statistics.
-         */
-        fun loadSmsVerdictStats() {
-            viewModelScope.launch {
-                val outcome = smsAnalysisRepo.getManyPaged(pageStats, pageSize)
-                _smsAnalysisStats.value =
-                    when (outcome) {
-                        is Outcome.Success -> outcome.value.messageCountVerdictStats()
+                val emailVerdictStats =
+                    when (emailOutcome) {
+                        is Outcome.Success -> emailOutcome.value.messageCountVerdictStats()
                         is Outcome.Failure -> VerdictStatsState.Zero
                     }
-            }
-        }
 
-        /**
-         * Loads and updates file verdict statistics.
-         */
-        fun loadFileVerdictStats() {
-            viewModelScope.launch {
-                val outcome = fileAnalysisRepo.getManyPaged(pageStats, pageSize)
-                _fileAnalysisStats.value =
-                    when (outcome) {
-                        is Outcome.Success -> outcome.value.multiCountVerdictStats()
+                val smsVerdictStats =
+                    when (smsOutcome) {
+                        is Outcome.Success -> smsOutcome.value.messageCountVerdictStats()
                         is Outcome.Failure -> VerdictStatsState.Zero
                     }
-            }
-        }
 
-        /**
-         * Loads and updates URL verdict statistics.
-         */
-        fun loadUrlVerdictStats() {
-            viewModelScope.launch {
-                val outcome = urlAnalysisRepo.getManyPaged(pageStats, pageSize)
-                _urlAnalysisStats.value =
-                    when (outcome) {
-                        is Outcome.Success -> outcome.value.multiCountVerdictStats()
+                val fileVerdictStats =
+                    when (fileOutcome) {
+                        is Outcome.Success -> fileOutcome.value.multiCountVerdictStats()
                         is Outcome.Failure -> VerdictStatsState.Zero
                     }
+
+                val urlVerdictStats =
+                    when (urlOutcome) {
+                        is Outcome.Success -> urlOutcome.value.multiCountVerdictStats()
+                        is Outcome.Failure -> VerdictStatsState.Zero
+                    }
+
+                _uiState.value =
+                    ResultsUiState(
+                        emailAnalysesStats = emailVerdictStats,
+                        smsAnalysesStats = smsVerdictStats,
+                        fileAnalysesStats = fileVerdictStats,
+                        urlAnalysesStats = urlVerdictStats
+                    )
             }
         }
 
@@ -148,17 +130,5 @@ internal class ResultsScreenViewModel
                 suspiciousVerdicts = verdicts.count { it == Verdict.Suspicious },
                 maliciousVerdicts = verdicts.count { it == Verdict.Malicious },
                 unknownVerdicts = verdicts.count { it == Verdict.Unknown }
-            )
-
-        /**
-         * Extension function to convert a [MutableStateFlow] to a [StateFlow] with default configuration.
-         *
-         * @return [StateFlow] configured with WhileSubscribed sharing policy and zero initial value
-         */
-        private fun MutableStateFlow<VerdictStatsState>.stateInDefault() =
-            this.stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5_000),
-                initialValue = VerdictStatsState.Zero
             )
     }
