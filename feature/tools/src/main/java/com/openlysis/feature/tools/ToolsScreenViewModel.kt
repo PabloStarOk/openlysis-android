@@ -26,9 +26,7 @@ import com.openlysis.feature.tools.data.ToolsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.net.URI
 import java.net.URISyntaxException
@@ -72,13 +70,7 @@ internal class ToolsScreenViewModel
 
         private var currentAnalysisRequestJob: Job? = null
 
-        val currentAnalysisRequest: StateFlow<AnalysisRequestState> =
-            _currentAnalysisRequest
-                .stateIn(
-                    scope = viewModelScope,
-                    started = SharingStarted.WhileSubscribed(5_000),
-                    initialValue = AnalysisRequestState.None
-                )
+        val currentAnalysisRequest = _currentAnalysisRequest.asStateFlow()
 
         /**
          * Initiates the analysis of a message with optional attachments.
