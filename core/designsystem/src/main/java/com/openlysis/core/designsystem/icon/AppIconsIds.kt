@@ -44,4 +44,14 @@ object AppIconsIds {
     @DrawableRes val Open = R.drawable.open_icon
 
     @DrawableRes val ArrowRight = R.drawable.arrow_right_icon
+
+    @DrawableRes val RotateLeft = R.drawable.rotate_left_icon
+
+    @DrawableRes val GitCommit = R.drawable.git_commit_icon
+
+    @DrawableRes val Clock = R.drawable.clock_icon
+
+    @DrawableRes val Document = R.drawable.document_icon
+
+    @DrawableRes val Refresh = R.drawable.refresh_icon
 }

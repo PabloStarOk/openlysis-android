@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="verdict_stats_label">Stats</string>
     <string name="verdict_stats_clean_label">Clean</string>
     <string name="verdict_stats_suspicious_label">Suspicious</string>
@@ -16,4 +16,40 @@
     <string name="results_screen_sms_card_description">Review the results of your SMS text message analyses.</string>
     <string name="results_screen_files_card_description">Review the results of your file analyses.</string>
     <string name="results_screen_urls_card_description">Review the results of your URL analyses.</string>
+
+    <string name="analysis_status_queued_badge_label">Analysis queued</string>
+    <string name="analysis_status_in_progress_badge_label">Analysis in progress</string>
+    <string name="analysis_status_completed_badge_label">Analysis completed</string>
+    <string name="analysis_status_failed_badge_label">Analysis failed</string>
+    <string name="analysis_status_timeout_badge_label">Analysis timed out</string>
+
+    <string name="analysis_status_queued_badge_icon_alt">Icon indicating queued analysis</string>
+    <string name="analysis_status_in_progress_badge_icon_alt">Rotating arrow icon indicating analysis in progress</string>
+    <string name="analysis_status_completed_badge_icon_alt">Check mark icon indicating completed analysis</string>
+    <string name="analysis_status_failed_badge_icon_alt">Cross icon indicating failed analysis</string>
+    <string name="analysis_status_timeout_badge_icon_alt">Clock icon indicating analysis timed out</string>
+
+    <string name="analysis_verdict_clean_badge">Clean</string>
+    <string name="analysis_verdict_suspicious_badge">Suspicious</string>
+    <string name="analysis_verdict_malicious_badge">Malicious</string>
+    <string name="analysis_verdict_unknown_badge">Unknown</string>
+
+    <string name="analysis_preview_started_date_label">Start date</string>
+    <string name="analysis_preview_verdict_label">Verdict</string>
+    <string name="analysis_preview_refresh_button_label">Refresh</string>
+    <string name="analysis_preview_refresh_button_icon_alt">Refresh icon</string>
+    <string name="analysis_preview_details_button_label">Details</string>
+    <string name="analysis_preview_details_button_icon_alt">Document icon</string>
+
+    <string name="error_analysis_repository_generic">An unexpected error occurred. Please try again.</string>
+    <string name="error_analysis_repository_server">A server error occurred. Please try again later.</string>
+    <string name="error_analysis_repository_network">A network error occurred. Please check your connection and try again.</string>
+    <string name="error_analysis_repository_server_unreachable">The server is unavailable. Please try again later.</string>
+    <string name="error_analysis_repository_unavailable">This service is currently unavailable. Please try again later.</string>
+
+    <string name="analyses_limit_reached_no_analyses">No analyses to show.</string>
+    <string name="analyses_limit_reached_no_more_analyses">No more analyses to show.</string>
+
+    <string name="email_previews_screen_title">Emails</string>
+    <string name="email_previews_cards_header_label">Sender</string>
 </resources>

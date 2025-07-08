@@ -65,4 +65,19 @@ object AppIcons {
 
     val ArrowRight
         @Composable get() = ImageVector.vectorResource(R.drawable.arrow_right_icon)
+
+    val RotateLeft
+        @Composable get() = ImageVector.vectorResource(R.drawable.rotate_left_icon)
+
+    val GitCommit
+        @Composable get() = ImageVector.vectorResource(R.drawable.git_commit_icon)
+
+    val Clock
+        @Composable get() = ImageVector.vectorResource(R.drawable.clock_icon)
+
+    val Document
+        @Composable get() = ImageVector.vectorResource(R.drawable.document_icon)
+
+    val Refresh
+        @Composable get() = ImageVector.vectorResource(R.drawable.refresh_icon)
 }

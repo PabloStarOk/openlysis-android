@@ -16,4 +16,40 @@
     <string name="results_screen_sms_card_description">Revisa los resultados de tus análisis de los mensajes de texto SMS.</string>
     <string name="results_screen_files_card_description">Revisa los resultados de tus análisis de archivos.</string>
     <string name="results_screen_urls_card_description">Revisa los resultados de tus análisis de URLs.</string>
+
+    <string name="analysis_status_queued_badge_label">Análisis en cola</string>
+    <string name="analysis_status_in_progress_badge_label">Análisis en progreso</string>
+    <string name="analysis_status_completed_badge_label">Análisis completado</string>
+    <string name="analysis_status_failed_badge_label">Análisis fallido</string>
+    <string name="analysis_status_timeout_badge_label">Análisis sobrepaso el tiempo de espera</string>
+
+    <string name="analysis_status_queued_badge_icon_alt">Ícono indicando análisis en cola</string>
+    <string name="analysis_status_in_progress_badge_icon_alt">Ícono de flecha rotando indicando análisis en progreso</string>
+    <string name="analysis_status_completed_badge_icon_alt">Ícono de marca de verificación indicando análisis completado</string>
+    <string name="analysis_status_failed_badge_icon_alt">Ícono de cruz indicando análisis fallido</string>
+    <string name="analysis_status_timeout_badge_icon_alt">Ícono de reloj indicando que el análisis sobrepasó el tiempo de espera</string>
+
+    <string name="analysis_verdict_clean_badge">Limpio</string>
+    <string name="analysis_verdict_suspicious_badge">Sospechoso</string>
+    <string name="analysis_verdict_malicious_badge">Malicioso</string>
+    <string name="analysis_verdict_unknown_badge">Desconocido</string>
+
+    <string name="analysis_preview_started_date_label">Fecha de inicio</string>
+    <string name="analysis_preview_verdict_label">Veredicto</string>
+    <string name="analysis_preview_details_button_label">Detalles</string>
+    <string name="analysis_preview_details_button_icon_alt">Ícono de documento</string>
+    <string name="analysis_preview_refresh_button_label">Refrescar</string>
+    <string name="analysis_preview_refresh_button_icon_alt">Ícono de refrescar</string>
+
+    <string name="error_analysis_repository_generic">Ocurrió un error inesperado. Por favor, inténtalo de nuevo.</string>
+    <string name="error_analysis_repository_server">Ocurrió un error del servidor. Por favor, inténtalo más tarde.</string>
+    <string name="error_analysis_repository_network">Ocurrió un error de red. Verifica tu conexión e inténtalo de nuevo.</string>
+    <string name="error_analysis_repository_server_unreachable">El servidor no está disponible. Por favor, inténtalo más tarde.</string>
+    <string name="error_analysis_repository_unavailable">Este servicio no está disponible en este momento. Por favor, inténtalo más tarde.</string>
+
+    <string name="analyses_limit_reached_no_analyses">No hay análisis para mostrar.</string>
+    <string name="analyses_limit_reached_no_more_analyses">No hay más análisis para mostrar.</string>
+
+    <string name="email_previews_screen_title">Correos Electrónicos</string>
+    <string name="email_previews_cards_header_label">Remitente</string>
 </resources>

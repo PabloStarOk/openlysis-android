@@ -1,0 +1,229 @@
+package com.openlysis.feature.results
+
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.openlysis.core.designsystem.components.bar.TopBarState
+import com.openlysis.core.designsystem.theme.LocalAppColorScheme
+import com.openlysis.core.designsystem.theme.size.LocalAppSpacing
+import com.openlysis.core.designsystem.theme.type.LocalAppTypography
+import com.openlysis.data.analysis.core.error.RepositoryError
+import com.openlysis.data.analysis.model.common.Model
+import com.openlysis.feature.results.components.AnalysisPreview
+import com.openlysis.feature.results.components.VerdictStats
+import kotlinx.coroutines.delay
+import kotlin.time.Duration.Companion.seconds
+
+/**
+ * Screen to display the previews of analysis results.
+ *
+ * @param TResult The type of model being displayed, must extend [Model]
+ * @param viewModel The view model handling the business logic and state management
+ * @param onTopBarUpdate Callback to update the top bar state
+ * @param screenTitle The title to be displayed in the top bar
+ * @param previewCardHeaderLabel The label to be displayed in the header of each analysis preview.
+ * @param modifier Optional modifier for the composable layout
+ */
+@Composable
+internal fun <TResult : Model> PreviewsScreen(
+    viewModel: PreviewsScreenViewModel<TResult>,
+    onTopBarUpdate: (TopBarState) -> Unit,
+    screenTitle: String,
+    previewCardHeaderLabel: String,
+    modifier: Modifier = Modifier
+) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    var initialized by rememberSaveable { mutableStateOf(false) }
+    if (!initialized) {
+        initialized = true
+        LaunchedEffect(Unit) {
+            onTopBarUpdate(TopBarState(title = screenTitle))
+            viewModel.loadPreviews()
+        }
+    }
+
+    val gridState = rememberLazyGridState()
+    val showLoadingIndicator by
+        remember(uiState.loadingState) {
+            derivedStateOf {
+                uiState.loadingState is LoadingState.InProgress
+            }
+        }
+    val showStatusMessage by
+        remember(uiState.loadingState, uiState.canLoadMore) {
+            derivedStateOf {
+                uiState.loadingState is LoadingState.Error || !uiState.canLoadMore
+            }
+        }
+    val shouldLoadMore by
+        remember(uiState.canLoadMore, uiState.previews) {
+            derivedStateOf {
+                if (!uiState.canLoadMore) {
+                    return@derivedStateOf false
+                }
+
+                val totalAnalyses = uiState.previews.size
+                val lastVisibleIndex =
+                    gridState.layoutInfo.visibleItemsInfo
+                        .lastOrNull()
+                        ?.index ?: 0
+                val remainingAnalyses = totalAnalyses - lastVisibleIndex
+                totalAnalyses > 0 && remainingAnalyses <= 2
+            }
+        }
+
+    LaunchedEffect(shouldLoadMore) {
+        if (shouldLoadMore) {
+            viewModel.loadPreviews()
+        }
+    }
+
+    LazyVerticalGrid(
+        state = gridState,
+        columns = GridCells.Adaptive(minSize = 350.dp),
+        verticalArrangement = Arrangement.spacedBy(LocalAppSpacing.current.value800),
+        horizontalArrangement =
+            Arrangement.spacedBy(
+                space = LocalAppSpacing.current.value800,
+                alignment = Alignment.CenterHorizontally
+            ),
+        contentPadding = PaddingValues(LocalAppSpacing.current.value400),
+        modifier = modifier
+    ) {
+        item(
+            span = { GridItemSpan(maxLineSpan) }
+        ) {
+            Row {
+                VerdictStats(
+                    state = uiState.verdictStats,
+                    smallSize = true,
+                    showUnknown = true,
+                    modifier = Modifier.width(IntrinsicSize.Min)
+                )
+            }
+        }
+
+        items(
+            items = uiState.previews,
+            key = { preview -> preview.id }
+        ) { preview ->
+            var isRefreshing by remember { mutableStateOf(false) }
+            AnalysisPreview(
+                onDetailsClick = { TODO("Add details click functionality") },
+                onRefreshClick = {
+                    isRefreshing = true
+                    viewModel.refreshPreview(
+                        id = preview.id,
+                        onFinished = {
+                            delay(1.seconds)
+                            isRefreshing = false
+                        }
+                    )
+                },
+                headerLabel = previewCardHeaderLabel,
+                state = preview,
+                isRefreshing = isRefreshing
+            )
+        }
+
+        item(
+            span = { GridItemSpan(maxLineSpan) }
+        ) {
+            AnimatedVisibility(
+                visible = showLoadingIndicator
+            ) {
+                Box(
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(
+                        color = LocalAppColorScheme.current.icon.brand.primary,
+                        trackColor = LocalAppColorScheme.current.border.default.primary,
+                        modifier = Modifier.size(50.dp)
+                    )
+                }
+            }
+
+            AnimatedVisibility(
+                visible = showStatusMessage,
+                enter = fadeIn(),
+                exit = fadeOut()
+            ) {
+                StatusMessage(
+                    loadingState = uiState.loadingState,
+                    noPreviews = uiState.previews.isEmpty(),
+                    modifier = modifier.fillMaxWidth()
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun StatusMessage(
+    loadingState: LoadingState,
+    noPreviews: Boolean,
+    modifier: Modifier = Modifier
+) {
+    val appColorScheme = LocalAppColorScheme.current
+    val textColor =
+        if (loadingState is LoadingState.Error) {
+            appColorScheme.text.danger.secondary
+        } else {
+            appColorScheme.text.default.tertiary
+        }
+
+    val message =
+        if (loadingState is LoadingState.Error) {
+            when (loadingState.error) {
+                is RepositoryError.Server -> R.string.error_analysis_repository_server
+                is RepositoryError.Network -> R.string.error_analysis_repository_network
+                is RepositoryError.ServerUnreachable ->
+                    R.string.error_analysis_repository_server_unreachable
+                is RepositoryError.Unavailable ->
+                    R.string.error_analysis_repository_unavailable
+                else -> R.string.error_analysis_repository_generic
+            }
+        } else if (noPreviews) {
+            R.string.analyses_limit_reached_no_analyses
+        } else {
+            R.string.analyses_limit_reached_no_more_analyses
+        }
+
+    Text(
+        text = stringResource(message),
+        style = LocalAppTypography.current.bodyBase,
+        color = textColor,
+        textAlign = TextAlign.Center,
+        modifier = modifier
+    )
+}

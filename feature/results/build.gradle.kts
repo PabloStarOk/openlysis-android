@@ -43,6 +43,7 @@ dependencies {
     implementation(libs.androidx.navigation)
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.google.dagger.hilt)
+    implementation(libs.kotlinx.datetime)
 
     implementation(projects.core.designsystem)
     implementation(projects.core.data.analysis.model)
