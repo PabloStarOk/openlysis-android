@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="verdict_stats_label">Estadísticas</string>
+    <string name="verdict_stats_label">Últimos resultados</string>
     <string name="verdict_stats_clean_label">Limpios</string>
     <string name="verdict_stats_suspicious_label">Sospechosos</string>
     <string name="verdict_stats_malicious_label">Maliciosos</string>

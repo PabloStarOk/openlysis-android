@@ -43,7 +43,7 @@ internal class ResultsScreenViewModel
         private val urlAnalysisRepo: AnalysesRepository<AnalyzeUrl, UrlMultiAnalysis>
     ) : ViewModel() {
         private val pageStats = 1
-        private val pageSize = 20
+        private val pageSize = 10
 
         private val _emailAnalysisStats =
             MutableStateFlow<VerdictStatsState>(VerdictStatsState.Zero)

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="verdict_stats_label">Stats</string>
+<resources>
+    <string name="verdict_stats_label">Last results</string>
     <string name="verdict_stats_clean_label">Clean</string>
     <string name="verdict_stats_suspicious_label">Suspicious</string>
     <string name="verdict_stats_malicious_label">Malicious</string>
