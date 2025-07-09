@@ -2,20 +2,10 @@ package com.openlysis.feature.results.components
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.core.FastOutLinearInEasing
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.scaleIn
-import androidx.compose.animation.scaleOut
-import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
@@ -26,7 +16,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -188,6 +177,7 @@ internal fun AnalysisPreview(
                     RefreshButton(
                         onRefreshClick = onRefreshClick,
                         isRefreshing = isRefreshing,
+                        displayLabel = true,
                         modifier = Modifier.weight(1f)
                     )
                 }
@@ -235,63 +225,6 @@ private fun PreviewInfo(
         )
 
         content()
-    }
-}
-
-@Composable
-private fun RefreshButton(
-    onRefreshClick: () -> Unit,
-    isRefreshing: Boolean,
-    modifier: Modifier = Modifier
-) {
-    AnimatedContent(
-        targetState = isRefreshing,
-        transitionSpec = {
-            scaleIn(
-                initialScale = 0.8f,
-                animationSpec = tween(300, easing = FastOutSlowInEasing)
-            ) +
-                fadeIn(
-                    animationSpec = tween(300)
-                ) togetherWith scaleOut(
-                    targetScale = 1.0f,
-                    animationSpec = tween(200, easing = FastOutLinearInEasing)
-                ) +
-                fadeOut(
-                    animationSpec = tween(200)
-                )
-        },
-        modifier = modifier
-    ) { state ->
-        if (state) {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                CircularProgressIndicator(
-                    color = LocalAppColorScheme.current.icon.brand.primary,
-                    trackColor = LocalAppColorScheme.current.border.default.primary
-                )
-            }
-        } else {
-            AppButton(
-                type = ButtonType.Secondary,
-                size = SizeType.Default,
-                onClick = onRefreshClick,
-                displayLabel = true,
-                displayIcon = true,
-                label =
-                    stringResource(
-                        R.string.analysis_preview_refresh_button_label
-                    ),
-                icon = AppIcons.Refresh,
-                iconAlt =
-                    stringResource(
-                        R.string.analysis_preview_refresh_button_icon_alt
-                    ),
-                modifier = Modifier.fillMaxWidth()
-            )
-        }
     }
 }
 

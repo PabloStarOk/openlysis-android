@@ -37,8 +37,10 @@ import com.openlysis.core.designsystem.theme.LocalAppColorScheme
 import com.openlysis.core.designsystem.theme.size.LocalAppSpacing
 import com.openlysis.core.designsystem.theme.type.LocalAppTypography
 import com.openlysis.data.analysis.core.error.RepositoryError
+import com.openlysis.data.analysis.model.analysis.AnalysisStatus
 import com.openlysis.data.analysis.model.common.Model
 import com.openlysis.feature.results.components.AnalysisPreview
+import com.openlysis.feature.results.components.RefreshButton
 import com.openlysis.feature.results.components.VerdictStats
 import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.seconds
@@ -101,6 +103,16 @@ internal fun <TResult : Model> PreviewsScreen(
                 totalAnalyses > 0 && remainingAnalyses <= 2
             }
         }
+    val showRefreshAllButton by
+        remember(uiState.previews) {
+            derivedStateOf {
+                uiState.previews.any {
+                    it.status == AnalysisStatus.Queued ||
+                        it.status == AnalysisStatus.InProgress
+                }
+            }
+        }
+    var isRefreshingPreviews by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(shouldLoadMore) {
         if (shouldLoadMore) {
@@ -123,13 +135,34 @@ internal fun <TResult : Model> PreviewsScreen(
         item(
             span = { GridItemSpan(maxLineSpan) }
         ) {
-            Row {
+            Row(horizontalArrangement = Arrangement.SpaceBetween) {
                 VerdictStats(
                     state = uiState.verdictStats,
                     smallSize = true,
                     showUnknown = true,
                     modifier = Modifier.width(IntrinsicSize.Min)
                 )
+
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(LocalAppSpacing.current.value200),
+                    modifier = modifier
+                ) {
+                    if (showRefreshAllButton) {
+                        RefreshButton(
+                            onRefreshClick = {
+                                isRefreshingPreviews = true
+                                viewModel.refreshAllPreviews(
+                                    onFinished = {
+                                        delay(1.seconds)
+                                        isRefreshingPreviews = false
+                                    }
+                                )
+                            },
+                            isRefreshing = isRefreshingPreviews,
+                            displayLabel = false
+                        )
+                    }
+                }
             }
         }
 

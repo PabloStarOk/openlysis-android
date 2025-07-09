@@ -3,11 +3,14 @@ package com.openlysis.feature.results
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.openlysis.data.analysis.core.repository.AnalysesRepository
+import com.openlysis.data.analysis.model.analysis.AnalysisStatus
 import com.openlysis.data.analysis.model.common.Model
 import com.openlysis.data.analysis.model.common.Outcome
 import com.openlysis.data.analysis.model.common.Verdict
 import com.openlysis.feature.results.components.AnalysisPreviewState
 import com.openlysis.feature.results.components.VerdictStatsState
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -80,21 +83,69 @@ internal abstract class PreviewsScreenViewModel<TResult : Model>(
         id: String,
         onFinished: suspend () -> Unit
     ) {
-        viewModelScope
-            .launch {
-                val outcome = repository.getUpdatedById(id)
-                if (outcome is Outcome.Success) {
-                    _uiState.update {
-                        val previewsMap = it.previews.associateBy { it.id }.toMutableMap()
-                        previewsMap[id] = convertToPreview(outcome.value)
-                        it.copy(
-                            previews = previewsMap.values.toList(),
-                            verdictStats = calculateVerdictStats(previewsMap.values)
-                        )
-                    }
+        viewModelScope.launch {
+            val outcome = repository.getUpdatedById(id)
+            if (outcome is Outcome.Success) {
+                _uiState.update {
+                    val previewsMap = it.previews.associateBy { it.id }.toMutableMap()
+                    previewsMap[id] = convertToPreview(outcome.value)
+                    it.copy(
+                        previews = previewsMap.values.toList(),
+                        verdictStats = calculateVerdictStats(previewsMap.values)
+                    )
                 }
-                onFinished()
             }
+            onFinished()
+        }
+    }
+
+    /**
+     * Refreshes all preview states that are either queued or in progress by fetching their
+     * updated data from the repository. Updates the UI state with any new information received.
+     *
+     * @param onFinished A suspend function to be executed after all previews have been refreshed,
+     *                  regardless of the operation's success or failure
+     */
+    fun refreshAllPreviews(onFinished: suspend () -> Unit) {
+        val refreshablePreviews =
+            uiState.value.previews
+                .filter {
+                    it.status == AnalysisStatus.Queued || it.status == AnalysisStatus.InProgress
+                }.associateBy { it.id }
+
+        viewModelScope.launch {
+            if (refreshablePreviews.isEmpty()) {
+                onFinished()
+                return@launch
+            }
+
+            val deferredUpdates =
+                refreshablePreviews.values
+                    .map {
+                        viewModelScope.async {
+                            repository.getUpdatedById(it.id)
+                        }
+                    }.toTypedArray()
+
+            val outcomes = awaitAll(*deferredUpdates)
+            val newPreviews =
+                outcomes
+                    .filter { it is Outcome.Success }
+                    .map { it as Outcome.Success }
+                    .map { convertToPreview(it.value) }
+                    .filterNot { refreshablePreviews[it.id] == it }
+
+            _uiState.update {
+                val previewsMap = it.previews.associateBy { it.id }.toMutableMap()
+                newPreviews.forEach { previewsMap[it.id] = it }
+                it.copy(
+                    previews = previewsMap.values.toList(),
+                    verdictStats = calculateVerdictStats(previewsMap.values)
+                )
+            }
+
+            onFinished()
+        }
     }
 
     /**
