@@ -125,6 +125,7 @@ internal class EmailMultiReputationsLocalDataSource
             )
 
         private companion object {
-            private val LOG_TAG = EmailMultiReputationsLocalDataSource::class.java.simpleName
+            private val LOG_TAG =
+                EmailMultiReputationsLocalDataSource::class.java.simpleName.take(23)
         }
     }

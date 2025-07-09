@@ -224,6 +224,6 @@ internal class MessageAnalysesLocalDataSource
         }
 
         companion object {
-            private val LOG_TAG = MessageAnalysesLocalDataSource::class.java.simpleName
+            private val LOG_TAG = MessageAnalysesLocalDataSource::class.java.simpleName.take(23)
         }
     }
