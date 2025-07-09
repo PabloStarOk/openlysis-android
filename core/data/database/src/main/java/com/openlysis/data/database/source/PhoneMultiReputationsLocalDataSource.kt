@@ -125,6 +125,7 @@ internal class PhoneMultiReputationsLocalDataSource
             )
 
         private companion object {
-            private val LOG_TAG = PhoneMultiReputationsLocalDataSource::class.java.simpleName
+            private val LOG_TAG =
+                PhoneMultiReputationsLocalDataSource::class.java.simpleName.take(23)
         }
     }

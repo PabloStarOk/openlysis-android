@@ -122,6 +122,6 @@ internal class UrlMultiAnalysesLocalDataSource
             )
 
         private companion object {
-            private val LOG_TAG = UrlMultiAnalysesLocalDataSource::class.java.simpleName
+            private val LOG_TAG = UrlMultiAnalysesLocalDataSource::class.java.simpleName.take(23)
         }
     }

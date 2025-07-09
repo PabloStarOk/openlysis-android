@@ -122,6 +122,7 @@ internal class FileMultiAnalysesLocalDataSource
             )
 
         private companion object {
-            private val LOG_TAG = FileMultiAnalysesLocalDataSource::class.java.simpleName
+            private val LOG_TAG =
+                FileMultiAnalysesLocalDataSource::class.java.simpleName.take(23)
         }
     }
