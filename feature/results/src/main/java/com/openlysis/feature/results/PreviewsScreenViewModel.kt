@@ -72,6 +72,9 @@ internal abstract class PreviewsScreenViewModel<TResult : Model>(
         viewModelScope.launch {
             while (nextPage <= targetPage) {
                 handleLoadPreviews()
+                if (uiState.value.loadingState is LoadingState.Error) {
+                    break
+                }
             }
         }
     }
