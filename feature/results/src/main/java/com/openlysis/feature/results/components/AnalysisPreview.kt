@@ -1,6 +1,7 @@
 package com.openlysis.feature.results.components
 
 import android.os.Build
+import android.text.format.DateFormat
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -23,8 +24,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
@@ -41,7 +42,6 @@ import com.openlysis.data.analysis.model.analysis.AnalysisStatus
 import com.openlysis.data.analysis.model.common.Verdict
 import com.openlysis.feature.results.R
 import kotlinx.datetime.toKotlinInstant
-import java.text.DateFormat
 import java.time.Instant
 
 /**
@@ -63,18 +63,16 @@ internal fun AnalysisPreview(
     isRefreshing: Boolean,
     modifier: Modifier = Modifier
 ) {
+    val localContext = LocalContext.current
     val formattedDate =
         remember(state.startedDate) {
             val epochMilliseconds =
                 state.startedDate
                     .toKotlinInstant()
                     .toEpochMilliseconds()
-            val dateFormat =
-                DateFormat.getDateInstance(
-                    DateFormat.MEDIUM,
-                    Locale.current.platformLocale
-                )
-            dateFormat.format(epochMilliseconds)
+            DateFormat
+                .getMediumDateFormat(localContext)
+                .format(epochMilliseconds)
         }
 
     val showRefreshButton =
