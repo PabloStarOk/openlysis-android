@@ -50,6 +50,33 @@
     <string name="analyses_limit_reached_no_analyses">No analyses to show.</string>
     <string name="analyses_limit_reached_no_more_analyses">No more analyses to show.</string>
 
+    <string name="filters_sort_by_section_label">Sort by</string>
+    <string name="filters_sort_by_date_label">Date</string>
+    <string name="filters_sort_by_verdict_label">Verdict</string>
+    <string name="filters_sort_by_status_label">Analysis status</string>
+    <string name="filters_verdict_section_label">Verdict</string>
+    <string name="filters_status_section_label">Analysis Status</string>
+    <string name="filters_status_queued_label">Queued</string>
+    <string name="filters_status_in_progress_label">In progress</string>
+    <string name="filters_status_completed_label">Completed</string>
+    <string name="filters_status_failed_label">Failed</string>
+    <string name="filters_status_timeout_label">Timed out</string>
+    <string name="filters_date_section_label">Date range</string>
+    <string name="filters_date_select_button_icon_alt">Calendar icon</string>
+    <string name="filters_date_dialog_min_date_label">Minimum date</string>
+    <string name="filters_date_dialog_max_date_label">Maximum date</string>
+    <string name="filters_date_dialog_accept_button_label">Accept</string>
+    <string name="filters_date_dialog_accept_button_icon_alt">Checkmark icon indicating to confirm the selected range.</string>
+    <string name="filters_date_dialog_cancel_button_label">Cancel</string>
+    <string name="filters_date_dialog_cancel_button_icon_alt">Cross icon indicating to cancel the selected range.</string>
+    <string name="filters_reset_all_button_label">Reset all</string>
+    <string name="filters_apply_button_label">Apply</string>
+    <string name="filters_cancel_button_label">Cancel</string>
+    <string name="filters_section_reset_button_label">Reset</string>
+    <string name="filters_chip_checkmark_icon_alt">Checkmark icon indicating the tag is selected</string>
+
+    <string name="previews_screen_filter_button_icon_alt">Filter icon</string>
+
     <string name="email_previews_screen_title">Emails</string>
     <string name="email_previews_cards_header_label">Sender</string>
 </resources>

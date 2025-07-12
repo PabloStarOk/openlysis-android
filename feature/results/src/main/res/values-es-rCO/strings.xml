@@ -50,6 +50,33 @@
     <string name="analyses_limit_reached_no_analyses">No hay análisis para mostrar.</string>
     <string name="analyses_limit_reached_no_more_analyses">No hay más análisis para mostrar.</string>
 
+    <string name="filters_sort_by_section_label">Ordenar por</string>
+    <string name="filters_sort_by_date_label">Fecha</string>
+    <string name="filters_sort_by_verdict_label">Veredicto</string>
+    <string name="filters_sort_by_status_label">Estado del análisis</string>
+    <string name="filters_verdict_section_label">Veredicto</string>
+    <string name="filters_status_section_label">Estado del Análisis</string>
+    <string name="filters_status_queued_label">En cola</string>
+    <string name="filters_status_in_progress_label">En progreso</string>
+    <string name="filters_status_completed_label">Completado</string>
+    <string name="filters_status_failed_label">Fallido</string>
+    <string name="filters_status_timeout_label">Fallido por tiempo de espera</string>
+    <string name="filters_date_section_label">Rango de Fechas</string>
+    <string name="filters_date_select_button_icon_alt">Ícono de calendario</string>
+    <string name="filters_date_dialog_min_date_label">Fecha mínima</string>
+    <string name="filters_date_dialog_max_date_label">Fecha máxima</string>
+    <string name="filters_date_dialog_accept_button_label">Aceptar</string>
+    <string name="filters_date_dialog_accept_button_icon_alt">Ícono de marca de verificación indicando confirmar el rango seleccionado.</string>
+    <string name="filters_date_dialog_cancel_button_label">Cancelar</string>
+    <string name="filters_date_dialog_cancel_button_icon_alt">Ícono de cruz indicando cancelar el rango seleccionado.</string>
+    <string name="filters_reset_all_button_label">Reestablecer todo</string>
+    <string name="filters_apply_button_label">Aplicar</string>
+    <string name="filters_cancel_button_label">Cancelar</string>
+    <string name="filters_section_reset_button_label">Reestablecer</string>
+    <string name="filters_chip_checkmark_icon_alt">Ícono de marca de verificación indicando que la etiqueta está seleccionada</string>
+
+    <string name="previews_screen_filter_button_icon_alt">Ícono de filtro</string>
+
     <string name="email_previews_screen_title">Correos Electrónicos</string>
     <string name="email_previews_cards_header_label">Remitente</string>
 </resources>

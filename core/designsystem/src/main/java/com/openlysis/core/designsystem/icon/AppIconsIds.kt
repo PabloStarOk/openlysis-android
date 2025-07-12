@@ -54,4 +54,8 @@ object AppIconsIds {
     @DrawableRes val Document = R.drawable.document_icon
 
     @DrawableRes val Refresh = R.drawable.refresh_icon
+
+    @DrawableRes val Filter = R.drawable.filter_icon
+
+    @DrawableRes val Calendar = R.drawable.calendar_icon
 }

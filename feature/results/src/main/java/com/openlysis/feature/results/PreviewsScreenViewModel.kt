@@ -9,6 +9,8 @@ import com.openlysis.data.analysis.model.common.Outcome
 import com.openlysis.data.analysis.model.common.Verdict
 import com.openlysis.feature.results.components.AnalysisPreviewState
 import com.openlysis.feature.results.components.VerdictStatsState
+import com.openlysis.feature.results.components.filter.FiltersState
+import com.openlysis.feature.results.components.filter.SortableField
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,6 +18,11 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.flow.updateAndGet
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Instant
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toKotlinInstant
+import kotlinx.datetime.toLocalDateTime
+import kotlin.collections.plus
 
 /**
  * Abstract base ViewModel for managing paginated previews of analysis results.
@@ -29,46 +36,43 @@ internal abstract class PreviewsScreenViewModel<TResult : Model>(
     private var nextPage = 1
     private val pageSize = 10
 
+    val defaultFiltersState = FiltersState.Default
+
     private val _uiState =
-        MutableStateFlow<PreviewsUiState>(PreviewsUiState())
+        MutableStateFlow<PreviewsUiState>(
+            PreviewsUiState(
+                filtersState = defaultFiltersState
+            )
+        )
     val uiState = _uiState.asStateFlow()
 
     /**
      * Loads a paginated batch of analysis previews.
      */
     fun loadPreviews() {
-        _uiState.update { it.copy(loadingState = LoadingState.InProgress) }
-        val existingAnalysisIds = _uiState.value.previews.map { it.id }
-
         viewModelScope.launch {
-            val outcome = repository.getManyPaged(nextPage, pageSize)
-            val newResults =
-                when (outcome) {
-                    is Outcome.Success ->
-                        outcome.value.filterNot {
-                            it.id in existingAnalysisIds
-                        }
-                    is Outcome.Failure -> {
-                        _uiState.update {
-                            it.copy(
-                                loadingState = LoadingState.Error(outcome.error)
-                            )
-                        }
-                        return@launch
-                    }
-                }
+            handleLoadPreviews()
+        }
+    }
 
-            val newState =
-                _uiState.updateAndGet {
-                    val previews = it.previews + newResults.map { convertToPreview(it) }
-                    PreviewsUiState(
-                        previews = previews,
-                        verdictStats = calculateVerdictStats(previews),
-                        canLoadMore = newResults.size >= pageSize,
-                        loadingState = LoadingState.Idle
-                    )
-                }
-            if (newState.canLoadMore) nextPage++
+    /**
+     * Reloads the previews using the new filters.
+     *
+     * @param newFiltersState The new filter configuration to be applied
+     */
+    fun updateFilters(newFiltersState: FiltersState) {
+        _uiState.update {
+            it.copy(
+                previews = emptyList(),
+                filtersState = newFiltersState
+            )
+        }
+        val targetPage = 1.coerceAtLeast(nextPage - 1)
+        nextPage = 1
+        viewModelScope.launch {
+            while (nextPage <= targetPage) {
+                handleLoadPreviews()
+            }
         }
     }
 
@@ -147,6 +151,99 @@ internal abstract class PreviewsScreenViewModel<TResult : Model>(
             onFinished()
         }
     }
+
+    /**
+     * Handles the loading of analysis previews in a paginated manner.
+     */
+    private suspend fun handleLoadPreviews() {
+        _uiState.update { it.copy(loadingState = LoadingState.InProgress) }
+        val outcome = repository.getManyPaged(nextPage, pageSize)
+        val newResults =
+            when (outcome) {
+                is Outcome.Success -> outcome.value
+                is Outcome.Failure -> {
+                    _uiState.update {
+                        it.copy(
+                            loadingState = LoadingState.Error(outcome.error)
+                        )
+                    }
+                    return
+                }
+            }
+
+        val newState =
+            _uiState.updateAndGet { currentState ->
+                val existingPreviewsIds = currentState.previews.map { it.id }
+                val newUniquePreviews =
+                    newResults
+                        .filterNot { it.id in existingPreviewsIds }
+                        .map { convertToPreview(it) }
+
+                val allFilteredPreviews = applyFilters(currentState.previews + newUniquePreviews)
+                currentState.copy(
+                    previews = allFilteredPreviews,
+                    verdictStats = calculateVerdictStats(allFilteredPreviews),
+                    canLoadMore = newResults.size >= pageSize,
+                    loadingState = LoadingState.Idle
+                )
+            }
+        if (newState.canLoadMore) nextPage++
+    }
+
+    /**
+     * Applies filtering and sorting operations to a list of analysis preview states based on the current UI state filters.
+     *
+     * @param previews The list of analysis preview states to filter and sort
+     * @return A filtered and sorted list of analysis preview states that match the current filter criteria
+     */
+    private fun applyFilters(previews: List<AnalysisPreviewState>): List<AnalysisPreviewState> {
+        val filtersState = uiState.value.filtersState
+
+        val startDate =
+            Instant
+                .fromEpochMilliseconds(filtersState.startDateMillis)
+                .toLocalDateTime(TimeZone.UTC)
+                .date
+
+        val endDate =
+            Instant
+                .fromEpochMilliseconds(filtersState.endDateMillis)
+                .toLocalDateTime(TimeZone.UTC)
+                .date
+
+        var filteredPreviews =
+            previews
+                .filter {
+                    val analysisDate =
+                        it.startedDate
+                            .toKotlinInstant()
+                            .toLocalDateTime(
+                                TimeZone.currentSystemDefault()
+                            ).date
+                    analysisDate >= startDate && analysisDate <= endDate
+                }.filter { it.verdict in filtersState.selectedVerdicts }
+                .filter { it.status in filtersState.selectedStatuses }
+
+        filtersState.sortingFields.forEach { filteredPreviews = sortPreviews(filteredPreviews, it) }
+        return filteredPreviews
+    }
+
+    /**
+     * Sorts a list of analysis preview states based on the specified sort field.
+     *
+     * @param previews The list of analysis preview states to be sorted
+     * @param sortBy The field by which the previews should be sorted
+     * @return A new sorted list of analysis preview states
+     */
+    private fun sortPreviews(
+        previews: List<AnalysisPreviewState>,
+        sortBy: SortableField
+    ): List<AnalysisPreviewState> =
+        when (sortBy) {
+            SortableField.Date -> previews.sortedByDescending { it.startedDate }
+            SortableField.Verdict -> previews.sortedByDescending { it.verdict }
+            SortableField.Status -> previews.sortedByDescending { it.status }
+        }
 
     /**
      * Converts a result model into an analysis preview state.

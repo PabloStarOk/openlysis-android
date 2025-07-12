@@ -80,4 +80,10 @@ object AppIcons {
 
     val Refresh
         @Composable get() = ImageVector.vectorResource(R.drawable.refresh_icon)
+
+    val Filter
+        @Composable get() = ImageVector.vectorResource(R.drawable.filter_icon)
+
+    val Calendar
+        @Composable get() = ImageVector.vectorResource(R.drawable.calendar_icon)
 }

@@ -3,6 +3,7 @@ package com.openlysis.feature.results
 import androidx.compose.runtime.Immutable
 import com.openlysis.feature.results.components.AnalysisPreviewState
 import com.openlysis.feature.results.components.VerdictStatsState
+import com.openlysis.feature.results.components.filter.FiltersState
 
 /**
  * UI state for previews screen.
@@ -17,5 +18,6 @@ internal data class PreviewsUiState(
     val previews: List<AnalysisPreviewState> = emptyList(),
     val verdictStats: VerdictStatsState = VerdictStatsState.Companion.Zero,
     val canLoadMore: Boolean = true,
-    val loadingState: LoadingState = LoadingState.Idle
+    val loadingState: LoadingState = LoadingState.Idle,
+    val filtersState: FiltersState
 )

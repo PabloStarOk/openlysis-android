@@ -33,6 +33,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.openlysis.core.designsystem.components.bar.TopBarState
+import com.openlysis.core.designsystem.components.button.AppButton
+import com.openlysis.core.designsystem.components.button.ButtonType
+import com.openlysis.core.designsystem.icon.AppIcons
+import com.openlysis.core.designsystem.modifier.SizeType
 import com.openlysis.core.designsystem.theme.LocalAppColorScheme
 import com.openlysis.core.designsystem.theme.size.LocalAppSpacing
 import com.openlysis.core.designsystem.theme.type.LocalAppTypography
@@ -42,6 +46,7 @@ import com.openlysis.data.analysis.model.common.Model
 import com.openlysis.feature.results.components.AnalysisPreview
 import com.openlysis.feature.results.components.RefreshButton
 import com.openlysis.feature.results.components.VerdictStats
+import com.openlysis.feature.results.components.filter.FiltersDialog
 import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.seconds
 
@@ -84,13 +89,18 @@ internal fun <TResult : Model> PreviewsScreen(
     val showStatusMessage by
         remember(uiState.loadingState, uiState.canLoadMore) {
             derivedStateOf {
-                uiState.loadingState is LoadingState.Error || !uiState.canLoadMore
+                uiState.loadingState is LoadingState.Error ||
+                    !uiState.canLoadMore ||
+                    (
+                        uiState.loadingState !is LoadingState.InProgress &&
+                            uiState.previews.isEmpty()
+                    )
             }
         }
     val shouldLoadMore by
-        remember(uiState.canLoadMore, uiState.previews) {
+        remember(uiState.canLoadMore, uiState.previews, uiState.loadingState) {
             derivedStateOf {
-                if (!uiState.canLoadMore) {
+                if (!uiState.canLoadMore || uiState.loadingState is LoadingState.InProgress) {
                     return@derivedStateOf false
                 }
 
@@ -113,6 +123,7 @@ internal fun <TResult : Model> PreviewsScreen(
             }
         }
     var isRefreshingPreviews by rememberSaveable { mutableStateOf(false) }
+    var showFiltersDialog by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(shouldLoadMore) {
         if (shouldLoadMore) {
@@ -147,6 +158,16 @@ internal fun <TResult : Model> PreviewsScreen(
                     horizontalArrangement = Arrangement.spacedBy(LocalAppSpacing.current.value200),
                     modifier = modifier
                 ) {
+                    AppButton(
+                        type = ButtonType.Secondary,
+                        size = SizeType.Default,
+                        onClick = { showFiltersDialog = true },
+                        displayLabel = false,
+                        displayIcon = true,
+                        icon = AppIcons.Filter,
+                        iconAlt = stringResource(R.string.previews_screen_filter_button_icon_alt)
+                    )
+
                     if (showRefreshAllButton) {
                         RefreshButton(
                             onRefreshClick = {
@@ -218,6 +239,18 @@ internal fun <TResult : Model> PreviewsScreen(
                 )
             }
         }
+    }
+
+    if (showFiltersDialog) {
+        FiltersDialog(
+            currentFilters = uiState.filtersState,
+            defaultFilters = viewModel.defaultFiltersState,
+            onApplyRequest = { newFilters ->
+                viewModel.updateFilters(newFilters)
+                showFiltersDialog = false
+            },
+            onDismissRequest = { showFiltersDialog = false }
+        )
     }
 }
 
