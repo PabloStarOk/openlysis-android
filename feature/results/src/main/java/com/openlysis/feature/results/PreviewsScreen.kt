@@ -149,6 +149,7 @@ internal fun <TResult : Model> PreviewsScreen(
             Row(horizontalArrangement = Arrangement.SpaceBetween) {
                 VerdictStats(
                     state = uiState.verdictStats,
+                    label = stringResource(R.string.verdict_stats_last_results_label),
                     smallSize = true,
                     showUnknown = true,
                     modifier = Modifier.width(IntrinsicSize.Min)

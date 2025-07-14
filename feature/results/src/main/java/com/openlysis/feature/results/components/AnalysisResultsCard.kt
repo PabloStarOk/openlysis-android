@@ -98,6 +98,7 @@ internal fun AnalysisResultsCard(
 
             VerdictStats(
                 state = verdictStatsState,
+                label = stringResource(R.string.verdict_stats_last_results_label),
                 smallSize = false,
                 modifier =
                     Modifier

@@ -25,6 +25,7 @@ import com.openlysis.feature.results.R
 @Composable
 internal fun VerdictStats(
     state: VerdictStatsState,
+    label: String,
     smallSize: Boolean,
     modifier: Modifier = Modifier,
     showUnknown: Boolean = false
@@ -48,7 +49,7 @@ internal fun VerdictStats(
         modifier = modifier
     ) {
         Text(
-            text = stringResource(R.string.verdict_stats_label),
+            text = label,
             style = labelStyle,
             color = LocalAppColorScheme.current.text.default.secondary
         )
@@ -109,6 +110,7 @@ private fun VerdictStatsPreview() {
                     maliciousVerdicts = 3,
                     unknownVerdicts = 2
                 ),
+            label = "Stats",
             smallSize = false,
             showUnknown = true
         )
