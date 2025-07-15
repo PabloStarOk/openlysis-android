@@ -3,6 +3,7 @@ package com.openlysis.feature.results
 import com.openlysis.data.analysis.core.di.EmailAnalysesRepository
 import com.openlysis.data.analysis.core.repository.AnalysesRepository
 import com.openlysis.data.analysis.core.request.AnalyzeMessage
+import com.openlysis.data.analysis.model.analysis.AnalysisStatus
 import com.openlysis.data.analysis.model.message.MessageAnalysis
 import com.openlysis.feature.results.components.DetailsScreenViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,4 +19,6 @@ internal class EmailAnalysisDetailsScreenViewModel
     @Inject
     constructor(
         @EmailAnalysesRepository repository: AnalysesRepository<AnalyzeMessage, MessageAnalysis>
-    ) : DetailsScreenViewModel<MessageAnalysis>(repository)
+    ) : DetailsScreenViewModel<MessageAnalysis>(repository) {
+        override fun getStatus(result: MessageAnalysis): AnalysisStatus = result.status
+    }

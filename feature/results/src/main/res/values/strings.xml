@@ -131,6 +131,10 @@
     <string name="details_screen_verdict_help">Indicates the reliability of the analyzed data.</string>
     <string name="details_screen_threat_score_help">Indicates how dangerous the analyzed data could be if it is malicious.</string>
 
+    <string name="details_screen_refreshing_status_in_progress">Refreshing analysis</string>
+    <string name="details_screen_refreshing_status_completed">Analysis completed</string>
+    <string name="details_screen_refreshing_status_completed_icon_alt">Checkmark icon indicating the completion of the analysis</string>
+
     <string name="details_section_accordion_expand_label">Tap to expand the section</string>
     <string name="details_section_accordion_collapse_label">Tap to collapse the section</string>
     <string name="details_section_accordion_collapsed_chevron_icon_alt">Chevron down icon</string>

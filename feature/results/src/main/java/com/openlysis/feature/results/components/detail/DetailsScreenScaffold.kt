@@ -1,6 +1,17 @@
 package com.openlysis.feature.results.components.detail
 
 import android.text.format.DateFormat
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,11 +28,16 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -49,6 +65,7 @@ import com.openlysis.feature.results.R
 import com.openlysis.feature.results.components.AnalysisStatusBadge
 import com.openlysis.feature.results.components.AnalysisVerdictBadge
 import com.openlysis.feature.results.util.getRepositoryErrorMessage
+import kotlinx.coroutines.delay
 import kotlinx.datetime.toKotlinInstant
 
 /**
@@ -56,8 +73,11 @@ import kotlinx.datetime.toKotlinInstant
  *
  * @param onTopBarUpdate Callback to update the top bar state
  * @param onLoadDetails Callback to load the result details to display
+ * @param onPollingStart Callback to invoke when polling should start
+ * @param onPollingStop Callback to invoke when polling should stop
  * @param screenTitle Title to be displayed in the top bar
  * @param uiState Current UI state of the details screen
+ * @param isPolling Indicates if polling is active
  * @param data Data to be displayed in the scaffold
  * @param modifier Optional modifier for customizing the layout
  * @param content Custom content to be displayed within the scaffold
@@ -66,11 +86,14 @@ import kotlinx.datetime.toKotlinInstant
 internal fun DetailsScreenScaffold(
     onTopBarUpdate: (TopBarState) -> Unit,
     onLoadDetails: () -> Unit,
+    onPollingStart: () -> Unit,
+    onPollingStop: () -> Unit,
     screenTitle: String,
     uiState: DetailsUiState<*>,
+    isPolling: Boolean,
     data: DetailsScreenScaffoldData?,
     modifier: Modifier = Modifier,
-    content: @Composable ColumnScope.() -> Unit
+    content: @Composable () -> Unit
 ) {
     var initialized by rememberSaveable { mutableStateOf(false) }
     if (!initialized) {
@@ -81,89 +104,132 @@ internal fun DetailsScreenScaffold(
         }
     }
 
+    DisposableEffect(Unit) {
+        onPollingStart()
+        onDispose {
+            onPollingStop()
+        }
+    }
+
     val scrollState = rememberScrollState()
-
-    Column(
-        verticalArrangement = Arrangement.spacedBy(LocalAppSpacing.current.value800),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier =
-            modifier
-                .verticalScroll(scrollState)
-                .padding(LocalAppSpacing.current.value400)
-    ) {
-        if (uiState is DetailsUiState.Loading) {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                CircularProgressIndicator(
-                    color = LocalAppColorScheme.current.icon.brand.primary,
-                    trackColor = LocalAppColorScheme.current.border.default.primary,
-                    modifier = Modifier.size(50.dp)
-                )
-            }
-            return@Column
-        } else if (uiState is DetailsUiState.Failure) {
-            val error = uiState.error
-            Text(
-                text = getRepositoryErrorMessage(error),
-                color = LocalAppColorScheme.current.text.danger.secondary,
-                style = LocalAppTypography.current.bodyBase,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
-            )
-            return@Column
+    val shouldShowPollingBar by remember(uiState, isPolling, data) {
+        derivedStateOf {
+            uiState is DetailsUiState.Success &&
+                isPolling &&
+                data?.status == AnalysisStatus.Queued ||
+                data?.status == AnalysisStatus.InProgress
         }
-
-        if (data == null) {
-            return@Column
+    }
+    var isPollingVarVisible by rememberSaveable { mutableStateOf(false) }
+    LaunchedEffect(shouldShowPollingBar) {
+        if (shouldShowPollingBar) {
+            isPollingVarVisible = true
+        } else {
+            delay(5000)
+            isPollingVarVisible = false
         }
+    }
 
-        val dateFormat = DateFormat.getLongDateFormat(LocalContext.current)
-        val timeFormat = DateFormat.getTimeFormat(LocalContext.current)
-        val startedDateMillis = data.startedDate.toKotlinInstant().toEpochMilliseconds()
-        val formattedDate = dateFormat.format(startedDateMillis)
-        val formattedTime = timeFormat.format(startedDateMillis)
-
-        HeroInformation(
-            status = data.status,
-            verdict = data.verdict,
-            threatScore = null,
-            showHeroDataInfoCard = data.heroInfoCardData != null,
-            heroDataInfoCardLabel = data.heroInfoCardData?.first,
-            heroDataInfoCardContent = data.heroInfoCardData?.second
-        )
-
-        SectionAccordion(
-            title = stringResource(R.string.details_screen_started_datetime_section_title),
-            initiallyExpanded = true
+    Column {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(LocalAppSpacing.current.value800),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier =
+                modifier
+                    .verticalScroll(scrollState)
+                    .padding(LocalAppSpacing.current.value400)
+                    .weight(1f)
         ) {
-            InformationCard(
-                label = stringResource(R.string.details_screen_started_datetime_section_date_label),
-                information = formattedDate
-            )
-
-            InformationCard(
-                label = stringResource(R.string.details_screen_started_datetime_section_time_label),
-                information = formattedTime
-            )
-        }
-
-        if (data.informationSectionTitle != null && data.informationSectionItems != null) {
-            SectionAccordion(
-                title = data.informationSectionTitle,
-                initiallyExpanded = true
-            ) {
-                data.informationSectionItems.forEach {
-                    InformationCard(
-                        label = it.first,
-                        information = it.second
+            if (uiState is DetailsUiState.Loading) {
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    CircularProgressIndicator(
+                        color = LocalAppColorScheme.current.icon.brand.primary,
+                        trackColor = LocalAppColorScheme.current.border.default.primary,
+                        modifier = Modifier.size(50.dp)
                     )
                 }
+            } else if (uiState is DetailsUiState.Failure) {
+                val error = uiState.error
+                Text(
+                    text = getRepositoryErrorMessage(error),
+                    color = LocalAppColorScheme.current.text.danger.secondary,
+                    style = LocalAppTypography.current.bodyBase,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                return@Column
             }
+
+            if (uiState !is DetailsUiState.Success || data == null) {
+                return@Column
+            }
+
+            val dateFormat = DateFormat.getLongDateFormat(LocalContext.current)
+            val timeFormat = DateFormat.getTimeFormat(LocalContext.current)
+            val startedDateMillis = data.startedDate.toKotlinInstant().toEpochMilliseconds()
+            val formattedDate = dateFormat.format(startedDateMillis)
+            val formattedTime = timeFormat.format(startedDateMillis)
+
+            HeroInformation(
+                status = data.status,
+                verdict = data.verdict,
+                threatScore = null,
+                showHeroDataInfoCard = data.heroInfoCardData != null,
+                heroDataInfoCardLabel = data.heroInfoCardData?.first,
+                heroDataInfoCardContent = data.heroInfoCardData?.second
+            )
+
+            SectionAccordion(
+                title = stringResource(R.string.details_screen_started_datetime_section_title),
+                initiallyExpanded = true
+            ) {
+                InformationCard(
+                    label =
+                        stringResource(R.string.details_screen_started_datetime_section_date_label),
+                    information = formattedDate
+                )
+
+                InformationCard(
+                    label =
+                        stringResource(
+                            R.string.details_screen_started_datetime_section_time_label
+                        ),
+                    information = formattedTime
+                )
+            }
+
+            if (data.informationSectionTitle != null && data.informationSectionItems != null) {
+                SectionAccordion(
+                    title = data.informationSectionTitle,
+                    initiallyExpanded = true
+                ) {
+                    data.informationSectionItems.forEach {
+                        InformationCard(
+                            label = it.first,
+                            information = it.second
+                        )
+                    }
+                }
+            }
+
+            content()
         }
 
-        content()
+        if (data == null) return@Column
+
+        AnimatedVisibility(
+            visible = isPollingVarVisible,
+            enter = expandVertically() + slideInVertically(initialOffsetY = { -it }),
+            exit = shrinkVertically() + slideOutVertically(targetOffsetY = { it })
+        ) {
+            PollingIndicationBar(
+                status = data.status,
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
     }
 }
 
@@ -319,6 +385,76 @@ private fun HeroInformationCard(
             }
 
             content()
+        }
+    }
+}
+
+@Composable
+private fun PollingIndicationBar(
+    status: AnalysisStatus,
+    modifier: Modifier = Modifier
+) {
+    val isFinished = status != AnalysisStatus.Queued && status != AnalysisStatus.InProgress
+    val textResourceId =
+        if (isFinished) {
+            R.string.details_screen_refreshing_status_completed
+        } else {
+            R.string.details_screen_refreshing_status_in_progress
+        }
+
+    Column(
+        modifier = modifier
+    ) {
+        HorizontalDivider(
+            thickness = 1.dp,
+            color = LocalAppColorScheme.current.border.default.primary
+        )
+
+        Row(
+            horizontalArrangement =
+                Arrangement.spacedBy(
+                    space = LocalAppSpacing.current.value200,
+                    alignment = Alignment.CenterHorizontally
+                ),
+            verticalAlignment = Alignment.CenterVertically,
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .background(
+                        color = LocalAppColorScheme.current.background.default.primary
+                    ).padding(LocalAppSpacing.current.value300)
+        ) {
+            Text(
+                text = stringResource(textResourceId),
+                style = LocalAppTypography.current.bodyBase,
+                color = LocalAppColorScheme.current.text.brand.primary
+            )
+
+            AnimatedContent(
+                targetState = isFinished,
+                transitionSpec = {
+                    scaleIn() + fadeIn() togetherWith
+                        fadeOut() + scaleOut()
+                }
+            ) { targetState ->
+                if (targetState) {
+                    Icon(
+                        imageVector = AppIcons.Check,
+                        contentDescription =
+                            stringResource(
+                                R.string.details_screen_refreshing_status_completed_icon_alt
+                            ),
+                        tint = LocalAppColorScheme.current.icon.positive.primary,
+                        modifier = Modifier.size(25.dp)
+                    )
+                } else {
+                    CircularProgressIndicator(
+                        color = LocalAppColorScheme.current.icon.brand.primary,
+                        trackColor = LocalAppColorScheme.current.border.default.primary,
+                        modifier = Modifier.size(25.dp)
+                    )
+                }
+            }
         }
     }
 }

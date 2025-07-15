@@ -131,6 +131,10 @@
     <string name="details_screen_verdict_help">Indica la fiabilidad del dato analizado.</string>
     <string name="details_screen_threat_score_help">Indica qué tan peligroso podría ser el dato analizado en caso de ser malicioso.</string>
 
+    <string name="details_screen_refreshing_status_in_progress">Refrescando análisis</string>
+    <string name="details_screen_refreshing_status_completed">Análisis completado</string>
+    <string name="details_screen_refreshing_status_completed_icon_alt">Ícono de marca de verificación indicando que el análisis se ha completado</string>
+
     <string name="details_section_accordion_expand_label">Presiona para expandir la sección</string>
     <string name="details_section_accordion_collapse_label">Presiona para contraer la sección</string>
     <string name="details_section_accordion_collapsed_chevron_icon_alt">Ícono de flecha hacia abajo</string>
