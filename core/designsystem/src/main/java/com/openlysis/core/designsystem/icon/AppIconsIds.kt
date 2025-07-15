@@ -58,4 +58,10 @@ object AppIconsIds {
     @DrawableRes val Filter = R.drawable.filter_icon
 
     @DrawableRes val Calendar = R.drawable.calendar_icon
+
+    @DrawableRes val Help = R.drawable.help_icon
+
+    @DrawableRes val Copy = R.drawable.copy_icon
+
+    @DrawableRes val ChevronDown = R.drawable.chevron_down_icon
 }

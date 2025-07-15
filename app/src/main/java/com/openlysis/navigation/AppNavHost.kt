@@ -12,6 +12,7 @@ import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.openlysis.feature.results.navigation.ResultsBaseRoute
+import com.openlysis.feature.results.navigation.navigateToEmailAnalysisDetails
 import com.openlysis.feature.results.navigation.navigateToEmailAnalysisPreviews
 import com.openlysis.feature.results.navigation.resultsScreen
 import com.openlysis.feature.tools.navigation.ToolsBaseRoute
@@ -40,10 +41,7 @@ internal fun AppNavHost(
         toolsScreen(
             navController = navController,
             onTopBarUpdate = appState::updateTopBarState,
-            onMessageAnalysisStart = {
-                navController.navigate(ResultsBaseRoute)
-                // TODO: Implement navigation to display and update results of this new analysis.
-            },
+            onMessageAnalysisStart = { navController.navigateToEmailAnalysisDetails(it.id) },
             onFileAnalysisStart = {
                 navController.navigate(ResultsBaseRoute)
                 // TODO: Implement navigation to display and update results of this new analysis.
@@ -87,6 +85,7 @@ internal fun AppNavHost(
         resultsScreen(
             onTopBarUpdate = appState::updateTopBarState,
             onEmailResultsClick = navController::navigateToEmailAnalysisPreviews,
+            onPreviewDetailsClick = navController::navigateToEmailAnalysisDetails,
             enterTransition = {
                 val isTopLevelDest = appState.isTopLevelDestination(this.initialState.destination)
                 if (isTopLevelDest) {

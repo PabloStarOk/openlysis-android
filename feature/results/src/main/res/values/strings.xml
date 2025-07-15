@@ -5,6 +5,7 @@
     <string name="verdict_stats_malicious_label">Malicious</string>
     <string name="verdict_stats_unknown_label">Unknown</string>
     <string name="verdict_stats_last_results_label">Last results</string>
+    <string name="verdict_stats_default_label">Stats</string>
 
     <string name="analysis_results_section_card_icon_alt">Arrow pointing right.</string>
 
@@ -79,4 +80,59 @@
 
     <string name="email_previews_screen_title">Emails</string>
     <string name="email_previews_cards_header_label">Sender</string>
+
+    <string name="help_icon_alt">Help icon</string>
+    <string name="copy_icon_alt">Copy icon</string>
+
+    <string name="details_screen_email_title">Email Analysis</string>
+    <string name="details_screen_sms_title">SMS Analysis</string>
+    <string name="details_screen_file_title">File Analysis</string>
+    <string name="details_screen_url_title">URL Analysis</string>
+    <string name="details_screen_file_name_label">File Name</string>
+    <string name="details_screen_url_label">URL</string>
+    <string name="details_screen_verdict_label">Verdict</string>
+    <string name="details_screen_threat_score_label">Threat Score</string>
+
+    <string name="details_screen_started_datetime_section_title">Start Date and Time</string>
+    <string name="details_screen_started_datetime_section_date_label">Start Date</string>
+    <string name="details_screen_started_datetime_section_time_label">Start Time</string>
+
+    <string name="details_screen_message_information_section_title">Message Information</string>
+    <string name="details_screen_message_sender_label">Sender</string>
+    <string name="details_screen_message_subject_label">Subject</string>
+    <string name="details_screen_message_content_label">Content</string>
+    <string name="details_screen_message_no_analyzable_data">No data was detected or attached to be analyzed.</string>
+    <string name="details_screen_message_analyzed_files_section_title">Analyzed Files</string>
+    <string name="details_screen_message_analyzed_file_label">File Name</string>
+    <string name="details_screen_message_analyzed_urls_section_title">Analyzed URLs</string>
+    <string name="details_screen_message_analyzed_url_label">URL</string>
+    <string name="details_screen_message_reputation_email_section_title">Email Reputation</string>
+    <string name="details_screen_message_reputation_email_label">Email Address</string>
+    <string name="details_screen_message_reputation_phone_section_title">Phone Number Reputation</string>
+    <string name="details_screen_message_reputation_phone_label">Phone Number</string>
+    <string name="details_screen_message_sub_result_final_verdict_label">Final Verdict</string>
+    <string name="details_screen_message_sub_result_information_section_title">Information</string>
+    <string name="details_screen_service_results_section_title">Service Results</string>
+    <string name="details_screen_service_results_threat_score">TS</string>
+    <string name="details_screen_service_results_help_message">The acronym \'TS\' indicates the threat score that the service gave to the analyzed data.</string>
+    <string name="details_screen_service_results_not_found">External service results were not found.</string>
+
+    <string name="details_screen_file_information_section_title">File Information</string>
+    <string name="details_screen_file_information_type_label">File Type</string>
+    <string name="details_screen_file_information_size_label">File Size</string>
+
+    <string name="details_screen_hash" translatable="false">Hash</string>
+    <string name="details_screen_hash_sha_1" translatable="false">SHA-1</string>
+    <string name="details_screen_hash_sha_256" translatable="false">SHA-256</string>
+    <string name="details_screen_hash_sha_512" translatable="false">SHA-512</string>
+    <string name="details_screen_hash_md5" translatable="false">MD5</string>
+    <string name="details_screen_hash_value_copied">Hash value copied</string>
+
+    <string name="details_screen_verdict_help">Indicates the reliability of the analyzed data.</string>
+    <string name="details_screen_threat_score_help">Indicates how dangerous the analyzed data could be if it is malicious.</string>
+
+    <string name="details_section_accordion_expand_label">Tap to expand the section</string>
+    <string name="details_section_accordion_collapse_label">Tap to collapse the section</string>
+    <string name="details_section_accordion_collapsed_chevron_icon_alt">Chevron down icon</string>
+    <string name="details_section_accordion_expanded_chevron_icon_alt">Chevron up icon</string>
 </resources>

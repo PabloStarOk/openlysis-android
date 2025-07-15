@@ -86,4 +86,13 @@ object AppIcons {
 
     val Calendar
         @Composable get() = ImageVector.vectorResource(R.drawable.calendar_icon)
+
+    val Help
+        @Composable get() = ImageVector.vectorResource(R.drawable.help_icon)
+
+    val Copy
+        @Composable get() = ImageVector.vectorResource(R.drawable.copy_icon)
+
+    val ChevronDown
+        @Composable get() = ImageVector.vectorResource(R.drawable.chevron_down_icon)
 }

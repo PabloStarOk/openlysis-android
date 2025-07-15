@@ -40,13 +40,13 @@ import com.openlysis.core.designsystem.modifier.SizeType
 import com.openlysis.core.designsystem.theme.LocalAppColorScheme
 import com.openlysis.core.designsystem.theme.size.LocalAppSpacing
 import com.openlysis.core.designsystem.theme.type.LocalAppTypography
-import com.openlysis.data.analysis.core.error.RepositoryError
 import com.openlysis.data.analysis.model.analysis.AnalysisStatus
 import com.openlysis.data.analysis.model.common.Model
 import com.openlysis.feature.results.components.AnalysisPreview
 import com.openlysis.feature.results.components.RefreshButton
 import com.openlysis.feature.results.components.VerdictStats
 import com.openlysis.feature.results.components.filter.FiltersDialog
+import com.openlysis.feature.results.util.getRepositoryErrorMessage
 import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.seconds
 
@@ -64,6 +64,7 @@ import kotlin.time.Duration.Companion.seconds
 internal fun <TResult : Model> PreviewsScreen(
     viewModel: PreviewsScreenViewModel<TResult>,
     onTopBarUpdate: (TopBarState) -> Unit,
+    onPreviewDetailsClick: (String) -> Unit,
     screenTitle: String,
     previewCardHeaderLabel: String,
     modifier: Modifier = Modifier
@@ -194,7 +195,7 @@ internal fun <TResult : Model> PreviewsScreen(
         ) { preview ->
             var isRefreshing by remember { mutableStateOf(false) }
             AnalysisPreview(
-                onDetailsClick = { TODO("Add details click functionality") },
+                onDetailsClick = { onPreviewDetailsClick(preview.id) },
                 onRefreshClick = {
                     isRefreshing = true
                     viewModel.refreshPreview(
@@ -271,23 +272,15 @@ private fun StatusMessage(
 
     val message =
         if (loadingState is LoadingState.Error) {
-            when (loadingState.error) {
-                is RepositoryError.Server -> R.string.error_analysis_repository_server
-                is RepositoryError.Network -> R.string.error_analysis_repository_network
-                is RepositoryError.ServerUnreachable ->
-                    R.string.error_analysis_repository_server_unreachable
-                is RepositoryError.Unavailable ->
-                    R.string.error_analysis_repository_unavailable
-                else -> R.string.error_analysis_repository_generic
-            }
+            getRepositoryErrorMessage(loadingState.error)
         } else if (noPreviews) {
-            R.string.analyses_limit_reached_no_analyses
+            stringResource(R.string.analyses_limit_reached_no_analyses)
         } else {
-            R.string.analyses_limit_reached_no_more_analyses
+            stringResource(R.string.analyses_limit_reached_no_more_analyses)
         }
 
     Text(
-        text = stringResource(message),
+        text = message,
         style = LocalAppTypography.current.bodyBase,
         color = textColor,
         textAlign = TextAlign.Center,

@@ -5,6 +5,7 @@
     <string name="verdict_stats_malicious_label">Maliciosos</string>
     <string name="verdict_stats_unknown_label">Desconocidos</string>
     <string name="verdict_stats_last_results_label">Últimos resultados</string>
+    <string name="verdict_stats_default_label">Estadísticas</string>
     
     <string name="analysis_results_section_card_icon_alt">Flecha apuntando a la derecha.</string>
     
@@ -79,4 +80,59 @@
 
     <string name="email_previews_screen_title">Correos Electrónicos</string>
     <string name="email_previews_cards_header_label">Remitente</string>
+
+    <string name="help_icon_alt">Ícono de ayuda</string>
+    <string name="copy_icon_alt">Ícono de copiar</string>
+
+    <string name="details_screen_email_title">Análisis de Correo</string>
+    <string name="details_screen_sms_title">Análisis de SMS</string>
+    <string name="details_screen_file_title">Análisis de Archivo</string>
+    <string name="details_screen_url_title">Análisis de URL</string>
+    <string name="details_screen_file_name_label">Nombre del Archivo</string>
+    <string name="details_screen_url_label">URL</string>
+    <string name="details_screen_verdict_label">Veredicto</string>
+    <string name="details_screen_threat_score_label">Puntaje de la Amenaza</string>
+
+    <string name="details_screen_started_datetime_section_title">Fecha y Hora de Inicio</string>
+    <string name="details_screen_started_datetime_section_date_label">Fecha de Inicio</string>
+    <string name="details_screen_started_datetime_section_time_label">Hora de Inicio</string>
+
+    <string name="details_screen_message_information_section_title">Información del Mensaje</string>
+    <string name="details_screen_message_sender_label">Remitente</string>
+    <string name="details_screen_message_subject_label">Asunto</string>
+    <string name="details_screen_message_content_label">Contenido</string>
+    <string name="details_screen_message_no_analyzable_data">Ningún dato fue detectado o adjuntado para ser analizado.</string>
+    <string name="details_screen_message_analyzed_files_section_title">Archivos Analizados</string>
+    <string name="details_screen_message_analyzed_file_label">Nombre del Archivo</string>
+    <string name="details_screen_message_analyzed_urls_section_title">URLs Analizadas</string>
+    <string name="details_screen_message_analyzed_url_label">URL</string>
+    <string name="details_screen_message_reputation_email_section_title">Reputación de Correos Electrónicos</string>
+    <string name="details_screen_message_reputation_email_label">Dirección de Correo Electrónico</string>
+    <string name="details_screen_message_reputation_phone_section_title">Reputación de Números Telefónicos</string>
+    <string name="details_screen_message_reputation_phone_label">Número Telefónico</string>
+    <string name="details_screen_message_sub_result_final_verdict_label">Veredicto Final</string>
+    <string name="details_screen_message_sub_result_information_section_title">Información</string>
+    <string name="details_screen_service_results_section_title">Resultados de Servicios</string>
+    <string name="details_screen_service_results_threat_score">PA</string>
+    <string name="details_screen_service_results_help_message">El acrónimo \'PA\' indica el puntaje de la amenaza que el servicio le dio al dato analizado.</string>
+    <string name="details_screen_service_results_not_found">No se encontraron los resultados de servicios externos.</string>
+
+    <string name="details_screen_file_information_section_title">Información del Archivo</string>
+    <string name="details_screen_file_information_type_label">Tipo de Archivo</string>
+    <string name="details_screen_file_information_size_label">Tamaño del Archivo</string>
+
+    <string name="details_screen_hash" translatable="false">Hash</string>
+    <string name="details_screen_hash_sha_1" translatable="false">SHA-1</string>
+    <string name="details_screen_hash_sha_256" translatable="false">SHA-256</string>
+    <string name="details_screen_hash_sha_512" translatable="false">SHA-512</string>
+    <string name="details_screen_hash_md5" translatable="false">MD5</string>
+    <string name="details_screen_hash_value_copied">Valor de hash copiado</string>
+
+    <string name="details_screen_verdict_help">Indica la fiabilidad del dato analizado.</string>
+    <string name="details_screen_threat_score_help">Indica qué tan peligroso podría ser el dato analizado en caso de ser malicioso.</string>
+
+    <string name="details_section_accordion_expand_label">Presiona para expandir la sección</string>
+    <string name="details_section_accordion_collapse_label">Presiona para contraer la sección</string>
+    <string name="details_section_accordion_collapsed_chevron_icon_alt">Ícono de flecha hacia abajo</string>
+    <string name="details_section_accordion_expanded_chevron_icon_alt">Ícono de flecha hacia arriba</string>
 </resources>
