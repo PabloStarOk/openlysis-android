@@ -69,17 +69,11 @@ internal fun <TResult : Model> PreviewsScreen(
     previewCardHeaderLabel: String,
     modifier: Modifier = Modifier
 ) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
-    var initialized by rememberSaveable { mutableStateOf(false) }
-    if (!initialized) {
-        initialized = true
-        LaunchedEffect(Unit) {
-            onTopBarUpdate(TopBarState(title = screenTitle))
-            viewModel.loadPreviews()
-        }
+    LaunchedEffect(Unit) {
+        onTopBarUpdate(TopBarState(title = screenTitle))
     }
 
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val gridState = rememberLazyGridState()
     val showLoadingIndicator by
         remember(uiState.loadingState) {
@@ -101,7 +95,7 @@ internal fun <TResult : Model> PreviewsScreen(
     val shouldLoadMore by
         remember(uiState.canLoadMore, uiState.previews, uiState.loadingState) {
             derivedStateOf {
-                if (!uiState.canLoadMore || uiState.loadingState is LoadingState.InProgress) {
+                if (!uiState.canLoadMore || uiState.loadingState !is LoadingState.Idle) {
                     return@derivedStateOf false
                 }
 
@@ -111,7 +105,7 @@ internal fun <TResult : Model> PreviewsScreen(
                         .lastOrNull()
                         ?.index ?: 0
                 val remainingAnalyses = totalAnalyses - lastVisibleIndex
-                totalAnalyses > 0 && remainingAnalyses <= 2
+                remainingAnalyses <= 2
             }
         }
     val showRefreshAllButton by
