@@ -37,7 +37,6 @@ import com.openlysis.feature.results.R
 import com.openlysis.feature.results.components.AnalysisVerdictBadge
 import com.openlysis.feature.results.components.VerdictStats
 import com.openlysis.feature.results.components.VerdictStatsState
-import kotlin.collections.forEach
 
 /**
  * A section displaying the results of various services.

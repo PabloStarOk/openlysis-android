@@ -1,4 +1,4 @@
-package com.openlysis.feature.results.components
+package com.openlysis.feature.results.components.preview
 
 import com.openlysis.data.analysis.model.analysis.AnalysisStatus
 import com.openlysis.data.analysis.model.common.Verdict

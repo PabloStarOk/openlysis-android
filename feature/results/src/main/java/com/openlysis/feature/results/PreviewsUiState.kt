@@ -1,9 +1,9 @@
 package com.openlysis.feature.results
 
 import androidx.compose.runtime.Immutable
-import com.openlysis.feature.results.components.AnalysisPreviewState
 import com.openlysis.feature.results.components.VerdictStatsState
-import com.openlysis.feature.results.components.filter.FiltersState
+import com.openlysis.feature.results.components.preview.AnalysisPreviewState
+import com.openlysis.feature.results.components.preview.FiltersState
 
 /**
  * UI state for previews screen.

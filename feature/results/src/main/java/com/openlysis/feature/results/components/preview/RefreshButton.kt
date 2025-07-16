@@ -1,4 +1,4 @@
-package com.openlysis.feature.results.components
+package com.openlysis.feature.results.components.preview
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.FastOutLinearInEasing

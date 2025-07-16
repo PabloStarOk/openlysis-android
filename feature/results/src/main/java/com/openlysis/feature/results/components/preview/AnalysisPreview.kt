@@ -1,4 +1,4 @@
-package com.openlysis.feature.results.components
+package com.openlysis.feature.results.components.preview
 
 import android.os.Build
 import android.text.format.DateFormat
@@ -41,6 +41,8 @@ import com.openlysis.core.designsystem.theme.type.LocalAppTypography
 import com.openlysis.data.analysis.model.analysis.AnalysisStatus
 import com.openlysis.data.analysis.model.common.Verdict
 import com.openlysis.feature.results.R
+import com.openlysis.feature.results.components.AnalysisStatusBadge
+import com.openlysis.feature.results.components.AnalysisVerdictBadge
 import kotlinx.datetime.toKotlinInstant
 import java.time.Instant
 

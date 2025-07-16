@@ -1,4 +1,4 @@
-package com.openlysis.feature.results.components.filter
+package com.openlysis.feature.results.components.preview
 
 import android.text.format.DateFormat
 import androidx.compose.animation.animateContentSize

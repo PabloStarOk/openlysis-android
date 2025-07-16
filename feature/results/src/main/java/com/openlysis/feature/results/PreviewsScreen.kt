@@ -42,10 +42,10 @@ import com.openlysis.core.designsystem.theme.size.LocalAppSpacing
 import com.openlysis.core.designsystem.theme.type.LocalAppTypography
 import com.openlysis.data.analysis.model.analysis.AnalysisStatus
 import com.openlysis.data.analysis.model.common.Model
-import com.openlysis.feature.results.components.AnalysisPreview
-import com.openlysis.feature.results.components.RefreshButton
 import com.openlysis.feature.results.components.VerdictStats
-import com.openlysis.feature.results.components.filter.FiltersDialog
+import com.openlysis.feature.results.components.preview.AnalysisPreview
+import com.openlysis.feature.results.components.preview.FiltersDialog
+import com.openlysis.feature.results.components.preview.RefreshButton
 import com.openlysis.feature.results.util.getRepositoryErrorMessage
 import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.seconds

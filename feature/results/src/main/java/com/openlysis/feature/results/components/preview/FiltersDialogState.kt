@@ -1,4 +1,4 @@
-package com.openlysis.feature.results.components.filter
+package com.openlysis.feature.results.components.preview
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

@@ -4,7 +4,7 @@ import com.openlysis.data.analysis.core.di.EmailAnalysesRepository
 import com.openlysis.data.analysis.core.repository.AnalysesRepository
 import com.openlysis.data.analysis.core.request.AnalyzeMessage
 import com.openlysis.data.analysis.model.message.MessageAnalysis
-import com.openlysis.feature.results.components.AnalysisPreviewState
+import com.openlysis.feature.results.components.preview.AnalysisPreviewState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

@@ -50,7 +50,6 @@ import com.openlysis.data.analysis.model.message.MessageAnalysis
 import com.openlysis.data.analysis.model.reputation.MultiReputation
 import com.openlysis.feature.results.components.AnalysisStatusBadge
 import com.openlysis.feature.results.components.AnalysisVerdictBadge
-import com.openlysis.feature.results.components.DetailsScreenViewModel
 import com.openlysis.feature.results.components.detail.DetailsScreenScaffold
 import com.openlysis.feature.results.components.detail.DetailsScreenScaffoldData
 import com.openlysis.feature.results.components.detail.HashValuesSection

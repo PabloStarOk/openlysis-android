@@ -15,7 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.openlysis.core.designsystem.theme.size.LocalAppSpacing
-import com.openlysis.feature.results.components.AnalysisResultsCard
+import com.openlysis.feature.results.components.initial.AnalysisResultsCard
 
 /**
  * Screen to access the analysis results of the user.

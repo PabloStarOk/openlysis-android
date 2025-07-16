@@ -1,4 +1,4 @@
-package com.openlysis.feature.results.components.filter
+package com.openlysis.feature.results.components.preview
 
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Immutable

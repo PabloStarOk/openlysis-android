@@ -7,10 +7,10 @@ import com.openlysis.data.analysis.model.analysis.AnalysisStatus
 import com.openlysis.data.analysis.model.common.Model
 import com.openlysis.data.analysis.model.common.Outcome
 import com.openlysis.data.analysis.model.common.Verdict
-import com.openlysis.feature.results.components.AnalysisPreviewState
 import com.openlysis.feature.results.components.VerdictStatsState
-import com.openlysis.feature.results.components.filter.FiltersState
-import com.openlysis.feature.results.components.filter.SortableField
+import com.openlysis.feature.results.components.preview.AnalysisPreviewState
+import com.openlysis.feature.results.components.preview.FiltersState
+import com.openlysis.feature.results.components.preview.SortableField
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,7 +22,6 @@ import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toKotlinInstant
 import kotlinx.datetime.toLocalDateTime
-import kotlin.collections.plus
 
 /**
  * Abstract base ViewModel for managing paginated previews of analysis results.

@@ -1,4 +1,4 @@
-package com.openlysis.feature.results.components
+package com.openlysis.feature.results.components.initial
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -27,6 +27,8 @@ import com.openlysis.core.designsystem.theme.radius.LocalAppRadius
 import com.openlysis.core.designsystem.theme.size.LocalAppSpacing
 import com.openlysis.core.designsystem.theme.type.LocalAppTypography
 import com.openlysis.feature.results.R
+import com.openlysis.feature.results.components.VerdictStats
+import com.openlysis.feature.results.components.VerdictStatsState
 
 /**
  * A composable function that displays a clickable card with stats about current verdicts.
@@ -117,7 +119,7 @@ private fun AnalysisResultsCardPreview() {
             onClick = { },
             title = "Title",
             description = "Example description.",
-            verdictStatsState = VerdictStatsState.Zero
+            verdictStatsState = VerdictStatsState.Companion.Zero
         )
     }
 }
