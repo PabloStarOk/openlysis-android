@@ -2,6 +2,16 @@ package com.openlysis.data.database.di
 
 import android.content.Context
 import androidx.room.Room
+import com.openlysis.data.analysis.core.di.EmailAnalysesLocalDataSource
+import com.openlysis.data.analysis.core.di.SmsAnalysesLocalDataSource
+import com.openlysis.data.analysis.core.source.AnalysesLocalDataSource
+import com.openlysis.data.analysis.model.analysis.FileMultiAnalysis
+import com.openlysis.data.analysis.model.analysis.UrlMultiAnalysis
+import com.openlysis.data.analysis.model.message.MessageAnalysis
+import com.openlysis.data.analysis.model.message.MessageType
+import com.openlysis.data.analysis.model.reputation.EmailAddressReputation
+import com.openlysis.data.analysis.model.reputation.MultiReputation
+import com.openlysis.data.analysis.model.reputation.PhoneNumberReputation
 import com.openlysis.data.database.AppDatabase
 import com.openlysis.data.database.LocalStoragePreferences
 import com.openlysis.data.database.constant.AppDatabaseInfo
@@ -15,6 +25,8 @@ import com.openlysis.data.database.dao.PhoneReputationDao
 import com.openlysis.data.database.dao.UrlAnalysisDao
 import com.openlysis.data.database.dao.UrlMultiAnalysisDao
 import com.openlysis.data.database.source.LocalDataSourceState
+import com.openlysis.data.database.source.MessageAnalysesLocalDataSource
+import com.openlysis.data.database.source.RelationalLocalDataSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -154,4 +166,46 @@ internal object LocalDatabaseProvidingModule {
                 currentStoredEntities = dao.countWithoutParent()
             )
         }
+
+    @EmailAnalysesLocalDataSource
+    @Singleton
+    @Provides
+    fun provideEmailAnalysisLocalDs(
+        @MessageAnalysisDsState state: LocalDataSourceState,
+        urlDs: RelationalLocalDataSource<UrlMultiAnalysis>,
+        fileDs: RelationalLocalDataSource<FileMultiAnalysis>,
+        emailDs: RelationalLocalDataSource<MultiReputation<EmailAddressReputation>>,
+        phoneDs: RelationalLocalDataSource<MultiReputation<PhoneNumberReputation>>,
+        analysisDao: MessageAnalysisDao
+    ): AnalysesLocalDataSource<MessageAnalysis> =
+        MessageAnalysesLocalDataSource(
+            state = state,
+            messageType = MessageType.Email,
+            urlDs = urlDs,
+            fileDs = fileDs,
+            emailDs = emailDs,
+            phoneDs = phoneDs,
+            analysisDao = analysisDao
+        )
+
+    @SmsAnalysesLocalDataSource
+    @Singleton
+    @Provides
+    fun provideSmsAnalysisLocalDs(
+        @MessageAnalysisDsState state: LocalDataSourceState,
+        urlDs: RelationalLocalDataSource<UrlMultiAnalysis>,
+        fileDs: RelationalLocalDataSource<FileMultiAnalysis>,
+        emailDs: RelationalLocalDataSource<MultiReputation<EmailAddressReputation>>,
+        phoneDs: RelationalLocalDataSource<MultiReputation<PhoneNumberReputation>>,
+        analysisDao: MessageAnalysisDao
+    ): AnalysesLocalDataSource<MessageAnalysis> =
+        MessageAnalysesLocalDataSource(
+            state = state,
+            messageType = MessageType.Sms,
+            urlDs = urlDs,
+            fileDs = fileDs,
+            emailDs = emailDs,
+            phoneDs = phoneDs,
+            analysisDao = analysisDao
+        )
 }

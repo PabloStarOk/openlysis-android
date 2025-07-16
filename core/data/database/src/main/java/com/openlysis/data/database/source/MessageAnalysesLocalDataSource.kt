@@ -4,6 +4,7 @@ import android.util.Log
 import com.openlysis.data.analysis.model.analysis.FileMultiAnalysis
 import com.openlysis.data.analysis.model.analysis.UrlMultiAnalysis
 import com.openlysis.data.analysis.model.message.MessageAnalysis
+import com.openlysis.data.analysis.model.message.MessageType
 import com.openlysis.data.analysis.model.reputation.EmailAddressReputation
 import com.openlysis.data.analysis.model.reputation.MultiReputation
 import com.openlysis.data.analysis.model.reputation.PhoneNumberReputation
@@ -24,6 +25,7 @@ import javax.inject.Inject
  * [UrlMultiAnalysis], [FileMultiAnalysis], [MultiReputation]<[EmailAddressReputation]>, and [MultiReputation]<[PhoneNumberReputation]>.
  *
  * @param state The [LocalDataSourceState] tracking entity limits.
+ * @param messageType The [MessageType] this data source handles.
  * @param urlDs The [RelationalLocalDataSource] for [UrlMultiAnalysis] entities.
  * @param fileDs The [RelationalLocalDataSource] for [FileMultiAnalysis] entities.
  * @param emailDs The [RelationalLocalDataSource] for [MultiReputation]<[EmailAddressReputation]> entities.
@@ -34,6 +36,7 @@ internal class MessageAnalysesLocalDataSource
     @Inject
     constructor(
         @MessageAnalysisDsState state: LocalDataSourceState,
+        private val messageType: MessageType,
         private val urlDs: RelationalLocalDataSource<UrlMultiAnalysis>,
         private val fileDs: RelationalLocalDataSource<FileMultiAnalysis>,
         private val emailDs: RelationalLocalDataSource<MultiReputation<EmailAddressReputation>>,
@@ -146,7 +149,7 @@ internal class MessageAnalysesLocalDataSource
             page: Int,
             size: Int
         ): List<MessageAnalysis> {
-            val analysesWithResults = analysisDao.getMany(page, size)
+            val analysesWithResults = analysisDao.getMany(page, size, messageType)
             return analysesWithResults.map { m -> buildMessageAnalysis(withResults = m) }
         }
 
