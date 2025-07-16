@@ -33,8 +33,8 @@
 
     <string name="attach_file_warning_alert">For privacy, never attach private or confidential files.</string>
     <plurals name="attach_file_limit_message">
-        <item quantity="one">You can attach a file up to %.1f MB in size.</item>
-        <item quantity="other">You can attach up to %d files, each up to %.1f MB in size.</item>
+        <item quantity="one">You can attach a file up to %s in size.</item>
+        <item quantity="other">You can attach up to %d files, each up to %s in size.</item>
     </plurals>
     <string name="attach_file_button_label">Add File</string>
     <string name="attach_file_button_icon_alt">Add file icon</string>
@@ -76,7 +76,7 @@
 
     <string name="info_file_already_attached">This file is already attached.</string>
     <string name="error_file_uri_null">File could not be added due to an unexpected error.</string>
-    <string name="error_file_too_large">The file size must be less than or equal to %.1f %s.</string>
+    <string name="error_file_too_large">The file size must be less than or equal to %s.</string>
     <string name="error_file_size_zero">File could not be added because has not data.</string>
 
     <string name="error_analysis_repository_generic">An unexpected error occurred. Please try again.</string>

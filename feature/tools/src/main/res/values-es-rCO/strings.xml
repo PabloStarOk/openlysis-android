@@ -33,8 +33,8 @@
 
     <string name="attach_file_warning_alert">Por privacidad, nunca adjuntes archivos privados o confidenciales.</string>
     <plurals name="attach_file_limit_message">
-        <item quantity="one">Puedes añadir un archivo de hasta %.1f MB de tamaño.</item>
-        <item quantity="other">Puedes añadir hasta %d archivos, de %.1f MB cada uno como máximo.</item>
+        <item quantity="one">Puedes añadir un archivo de hasta %s de tamaño.</item>
+        <item quantity="other">Puedes añadir hasta %d archivos, de %s cada uno como máximo.</item>
     </plurals>
     <string name="attach_file_button_label">Agregar archivo</string>
     <string name="attach_file_button_icon_alt">Icono para agregar archivo</string>
@@ -76,7 +76,7 @@
 
     <string name="info_file_already_attached">Este archivo ya está adjunto.</string>
     <string name="error_file_uri_null">No se pudo agregar el archivo debido a un error inesperado.</string>
-    <string name="error_file_too_large">El tamaño del archivo debe ser igual o menor a %.1f %s.</string>
+    <string name="error_file_too_large">El tamaño del archivo debe ser igual o menor a %s.</string>
     <string name="error_file_size_zero">No se pudo agregar el archivo porque no contiene información.</string>
 
     <string name="error_analysis_repository_generic">Ocurrió un error inesperado. Por favor, inténtalo de nuevo.</string>
