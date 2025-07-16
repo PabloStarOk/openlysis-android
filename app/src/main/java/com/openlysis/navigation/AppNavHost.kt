@@ -1,6 +1,9 @@
 package com.openlysis.navigation
 
+import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.AnimatedContentTransitionScope.SlideDirection
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.EaseInOut
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -8,6 +11,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -52,14 +56,7 @@ internal fun AppNavHost(
             enterTransition = {
                 val isTopLevelDest = appState.isTopLevelDestination(this.initialState.destination)
                 if (isTopLevelDest) {
-                    slideIntoContainer(
-                        towards = SlideDirection.Right,
-                        animationSpec =
-                            tween(
-                                durationMillis = 300,
-                                easing = EaseInOut
-                            )
-                    )
+                    fromTopDestinationEnterTransition(SlideDirection.Right)
                 } else {
                     slideIntoContainer(SlideDirection.Up) + fadeIn()
                 }
@@ -67,14 +64,7 @@ internal fun AppNavHost(
             exitTransition = {
                 val isTopLevelDest = appState.isTopLevelDestination(this.targetState.destination)
                 if (isTopLevelDest) {
-                    slideOutOfContainer(
-                        towards = SlideDirection.Left,
-                        animationSpec =
-                            tween(
-                                durationMillis = 300,
-                                easing = EaseInOut
-                            )
-                    )
+                    toTopDestinationExitTransition(SlideDirection.Left)
                 } else {
                     slideOutOfContainer(SlideDirection.Down) + fadeOut()
                 }
@@ -98,19 +88,13 @@ internal fun AppNavHost(
                 val isTopLevelDest = appState.isTopLevelDestination(this.initialState.destination)
                 if (isTopLevelDest) {
                     val toTools = this.initialState.destination.hasRoute(ToolsRoute::class)
-                    val direction =
-                        if (toTools) {
-                            SlideDirection.Left
-                        } else {
-                            SlideDirection.Right
-                        }
-                    slideIntoContainer(
-                        towards = direction,
-                        animationSpec =
-                            tween(
-                                durationMillis = 300,
-                                easing = EaseInOut
-                            )
+                    fromTopDestinationEnterTransition(
+                        direction =
+                            if (toTools) {
+                                SlideDirection.Left
+                            } else {
+                                SlideDirection.Right
+                            }
                     )
                 } else {
                     slideIntoContainer(SlideDirection.Up) + fadeIn()
@@ -120,19 +104,13 @@ internal fun AppNavHost(
                 val isTopLevelDest = appState.isTopLevelDestination(this.targetState.destination)
                 if (isTopLevelDest) {
                     val toTools = this.targetState.destination.hasRoute(ToolsRoute::class)
-                    val direction =
-                        if (toTools) {
-                            SlideDirection.Right
-                        } else {
-                            SlideDirection.Left
-                        }
-                    slideOutOfContainer(
-                        towards = direction,
-                        animationSpec =
-                            tween(
-                                durationMillis = 300,
-                                easing = EaseInOut
-                            )
+                    toTopDestinationExitTransition(
+                        direction =
+                            if (toTools) {
+                                SlideDirection.Right
+                            } else {
+                                SlideDirection.Left
+                            }
                     )
                 } else {
                     slideOutOfContainer(SlideDirection.Down) + fadeOut()
@@ -145,3 +123,27 @@ internal fun AppNavHost(
         }
     }
 }
+
+private fun AnimatedContentTransitionScope<NavBackStackEntry>.fromTopDestinationEnterTransition(
+    direction: SlideDirection
+): EnterTransition =
+    slideIntoContainer(
+        towards = direction,
+        animationSpec =
+            tween(
+                durationMillis = 300,
+                easing = EaseInOut
+            )
+    )
+
+private fun AnimatedContentTransitionScope<NavBackStackEntry>.toTopDestinationExitTransition(
+    direction: SlideDirection
+): ExitTransition =
+    slideOutOfContainer(
+        towards = direction,
+        animationSpec =
+            tween(
+                durationMillis = 300,
+                easing = EaseInOut
+            )
+    )
