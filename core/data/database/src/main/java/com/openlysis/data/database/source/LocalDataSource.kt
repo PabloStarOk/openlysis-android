@@ -100,6 +100,21 @@ internal abstract class LocalDataSource<TModel>(
     }
 
     /**
+     * Retrieves a list of models from the local database based on pagination parameters.
+     *
+     * @param page The page number to retrieve (starting from 1).
+     * @param size The number of models per page.
+     * @return A list of models for the specified page.
+     */
+    override suspend fun getMany(
+        page: Int,
+        size: Int
+    ): List<TModel> {
+        val zeroBasedPage = page - 1
+        return handleGetMany(zeroBasedPage, size)
+    }
+
+    /**
      * Checks if a model with the given ID exists in the local database.
      *
      * @param model The model whose existence is to be checked.
