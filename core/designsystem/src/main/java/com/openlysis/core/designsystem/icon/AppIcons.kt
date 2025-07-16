@@ -62,4 +62,37 @@ object AppIcons {
 
     val Open: ImageVector
         @Composable get() = ImageVector.vectorResource(R.drawable.open_icon)
+
+    val ArrowRight
+        @Composable get() = ImageVector.vectorResource(R.drawable.arrow_right_icon)
+
+    val RotateLeft
+        @Composable get() = ImageVector.vectorResource(R.drawable.rotate_left_icon)
+
+    val GitCommit
+        @Composable get() = ImageVector.vectorResource(R.drawable.git_commit_icon)
+
+    val Clock
+        @Composable get() = ImageVector.vectorResource(R.drawable.clock_icon)
+
+    val Document
+        @Composable get() = ImageVector.vectorResource(R.drawable.document_icon)
+
+    val Refresh
+        @Composable get() = ImageVector.vectorResource(R.drawable.refresh_icon)
+
+    val Filter
+        @Composable get() = ImageVector.vectorResource(R.drawable.filter_icon)
+
+    val Calendar
+        @Composable get() = ImageVector.vectorResource(R.drawable.calendar_icon)
+
+    val Help
+        @Composable get() = ImageVector.vectorResource(R.drawable.help_icon)
+
+    val Copy
+        @Composable get() = ImageVector.vectorResource(R.drawable.copy_icon)
+
+    val ChevronDown
+        @Composable get() = ImageVector.vectorResource(R.drawable.chevron_down_icon)
 }

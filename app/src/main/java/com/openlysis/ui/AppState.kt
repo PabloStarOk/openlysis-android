@@ -13,8 +13,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.openlysis.core.designsystem.components.bar.TopBarState
+import com.openlysis.feature.results.navigation.navigateToResults
 import com.openlysis.feature.tools.navigation.navigateToTools
-import com.openlysis.navigation.TemporaryResults
 import com.openlysis.navigation.TemporarySettings
 import com.openlysis.navigation.TopLevelDestination
 
@@ -88,8 +88,19 @@ internal class AppState(
     fun navigateToTopLevelDestination(destination: TopLevelDestination) {
         when (destination) {
             TopLevelDestination.Tools -> navController.navigateToTools(navOptions)
-            TopLevelDestination.Results -> navController.navigate(TemporaryResults)
+            TopLevelDestination.Results -> navController.navigateToResults(navOptions)
             TopLevelDestination.Settings -> navController.navigate(TemporarySettings)
         }
     }
+
+    /**
+     * Checks if the given destination is a top-level destination in the app's navigation hierarchy.
+     *
+     * @param destination The [NavDestination] to check.
+     * @return `true` if the destination is a top-level destination, `false` otherwise.
+     */
+    fun isTopLevelDestination(destination: NavDestination): Boolean =
+        topLevelDestinations.any {
+            destination.hasRoute(it.route)
+        }
 }

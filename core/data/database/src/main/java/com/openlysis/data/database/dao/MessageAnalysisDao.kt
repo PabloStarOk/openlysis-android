@@ -3,6 +3,7 @@ package com.openlysis.data.database.dao
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
+import com.openlysis.data.analysis.model.message.MessageType
 import com.openlysis.data.database.entity.message.MessageAnalysisEntity
 import com.openlysis.data.database.entity.message.MessageAnalysisWithResults
 
@@ -52,13 +53,21 @@ internal interface MessageAnalysisDao :
      *
      * @param page The page number (zero-based).
      * @param size The number of items per page.
+     * @param type A [MessageType] representing the type of message to retrieve.
      * @return A list of [MessageAnalysisWithResults] for the specified page.
      */
     @Transaction
-    @Query("SELECT * FROM MessageAnalysisEntity LIMIT :size OFFSET (:size * :page)")
+    @Query(
+        """
+            SELECT * FROM MessageAnalysisEntity
+            WHERE message_type = :type
+            LIMIT :size OFFSET (:size * :page)
+        """
+    )
     suspend fun getMany(
         page: Int,
-        size: Int
+        size: Int,
+        type: MessageType
     ): List<MessageAnalysisWithResults>
 
     /**

@@ -3,13 +3,11 @@ package com.openlysis.data.database.di
 import com.openlysis.data.analysis.core.source.AnalysesLocalDataSource
 import com.openlysis.data.analysis.model.analysis.FileMultiAnalysis
 import com.openlysis.data.analysis.model.analysis.UrlMultiAnalysis
-import com.openlysis.data.analysis.model.message.MessageAnalysis
 import com.openlysis.data.analysis.model.reputation.EmailAddressReputation
 import com.openlysis.data.analysis.model.reputation.MultiReputation
 import com.openlysis.data.analysis.model.reputation.PhoneNumberReputation
 import com.openlysis.data.database.source.EmailMultiReputationsLocalDataSource
 import com.openlysis.data.database.source.FileMultiAnalysesLocalDataSource
-import com.openlysis.data.database.source.MessageAnalysesLocalDataSource
 import com.openlysis.data.database.source.PhoneMultiReputationsLocalDataSource
 import com.openlysis.data.database.source.RelationalLocalDataSource
 import com.openlysis.data.database.source.UrlMultiAnalysesLocalDataSource
@@ -40,12 +38,6 @@ internal abstract class LocalDatabaseBindingModule {
     abstract fun bindLocalFileMultiAnalysisRepo(
         impl: FileMultiAnalysesLocalDataSource
     ): AnalysesLocalDataSource<FileMultiAnalysis>
-
-    @Singleton
-    @Binds
-    abstract fun bindLocalMessageAnalysisRepo(
-        impl: MessageAnalysesLocalDataSource
-    ): AnalysesLocalDataSource<MessageAnalysis>
 
     @Singleton
     @Binds

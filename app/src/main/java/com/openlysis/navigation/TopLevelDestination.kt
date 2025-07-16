@@ -4,6 +4,8 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.openlysis.R
 import com.openlysis.core.designsystem.icon.AppIconsIds
+import com.openlysis.feature.results.navigation.ResultsBaseRoute
+import com.openlysis.feature.results.navigation.ResultsRoute
 import com.openlysis.feature.tools.navigation.ToolsBaseRoute
 import com.openlysis.feature.tools.navigation.ToolsRoute
 import kotlinx.serialization.Serializable
@@ -36,7 +38,8 @@ internal enum class TopLevelDestination(
         iconResId = AppIconsIds.Results,
         iconAltResId = R.string.nav_bar_results_icon_alt,
         navBarItemLabelResId = R.string.nav_bar_results_label,
-        route = TemporaryResults::class
+        route = ResultsRoute::class,
+        baseRoute = ResultsBaseRoute::class
     ),
     Settings(
         iconResId = AppIconsIds.Settings,
@@ -45,9 +48,6 @@ internal enum class TopLevelDestination(
         route = TemporarySettings::class
     )
 }
-
-@Serializable
-internal object TemporaryResults
 
 @Serializable
 internal object TemporarySettings

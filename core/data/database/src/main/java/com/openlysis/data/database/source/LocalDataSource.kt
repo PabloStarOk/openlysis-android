@@ -78,9 +78,25 @@ internal abstract class LocalDataSource<TModel>(
      */
     override suspend fun getById(id: String): Outcome<TModel> {
         if (existsDao.exists(id)) {
-            return Outcome.Failure(RepositoryError.NotFound)
+            return Outcome.Success(handleGetById(id))
         }
-        return Outcome.Success(handleGetById(id))
+
+        return Outcome.Failure(RepositoryError.NotFound)
+    }
+
+    /**
+     * Retrieves a list of models from the local database based on pagination parameters.
+     *
+     * @param page The page number to retrieve (starting from 1).
+     * @param size The number of models per page.
+     * @return A list of models for the specified page.
+     */
+    override suspend fun getMany(
+        page: Int,
+        size: Int
+    ): List<TModel> {
+        val zeroBasedPage = page - 1
+        return handleGetMany(zeroBasedPage, size)
     }
 
     /**

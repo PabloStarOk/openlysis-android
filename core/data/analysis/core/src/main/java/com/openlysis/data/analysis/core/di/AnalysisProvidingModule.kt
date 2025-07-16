@@ -23,7 +23,7 @@ internal object AnalysisProvidingModule {
     @Singleton
     @Provides
     fun provideEmailAnalysesRepository(
-        localDs: AnalysesLocalDataSource<MessageAnalysis>,
+        @EmailAnalysesLocalDataSource localDs: AnalysesLocalDataSource<MessageAnalysis>,
         @EmailAnalysesRemoteDataSource remoteDs:
             AnalysesRemoteDataSource<AnalyzeMessage, MessageAnalysis>
     ): AnalysesRepository<AnalyzeMessage, MessageAnalysis> =
@@ -36,7 +36,7 @@ internal object AnalysisProvidingModule {
     @Singleton
     @Provides
     fun provideSmsAnalysesRepository(
-        localDs: AnalysesLocalDataSource<MessageAnalysis>,
+        @SmsAnalysesLocalDataSource localDs: AnalysesLocalDataSource<MessageAnalysis>,
         @SmsAnalysesRemoteDataSource remoteDs:
             AnalysesRemoteDataSource<AnalyzeMessage, MessageAnalysis>
     ): AnalysesRepository<AnalyzeMessage, MessageAnalysis> =
