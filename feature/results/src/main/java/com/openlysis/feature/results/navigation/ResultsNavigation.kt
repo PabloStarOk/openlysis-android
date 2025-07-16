@@ -28,6 +28,8 @@ import com.openlysis.feature.results.PreviewsScreen
 import com.openlysis.feature.results.R
 import com.openlysis.feature.results.ResultsScreen
 import com.openlysis.feature.results.SmsPreviewsScreenViewModel
+import com.openlysis.feature.results.UrlMultiAnalysisDetailsScreen
+import com.openlysis.feature.results.UrlMultiAnalysisDetailsScreenViewModel
 import com.openlysis.feature.results.UrlMultiAnalysisPreviewsScreenViewModel
 import kotlinx.serialization.Serializable
 import kotlin.reflect.KClass
@@ -73,6 +75,14 @@ data class FileMultiAnalysisDetailsRoute(
 )
 
 /**
+ * Route for accessing the URL multi analysis details screen.
+ */
+@Serializable
+data class UrlMultiAnalysisDetailsRoute(
+    val analysisId: String
+)
+
+/**
  * Provides functionality to navigate to the analysis results screen.
  */
 fun NavController.navigateToResults(navOptions: NavOptions) =
@@ -105,6 +115,16 @@ fun NavController.navigateToMessageAnalysisDetails(
  */
 fun NavController.navigateToFileMultiAnalysisDetails(analysisId: String) {
     this.navigate(FileMultiAnalysisDetailsRoute(analysisId))
+}
+
+/**
+ * Navigates to the URL multi analysis details screen.
+ *
+ * @receiver NavController used for navigation.
+ * @param analysisId The unique identifier of the URL analysis.
+ */
+fun NavController.navigateToUrlMultiAnalysisDetails(analysisId: String) {
+    this.navigate(UrlMultiAnalysisDetailsRoute(analysisId))
 }
 
 /**
@@ -159,13 +179,15 @@ fun NavGraphBuilder.resultsScreen(
             enterTransition = {
                 this.previewsScreenEnterTransition(
                     MessageAnalysisDetailsRoute::class,
-                    FileMultiAnalysisDetailsRoute::class
+                    FileMultiAnalysisDetailsRoute::class,
+                    UrlMultiAnalysisDetailsRoute::class
                 )
             },
             exitTransition = {
                 this.previewsScreenExitTransition(
                     MessageAnalysisDetailsRoute::class,
-                    FileMultiAnalysisDetailsRoute::class
+                    FileMultiAnalysisDetailsRoute::class,
+                    UrlMultiAnalysisDetailsRoute::class
                 )
             }
         ) { backStackEntry ->
@@ -206,6 +228,18 @@ fun NavGraphBuilder.resultsScreen(
             val route: FileMultiAnalysisDetailsRoute = backStackEntry.toRoute()
             FileMultiAnalysisDetailsScreen(
                 viewModel = hiltViewModel<FileMultiAnalysisDetailsScreenViewModel>(),
+                onTopBarUpdate = onTopBarUpdate,
+                analysisId = route.analysisId
+            )
+        }
+
+        composable<UrlMultiAnalysisDetailsRoute>(
+            enterTransition = { slideIntoContainer(towards = SlideDirection.Down) + fadeIn() },
+            exitTransition = { slideOutOfContainer(towards = SlideDirection.Up) + fadeOut() }
+        ) { backStackEntry ->
+            val route: UrlMultiAnalysisDetailsRoute = backStackEntry.toRoute()
+            UrlMultiAnalysisDetailsScreen(
+                viewModel = hiltViewModel<UrlMultiAnalysisDetailsScreenViewModel>(),
                 onTopBarUpdate = onTopBarUpdate,
                 analysisId = route.analysisId
             )

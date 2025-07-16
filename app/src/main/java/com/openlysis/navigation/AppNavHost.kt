@@ -13,10 +13,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.openlysis.data.analysis.model.message.MessageType
 import com.openlysis.feature.results.navigation.ResultType
-import com.openlysis.feature.results.navigation.ResultsBaseRoute
 import com.openlysis.feature.results.navigation.navigateToFileMultiAnalysisDetails
 import com.openlysis.feature.results.navigation.navigateToMessageAnalysisDetails
 import com.openlysis.feature.results.navigation.navigateToPreviews
+import com.openlysis.feature.results.navigation.navigateToUrlMultiAnalysisDetails
 import com.openlysis.feature.results.navigation.resultsScreen
 import com.openlysis.feature.tools.navigation.ToolsBaseRoute
 import com.openlysis.feature.tools.navigation.ToolsRoute
@@ -48,10 +48,7 @@ internal fun AppNavHost(
                 navController.navigateToMessageAnalysisDetails(it.id, it.message.type)
             },
             onFileAnalysisStart = { navController.navigateToFileMultiAnalysisDetails(it.id) },
-            onUrlAnalysisStart = {
-                navController.navigate(ResultsBaseRoute)
-                // TODO: Implement navigation to display and update results of this new analysis.
-            },
+            onUrlAnalysisStart = { navController.navigateToUrlMultiAnalysisDetails(it.id) },
             enterTransition = {
                 val isTopLevelDest = appState.isTopLevelDestination(this.initialState.destination)
                 if (isTopLevelDest) {
@@ -94,7 +91,7 @@ internal fun AppNavHost(
                     ResultType.Sms ->
                         navController.navigateToMessageAnalysisDetails(id, MessageType.Sms)
                     ResultType.File -> navController.navigateToFileMultiAnalysisDetails(id)
-                    ResultType.Url -> { }
+                    ResultType.Url -> navController.navigateToUrlMultiAnalysisDetails(id)
                 }
             },
             enterTransition = {
