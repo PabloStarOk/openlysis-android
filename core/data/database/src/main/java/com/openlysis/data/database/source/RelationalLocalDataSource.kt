@@ -84,7 +84,7 @@ internal abstract class RelationalLocalDataSource<TModel>(
      * @param size The number of items per page.
      * @return A list of models for the specified page and size.
      */
-    override suspend fun getMany(
+    override suspend fun handleGetMany(
         page: Int,
         size: Int
     ): List<TModel> {
