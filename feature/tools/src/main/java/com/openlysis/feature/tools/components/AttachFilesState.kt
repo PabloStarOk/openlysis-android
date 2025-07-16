@@ -1,5 +1,7 @@
 package com.openlysis.feature.tools.components
 
+import android.content.Context
+import android.text.format.Formatter
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
@@ -7,6 +9,7 @@ import androidx.compose.runtime.saveable.listSaver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.toMutableStateList
+import androidx.compose.ui.platform.LocalContext
 import com.openlysis.feature.tools.MessageUiNotifier
 import com.openlysis.feature.tools.R
 import com.openlysis.feature.tools.data.AttachedFileData
@@ -34,9 +37,11 @@ internal fun rememberAttachFilesState(
         ) {
             mutableStateListOf<AttachedFileData>()
         }
+    val localContext = LocalContext.current
 
     return remember {
         AttachFilesState(
+            context = localContext,
             _attachedFiles = attachedFiles,
             settings = settings,
             messageUiNotifier = messageUiNotifier
@@ -47,11 +52,13 @@ internal fun rememberAttachFilesState(
 /**
  * Manages the state of file attachments.
  *
+ * @property context The context of the application.
  * @property _attachedFiles A mutable snapshot list to store the attached files.
  * @property settings Configuration for file attachment constraints
  * @property messageUiNotifier Handler for displaying UI messages to the user
  */
 internal class AttachFilesState(
+    private val context: Context,
     private val _attachedFiles: SnapshotStateList<AttachedFileData>,
     private val settings: FileAttachmentSettings,
     private val messageUiNotifier: MessageUiNotifier
@@ -78,9 +85,8 @@ internal class AttachFilesState(
         }
 
         if (file.size > settings.maxFileSize) {
-            val maxInMb = convertFileSizeToMb()
-            val mbUnit = "MB"
-            messageUiNotifier.showMessage(R.string.error_file_too_large, maxInMb, mbUnit)
+            val formattedFileSize = Formatter.formatFileSize(context, settings.maxFileSize)
+            messageUiNotifier.showMessage(R.string.error_file_too_large, formattedFileSize)
             return
         }
 
@@ -113,11 +119,4 @@ internal class AttachFilesState(
         var file = _attachedFiles.find { it.uri == file.uri }
         _attachedFiles.remove(file)
     }
-
-    /**
-     * Converts the maximum file size setting from bytes to megabytes.
-     *
-     * @return The maximum file size in megabytes as a Float value
-     */
-    private fun convertFileSizeToMb(): Float = settings.maxFileSize.toFloat() / (1024f * 1024f)
 }

@@ -3,6 +3,7 @@ package com.openlysis.feature.tools.components
 import android.content.ContentResolver
 import android.net.Uri
 import android.provider.OpenableColumns
+import android.text.format.Formatter
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.animateContentSize
@@ -74,12 +75,12 @@ internal fun AttachFilesSection(
             }
         }
 
-    val fileSizeInMb = settings.maxFileSize.toFloat() / (1024 * 1024)
+    val formattedFileSize = Formatter.formatFileSize(LocalContext.current, settings.maxFileSize)
     val limitMessageArgs =
         if (settings.maxFilesAmount > 1) {
-            arrayOf<Any>(settings.maxFilesAmount, fileSizeInMb)
+            arrayOf<Any>(settings.maxFilesAmount, formattedFileSize)
         } else {
-            arrayOf(fileSizeInMb)
+            arrayOf(formattedFileSize)
         }
     val limitMessage =
         pluralStringResource(
