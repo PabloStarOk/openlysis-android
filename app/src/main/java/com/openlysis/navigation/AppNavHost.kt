@@ -14,6 +14,7 @@ import androidx.navigation.compose.composable
 import com.openlysis.data.analysis.model.message.MessageType
 import com.openlysis.feature.results.navigation.ResultType
 import com.openlysis.feature.results.navigation.ResultsBaseRoute
+import com.openlysis.feature.results.navigation.navigateToFileMultiAnalysisDetails
 import com.openlysis.feature.results.navigation.navigateToMessageAnalysisDetails
 import com.openlysis.feature.results.navigation.navigateToPreviews
 import com.openlysis.feature.results.navigation.resultsScreen
@@ -46,10 +47,7 @@ internal fun AppNavHost(
             onMessageAnalysisStart = {
                 navController.navigateToMessageAnalysisDetails(it.id, it.message.type)
             },
-            onFileAnalysisStart = {
-                navController.navigate(ResultsBaseRoute)
-                // TODO: Implement navigation to display and update results of this new analysis.
-            },
+            onFileAnalysisStart = { navController.navigateToFileMultiAnalysisDetails(it.id) },
             onUrlAnalysisStart = {
                 navController.navigate(ResultsBaseRoute)
                 // TODO: Implement navigation to display and update results of this new analysis.
@@ -95,7 +93,7 @@ internal fun AppNavHost(
                         navController.navigateToMessageAnalysisDetails(id, MessageType.Email)
                     ResultType.Sms ->
                         navController.navigateToMessageAnalysisDetails(id, MessageType.Sms)
-                    ResultType.File -> { }
+                    ResultType.File -> navController.navigateToFileMultiAnalysisDetails(id)
                 }
             },
             enterTransition = {

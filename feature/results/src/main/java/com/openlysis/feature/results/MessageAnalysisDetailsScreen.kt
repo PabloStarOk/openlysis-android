@@ -91,6 +91,7 @@ internal fun MessageAnalysisDetailsScreen(
                 heroInfoCardData = null,
                 status = analysis.status,
                 verdict = analysis.verdict,
+                threatScore = null,
                 startedDate = analysis.startedDate,
                 informationSectionTitle =
                     stringResource(
@@ -132,11 +133,7 @@ internal fun MessageAnalysisDetailsScreen(
         isPolling = isPolling,
         data = scaffoldData,
         modifier = modifier
-    ) {
-        if (analysis == null) {
-            return@DetailsScreenScaffold
-        }
-
+    ) { analysis ->
         if (analysis.fileMultiAnalyses.isEmpty() &&
             analysis.urlMultiAnalyses.isEmpty() &&
             analysis.emailAddressMultiReputations.isEmpty() &&

@@ -19,6 +19,8 @@ import androidx.navigation.toRoute
 import com.openlysis.core.designsystem.components.bar.TopBarState
 import com.openlysis.data.analysis.model.message.MessageType
 import com.openlysis.feature.results.EmailPreviewsScreenViewModel
+import com.openlysis.feature.results.FileMultiAnalysisDetailsScreen
+import com.openlysis.feature.results.FileMultiAnalysisDetailsScreenViewModel
 import com.openlysis.feature.results.FileMultiAnalysisPreviewsScreenViewModel
 import com.openlysis.feature.results.MessageAnalysisDetailsScreen
 import com.openlysis.feature.results.MessageDetailsScreenViewModel
@@ -62,6 +64,14 @@ data class MessageAnalysisDetailsRoute(
 )
 
 /**
+ * Route for accessing the file multi analysis details screen.
+ */
+@Serializable
+data class FileMultiAnalysisDetailsRoute(
+    val analysisId: String
+)
+
+/**
  * Provides functionality to navigate to the analysis results screen.
  */
 fun NavController.navigateToResults(navOptions: NavOptions) =
@@ -84,6 +94,16 @@ fun NavController.navigateToMessageAnalysisDetails(
     messageType: MessageType
 ) {
     this.navigate(MessageAnalysisDetailsRoute(analysisId, messageType))
+}
+
+/**
+ * Navigates to the file multi analysis details screen.
+ *
+ * @receiver NavController used for navigation.
+ * @param analysisId The unique identifier of the file analysis.
+ */
+fun NavController.navigateToFileMultiAnalysisDetails(analysisId: String) {
+    this.navigate(FileMultiAnalysisDetailsRoute(analysisId))
 }
 
 /**
@@ -136,10 +156,16 @@ fun NavGraphBuilder.resultsScreen(
 
         composable<PreviewsRoute>(
             enterTransition = {
-                this.previewsScreenEnterTransition(MessageAnalysisDetailsRoute::class)
+                this.previewsScreenEnterTransition(
+                    MessageAnalysisDetailsRoute::class,
+                    FileMultiAnalysisDetailsRoute::class
+                )
             },
             exitTransition = {
-                this.previewsScreenExitTransition(MessageAnalysisDetailsRoute::class)
+                this.previewsScreenExitTransition(
+                    MessageAnalysisDetailsRoute::class,
+                    FileMultiAnalysisDetailsRoute::class
+                )
             }
         ) { backStackEntry ->
             val route: PreviewsRoute = backStackEntry.toRoute()
@@ -168,6 +194,18 @@ fun NavGraphBuilder.resultsScreen(
                 viewModel = hiltViewModel<MessageDetailsScreenViewModel>(),
                 onTopBarUpdate = onTopBarUpdate,
                 screenTitle = stringResource(screenTitleResId),
+                analysisId = route.analysisId
+            )
+        }
+
+        composable<FileMultiAnalysisDetailsRoute>(
+            enterTransition = { slideIntoContainer(towards = SlideDirection.Down) + fadeIn() },
+            exitTransition = { slideOutOfContainer(towards = SlideDirection.Up) + fadeOut() }
+        ) { backStackEntry ->
+            val route: FileMultiAnalysisDetailsRoute = backStackEntry.toRoute()
+            FileMultiAnalysisDetailsScreen(
+                viewModel = hiltViewModel<FileMultiAnalysisDetailsScreenViewModel>(),
+                onTopBarUpdate = onTopBarUpdate,
                 analysisId = route.analysisId
             )
         }

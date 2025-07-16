@@ -59,6 +59,7 @@ import com.openlysis.core.designsystem.theme.radius.LocalAppRadius
 import com.openlysis.core.designsystem.theme.size.LocalAppSpacing
 import com.openlysis.core.designsystem.theme.type.LocalAppTypography
 import com.openlysis.data.analysis.model.analysis.AnalysisStatus
+import com.openlysis.data.analysis.model.common.Model
 import com.openlysis.data.analysis.model.common.Verdict
 import com.openlysis.feature.results.DetailsUiState
 import com.openlysis.feature.results.R
@@ -80,20 +81,20 @@ import kotlinx.datetime.toKotlinInstant
  * @param isPolling Indicates if polling is active
  * @param data Data to be displayed in the scaffold
  * @param modifier Optional modifier for customizing the layout
- * @param content Custom content to be displayed within the scaffold
+ * @param content Custom content to be displayed within the scaffold when the [TResult] of the [DetailsUiState.Success] is not null.
  */
 @Composable
-internal fun DetailsScreenScaffold(
+internal fun <TResult : Model> DetailsScreenScaffold(
     onTopBarUpdate: (TopBarState) -> Unit,
     onLoadDetails: () -> Unit,
     onPollingStart: () -> Unit,
     onPollingStop: () -> Unit,
     screenTitle: String,
-    uiState: DetailsUiState<*>,
+    uiState: DetailsUiState<TResult>,
     isPolling: Boolean,
     data: DetailsScreenScaffoldData?,
     modifier: Modifier = Modifier,
-    content: @Composable () -> Unit
+    content: @Composable (TResult) -> Unit
 ) {
     var initialized by rememberSaveable { mutableStateOf(false) }
     if (!initialized) {
@@ -176,7 +177,7 @@ internal fun DetailsScreenScaffold(
             HeroInformation(
                 status = data.status,
                 verdict = data.verdict,
-                threatScore = null,
+                threatScore = data.threatScore,
                 showHeroDataInfoCard = data.heroInfoCardData != null,
                 heroDataInfoCardLabel = data.heroInfoCardData?.first,
                 heroDataInfoCardContent = data.heroInfoCardData?.second
@@ -215,7 +216,7 @@ internal fun DetailsScreenScaffold(
                 }
             }
 
-            content()
+            content(uiState.analysis)
         }
 
         if (data == null) return@Column

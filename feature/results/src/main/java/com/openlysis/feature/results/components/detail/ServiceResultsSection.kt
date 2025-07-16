@@ -44,18 +44,21 @@ import com.openlysis.feature.results.components.VerdictStatsState
  * @param isPrimarySection Indicates if this is a primary section in the current screen.
  * @param serviceResults List of service result data to display.
  * @param modifier Modifier for styling and layout.
+ * @param initiallyExpanded If the section is initially expanded.
  */
 @Composable
 internal fun ServiceResultsSection(
     isPrimarySection: Boolean,
     serviceResults: List<ServiceResultData>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    initiallyExpanded: Boolean = false
 ) {
     var showHelpTooltip by rememberSaveable { mutableStateOf(false) }
     SectionAccordion(
         title = stringResource(R.string.details_screen_service_results_section_title),
         isPrimarySection = isPrimarySection,
-        modifier = modifier
+        modifier = modifier,
+        initiallyExpanded = initiallyExpanded
     ) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,

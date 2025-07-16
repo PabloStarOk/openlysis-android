@@ -19,12 +19,14 @@ import kotlinx.coroutines.launch
  * @param hashValues The hash values to display.
  * @param isPrimarySection Whether this section is a primary section in the UI.
  * @param modifier Modifier for styling and layout.
+ * @param initiallyExpanded If the section is initially expanded.
  */
 @Composable
 internal fun HashValuesSection(
     hashValues: HashValues,
     isPrimarySection: Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    initiallyExpanded: Boolean = false
 ) {
     val coroutineScope = rememberCoroutineScope()
     val clipboard = LocalClipboard.current
@@ -62,7 +64,8 @@ internal fun HashValuesSection(
     SectionAccordion(
         title = stringResource(R.string.details_screen_hash),
         isPrimarySection = isPrimarySection,
-        modifier = modifier
+        modifier = modifier,
+        initiallyExpanded = initiallyExpanded
     ) {
         copyableHashValues.forEach { labeledHash ->
             InformationCard(
