@@ -19,8 +19,7 @@ import javax.inject.Inject
 internal class SmsPreviewsScreenViewModel
     @Inject
     constructor(
-        @SmsAnalysesRepository private val repository:
-            AnalysesRepository<AnalyzeMessage, MessageAnalysis>
+        @SmsAnalysesRepository repository: AnalysesRepository<AnalyzeMessage, MessageAnalysis>
     ) : PreviewsScreenViewModel<MessageAnalysis>(repository = repository) {
         override fun convertToPreview(result: MessageAnalysis): AnalysisPreviewState =
             AnalysisPreviewState(

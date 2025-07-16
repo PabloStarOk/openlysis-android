@@ -19,6 +19,7 @@ import androidx.navigation.toRoute
 import com.openlysis.core.designsystem.components.bar.TopBarState
 import com.openlysis.data.analysis.model.message.MessageType
 import com.openlysis.feature.results.EmailPreviewsScreenViewModel
+import com.openlysis.feature.results.FileMultiAnalysisPreviewsScreenViewModel
 import com.openlysis.feature.results.MessageAnalysisDetailsScreen
 import com.openlysis.feature.results.MessageDetailsScreenViewModel
 import com.openlysis.feature.results.PreviewsScreen
@@ -128,7 +129,7 @@ fun NavGraphBuilder.resultsScreen(
                 viewModel = hiltViewModel(),
                 onEmailResultsClick = { onResultsCardClick(ResultType.Email) },
                 onSmsResultsClick = { onResultsCardClick(ResultType.Sms) },
-                onFileResultsClick = { },
+                onFileResultsClick = { onResultsCardClick(ResultType.File) },
                 onUrlResultsClick = { }
             )
         }
@@ -189,6 +190,14 @@ private val previewDataMap =
                 getViewModel = { hiltViewModel<SmsPreviewsScreenViewModel>() },
                 screenTitleResId = R.string.sms_previews_screen_title,
                 previewsHeaderLabelResId = R.string.sms_previews_cards_header_label
+            )
+        ),
+        Pair(
+            ResultType.File,
+            PreviewsScreenData(
+                getViewModel = { hiltViewModel<FileMultiAnalysisPreviewsScreenViewModel>() },
+                screenTitleResId = R.string.file_previews_screen_title,
+                previewsHeaderLabelResId = R.string.file_previews_cards_header_label
             )
         )
     )

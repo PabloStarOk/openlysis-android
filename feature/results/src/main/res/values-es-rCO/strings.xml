@@ -84,6 +84,9 @@
     <string name="sms_previews_screen_title">Mensajes de Texto SMS</string>
     <string name="sms_previews_cards_header_label">Remitente</string>
 
+    <string name="file_previews_screen_title">Archivos</string>
+    <string name="file_previews_cards_header_label">Nombre del Archivo</string>
+
     <string name="help_icon_alt">Ícono de ayuda</string>
     <string name="copy_icon_alt">Ícono de copiar</string>
 

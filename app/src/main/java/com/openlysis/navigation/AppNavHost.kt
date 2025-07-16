@@ -95,6 +95,7 @@ internal fun AppNavHost(
                         navController.navigateToMessageAnalysisDetails(id, MessageType.Email)
                     ResultType.Sms ->
                         navController.navigateToMessageAnalysisDetails(id, MessageType.Sms)
+                    ResultType.File -> { }
                 }
             },
             enterTransition = {

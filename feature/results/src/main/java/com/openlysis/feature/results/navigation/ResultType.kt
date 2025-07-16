@@ -5,5 +5,6 @@ package com.openlysis.feature.results.navigation
  */
 enum class ResultType {
     Email,
-    Sms
+    Sms,
+    File
 }
