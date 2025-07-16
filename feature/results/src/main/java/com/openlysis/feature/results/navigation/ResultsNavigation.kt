@@ -28,6 +28,7 @@ import com.openlysis.feature.results.PreviewsScreen
 import com.openlysis.feature.results.R
 import com.openlysis.feature.results.ResultsScreen
 import com.openlysis.feature.results.SmsPreviewsScreenViewModel
+import com.openlysis.feature.results.UrlMultiAnalysisPreviewsScreenViewModel
 import kotlinx.serialization.Serializable
 import kotlin.reflect.KClass
 
@@ -150,7 +151,7 @@ fun NavGraphBuilder.resultsScreen(
                 onEmailResultsClick = { onResultsCardClick(ResultType.Email) },
                 onSmsResultsClick = { onResultsCardClick(ResultType.Sms) },
                 onFileResultsClick = { onResultsCardClick(ResultType.File) },
-                onUrlResultsClick = { }
+                onUrlResultsClick = { onResultsCardClick(ResultType.Url) }
             )
         }
 
@@ -236,6 +237,14 @@ private val previewDataMap =
                 getViewModel = { hiltViewModel<FileMultiAnalysisPreviewsScreenViewModel>() },
                 screenTitleResId = R.string.file_previews_screen_title,
                 previewsHeaderLabelResId = R.string.file_previews_cards_header_label
+            )
+        ),
+        Pair(
+            ResultType.Url,
+            PreviewsScreenData(
+                getViewModel = { hiltViewModel<UrlMultiAnalysisPreviewsScreenViewModel>() },
+                screenTitleResId = R.string.url_previews_screen_title,
+                previewsHeaderLabelResId = R.string.url_previews_cards_header_label
             )
         )
     )

@@ -87,6 +87,9 @@
     <string name="file_previews_screen_title">Files</string>
     <string name="file_previews_cards_header_label">File Name</string>
 
+    <string name="url_previews_screen_title" translatable="false">URLs</string>
+    <string name="url_previews_cards_header_label" translatable="false">URL</string>
+
     <string name="help_icon_alt">Help icon</string>
     <string name="copy_icon_alt">Copy icon</string>
 
