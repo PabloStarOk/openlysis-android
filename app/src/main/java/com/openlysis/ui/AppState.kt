@@ -7,8 +7,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
-import androidx.navigation.NavOptions
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
@@ -55,12 +55,6 @@ internal class AppState(
 
     val topLevelDestinations: List<TopLevelDestination> = TopLevelDestination.entries
 
-    val navOptions: NavOptions =
-        navOptions {
-            launchSingleTop = true
-            restoreState = true
-        }
-
     private val topBarMutableState =
         mutableStateOf(
             TopBarState(
@@ -86,10 +80,18 @@ internal class AppState(
      * @param destination The [TopLevelDestination] to navigate to, which can be Tools, Results, or Settings.
      */
     fun navigateToTopLevelDestination(destination: TopLevelDestination) {
+        val navOptions =
+            navOptions {
+                popUpTo(navController.graph.findStartDestination().id) {
+                    saveState = true
+                }
+                launchSingleTop = true
+                restoreState = true
+            }
         when (destination) {
             TopLevelDestination.Tools -> navController.navigateToTools(navOptions)
             TopLevelDestination.Results -> navController.navigateToResults(navOptions)
-            TopLevelDestination.Settings -> navController.navigate(TemporarySettings)
+            TopLevelDestination.Settings -> navController.navigate(TemporarySettings, navOptions)
         }
     }
 
