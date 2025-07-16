@@ -9,12 +9,12 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 /**
- * ViewModel for displaying details of an email message analysis.
+ * ViewModel for displaying details of a message analysis.
  *
- * @param repository The repository used to fetch and manage message analysis data.
+ * @param repository The repository used to fetch and manage message analysis data, which can be either an email or SMS message analysis repository.
  */
 @HiltViewModel
-internal class EmailAnalysisDetailsScreenViewModel
+internal class MessageDetailsScreenViewModel
     @Inject
     constructor(
         @EmailAnalysesRepository repository: AnalysesRepository<AnalyzeMessage, MessageAnalysis>

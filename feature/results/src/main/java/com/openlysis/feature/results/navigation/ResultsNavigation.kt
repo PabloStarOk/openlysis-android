@@ -17,14 +17,16 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
 import com.openlysis.core.designsystem.components.bar.TopBarState
-import com.openlysis.feature.results.EmailAnalysisDetailsScreenViewModel
+import com.openlysis.data.analysis.model.message.MessageType
 import com.openlysis.feature.results.EmailPreviewsScreenViewModel
 import com.openlysis.feature.results.MessageAnalysisDetailsScreen
+import com.openlysis.feature.results.MessageDetailsScreenViewModel
 import com.openlysis.feature.results.PreviewsScreen
 import com.openlysis.feature.results.R
 import com.openlysis.feature.results.ResultsScreen
 import com.openlysis.feature.results.SmsPreviewsScreenViewModel
 import kotlinx.serialization.Serializable
+import kotlin.reflect.KClass
 
 /**
  * Base navigation route for the analysis results navigation graph.
@@ -52,11 +54,12 @@ data object EmailAnalysisPreviewsRoute
 data object SmsAnalysisPreviewsRoute
 
 /**
- * Route for accessing the email analysis details screen.
+ * Route for accessing the message analysis details screen.
  */
 @Serializable
-data class EmailAnalysisDetailsRoute(
-    val analysisId: String
+data class MessageAnalysisDetailsRoute(
+    val analysisId: String,
+    val messageType: MessageType
 )
 
 /**
@@ -76,10 +79,18 @@ fun NavController.navigateToEmailAnalysisPreviews() = this.navigate(EmailAnalysi
 fun NavController.navigateToSmsAnalysisPreviews() = this.navigate(SmsAnalysisPreviewsRoute)
 
 /**
- * Provides functionality to navigate to the email analysis details screen.
+ * Navigates to the message analysis details screen.
+ *
+ * @receiver NavController used for navigation.
+ * @param analysisId The unique identifier of the analysis.
+ * @param messageType The type of the analyzed message.
  */
-fun NavController.navigateToEmailAnalysisDetails(analysisId: String) =
-    this.navigate(EmailAnalysisDetailsRoute(analysisId))
+fun NavController.navigateToMessageAnalysisDetails(
+    analysisId: String,
+    messageType: MessageType
+) {
+    this.navigate(MessageAnalysisDetailsRoute(analysisId, messageType))
+}
 
 /**
  * Adds the analysis results screens to the navigation graph.
@@ -87,8 +98,7 @@ fun NavController.navigateToEmailAnalysisDetails(analysisId: String) =
  * @param onTopBarUpdate Callback to update top bar for screens.
  * @param onEmailResultsClick Callback to invoke when the email analysis results card is clicked.
  * @param onSmsResultsClick Callback to invoke when the SMS analysis results card is clicked.
- * @param onEmailPreviewDetailsClick Callback to invoke when an email preview card is clicked, receives the analysis ID.
- * @param onSmsPreviewDetailsClick Callback to invoke when an SMS preview card is clicked, receives the analysis ID.
+ * @param onMessagePreviewDetailsClick Callback to invoke when a message preview card is clicked, receives the analysis ID.
  * @param enterTransition Animation played when the screen enters
  * @param exitTransition Animation played when the screen exits
  * @param popEnterTransition Animation played when the screen re-enters after pop (defaults to enterTransition)
@@ -98,8 +108,7 @@ fun NavGraphBuilder.resultsScreen(
     onTopBarUpdate: (TopBarState) -> Unit,
     onEmailResultsClick: () -> Unit,
     onSmsResultsClick: () -> Unit,
-    onEmailPreviewDetailsClick: (String) -> Unit,
-    onSmsPreviewDetailsClick: (String) -> Unit,
+    onMessagePreviewDetailsClick: (String, MessageType) -> Unit,
     enterTransition: (
     AnimatedContentTransitionScope<NavBackStackEntry>.()
     -> @JvmSuppressWildcards EnterTransition?
@@ -135,22 +144,10 @@ fun NavGraphBuilder.resultsScreen(
 
         composable<EmailAnalysisPreviewsRoute>(
             enterTransition = {
-                val slideDirection =
-                    if (this.initialState.destination.hasRoute(EmailAnalysisDetailsRoute::class)) {
-                        SlideDirection.Up
-                    } else {
-                        SlideDirection.Down
-                    }
-                slideIntoContainer(towards = slideDirection) + fadeIn()
+                this.previewsScreenEnterTransition(MessageAnalysisDetailsRoute::class)
             },
             exitTransition = {
-                val slideDirection =
-                    if (this.targetState.destination.hasRoute(EmailAnalysisDetailsRoute::class)) {
-                        SlideDirection.Down
-                    } else {
-                        SlideDirection.Up
-                    }
-                slideOutOfContainer(towards = slideDirection) + fadeOut()
+                this.previewsScreenExitTransition(MessageAnalysisDetailsRoute::class)
             }
         ) {
             PreviewsScreen(
@@ -158,34 +155,68 @@ fun NavGraphBuilder.resultsScreen(
                 onTopBarUpdate = onTopBarUpdate,
                 screenTitle = stringResource(R.string.email_previews_screen_title),
                 previewCardHeaderLabel = stringResource(R.string.email_previews_cards_header_label),
-                onPreviewDetailsClick = onEmailPreviewDetailsClick
-            )
-        }
-
-        composable<EmailAnalysisDetailsRoute>(
-            enterTransition = { slideIntoContainer(towards = SlideDirection.Down) + fadeIn() },
-            exitTransition = { slideOutOfContainer(towards = SlideDirection.Up) + fadeOut() }
-        ) { backStackEntry ->
-            val route: EmailAnalysisDetailsRoute = backStackEntry.toRoute()
-            MessageAnalysisDetailsScreen(
-                viewModel = hiltViewModel<EmailAnalysisDetailsScreenViewModel>(),
-                onTopBarUpdate = onTopBarUpdate,
-                screenTitle = stringResource(R.string.details_screen_email_title),
-                analysisId = route.analysisId
+                onPreviewDetailsClick = { onMessagePreviewDetailsClick(it, MessageType.Email) }
             )
         }
 
         composable<SmsAnalysisPreviewsRoute>(
-            enterTransition = { slideIntoContainer(towards = SlideDirection.Down) + fadeIn() },
-            exitTransition = { slideOutOfContainer(towards = SlideDirection.Up) + fadeOut() }
+            enterTransition = {
+                this.previewsScreenEnterTransition(MessageAnalysisDetailsRoute::class)
+            },
+            exitTransition = {
+                this.previewsScreenExitTransition(MessageAnalysisDetailsRoute::class)
+            }
         ) {
             PreviewsScreen(
                 viewModel = hiltViewModel<SmsPreviewsScreenViewModel>(),
                 onTopBarUpdate = onTopBarUpdate,
                 screenTitle = stringResource(R.string.sms_previews_screen_title),
                 previewCardHeaderLabel = stringResource(R.string.sms_previews_cards_header_label),
-                onPreviewDetailsClick = onSmsPreviewDetailsClick
+                onPreviewDetailsClick = { onMessagePreviewDetailsClick(it, MessageType.Sms) }
+            )
+        }
+
+        composable<MessageAnalysisDetailsRoute>(
+            enterTransition = { slideIntoContainer(towards = SlideDirection.Down) + fadeIn() },
+            exitTransition = { slideOutOfContainer(towards = SlideDirection.Up) + fadeOut() }
+        ) { backStackEntry ->
+            val route: MessageAnalysisDetailsRoute = backStackEntry.toRoute()
+            val screenTitleResId =
+                if (route.messageType == MessageType.Email) {
+                    R.string.details_screen_email_title
+                } else {
+                    R.string.details_screen_sms_title
+                }
+            MessageAnalysisDetailsScreen(
+                viewModel = hiltViewModel<MessageDetailsScreenViewModel>(),
+                onTopBarUpdate = onTopBarUpdate,
+                screenTitle = stringResource(screenTitleResId),
+                analysisId = route.analysisId
             )
         }
     }
+}
+
+private fun AnimatedContentTransitionScope<NavBackStackEntry>.previewsScreenEnterTransition(
+    initialRoute: KClass<*>
+): @JvmSuppressWildcards EnterTransition? {
+    val slideDirection =
+        if (this.initialState.destination.hasRoute(initialRoute)) {
+            SlideDirection.Up
+        } else {
+            SlideDirection.Down
+        }
+    return slideIntoContainer(towards = slideDirection) + fadeIn()
+}
+
+private fun AnimatedContentTransitionScope<NavBackStackEntry>.previewsScreenExitTransition(
+    targetRoute: KClass<*>
+): @JvmSuppressWildcards ExitTransition? {
+    val slideDirection =
+        if (this.targetState.destination.hasRoute(targetRoute)) {
+            SlideDirection.Down
+        } else {
+            SlideDirection.Up
+        }
+    return slideOutOfContainer(towards = slideDirection) + fadeOut()
 }
