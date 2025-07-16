@@ -42,16 +42,14 @@ data object ResultsBaseRoute
 data object ResultsRoute
 
 /**
- * Route for accessing the email analysis previews screen.
+ * Route for accessing the analysis previews screen.
+ *
+ * @property type A [ResultType] representing the type of result to preview.
  */
 @Serializable
-data object EmailAnalysisPreviewsRoute
-
-/**
- * Route for accessing the SMS analysis previews screen.
- */
-@Serializable
-data object SmsAnalysisPreviewsRoute
+data class PreviewsRoute(
+    val type: ResultType
+)
 
 /**
  * Route for accessing the message analysis details screen.
@@ -69,14 +67,9 @@ fun NavController.navigateToResults(navOptions: NavOptions) =
     this.navigate(ResultsBaseRoute, navOptions = navOptions)
 
 /**
- * Provides functionality to navigate to the email analysis previews screen.
+ * Provides functionality to navigate to the analysis previews screen.
  */
-fun NavController.navigateToEmailAnalysisPreviews() = this.navigate(EmailAnalysisPreviewsRoute)
-
-/**
- * Provides functionality to navigate to the SMS analysis previews screen.
- */
-fun NavController.navigateToSmsAnalysisPreviews() = this.navigate(SmsAnalysisPreviewsRoute)
+fun NavController.navigateToPreviews(type: ResultType) = this.navigate(PreviewsRoute(type))
 
 /**
  * Navigates to the message analysis details screen.
@@ -96,9 +89,8 @@ fun NavController.navigateToMessageAnalysisDetails(
  * Adds the analysis results screens to the navigation graph.
  *
  * @param onTopBarUpdate Callback to update top bar for screens.
- * @param onEmailResultsClick Callback to invoke when the email analysis results card is clicked.
- * @param onSmsResultsClick Callback to invoke when the SMS analysis results card is clicked.
- * @param onMessagePreviewDetailsClick Callback to invoke when a message preview card is clicked, receives the analysis ID.
+ * @param onResultsCardClick Callback to invoke when an analysis results card is clicked.
+ * @param onPreviewDetailsClick Callback to invoke when a preview card's details button is clicked.
  * @param enterTransition Animation played when the screen enters
  * @param exitTransition Animation played when the screen exits
  * @param popEnterTransition Animation played when the screen re-enters after pop (defaults to enterTransition)
@@ -106,9 +98,8 @@ fun NavController.navigateToMessageAnalysisDetails(
  */
 fun NavGraphBuilder.resultsScreen(
     onTopBarUpdate: (TopBarState) -> Unit,
-    onEmailResultsClick: () -> Unit,
-    onSmsResultsClick: () -> Unit,
-    onMessagePreviewDetailsClick: (String, MessageType) -> Unit,
+    onResultsCardClick: (ResultType) -> Unit,
+    onPreviewDetailsClick: (String, ResultType) -> Unit,
     enterTransition: (
     AnimatedContentTransitionScope<NavBackStackEntry>.()
     -> @JvmSuppressWildcards EnterTransition?
@@ -135,44 +126,29 @@ fun NavGraphBuilder.resultsScreen(
         ) {
             ResultsScreen(
                 viewModel = hiltViewModel(),
-                onEmailResultsClick = onEmailResultsClick,
-                onSmsResultsClick = onSmsResultsClick,
+                onEmailResultsClick = { onResultsCardClick(ResultType.Email) },
+                onSmsResultsClick = { onResultsCardClick(ResultType.Sms) },
                 onFileResultsClick = { },
                 onUrlResultsClick = { }
             )
         }
 
-        composable<EmailAnalysisPreviewsRoute>(
+        composable<PreviewsRoute>(
             enterTransition = {
                 this.previewsScreenEnterTransition(MessageAnalysisDetailsRoute::class)
             },
             exitTransition = {
                 this.previewsScreenExitTransition(MessageAnalysisDetailsRoute::class)
             }
-        ) {
+        ) { backStackEntry ->
+            val route: PreviewsRoute = backStackEntry.toRoute()
+            val screenData = previewDataMap.getValue(route.type)
             PreviewsScreen(
-                viewModel = hiltViewModel<EmailPreviewsScreenViewModel>(),
+                viewModel = screenData.getViewModel(),
                 onTopBarUpdate = onTopBarUpdate,
-                screenTitle = stringResource(R.string.email_previews_screen_title),
-                previewCardHeaderLabel = stringResource(R.string.email_previews_cards_header_label),
-                onPreviewDetailsClick = { onMessagePreviewDetailsClick(it, MessageType.Email) }
-            )
-        }
-
-        composable<SmsAnalysisPreviewsRoute>(
-            enterTransition = {
-                this.previewsScreenEnterTransition(MessageAnalysisDetailsRoute::class)
-            },
-            exitTransition = {
-                this.previewsScreenExitTransition(MessageAnalysisDetailsRoute::class)
-            }
-        ) {
-            PreviewsScreen(
-                viewModel = hiltViewModel<SmsPreviewsScreenViewModel>(),
-                onTopBarUpdate = onTopBarUpdate,
-                screenTitle = stringResource(R.string.sms_previews_screen_title),
-                previewCardHeaderLabel = stringResource(R.string.sms_previews_cards_header_label),
-                onPreviewDetailsClick = { onMessagePreviewDetailsClick(it, MessageType.Sms) }
+                screenTitle = stringResource(screenData.screenTitleResId),
+                previewCardHeaderLabel = stringResource(screenData.previewsHeaderLabelResId),
+                onPreviewDetailsClick = { onPreviewDetailsClick(it, route.type) }
             )
         }
 
@@ -197,11 +173,31 @@ fun NavGraphBuilder.resultsScreen(
     }
 }
 
+private val previewDataMap =
+    mapOf(
+        Pair(
+            ResultType.Email,
+            PreviewsScreenData(
+                getViewModel = { hiltViewModel<EmailPreviewsScreenViewModel>() },
+                screenTitleResId = R.string.email_previews_screen_title,
+                previewsHeaderLabelResId = R.string.email_previews_cards_header_label
+            )
+        ),
+        Pair(
+            ResultType.Sms,
+            PreviewsScreenData(
+                getViewModel = { hiltViewModel<SmsPreviewsScreenViewModel>() },
+                screenTitleResId = R.string.sms_previews_screen_title,
+                previewsHeaderLabelResId = R.string.sms_previews_cards_header_label
+            )
+        )
+    )
+
 private fun AnimatedContentTransitionScope<NavBackStackEntry>.previewsScreenEnterTransition(
-    initialRoute: KClass<*>
+    vararg initialRoutes: KClass<*>
 ): @JvmSuppressWildcards EnterTransition? {
     val slideDirection =
-        if (this.initialState.destination.hasRoute(initialRoute)) {
+        if (initialRoutes.any { this.initialState.destination.hasRoute(it) }) {
             SlideDirection.Up
         } else {
             SlideDirection.Down
@@ -210,10 +206,10 @@ private fun AnimatedContentTransitionScope<NavBackStackEntry>.previewsScreenEnte
 }
 
 private fun AnimatedContentTransitionScope<NavBackStackEntry>.previewsScreenExitTransition(
-    targetRoute: KClass<*>
+    vararg targetRoutes: KClass<*>
 ): @JvmSuppressWildcards ExitTransition? {
     val slideDirection =
-        if (this.targetState.destination.hasRoute(targetRoute)) {
+        if (targetRoutes.any { this.targetState.destination.hasRoute(it) }) {
             SlideDirection.Down
         } else {
             SlideDirection.Up

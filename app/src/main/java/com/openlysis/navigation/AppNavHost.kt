@@ -11,10 +11,11 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.openlysis.data.analysis.model.message.MessageType
+import com.openlysis.feature.results.navigation.ResultType
 import com.openlysis.feature.results.navigation.ResultsBaseRoute
-import com.openlysis.feature.results.navigation.navigateToEmailAnalysisPreviews
 import com.openlysis.feature.results.navigation.navigateToMessageAnalysisDetails
-import com.openlysis.feature.results.navigation.navigateToSmsAnalysisPreviews
+import com.openlysis.feature.results.navigation.navigateToPreviews
 import com.openlysis.feature.results.navigation.resultsScreen
 import com.openlysis.feature.tools.navigation.ToolsBaseRoute
 import com.openlysis.feature.tools.navigation.ToolsRoute
@@ -87,10 +88,14 @@ internal fun AppNavHost(
 
         resultsScreen(
             onTopBarUpdate = appState::updateTopBarState,
-            onEmailResultsClick = navController::navigateToEmailAnalysisPreviews,
-            onSmsResultsClick = navController::navigateToSmsAnalysisPreviews,
-            onMessagePreviewDetailsClick = { id, messageType ->
-                navController.navigateToMessageAnalysisDetails(id, messageType)
+            onResultsCardClick = navController::navigateToPreviews,
+            onPreviewDetailsClick = { id, previewType ->
+                when (previewType) {
+                    ResultType.Email ->
+                        navController.navigateToMessageAnalysisDetails(id, MessageType.Email)
+                    ResultType.Sms ->
+                        navController.navigateToMessageAnalysisDetails(id, MessageType.Sms)
+                }
             },
             enterTransition = {
                 val isTopLevelDest = appState.isTopLevelDestination(this.initialState.destination)
