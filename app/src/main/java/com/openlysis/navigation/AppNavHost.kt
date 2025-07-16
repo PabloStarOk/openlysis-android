@@ -14,6 +14,7 @@ import androidx.navigation.compose.composable
 import com.openlysis.feature.results.navigation.ResultsBaseRoute
 import com.openlysis.feature.results.navigation.navigateToEmailAnalysisDetails
 import com.openlysis.feature.results.navigation.navigateToEmailAnalysisPreviews
+import com.openlysis.feature.results.navigation.navigateToSmsAnalysisPreviews
 import com.openlysis.feature.results.navigation.resultsScreen
 import com.openlysis.feature.tools.navigation.ToolsBaseRoute
 import com.openlysis.feature.tools.navigation.ToolsRoute
@@ -85,7 +86,9 @@ internal fun AppNavHost(
         resultsScreen(
             onTopBarUpdate = appState::updateTopBarState,
             onEmailResultsClick = navController::navigateToEmailAnalysisPreviews,
-            onPreviewDetailsClick = navController::navigateToEmailAnalysisDetails,
+            onSmsResultsClick = navController::navigateToSmsAnalysisPreviews,
+            onEmailPreviewDetailsClick = navController::navigateToEmailAnalysisDetails,
+            onSmsPreviewDetailsClick = { },
             enterTransition = {
                 val isTopLevelDest = appState.isTopLevelDestination(this.initialState.destination)
                 if (isTopLevelDest) {

@@ -23,6 +23,7 @@ import com.openlysis.feature.results.MessageAnalysisDetailsScreen
 import com.openlysis.feature.results.PreviewsScreen
 import com.openlysis.feature.results.R
 import com.openlysis.feature.results.ResultsScreen
+import com.openlysis.feature.results.SmsPreviewsScreenViewModel
 import kotlinx.serialization.Serializable
 
 /**
@@ -45,6 +46,12 @@ data object ResultsRoute
 data object EmailAnalysisPreviewsRoute
 
 /**
+ * Route for accessing the SMS analysis previews screen.
+ */
+@Serializable
+data object SmsAnalysisPreviewsRoute
+
+/**
  * Route for accessing the email analysis details screen.
  */
 @Serializable
@@ -64,6 +71,11 @@ fun NavController.navigateToResults(navOptions: NavOptions) =
 fun NavController.navigateToEmailAnalysisPreviews() = this.navigate(EmailAnalysisPreviewsRoute)
 
 /**
+ * Provides functionality to navigate to the SMS analysis previews screen.
+ */
+fun NavController.navigateToSmsAnalysisPreviews() = this.navigate(SmsAnalysisPreviewsRoute)
+
+/**
  * Provides functionality to navigate to the email analysis details screen.
  */
 fun NavController.navigateToEmailAnalysisDetails(analysisId: String) =
@@ -74,6 +86,9 @@ fun NavController.navigateToEmailAnalysisDetails(analysisId: String) =
  *
  * @param onTopBarUpdate Callback to update top bar for screens.
  * @param onEmailResultsClick Callback to invoke when the email analysis results card is clicked.
+ * @param onSmsResultsClick Callback to invoke when the SMS analysis results card is clicked.
+ * @param onEmailPreviewDetailsClick Callback to invoke when an email preview card is clicked, receives the analysis ID.
+ * @param onSmsPreviewDetailsClick Callback to invoke when an SMS preview card is clicked, receives the analysis ID.
  * @param enterTransition Animation played when the screen enters
  * @param exitTransition Animation played when the screen exits
  * @param popEnterTransition Animation played when the screen re-enters after pop (defaults to enterTransition)
@@ -82,7 +97,9 @@ fun NavController.navigateToEmailAnalysisDetails(analysisId: String) =
 fun NavGraphBuilder.resultsScreen(
     onTopBarUpdate: (TopBarState) -> Unit,
     onEmailResultsClick: () -> Unit,
-    onPreviewDetailsClick: (String) -> Unit,
+    onSmsResultsClick: () -> Unit,
+    onEmailPreviewDetailsClick: (String) -> Unit,
+    onSmsPreviewDetailsClick: (String) -> Unit,
     enterTransition: (
     AnimatedContentTransitionScope<NavBackStackEntry>.()
     -> @JvmSuppressWildcards EnterTransition?
@@ -110,7 +127,7 @@ fun NavGraphBuilder.resultsScreen(
             ResultsScreen(
                 viewModel = hiltViewModel(),
                 onEmailResultsClick = onEmailResultsClick,
-                onSmsResultsClick = { },
+                onSmsResultsClick = onSmsResultsClick,
                 onFileResultsClick = { },
                 onUrlResultsClick = { }
             )
@@ -141,7 +158,7 @@ fun NavGraphBuilder.resultsScreen(
                 onTopBarUpdate = onTopBarUpdate,
                 screenTitle = stringResource(R.string.email_previews_screen_title),
                 previewCardHeaderLabel = stringResource(R.string.email_previews_cards_header_label),
-                onPreviewDetailsClick = onPreviewDetailsClick
+                onPreviewDetailsClick = onEmailPreviewDetailsClick
             )
         }
 
@@ -155,6 +172,19 @@ fun NavGraphBuilder.resultsScreen(
                 onTopBarUpdate = onTopBarUpdate,
                 screenTitle = stringResource(R.string.details_screen_email_title),
                 analysisId = route.analysisId
+            )
+        }
+
+        composable<SmsAnalysisPreviewsRoute>(
+            enterTransition = { slideIntoContainer(towards = SlideDirection.Down) + fadeIn() },
+            exitTransition = { slideOutOfContainer(towards = SlideDirection.Up) + fadeOut() }
+        ) {
+            PreviewsScreen(
+                viewModel = hiltViewModel<SmsPreviewsScreenViewModel>(),
+                onTopBarUpdate = onTopBarUpdate,
+                screenTitle = stringResource(R.string.sms_previews_screen_title),
+                previewCardHeaderLabel = stringResource(R.string.sms_previews_cards_header_label),
+                onPreviewDetailsClick = onSmsPreviewDetailsClick
             )
         }
     }

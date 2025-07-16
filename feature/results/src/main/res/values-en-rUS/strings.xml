@@ -81,6 +81,9 @@
     <string name="email_previews_screen_title">Emails</string>
     <string name="email_previews_cards_header_label">Sender</string>
 
+    <string name="sms_previews_screen_title">SMS</string>
+    <string name="sms_previews_cards_header_label">Sender</string>
+
     <string name="help_icon_alt">Help icon</string>
     <string name="copy_icon_alt">Copy icon</string>
 
