@@ -78,9 +78,10 @@ internal abstract class LocalDataSource<TModel>(
      */
     override suspend fun getById(id: String): Outcome<TModel> {
         if (existsDao.exists(id)) {
-            return Outcome.Failure(RepositoryError.NotFound)
+            return Outcome.Success(handleGetById(id))
         }
-        return Outcome.Success(handleGetById(id))
+
+        return Outcome.Failure(RepositoryError.NotFound)
     }
 
     /**
