@@ -142,7 +142,7 @@ internal class MessageAnalysesLocalDataSource
          * @param size The number of items per page.
          * @return A list of [MessageAnalysis] records for the specified page.
          */
-        override suspend fun getMany(
+        override suspend fun handleGetMany(
             page: Int,
             size: Int
         ): List<MessageAnalysis> {
