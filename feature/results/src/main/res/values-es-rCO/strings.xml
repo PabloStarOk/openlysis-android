@@ -116,6 +116,7 @@
     <string name="details_screen_message_sub_result_final_verdict_label">Veredicto Final</string>
     <string name="details_screen_message_sub_result_information_section_title">Información</string>
     <string name="details_screen_service_results_section_title">Resultados de Servicios</string>
+    <string name="details_screen_service_results_failed_analysis">Análisis fallido</string>
     <string name="details_screen_service_results_threat_score">PA</string>
     <string name="details_screen_service_results_help_message">El acrónimo \'PA\' indica el puntaje de la amenaza que el servicio le dio al dato analizado.</string>
     <string name="details_screen_service_results_not_found">No se encontraron los resultados de servicios externos.</string>

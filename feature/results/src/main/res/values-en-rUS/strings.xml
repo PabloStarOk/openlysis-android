@@ -116,6 +116,7 @@
     <string name="details_screen_message_sub_result_final_verdict_label">Final Verdict</string>
     <string name="details_screen_message_sub_result_information_section_title">Information</string>
     <string name="details_screen_service_results_section_title">Service Results</string>
+    <string name="details_screen_service_results_failed_analysis">Analysis failed</string>
     <string name="details_screen_service_results_threat_score">TS</string>
     <string name="details_screen_service_results_help_message">The acronym \'TS\' indicates the threat score that the service gave to the analyzed data.</string>
     <string name="details_screen_service_results_not_found">External service results were not found.</string>

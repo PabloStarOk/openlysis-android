@@ -168,7 +168,7 @@ private fun ServiceResultItem(
             status == AnalysisStatus.Timeout
         ) {
             Text(
-                text = "Analysis failed",
+                text = stringResource(R.string.details_screen_service_results_failed_analysis),
                 style = LocalAppTypography.current.bodySmall,
                 color = LocalAppColorScheme.current.text.danger.secondary
             )
