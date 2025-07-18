@@ -22,6 +22,7 @@ room = "2.7.1"
 hilt = "2.56.2"
 androidXHilt = "1.2.0"
 kotlinxDatetime = "0.5.0"
+kotlinxCoroutines = "1.10.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -55,6 +56,7 @@ google-dagger-hilt-compiler = { group = "com.google.dagger", name = "hilt-androi
 google-dagger-hilt-core = { group = "com.google.dagger", name = "hilt-core", version.ref = "hilt"}
 androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "androidXHilt"}
 kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlinxDatetime" }
+kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
