@@ -23,6 +23,9 @@ hilt = "2.56.2"
 androidXHilt = "1.2.0"
 kotlinxDatetime = "0.5.0"
 kotlinxCoroutines = "1.10.2"
+androidXDataStore = "1.1.7"
+protobuf = "4.31.1"
+protobufPlugin = "0.9.5"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -57,6 +60,11 @@ google-dagger-hilt-core = { group = "com.google.dagger", name = "hilt-core", ver
 androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "androidXHilt"}
 kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlinxDatetime" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
+androidx-dataStore = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "androidXDataStore" }
+androidx-dataStoreProto = { group = "androidx.datastore", name = "datastore", version.ref = "androidXDataStore" }
+protobuf-kotlin-lite = { group = "com.google.protobuf", name = "protobuf-kotlin-lite", version.ref = "protobuf" }
+protobuf-java = { group = "com.google.protobuf", name = "protobuf-java", version.ref = "protobuf" }
+protobuf-protoc = { group = "com.google.protobuf", name = "protoc", version.ref = "protobuf" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -70,3 +78,4 @@ google-devtools-ksp = { id = "com.google.devtools.ksp", version = "2.1.21-2.0.2"
 google-dagger-hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt"}
 androidx-room = { id = "androidx.room", version.ref = "room" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize" }
+protobuf = { id = "com.google.protobuf", version.ref = "protobufPlugin" }
