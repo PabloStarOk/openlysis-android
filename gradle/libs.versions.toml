@@ -63,7 +63,6 @@ kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-cor
 androidx-dataStore = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "androidXDataStore" }
 androidx-dataStoreProto = { group = "androidx.datastore", name = "datastore", version.ref = "androidXDataStore" }
 protobuf-kotlin-lite = { group = "com.google.protobuf", name = "protobuf-kotlin-lite", version.ref = "protobuf" }
-protobuf-java = { group = "com.google.protobuf", name = "protobuf-java", version.ref = "protobuf" }
 protobuf-protoc = { group = "com.google.protobuf", name = "protoc", version.ref = "protobuf" }
 
 [plugins]

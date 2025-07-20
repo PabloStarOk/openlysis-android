@@ -2,7 +2,6 @@ package com.openlysis.data.datastore
 
 import android.util.Log
 import androidx.datastore.core.DataStore
-import com.google.protobuf.kotlin.toByteStringUtf8
 import com.openlysis.core.data.datastore.EncryptedUserAuthData
 import com.openlysis.data.auth.UserAuthData
 import com.openlysis.data.auth.UserAuthLocalDataSource
@@ -25,8 +24,7 @@ internal class EncryptedUserAuthLocalDataSource
             userAuthDataStore.data.map {
                 UserAuthData(
                     isSignedIn = it.isSignedIn,
-                    apiKey = it.encryptedApiKey.toStringUtf8()
-                    // TODO: Remove usage of toStringUtf8() method
+                    apiKey = it.apiKey
                 )
             }
 
@@ -48,14 +46,12 @@ internal class EncryptedUserAuthLocalDataSource
                 throw IllegalArgumentException("API Key must not be empty.")
             }
 
-            // TODO: Add encryption.
             try {
                 userAuthDataStore.updateData {
                     it
                         .toBuilder()
-                        .setEncryptedApiKey(apiKey.toByteStringUtf8())
+                        .setApiKey(apiKey)
                         .build()
-                    // TODO: Remove usage of toByteStringUtf8() method
                 }
             } catch (ioException: IOException) {
                 Log.e("EncryptedUserAuthData", "Failed to set API Key", ioException)
@@ -67,7 +63,7 @@ internal class EncryptedUserAuthLocalDataSource
                 userAuthDataStore.updateData {
                     it
                         .toBuilder()
-                        .clearEncryptedApiKey()
+                        .clearApiKey()
                         .build()
                 }
             } catch (ioException: IOException) {
