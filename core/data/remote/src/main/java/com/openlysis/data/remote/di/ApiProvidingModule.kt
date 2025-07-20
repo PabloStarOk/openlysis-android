@@ -6,7 +6,6 @@ import com.openlysis.data.analysis.core.request.AnalyzeMessage
 import com.openlysis.data.analysis.core.source.AnalysesRemoteDataSource
 import com.openlysis.data.analysis.model.message.MessageAnalysis
 import com.openlysis.data.remote.ApiClientSettings
-import com.openlysis.data.remote.ApiCredentials
 import com.openlysis.data.remote.OpenlysisApi
 import com.openlysis.data.remote.dto.common.AnalysisType
 import com.openlysis.data.remote.interceptor.ApiKeyHeaderInterceptor
@@ -35,12 +34,12 @@ internal object ApiProvidingModule {
     @Provides
     fun provideOpenlysisService(
         apiClientSettings: ApiClientSettings,
-        apiCredentials: ApiCredentials
+        apiKeyInterceptor: ApiKeyHeaderInterceptor
     ): OpenlysisApi {
         val client =
             OkHttpClient
                 .Builder()
-                .addInterceptor(ApiKeyHeaderInterceptor(apiCredentials))
+                .addInterceptor(apiKeyInterceptor)
                 .build()
 
         return Retrofit

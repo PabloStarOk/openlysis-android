@@ -116,10 +116,12 @@ dependencies {
     implementation(projects.core.designsystem)
     implementation(projects.feature.tools)
     implementation(projects.feature.results)
+    implementation(projects.core.common)
     implementation(projects.core.data.analysis.model)
     implementation(projects.core.data.analysis.core)
     implementation(projects.core.data.remote)
     implementation(projects.core.data.database)
+    implementation(projects.core.data.datastore)
 
     coreLibraryDesugaring(libs.android.tools.desugar)
 
