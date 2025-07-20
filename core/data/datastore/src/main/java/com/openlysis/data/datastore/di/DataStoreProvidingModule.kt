@@ -3,6 +3,7 @@ package com.openlysis.data.datastore.di
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.DataStoreFactory
+import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import androidx.datastore.dataStoreFile
 import com.openlysis.core.data.datastore.EncryptedUserAuthData
 import com.openlysis.core.network.AppDispatcher
@@ -38,7 +39,11 @@ internal object DataStoreProvidingModule {
     ): DataStore<EncryptedUserAuthData> =
         DataStoreFactory.create(
             serializer = serializer,
-            scope = CoroutineScope(scope.coroutineContext + ioDispatcher)
+            scope = CoroutineScope(scope.coroutineContext + ioDispatcher),
+            corruptionHandler =
+                ReplaceFileCorruptionHandler<EncryptedUserAuthData>(
+                    produceNewData = { EncryptedUserAuthData.getDefaultInstance() }
+                )
         ) {
             context.dataStoreFile("encrypted_user_auth_data.pb")
         }
