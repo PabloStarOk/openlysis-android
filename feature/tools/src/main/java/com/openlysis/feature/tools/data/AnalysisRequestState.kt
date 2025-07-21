@@ -1,8 +1,8 @@
 package com.openlysis.feature.tools.data
 
+import com.openlysis.core.outcome.AppError
 import com.openlysis.data.analysis.model.analysis.FileMultiAnalysis
 import com.openlysis.data.analysis.model.analysis.UrlMultiAnalysis
-import com.openlysis.data.analysis.model.common.AnalysisError
 import com.openlysis.data.analysis.model.message.MessageAnalysis
 
 /**
@@ -43,7 +43,7 @@ internal sealed interface AnalysisRequestState {
      * @property error The error details of the failed analysis.
      */
     data class Failure(
-        val error: AnalysisError
+        val error: AppError
     ) : AnalysisRequestState
 
     /**

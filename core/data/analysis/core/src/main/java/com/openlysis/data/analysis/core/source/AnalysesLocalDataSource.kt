@@ -1,7 +1,7 @@
 package com.openlysis.data.analysis.core.source
 
+import com.openlysis.core.outcome.Outcome
 import com.openlysis.data.analysis.model.common.Model
-import com.openlysis.data.analysis.model.common.Outcome
 
 /**
  * Interface for local data source operations on analysis models.

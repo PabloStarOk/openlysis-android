@@ -54,8 +54,8 @@ import com.openlysis.core.designsystem.theme.OpenlysisTheme
 import com.openlysis.core.designsystem.theme.radius.LocalAppRadius
 import com.openlysis.core.designsystem.theme.size.LocalAppSpacing
 import com.openlysis.core.designsystem.theme.type.LocalAppTypography
+import com.openlysis.core.outcome.AppError
 import com.openlysis.data.analysis.core.error.RepositoryError
-import com.openlysis.data.analysis.model.common.AnalysisError
 import com.openlysis.data.attachment.AttachmentCreationError
 import com.openlysis.feature.tools.R
 import com.openlysis.feature.tools.data.AnalysisRequestState
@@ -444,7 +444,7 @@ private data class DialogState(
             else -> R.string.analysis_request_state_dialog_in_progress_description
         }
 
-    private fun getAnalysisErrorString(error: AnalysisError): Int =
+    private fun getAnalysisErrorString(error: AppError): Int =
         when (error) {
             is RepositoryError -> getRepositoryErrorString(error)
             is AttachmentCreationError -> R.string.error_attachment_creation

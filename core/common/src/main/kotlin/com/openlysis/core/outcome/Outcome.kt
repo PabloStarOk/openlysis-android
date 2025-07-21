@@ -1,4 +1,4 @@
-package com.openlysis.data.analysis.model.common
+package com.openlysis.core.outcome
 
 /**
  * Represents the result of an operation that can either be successful with a value or failed with an error.
@@ -21,6 +21,6 @@ sealed interface Outcome<out TValue : Any> {
      * @param error The error representing the failure of the operation.
      */
     data class Failure(
-        val error: AnalysisError
+        val error: AppError
     ) : Outcome<Nothing>
 }

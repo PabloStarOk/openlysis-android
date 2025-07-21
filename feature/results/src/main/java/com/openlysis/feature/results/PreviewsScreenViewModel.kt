@@ -2,10 +2,10 @@ package com.openlysis.feature.results
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.openlysis.core.outcome.Outcome
 import com.openlysis.data.analysis.core.repository.AnalysesRepository
 import com.openlysis.data.analysis.model.analysis.AnalysisStatus
 import com.openlysis.data.analysis.model.common.Model
-import com.openlysis.data.analysis.model.common.Outcome
 import com.openlysis.data.analysis.model.common.Verdict
 import com.openlysis.feature.results.components.VerdictStatsState
 import com.openlysis.feature.results.components.preview.AnalysisPreviewState

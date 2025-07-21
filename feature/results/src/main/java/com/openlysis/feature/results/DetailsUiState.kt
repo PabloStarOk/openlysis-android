@@ -1,6 +1,6 @@
 package com.openlysis.feature.results
 
-import com.openlysis.data.analysis.model.common.AnalysisError
+import com.openlysis.core.outcome.AppError
 import com.openlysis.data.analysis.model.common.Model
 
 /**
@@ -24,7 +24,7 @@ internal sealed interface DetailsUiState<out TAnalysis : Model> {
      * @property error The error encountered during analysis fetching.
      */
     data class Failure(
-        val error: AnalysisError
+        val error: AppError
     ) : DetailsUiState<Nothing>
 
     /**

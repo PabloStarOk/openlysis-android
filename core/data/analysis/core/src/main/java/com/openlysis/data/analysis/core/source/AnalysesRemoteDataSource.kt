@@ -1,8 +1,8 @@
 package com.openlysis.data.analysis.core.source
 
+import com.openlysis.core.outcome.Outcome
 import com.openlysis.data.analysis.core.response.AnalyzeResponse
 import com.openlysis.data.analysis.model.common.Model
-import com.openlysis.data.analysis.model.common.Outcome
 
 /**
  * A remote data source to perform and retrieve analyses.
