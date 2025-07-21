@@ -1,11 +1,11 @@
 package com.openlysis.data.analysis.core.error
 
-import com.openlysis.data.analysis.model.common.AnalysisError
+import com.openlysis.core.outcome.AppError
 
 /**
  * Represents different types of API errors that can occur during remote requests.
  */
-sealed interface RepositoryError : AnalysisError {
+sealed interface RepositoryError : AppError {
     /** Indicates a 400 Bad Request error. */
     data object BadRequest : RepositoryError
 

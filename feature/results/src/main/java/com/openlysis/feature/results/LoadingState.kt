@@ -1,6 +1,6 @@
 package com.openlysis.feature.results
 
-import com.openlysis.data.analysis.model.common.AnalysisError
+import com.openlysis.core.outcome.AppError
 
 /**
  * Represents the loading state for results data fetching.
@@ -22,6 +22,6 @@ internal sealed interface LoadingState {
      * @property error The error that occurred during the loading operation.
      */
     data class Error(
-        val error: AnalysisError
+        val error: AppError
     ) : LoadingState
 }

@@ -1,7 +1,7 @@
 package com.openlysis.data.attachment
 
 import android.net.Uri
-import com.openlysis.data.analysis.model.common.AnalysisError
+import com.openlysis.core.outcome.AppError
 import java.io.FileNotFoundException
 
 /**
@@ -11,7 +11,7 @@ import java.io.FileNotFoundException
  */
 sealed class AttachmentCreationError(
     open val uri: Uri
-) : AnalysisError {
+) : AppError {
     /**
      * Error indicating that the input stream for reading the file content is null.
      *

@@ -2,6 +2,7 @@ package com.openlysis.feature.tools
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.openlysis.core.outcome.Outcome
 import com.openlysis.data.analysis.core.di.EmailAnalysesRepository
 import com.openlysis.data.analysis.core.di.SmsAnalysesRepository
 import com.openlysis.data.analysis.core.repository.AnalysesRepository
@@ -12,7 +13,6 @@ import com.openlysis.data.analysis.core.request.Attachment
 import com.openlysis.data.analysis.core.request.Message
 import com.openlysis.data.analysis.model.analysis.FileMultiAnalysis
 import com.openlysis.data.analysis.model.analysis.UrlMultiAnalysis
-import com.openlysis.data.analysis.model.common.Outcome
 import com.openlysis.data.analysis.model.message.MessageAnalysis
 import com.openlysis.data.analysis.model.message.MessageType
 import com.openlysis.data.attachment.AttachmentFactory
