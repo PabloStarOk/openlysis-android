@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="openlysis_icon_alt">Ícono de Openlysis</string>
+
+    <string name="screen_welcome_title">¡Bienvenido!</string>
+    <string name="screen_welcome_description">Ahorra tu tiempo mientras optimizas tu seguridad digital.</string>
+    <string name="screen_welcome_sign_up_button_label">Registrarme</string>
+    <string name="screen_welcome_sign_in_button_label">Iniciar sesión</string>
+</resources>

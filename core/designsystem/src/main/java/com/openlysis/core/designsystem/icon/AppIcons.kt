@@ -9,6 +9,9 @@ import com.openlysis.core.designsystem.R
  * Application's icons provided as image vectors.
  */
 object AppIcons {
+    val Openlysis: ImageVector
+        @Composable get() = ImageVector.vectorResource(R.drawable.openlysis_icon)
+
     val Search: ImageVector
         @Composable get() = ImageVector.vectorResource(R.drawable.search_icon)
 

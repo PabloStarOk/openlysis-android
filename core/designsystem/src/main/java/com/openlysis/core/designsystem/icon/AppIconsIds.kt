@@ -7,6 +7,8 @@ import com.openlysis.core.designsystem.R
  * Application's icons provided as drawable resource ids.
  */
 object AppIconsIds {
+    @DrawableRes val Openlysis = R.drawable.openlysis_icon
+
     @DrawableRes val Search = R.drawable.search_icon
 
     @DrawableRes val Results = R.drawable.stats_icon

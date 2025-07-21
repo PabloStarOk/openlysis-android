@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="openlysis" translatable="false">Openlysis</string>
+    <string name="openlysis_icon_alt">Openlysis icon</string>
+
+    <string name="screen_welcome_title">Welcome!</string>
+    <string name="screen_welcome_description">Save time while optimizing your digital security.</string>
+    <string name="screen_welcome_sign_up_button_label">Sign up</string>
+    <string name="screen_welcome_sign_in_button_label">Sign in</string>
+</resources>
