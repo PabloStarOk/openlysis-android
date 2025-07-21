@@ -36,14 +36,15 @@ internal fun App(
     modifier: Modifier = Modifier
 ) {
     val navController = appState.navController
+    val isAuthDestination = appState.isAuthDestination
     val isTopLevelDestination = appState.currentTopLevelDestination != null
     val density = LocalDensity.current
 
     val topBarVisible = remember { MutableTransitionState(false) }
-    val navBarVisible = remember { MutableTransitionState(true) }
+    val navBarVisible = remember { MutableTransitionState(false) }
 
-    LaunchedEffect(isTopLevelDestination) {
-        topBarVisible.targetState = !isTopLevelDestination // Non-top level destinations.
+    LaunchedEffect(isTopLevelDestination, isAuthDestination) {
+        topBarVisible.targetState = !isTopLevelDestination && !isAuthDestination
         navBarVisible.targetState = isTopLevelDestination
     }
 
@@ -103,6 +104,10 @@ internal fun App(
 @Composable
 private fun AppPreview() {
     OpenlysisTheme(darkTheme = false) {
-        App(rememberAppState())
+        App(
+            rememberAppState(
+                isUserSignedIn = false
+            )
+        )
     }
 }

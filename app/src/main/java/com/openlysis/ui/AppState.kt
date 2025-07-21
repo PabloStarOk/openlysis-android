@@ -7,13 +7,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
+import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.openlysis.core.designsystem.components.bar.TopBarState
+import com.openlysis.feature.auth.navigation.AuthBaseRoute
 import com.openlysis.feature.results.navigation.navigateToResults
+import com.openlysis.feature.tools.navigation.ToolsBaseRoute
 import com.openlysis.feature.tools.navigation.navigateToTools
 import com.openlysis.navigation.TemporarySettings
 import com.openlysis.navigation.TopLevelDestination
@@ -21,13 +24,17 @@ import com.openlysis.navigation.TopLevelDestination
 /**
  * Creates and remembers an instance of [AppState].
  *
+ * @param isUserSignedIn If the user is signed in.
  * @return An instance of [AppState] that is remembered across recompositions.
  */
 @Composable
-internal fun rememberAppState(): AppState {
+internal fun rememberAppState(isUserSignedIn: Boolean): AppState {
     val navController = rememberNavController()
     return remember {
-        AppState(navController)
+        AppState(
+            navController = navController,
+            isUserSignedIn = isUserSignedIn
+        )
     }
 }
 
@@ -35,11 +42,15 @@ internal fun rememberAppState(): AppState {
  * The overall state of the application.
  *
  * @property navController The [NavHostController] used for navigating between screens.
+ * @property isUserSignedIn If the user is signed in.
  */
 @Stable
 internal class AppState(
-    val navController: NavHostController
+    val navController: NavHostController,
+    private val isUserSignedIn: Boolean
 ) {
+    val startDestinationRoute = if (isUserSignedIn) ToolsBaseRoute else AuthBaseRoute
+
     val currentDestination: NavDestination?
         @Composable get() {
             val currentEntry =
@@ -52,6 +63,12 @@ internal class AppState(
             TopLevelDestination.entries.firstOrNull {
                 currentDestination?.hasRoute(it.route) == true
             }
+
+    val isAuthDestination: Boolean
+        @Composable get() =
+            currentDestination?.hierarchy?.any {
+                it.hasRoute(AuthBaseRoute::class)
+            } == true
 
     val topLevelDestinations: List<TopLevelDestination> = TopLevelDestination.entries
 

@@ -16,13 +16,13 @@ import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.openlysis.data.analysis.model.message.MessageType
+import com.openlysis.feature.auth.navigation.authScreen
 import com.openlysis.feature.results.navigation.ResultType
 import com.openlysis.feature.results.navigation.navigateToFileMultiAnalysisDetails
 import com.openlysis.feature.results.navigation.navigateToMessageAnalysisDetails
 import com.openlysis.feature.results.navigation.navigateToPreviews
 import com.openlysis.feature.results.navigation.navigateToUrlMultiAnalysisDetails
 import com.openlysis.feature.results.navigation.resultsScreen
-import com.openlysis.feature.tools.navigation.ToolsBaseRoute
 import com.openlysis.feature.tools.navigation.ToolsRoute
 import com.openlysis.feature.tools.navigation.toolsScreen
 import com.openlysis.ui.AppState
@@ -42,9 +42,14 @@ internal fun AppNavHost(
     val navController = appState.navController
     NavHost(
         navController = navController,
-        startDestination = ToolsBaseRoute,
+        startDestination = appState.startDestinationRoute,
         modifier = modifier
     ) {
+        authScreen(
+            onSignUpRequest = { },
+            onSignInRequest = { }
+        )
+
         toolsScreen(
             navController = navController,
             onTopBarUpdate = appState::updateTopBarState,
