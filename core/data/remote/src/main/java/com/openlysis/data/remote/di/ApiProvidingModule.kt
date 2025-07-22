@@ -6,6 +6,7 @@ import com.openlysis.data.analysis.core.request.AnalyzeMessage
 import com.openlysis.data.analysis.core.source.AnalysesRemoteDataSource
 import com.openlysis.data.analysis.model.message.MessageAnalysis
 import com.openlysis.data.remote.ApiClientSettings
+import com.openlysis.data.remote.AuthenticationApi
 import com.openlysis.data.remote.OpenlysisApi
 import com.openlysis.data.remote.dto.common.AnalysisType
 import com.openlysis.data.remote.interceptor.ApiKeyHeaderInterceptor
@@ -15,6 +16,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
+import retrofit2.Converter
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import javax.inject.Singleton
@@ -32,24 +34,45 @@ import javax.inject.Singleton
 internal object ApiProvidingModule {
     @Singleton
     @Provides
-    fun provideOpenlysisService(
-        apiClientSettings: ApiClientSettings,
-        apiKeyInterceptor: ApiKeyHeaderInterceptor
-    ): OpenlysisApi {
-        val client =
-            OkHttpClient
-                .Builder()
-                .addInterceptor(apiKeyInterceptor)
-                .build()
+    fun provideHttpClient(apiKeyInterceptor: ApiKeyHeaderInterceptor): OkHttpClient =
+        OkHttpClient
+            .Builder()
+            .addInterceptor(apiKeyInterceptor)
+            .build()
 
-        return Retrofit
+    @Singleton
+    @Provides
+    fun provideMoshiConverterFactory(): Converter.Factory = MoshiConverterFactory.create()
+
+    @Singleton
+    @Provides
+    fun provideOpenlysisApi(
+        apiClientSettings: ApiClientSettings,
+        converterFactory: Converter.Factory,
+        client: OkHttpClient
+    ): OpenlysisApi =
+        Retrofit
             .Builder()
             .baseUrl(apiClientSettings.baseUrl)
-            .addConverterFactory(MoshiConverterFactory.create())
+            .addConverterFactory(converterFactory)
             .client(client)
             .build()
             .create(OpenlysisApi::class.java)
-    }
+
+    @Singleton
+    @Provides
+    fun provideAuthenticationApi(
+        apiClientSettings: ApiClientSettings,
+        converterFactory: MoshiConverterFactory,
+        client: OkHttpClient
+    ): AuthenticationApi =
+        Retrofit
+            .Builder()
+            .baseUrl(apiClientSettings.baseUrl)
+            .addConverterFactory(converterFactory)
+            .client(client)
+            .build()
+            .create(AuthenticationApi::class.java)
 
     @EmailAnalysesRemoteDataSource
     @Singleton
