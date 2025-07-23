@@ -98,4 +98,7 @@ object AppIcons {
 
     val ChevronDown
         @Composable get() = ImageVector.vectorResource(R.drawable.chevron_down_icon)
+
+    val Login
+        @Composable get() = ImageVector.vectorResource(R.drawable.login_icon)
 }

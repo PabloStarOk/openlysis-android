@@ -47,7 +47,7 @@ internal fun WelcomeScreen(
             modifier = Modifier.fillMaxWidth()
         ) {
             HeroSection(
-                showIcon = true,
+                iconInlineVariant = false,
                 modifier = Modifier.weight(1f).fillMaxSize()
             )
 
@@ -119,7 +119,7 @@ private fun ActionButtons(
             onClick = onSignUpRequest,
             displayLabel = true,
             displayIcon = false,
-            label = stringResource(R.string.screen_welcome_sign_up_button_label),
+            label = stringResource(R.string.sign_up_button_label),
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -129,7 +129,7 @@ private fun ActionButtons(
             onClick = onSignInRequest,
             displayLabel = true,
             displayIcon = false,
-            label = stringResource(R.string.screen_welcome_sign_in_button_label),
+            label = stringResource(R.string.sign_in_button_label),
             modifier = Modifier.fillMaxWidth()
         )
     }

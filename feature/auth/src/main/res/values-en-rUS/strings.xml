@@ -2,8 +2,26 @@
 <resources>
     <string name="openlysis_icon_alt">Openlysis icon</string>
 
+    <string name="sign_up_button_label">Sign up</string>
+    <string name="sign_in_button_label">Sign in</string>
+
+    <string name="error_sign_in">Email or password invalid.</string>
+    <string name="error_generic">An unexpected error occurred. Please try again.</string>
+    <string name="error_server">A server error occurred. Please try again later.</string>
+    <string name="error_network">A network error occurred. Please check your connection and try again.</string>
+    <string name="error_server_unreachable">The server is unavailable. Please try again later.</string>
+    <string name="error_unavailable">This service is currently unavailable. Please try again later.</string>
+
     <string name="screen_welcome_title">Welcome!</string>
     <string name="screen_welcome_description">Save time while optimizing your digital security.</string>
-    <string name="screen_welcome_sign_up_button_label">Sign up</string>
-    <string name="screen_welcome_sign_in_button_label">Sign in</string>
+
+    <string name="screen_auth_email_input_label">Email</string>
+    <string name="screen_auth_password_input_label">Password</string>
+    <string name="screen_auth_password_input_show_icon_alt">Show password icon</string>
+    <string name="screen_auth_password_input_hide_icon_alt">Hide password icon</string>
+
+    <string name="screen_auth_sign_in_title">Sign In</string>
+    <string name="screen_auth_sign_in_primary_button_icon_alt">Enter icon</string>
+    <string name="screen_auth_sign_in_switch_auth_type_label">Don\'t have an account?</string>
+    <string name="screen_auth_sign_in_switch_auth_type_button_label">Create one</string>
 </resources>

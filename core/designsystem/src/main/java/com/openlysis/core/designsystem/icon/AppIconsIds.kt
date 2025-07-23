@@ -66,4 +66,6 @@ object AppIconsIds {
     @DrawableRes val Copy = R.drawable.copy_icon
 
     @DrawableRes val ChevronDown = R.drawable.chevron_down_icon
+
+    @DrawableRes val Login = R.drawable.login_icon
 }

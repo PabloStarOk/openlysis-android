@@ -2,8 +2,26 @@
 <resources>
     <string name="openlysis_icon_alt">Ícono de Openlysis</string>
 
+    <string name="sign_up_button_label">Registrarme</string>
+    <string name="sign_in_button_label">Iniciar sesión</string>
+
+    <string name="error_sign_in">Correo electrónico o contraseña incorrecta.</string>
+    <string name="error_generic">Ocurrió un error inesperado. Por favor, inténtalo de nuevo.</string>
+    <string name="error_server">Ocurrió un error del servidor. Por favor, inténtalo más tarde.</string>
+    <string name="error_network">Ocurrió un error de red. Verifica tu conexión e inténtalo de nuevo.</string>
+    <string name="error_server_unreachable">El servidor no está disponible. Por favor, inténtalo más tarde.</string>
+    <string name="error_unavailable">Este servicio no está disponible en este momento. Por favor, inténtalo más tarde.</string>
+
     <string name="screen_welcome_title">¡Bienvenido!</string>
     <string name="screen_welcome_description">Ahorra tu tiempo mientras optimizas tu seguridad digital.</string>
-    <string name="screen_welcome_sign_up_button_label">Registrarme</string>
-    <string name="screen_welcome_sign_in_button_label">Iniciar sesión</string>
+
+    <string name="screen_auth_email_input_label">Correo Electrónico</string>
+    <string name="screen_auth_password_input_label">Contraseña</string>
+    <string name="screen_auth_password_input_show_icon_alt">Ícono de mostrar la contraseña</string>
+    <string name="screen_auth_password_input_hide_icon_alt">Ícono de ocultar la contraseña</string>
+
+    <string name="screen_auth_sign_in_title">Iniciar sesión</string>
+    <string name="screen_auth_sign_in_primary_button_icon_alt">Ícono de ingresar</string>
+    <string name="screen_auth_sign_in_switch_auth_type_label">¿No tienes cuenta?</string>
+    <string name="screen_auth_sign_in_switch_auth_type_button_label">Crea una aquí</string>
 </resources>

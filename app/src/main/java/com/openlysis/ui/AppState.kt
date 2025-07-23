@@ -8,7 +8,6 @@ import androidx.compose.runtime.remember
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
@@ -99,7 +98,7 @@ internal class AppState(
     fun navigateToTopLevelDestination(destination: TopLevelDestination) {
         val navOptions =
             navOptions {
-                popUpTo(navController.graph.findStartDestination().id) {
+                popUpTo(TopLevelDestination.Tools.route) {
                     saveState = true
                 }
                 launchSingleTop = true

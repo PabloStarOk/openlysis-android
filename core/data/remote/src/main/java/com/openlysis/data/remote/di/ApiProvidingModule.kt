@@ -63,7 +63,7 @@ internal object ApiProvidingModule {
     @Provides
     fun provideAuthenticationApi(
         apiClientSettings: ApiClientSettings,
-        converterFactory: MoshiConverterFactory,
+        converterFactory: Converter.Factory,
         client: OkHttpClient
     ): AuthenticationApi =
         Retrofit

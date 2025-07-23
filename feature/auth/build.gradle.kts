@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.json.serialization)
+    alias(libs.plugins.google.devtools.ksp)
 }
 
 android {
@@ -31,8 +32,14 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.navigation)
+    implementation(libs.androidx.hilt.navigation.compose)
+    implementation(libs.google.dagger.hilt)
 
     implementation(projects.core.designsystem)
+    implementation(projects.core.data.auth)
+    implementation(projects.core.data.analysis.core)
+
+    ksp(libs.google.dagger.hilt.compiler)
 
     testImplementation(libs.junit)
 
