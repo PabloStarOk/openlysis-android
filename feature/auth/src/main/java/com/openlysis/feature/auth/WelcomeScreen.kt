@@ -27,14 +27,14 @@ import com.openlysis.feature.auth.component.HeroSection
 /**
  * Displays the welcome screen for authentication.
  *
- * @param onSignUpRequest Callback invoked when the sign up button is pressed.
- * @param onSignInRequest Callback invoked when the sign in button is pressed.
+ * @param onGoToSignUp Callback invoked when the sign up button is pressed.
+ * @param onGoToSignIn Callback invoked when the sign in button is pressed.
  * @param modifier Modifier to be applied to the root composable.
  */
 @Composable
 internal fun WelcomeScreen(
-    onSignUpRequest: () -> Unit,
-    onSignInRequest: () -> Unit,
+    onGoToSignUp: () -> Unit,
+    onGoToSignIn: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -70,7 +70,7 @@ internal fun WelcomeScreen(
             ) {
                 InformationSection()
 
-                ActionButtons(onSignUpRequest, onSignInRequest)
+                ActionButtons(onGoToSignUp, onGoToSignIn)
             }
         }
     }
@@ -105,8 +105,8 @@ private fun InformationSection(modifier: Modifier = Modifier) {
 
 @Composable
 private fun ActionButtons(
-    onSignUpRequest: () -> Unit,
-    onSignInRequest: () -> Unit,
+    onGoToSignUp: () -> Unit,
+    onGoToSignIn: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -116,7 +116,7 @@ private fun ActionButtons(
         AppButton(
             type = ButtonType.Primary,
             size = SizeType.Default,
-            onClick = onSignUpRequest,
+            onClick = onGoToSignUp,
             displayLabel = true,
             displayIcon = false,
             label = stringResource(R.string.sign_up_button_label),
@@ -126,7 +126,7 @@ private fun ActionButtons(
         AppButton(
             type = ButtonType.Secondary,
             size = SizeType.Default,
-            onClick = onSignInRequest,
+            onClick = onGoToSignIn,
             displayLabel = true,
             displayIcon = false,
             label = stringResource(R.string.sign_in_button_label),
@@ -140,8 +140,8 @@ private fun ActionButtons(
 private fun WelcomeScreenPreview() {
     OpenlysisTheme {
         WelcomeScreen(
-            onSignUpRequest = { },
-            onSignInRequest = { }
+            onGoToSignUp = { },
+            onGoToSignIn = { }
         )
     }
 }

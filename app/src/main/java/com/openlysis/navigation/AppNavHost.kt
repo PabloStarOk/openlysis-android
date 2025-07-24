@@ -46,8 +46,8 @@ internal fun AppNavHost(
         modifier = modifier
     ) {
         authScreen(
-            onSignUpRequest = { appState.navigateToAuthDestination(AuthDestination.SignUp) },
-            onSignInRequest = { appState.navigateToAuthDestination(AuthDestination.SignIn) },
+            onGoToSignUp = { appState.navigateToAuthDestination(AuthDestination.SignUp) },
+            onGoToSignIn = { appState.navigateToAuthDestination(AuthDestination.SignIn) },
             onAuthenticated = { appState.navigateToRootDestination(RootDestination.TopLevel) }
         )
 

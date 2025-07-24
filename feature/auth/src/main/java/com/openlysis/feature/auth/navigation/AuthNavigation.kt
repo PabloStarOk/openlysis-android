@@ -7,7 +7,6 @@ import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
-import androidx.navigation.navOptions
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
 import com.openlysis.feature.auth.AuthScreen
@@ -52,13 +51,13 @@ fun NavController.navigateToAuthentication(
 /**
  * Adds the authentication screens to the navigation graph.
  *
- * @param onSignUpRequest Callback invoked when the user requests to sign up.
- * @param onSignInRequest Callback invoked when the user requests to sign in.
+ * @param onGoToSignUp Callback invoked when the user requests to go to sign-up screen.
+ * @param onGoToSignIn Callback invoked when the user requests to go to sign-in screen.
  * @param onAuthenticated Callback invoked when the user is successfully authenticated.
  */
 fun NavGraphBuilder.authScreen(
-    onSignUpRequest: () -> Unit,
-    onSignInRequest: () -> Unit,
+    onGoToSignUp: () -> Unit,
+    onGoToSignIn: () -> Unit,
     onAuthenticated: () -> Unit
 ) {
     navigation<AuthBaseRoute>(startDestination = WelcomeRoute) {
@@ -66,7 +65,7 @@ fun NavGraphBuilder.authScreen(
             enterTransition = { slideIntoContainer(SlideDirection.Right) },
             exitTransition = { slideOutOfContainer(SlideDirection.Left) }
         ) {
-            WelcomeScreen(onSignUpRequest, onSignInRequest)
+            WelcomeScreen(onGoToSignUp, onGoToSignIn)
         }
 
         composable<AuthRoute>(
