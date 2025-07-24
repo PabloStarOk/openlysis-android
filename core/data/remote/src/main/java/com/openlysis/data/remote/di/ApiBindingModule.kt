@@ -6,6 +6,8 @@ import com.openlysis.data.analysis.core.request.AnalyzeUrl
 import com.openlysis.data.analysis.core.source.AnalysesRemoteDataSource
 import com.openlysis.data.analysis.model.analysis.FileMultiAnalysis
 import com.openlysis.data.analysis.model.analysis.UrlMultiAnalysis
+import com.openlysis.data.auth.UserAuthenticator
+import com.openlysis.data.remote.DefaultUserAuthenticator
 import com.openlysis.data.remote.source.FileMultiAnalysesRemoteDataSource
 import com.openlysis.data.remote.source.UrlMultiAnalysesRemoteDataSource
 import dagger.Binds
@@ -35,4 +37,8 @@ internal abstract class ApiBindingModule {
     abstract fun bindFileMultiAnalysisRepo(
         impl: FileMultiAnalysesRemoteDataSource
     ): AnalysesRemoteDataSource<AnalyzeFile, FileMultiAnalysis>
+
+    @Singleton
+    @Binds
+    abstract fun bindUserAuthenticator(impl: DefaultUserAuthenticator): UserAuthenticator
 }

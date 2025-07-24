@@ -6,12 +6,15 @@ plugins {
 dependencies {
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter.moshi)
+    implementation(libs.kotlinx.coroutines.core)
+
+    implementation(projects.core.data.analysis.model)
+    implementation(projects.core.data.analysis.core)
+    implementation(projects.core.data.auth)
+    implementation(projects.core.common)
 
     compileOnly(libs.google.dagger.hilt.core)
 
     ksp(libs.moshi.kotlin.codegen)
     ksp(libs.google.dagger.hilt.compiler)
-
-    implementation(projects.core.data.analysis.model)
-    implementation(projects.core.data.analysis.core)
 }

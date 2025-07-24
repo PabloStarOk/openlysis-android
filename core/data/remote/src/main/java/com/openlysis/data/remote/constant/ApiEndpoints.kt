@@ -12,4 +12,7 @@ internal object ApiEndpoints {
     const val GET_FILE_MULTI_ANALYSIS = "files/analyses/{id}"
     const val GET_MESSAGE_ANALYSIS = "messages/analyses/{id}"
     const val GET_ANALYSES = "users/analyses"
+
+    const val SIGN_UP = "auth/sign-up"
+    const val SIGN_IN = "auth/sign-in"
 }
