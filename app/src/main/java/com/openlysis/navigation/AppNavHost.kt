@@ -17,7 +17,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navOptions
 import com.openlysis.data.analysis.model.message.MessageType
-import com.openlysis.feature.auth.AuthenticationType
+import com.openlysis.feature.auth.model.AuthenticationType
 import com.openlysis.feature.auth.navigation.authScreen
 import com.openlysis.feature.auth.navigation.navigateToAuthentication
 import com.openlysis.feature.results.navigation.ResultType

@@ -10,8 +10,8 @@ import androidx.navigation.navigation
 import androidx.navigation.toRoute
 import com.openlysis.feature.auth.AuthScreen
 import com.openlysis.feature.auth.AuthScreenViewModel
-import com.openlysis.feature.auth.AuthenticationType
 import com.openlysis.feature.auth.WelcomeScreen
+import com.openlysis.feature.auth.model.AuthenticationType
 import kotlinx.serialization.Serializable
 
 /**

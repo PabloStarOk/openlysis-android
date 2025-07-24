@@ -1,4 +1,4 @@
-package com.openlysis.feature.auth
+package com.openlysis.feature.auth.model
 
 /**
  * Represents the type of authentication action.
