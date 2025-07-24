@@ -24,4 +24,11 @@ internal sealed interface MainActivityUiState {
      * @return true if the user is signed in, false otherwise.
      */
     fun isUserSignedIn() = this is Success && this.userSignedIn
+
+    /**
+     * Checks if the splash screen should be kept visible.
+     *
+     * @return true if the current state is Loading, false otherwise.
+     */
+    fun shouldKeepSplashScreen() = this is Loading
 }

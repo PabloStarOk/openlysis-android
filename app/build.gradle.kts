@@ -112,6 +112,7 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.navigation)
     implementation(libs.google.dagger.hilt)
+    implementation(libs.androidx.splashscreen)
 
     implementation(projects.core.designsystem)
     implementation(projects.feature.tools)

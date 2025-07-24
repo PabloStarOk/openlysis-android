@@ -26,6 +26,7 @@ kotlinxCoroutines = "1.10.2"
 androidXDataStore = "1.1.7"
 protobuf = "4.31.1"
 protobufPlugin = "0.9.5"
+splashScreen = "1.0.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -64,6 +65,7 @@ androidx-dataStore = { group = "androidx.datastore", name = "datastore-preferenc
 androidx-dataStoreProto = { group = "androidx.datastore", name = "datastore", version.ref = "androidXDataStore" }
 protobuf-kotlin-lite = { group = "com.google.protobuf", name = "protobuf-kotlin-lite", version.ref = "protobuf" }
 protobuf-protoc = { group = "com.google.protobuf", name = "protoc", version.ref = "protobuf" }
+androidx-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "splashScreen" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
