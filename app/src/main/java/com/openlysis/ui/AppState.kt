@@ -13,10 +13,15 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.openlysis.core.designsystem.components.bar.TopBarState
+import com.openlysis.feature.auth.model.AuthenticationType
 import com.openlysis.feature.auth.navigation.AuthBaseRoute
+import com.openlysis.feature.auth.navigation.WelcomeRoute
+import com.openlysis.feature.auth.navigation.navigateToAuthentication
 import com.openlysis.feature.results.navigation.navigateToResults
 import com.openlysis.feature.tools.navigation.ToolsBaseRoute
 import com.openlysis.feature.tools.navigation.navigateToTools
+import com.openlysis.navigation.AuthDestination
+import com.openlysis.navigation.RootDestination
 import com.openlysis.navigation.TemporarySettings
 import com.openlysis.navigation.TopLevelDestination
 
@@ -98,7 +103,7 @@ internal class AppState(
     fun navigateToTopLevelDestination(destination: TopLevelDestination) {
         val navOptions =
             navOptions {
-                popUpTo(TopLevelDestination.Tools.route) {
+                popUpTo(RootDestination.TopLevel.startRoute) {
                     saveState = true
                 }
                 launchSingleTop = true
@@ -121,4 +126,58 @@ internal class AppState(
         topLevelDestinations.any {
             destination.hasRoute(it.route)
         }
+
+    /**
+     * Navigates to the specified authentication destination in the app.
+     *
+     * @param destination The [AuthDestination] to navigate to, such as Welcome, SignUp, or SignIn.
+     */
+    fun navigateToAuthDestination(destination: AuthDestination) {
+        val navOptions =
+            navOptions {
+                popUpTo(RootDestination.Authentication.startRoute) {
+                    saveState = true
+                }
+                launchSingleTop = true
+                restoreState = true
+            }
+
+        when (destination) {
+            AuthDestination.Welcome ->
+                navController.navigate(
+                    route = WelcomeRoute,
+                    navOptions = navOptions
+                )
+            AuthDestination.SignUp ->
+                navController.navigateToAuthentication(
+                    AuthenticationType.SignUp,
+                    navOptions = navOptions
+                )
+            AuthDestination.SignIn ->
+                navController.navigateToAuthentication(
+                    AuthenticationType.SignIn,
+                    navOptions = navOptions
+                )
+        }
+    }
+
+    /**
+     * Navigates to the specified root destination in the app.
+     *
+     * @param root The [RootDestination] to navigate to.
+     */
+    fun navigateToRootDestination(root: RootDestination) {
+        val navOptions =
+            navOptions {
+                popUpTo(navController.graph.id) {
+                    inclusive = true
+                    saveState = false
+                }
+
+                launchSingleTop = true
+                restoreState = false
+            }
+
+        navController.navigate(route = root.startBaseRoute, navOptions = navOptions)
+    }
 }

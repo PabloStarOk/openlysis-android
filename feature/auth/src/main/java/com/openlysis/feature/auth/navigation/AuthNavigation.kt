@@ -5,7 +5,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import androidx.navigation.navOptions
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
 import com.openlysis.feature.auth.AuthScreen
@@ -38,9 +40,14 @@ data class AuthRoute(
 
 /**
  * Navigates to the sign-in screen.
+ *
+ * @param authenticationType The type of authentication to use.
+ * @param navOptions Navigation options for the transition.
  */
-fun NavController.navigateToAuthentication(authenticationType: AuthenticationType) =
-    this.navigate(AuthRoute(authenticationType))
+fun NavController.navigateToAuthentication(
+    authenticationType: AuthenticationType,
+    navOptions: NavOptions
+) = this.navigate(AuthRoute(authenticationType), navOptions = navOptions)
 
 /**
  * Adds the authentication screens to the navigation graph.

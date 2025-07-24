@@ -15,11 +15,8 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.navOptions
 import com.openlysis.data.analysis.model.message.MessageType
-import com.openlysis.feature.auth.model.AuthenticationType
 import com.openlysis.feature.auth.navigation.authScreen
-import com.openlysis.feature.auth.navigation.navigateToAuthentication
 import com.openlysis.feature.results.navigation.ResultType
 import com.openlysis.feature.results.navigation.navigateToFileMultiAnalysisDetails
 import com.openlysis.feature.results.navigation.navigateToMessageAnalysisDetails
@@ -27,7 +24,6 @@ import com.openlysis.feature.results.navigation.navigateToPreviews
 import com.openlysis.feature.results.navigation.navigateToUrlMultiAnalysisDetails
 import com.openlysis.feature.results.navigation.resultsScreen
 import com.openlysis.feature.tools.navigation.ToolsRoute
-import com.openlysis.feature.tools.navigation.navigateToTools
 import com.openlysis.feature.tools.navigation.toolsScreen
 import com.openlysis.ui.AppState
 
@@ -50,21 +46,9 @@ internal fun AppNavHost(
         modifier = modifier
     ) {
         authScreen(
-            onSignUpRequest = { navController.navigateToAuthentication(AuthenticationType.SignUp) },
-            onSignInRequest = { navController.navigateToAuthentication(AuthenticationType.SignIn) },
-            onAuthenticated = {
-                val navOptions =
-                    navOptions {
-                        popUpTo(navController.graph.id) {
-                            inclusive = true
-                            saveState = false
-                        }
-
-                        launchSingleTop = true
-                        restoreState = false
-                    }
-                navController.navigateToTools(navOptions)
-            }
+            onSignUpRequest = { appState.navigateToAuthDestination(AuthDestination.SignUp) },
+            onSignInRequest = { appState.navigateToAuthDestination(AuthDestination.SignIn) },
+            onAuthenticated = { appState.navigateToRootDestination(RootDestination.TopLevel) }
         )
 
         toolsScreen(
