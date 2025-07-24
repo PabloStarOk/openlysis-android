@@ -18,7 +18,6 @@ import com.openlysis.feature.auth.navigation.AuthBaseRoute
 import com.openlysis.feature.auth.navigation.WelcomeRoute
 import com.openlysis.feature.auth.navigation.navigateToAuthentication
 import com.openlysis.feature.results.navigation.navigateToResults
-import com.openlysis.feature.tools.navigation.ToolsBaseRoute
 import com.openlysis.feature.tools.navigation.navigateToTools
 import com.openlysis.navigation.AuthDestination
 import com.openlysis.navigation.RootDestination
@@ -53,7 +52,12 @@ internal class AppState(
     val navController: NavHostController,
     private val isUserSignedIn: Boolean
 ) {
-    val startDestinationRoute = if (isUserSignedIn) ToolsBaseRoute else AuthBaseRoute
+    val startRootDestinationRoute =
+        if (isUserSignedIn) {
+            RootDestination.TopLevel.startBaseRoute
+        } else {
+            RootDestination.Authentication.startBaseRoute
+        }
 
     val currentDestination: NavDestination?
         @Composable get() {
