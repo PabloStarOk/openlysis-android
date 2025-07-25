@@ -5,16 +5,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.openlysis.core.outcome.Outcome
 import com.openlysis.data.analysis.core.repository.AnalysesRepository
-import com.openlysis.data.analysis.core.request.AnalyzeFile
 import com.openlysis.data.analysis.core.request.AnalyzeUrl
-import com.openlysis.data.analysis.core.request.Attachment
-import com.openlysis.data.analysis.model.analysis.FileMultiAnalysis
 import com.openlysis.data.analysis.model.analysis.UrlMultiAnalysis
-import com.openlysis.data.attachment.AttachmentFactory
 import com.openlysis.feature.tools.data.AnalysisRequestState
 import com.openlysis.feature.tools.data.AnalysisSettings
-import com.openlysis.feature.tools.data.AttachedFileData
-import com.openlysis.feature.tools.data.FileAttachmentSettings
 import com.openlysis.feature.tools.data.ToolsDataSource
 import com.openlysis.feature.tools.data.ToolsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -29,20 +23,14 @@ import javax.inject.Inject
 /**
  * ViewModel responsible for managing message, file and URL analyses functionality in the tools screen.
  *
- * @property attachmentFactory Factory for creating [Attachment] objects from [AttachedFileData] objects
- * @property fileAnalysisRepo Repository for analyzing individual files
  * @property urlAnalysisRepo Repository for analyzing URLs
- * @property fileAttachmentSettings Settings for file attachments configuration
  * @property analysisSettings Settings for analysis configuration
  */
 @HiltViewModel
 internal class ToolsScreenViewModel
     @Inject
     constructor(
-        private val attachmentFactory: AttachmentFactory,
-        private val fileAnalysisRepo: AnalysesRepository<AnalyzeFile, FileMultiAnalysis>,
         private val urlAnalysisRepo: AnalysesRepository<AnalyzeUrl, UrlMultiAnalysis>,
-        val fileAttachmentSettings: FileAttachmentSettings,
         val analysisSettings: AnalysisSettings
     ) : ViewModel() {
         val toolsRepository: ToolsRepository = ToolsDataSource()
@@ -53,56 +41,6 @@ internal class ToolsScreenViewModel
         private var currentAnalysisRequestJob: Job? = null
 
         val currentAnalysisRequest = _currentAnalysisRequest.asStateFlow()
-
-        /**
-         * Initiates the analysis of a single file.
-         *
-         * The result of the analysis request can be observed from [currentAnalysisRequest].
-         *
-         * @param attachedFile Data object containing the URI and password (if any) of the file to analyze
-         */
-        fun startFileAnalysis(attachedFile: AttachedFileData) {
-            _currentAnalysisRequest.value = AnalysisRequestState.InProgress
-            val outcome =
-                attachmentFactory.create(
-                    attachedFile.uri,
-                    attachedFile.password
-                )
-
-            val attachment =
-                when (outcome) {
-                    is Outcome.Success -> outcome.value
-                    is Outcome.Failure -> {
-                        _currentAnalysisRequest.value = AnalysisRequestState.Failure(outcome.error)
-                        return
-                    }
-                }
-
-            val request =
-                AnalyzeFile(
-                    attachment = attachment,
-                    reanalyze = analysisSettings.reanalyzeFiles
-                )
-
-            currentAnalysisRequestJob =
-                viewModelScope.launch {
-                    try {
-                        val outcome = fileAnalysisRepo.analyze(request)
-                        _currentAnalysisRequest.value =
-                            when (outcome) {
-                                is Outcome.Success ->
-                                    AnalysisRequestState.Success.File(
-                                        outcome.value
-                                    )
-
-                                is Outcome.Failure -> AnalysisRequestState.Failure(outcome.error)
-                            }
-                    } finally {
-                        attachment.close()
-                    }
-                }
-            currentAnalysisRequestJob?.invokeOnCompletion { currentAnalysisRequestJob = null }
-        }
 
         /**
          * Initiates the analysis of a URL.

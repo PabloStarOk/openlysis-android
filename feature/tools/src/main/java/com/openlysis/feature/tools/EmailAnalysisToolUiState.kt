@@ -1,6 +1,7 @@
 package com.openlysis.feature.tools
 
 import android.net.Uri
+import androidx.compose.runtime.Immutable
 import com.openlysis.feature.tools.components.MessageState
 import com.openlysis.feature.tools.data.AnalysisRequestState
 import com.openlysis.feature.tools.data.AttachedFileData
@@ -15,6 +16,7 @@ import com.openlysis.feature.tools.data.AttachedFileData
  * @property canAttachFiles Indicates if files can be attached.
  * @property requestState Current state of the analysis request.
  */
+@Immutable
 internal data class EmailAnalysisToolUiState(
     val message: MessageState = MessageState(),
     val attachedFiles: Map<Uri, AttachedFileData> = emptyMap(),

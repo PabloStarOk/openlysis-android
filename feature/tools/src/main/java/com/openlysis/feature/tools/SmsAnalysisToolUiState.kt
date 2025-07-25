@@ -1,5 +1,6 @@
 package com.openlysis.feature.tools
 
+import androidx.compose.runtime.Immutable
 import com.openlysis.feature.tools.components.MessageState
 import com.openlysis.feature.tools.data.AnalysisRequestState
 
@@ -10,6 +11,7 @@ import com.openlysis.feature.tools.data.AnalysisRequestState
  * @property canRequestAnalysis Indicates if analysis can be requested based on message state.
  * @property requestState Current state of the analysis request.
  */
+@Immutable
 internal data class SmsAnalysisToolUiState(
     val message: MessageState = MessageState(),
     val canRequestAnalysis: Boolean = message.submitEnabled,
