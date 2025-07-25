@@ -1,5 +1,6 @@
 package com.openlysis.feature.tools
 
+import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.openlysis.core.outcome.Outcome
@@ -58,12 +59,6 @@ internal class ToolsScreenViewModel
         val analysisSettings: AnalysisSettings
     ) : ViewModel() {
         val toolsRepository: ToolsRepository = ToolsDataSource()
-
-        private val urlValidationRegex =
-            Regex(
-                "^(?:https?|ftp|sftp|gopher|ws|wss)://(?:(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\\.)+[a-zA-Z]{2,6}|\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3})(?::\\d+)?(?:/\\S*)?$|^(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\\.)+[a-zA-Z]{2,6}(?::\\d+)?(?:/\\S*)?$",
-                options = setOf(RegexOption.IGNORE_CASE)
-            )
 
         private val _currentAnalysisRequest =
             MutableStateFlow<AnalysisRequestState>(AnalysisRequestState.None)
@@ -244,7 +239,7 @@ internal class ToolsScreenViewModel
          * @return A valid [URI] object if the URL is valid and can be parsed, null otherwise
          */
         fun getUrlIfValid(rawUrl: String): URI? {
-            if (!urlValidationRegex.matches(rawUrl)) {
+            if (!Patterns.WEB_URL.matcher(rawUrl).matches()) {
                 return null
             }
 
