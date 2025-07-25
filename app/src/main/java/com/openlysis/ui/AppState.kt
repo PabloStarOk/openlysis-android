@@ -33,7 +33,7 @@ import com.openlysis.navigation.TopLevelDestination
 @Composable
 internal fun rememberAppState(isUserSignedIn: Boolean): AppState {
     val navController = rememberNavController()
-    return remember {
+    return remember(navController, isUserSignedIn) {
         AppState(
             navController = navController,
             isUserSignedIn = isUserSignedIn

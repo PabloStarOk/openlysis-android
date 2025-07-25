@@ -11,6 +11,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -66,7 +67,8 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-            val appState = rememberAppState(isUserSignedIn = uiState.isUserSignedIn())
+            val isUserSignedIn = remember(uiState) { uiState.isUserSignedIn() }
+            val appState = rememberAppState(isUserSignedIn = isUserSignedIn)
             OpenlysisTheme {
                 App(appState)
             }
