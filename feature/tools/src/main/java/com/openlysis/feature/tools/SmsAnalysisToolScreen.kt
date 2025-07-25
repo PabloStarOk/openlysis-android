@@ -56,7 +56,7 @@ internal fun SmsAnalysisToolScreen(
             }
         },
         onCancelRequest = viewModel::cancelCurrentRequest,
-        analysisRequestState = analysisRequestState,
+        analysisRequestState = analysisRequestState.value,
         screenTitle = stringResource(R.string.sms_message_tool_screen_title),
         onTopBarUpdate = onTopBarUpdate,
         submitButtonLabel = stringResource(R.string.analyze_button_label),
@@ -66,7 +66,7 @@ internal fun SmsAnalysisToolScreen(
     ) {
         // TODO: Add functionality to select an SMS from the device's inbox.
         MessageSection(
-            state = state,
+            state = state.value,
             onSenderChange = { state.value = state.value.copy(sender = it) },
             onContentChange = { state.value = state.value.copy(content = it) },
             title = stringResource(R.string.sms_message_tool_section_title),

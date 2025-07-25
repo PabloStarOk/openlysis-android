@@ -2,9 +2,7 @@ package com.openlysis.feature.tools.components
 
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -29,7 +27,7 @@ import com.openlysis.feature.tools.R
  */
 @Composable
 internal fun MessageSection(
-    state: State<MessageState>,
+    state: MessageState,
     onSenderChange: (String) -> Unit,
     onContentChange: (String) -> Unit,
     title: String,
@@ -38,7 +36,6 @@ internal fun MessageSection(
     modifier: Modifier = Modifier,
     onSubjectChange: ((String) -> Unit)? = null
 ) {
-    val stateValue by state
     val senderKeyboardOptions =
         remember {
             KeyboardOptions(
@@ -57,7 +54,7 @@ internal fun MessageSection(
         modifier = modifier
     ) {
         TextInput(
-            value = stateValue.sender,
+            value = state.sender,
             onValueChange = onSenderChange,
             label = stringResource(R.string.analyze_message_sender_input_label),
             keyboardOptions = senderKeyboardOptions
@@ -65,7 +62,7 @@ internal fun MessageSection(
 
         if (isEmail) {
             TextInput(
-                value = stateValue.subject ?: "",
+                value = state.subject ?: "",
                 onValueChange = onSubjectChange ?: { },
                 label = stringResource(R.string.analyze_message_subject_input_label),
                 keyboardOptions = textKeyboardOptions.copy(imeAction = ImeAction.Next)
@@ -73,7 +70,7 @@ internal fun MessageSection(
         }
 
         TextInput(
-            value = stateValue.content,
+            value = state.content,
             onValueChange = onContentChange,
             label = stringResource(R.string.analyze_message_content_input_label),
             keyboardOptions = textKeyboardOptions,
@@ -87,7 +84,7 @@ internal fun MessageSection(
 private fun MessageSectionPreview() {
     OpenlysisTheme(darkTheme = false) {
         MessageSection(
-            state = remember { mutableStateOf(MessageState()) },
+            state = MessageState(),
             onSenderChange = { },
             onContentChange = { },
             title = "Test Title",

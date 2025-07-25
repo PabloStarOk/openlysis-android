@@ -4,6 +4,7 @@ import android.net.Uri
 import android.os.Parcelable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
+import com.openlysis.feature.tools.model.AttachedFileError
 import kotlinx.parcelize.Parcelize
 
 /**
@@ -21,5 +22,6 @@ internal data class AttachedFileData(
     val uri: Uri,
     val displayName: String,
     val size: Long,
-    val password: String? = null
+    val password: String? = null,
+    val error: AttachedFileError? = null // TODO: Add error to docs.
 ) : Parcelable

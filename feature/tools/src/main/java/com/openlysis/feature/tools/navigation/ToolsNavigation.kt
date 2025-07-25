@@ -20,6 +20,7 @@ import com.openlysis.data.analysis.model.analysis.FileMultiAnalysis
 import com.openlysis.data.analysis.model.analysis.UrlMultiAnalysis
 import com.openlysis.data.analysis.model.message.MessageAnalysis
 import com.openlysis.feature.tools.EmailAnalysisToolScreen
+import com.openlysis.feature.tools.EmailAnalysisToolScreenViewModel
 import com.openlysis.feature.tools.FileAnalysisToolScreen
 import com.openlysis.feature.tools.SmsAnalysisToolScreen
 import com.openlysis.feature.tools.ToolsScreen
@@ -142,7 +143,7 @@ fun NavGraphBuilder.toolsScreen(
             }
         ) { backStackEntry ->
             EmailAnalysisToolScreen(
-                viewModel = getSharedViewModel(backStackEntry, navController),
+                viewModel = hiltViewModel<EmailAnalysisToolScreenViewModel>(),
                 onAnalysisStart = onMessageAnalysisStart,
                 onTopBarUpdate = onTopBarUpdate
             )

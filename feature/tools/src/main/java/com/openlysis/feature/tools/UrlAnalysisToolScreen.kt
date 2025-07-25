@@ -71,7 +71,7 @@ internal fun UrlAnalysisToolScreen(
             }
         },
         onCancelRequest = viewModel::cancelCurrentRequest,
-        analysisRequestState = analysisRequestState,
+        analysisRequestState = analysisRequestState.value,
         screenTitle = stringResource(R.string.url_tool_screen_title),
         onTopBarUpdate = onTopBarUpdate,
         submitEnabled = submitEnabled,

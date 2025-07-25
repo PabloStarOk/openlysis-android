@@ -52,7 +52,7 @@ internal fun FileAnalysisToolScreen(
             }
         },
         onCancelRequest = viewModel::cancelCurrentRequest,
-        analysisRequestState = analysisRequestState,
+        analysisRequestState = analysisRequestState.value,
         screenTitle = stringResource(R.string.file_tool_screen_title),
         onTopBarUpdate = onTopBarUpdate,
         submitEnabled = isFileAttached,

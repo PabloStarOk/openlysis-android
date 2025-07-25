@@ -25,7 +25,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
@@ -65,7 +64,7 @@ import kotlin.time.Duration.Companion.seconds
 /**
  * A composable dialog that displays the current state of an analysis request.
  *
- * @param state The current state of the analysis request wrapped in a [State].
+ * @param state The current state of the analysis request.
  * @param onGoToAnalysisRequest Callback invoked when the user clicks the "Go to Analysis" button in success state.
  * @param onCancelRequest Callback invoked when the user cancels an in-progress analysis request.
  * @param onRetryRequest Callback invoked when the user clicks the retry button in failure state.
@@ -75,7 +74,7 @@ import kotlin.time.Duration.Companion.seconds
  */
 @Composable
 internal fun AnalysisRequestStateDialog(
-    state: State<AnalysisRequestState>,
+    state: AnalysisRequestState,
     onGoToAnalysisRequest: () -> Unit,
     onCancelRequest: () -> Unit,
     onRetryRequest: () -> Unit,
@@ -83,37 +82,36 @@ internal fun AnalysisRequestStateDialog(
     modifier: Modifier = Modifier,
     enableCancelDelaySeconds: Long = 60
 ) {
-    val requestState by state
     var enableCancel by rememberSaveable { mutableStateOf(false) }
     val dialogState =
-        remember(requestState, enableCancel) {
+        remember(state, enableCancel) {
             DialogState(
-                requestState = requestState,
+                requestState = state,
                 enableCancel = enableCancel,
                 enableCancelDelaySeconds = enableCancelDelaySeconds
             )
         }
     val appColorScheme = LocalAppColorScheme.current
     val descriptionColor =
-        remember(requestState, appColorScheme) {
-            when (requestState) {
+        remember(state, appColorScheme) {
+            when (state) {
                 is AnalysisRequestState.Failure -> appColorScheme.text.danger.secondary
                 else -> appColorScheme.text.default.primary
             }
         }
     val showWaitingTime =
-        remember(requestState, enableCancel) {
+        remember(state, enableCancel) {
             !enableCancel &&
                 (
-                    requestState is AnalysisRequestState.InProgress ||
-                        requestState is AnalysisRequestState.None
+                    state is AnalysisRequestState.InProgress ||
+                        state is AnalysisRequestState.None
                 )
         }
 
     Dialog(
         onDismissRequest = {
             if (dialogState.dismissible) {
-                if (requestState is AnalysisRequestState.InProgress) {
+                if (state is AnalysisRequestState.InProgress) {
                     onCancelRequest()
                 }
 
@@ -142,7 +140,7 @@ internal fun AnalysisRequestStateDialog(
                         )
             ) {
                 IndicationIcons(
-                    requestState = requestState
+                    requestState = state
                 )
 
                 Column(
@@ -169,7 +167,7 @@ internal fun AnalysisRequestStateDialog(
                             onStart = { enableCancel = false },
                             onComplete = { enableCancel = true },
                             countdown = enableCancelDelaySeconds,
-                            requestState = requestState,
+                            requestState = state,
                             modifier = Modifier.fillMaxWidth()
                         )
                     }
@@ -183,7 +181,7 @@ internal fun AnalysisRequestStateDialog(
                     },
                     onRetryClick = onRetryRequest,
                     onBackClick = onDismissRequest,
-                    requestState = requestState,
+                    requestState = state,
                     timeoutCompleted = enableCancel,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -473,12 +471,7 @@ private data class DialogState(
 private fun AnalysisProgressDialogPreview() {
     OpenlysisTheme {
         AnalysisRequestStateDialog(
-            state =
-                remember {
-                    mutableStateOf(
-                        AnalysisRequestState.InProgress
-                    )
-                },
+            state = AnalysisRequestState.InProgress,
             onGoToAnalysisRequest = { },
             onCancelRequest = { },
             onRetryRequest = { },

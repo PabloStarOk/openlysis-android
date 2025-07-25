@@ -12,10 +12,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -39,7 +37,7 @@ import com.openlysis.feature.tools.data.AnalysisRequestState
  * @param onSubmitRequest Callback when the user requests to start the analysis.
  * @param onGoToAnalysisRequest Callback when the user wants to navigate to the analysis.
  * @param onCancelRequest Callback when the user cancels the analysis request.
- * @param analysisRequestState State holding the current analysis request status.
+ * @param analysisRequestState Current state of the analysis request.
  * @param screenTitle The title to display in the top bar.
  * @param submitButtonLabel The label for the submit button.
  * @param submitButtonIconAlt The content description for the submit button icon.
@@ -54,7 +52,7 @@ internal fun ToolScreenScaffold(
     onSubmitRequest: () -> Unit,
     onGoToAnalysisRequest: () -> Unit,
     onCancelRequest: () -> Unit,
-    analysisRequestState: State<AnalysisRequestState>,
+    analysisRequestState: AnalysisRequestState,
     screenTitle: String,
     submitButtonLabel: String,
     submitButtonIconAlt: String,
@@ -137,7 +135,7 @@ internal fun ToolScreenScaffold(
         AnalysisRequestStateDialog(
             state = analysisRequestState,
             onGoToAnalysisRequest = {
-                if (analysisRequestState.value is AnalysisRequestState.Success) {
+                if (analysisRequestState is AnalysisRequestState.Success) {
                     showRequestStateDialog = false
                     onGoToAnalysisRequest()
                 }
@@ -161,7 +159,7 @@ private fun ToolScreenScaffoldPreview() {
             onSubmitRequest = { },
             onGoToAnalysisRequest = { },
             onCancelRequest = { },
-            analysisRequestState = remember { mutableStateOf(AnalysisRequestState.None) },
+            analysisRequestState = AnalysisRequestState.None,
             screenTitle = "Test Title",
             submitButtonLabel = "Test",
             submitButtonIconAlt = "Test",
