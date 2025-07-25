@@ -51,8 +51,8 @@ internal fun ResultsScreen(
         verticalArrangement = Arrangement.spacedBy(LocalAppSpacing.current.value800),
         modifier =
             modifier
-                .padding(LocalAppSpacing.current.value400)
                 .verticalScroll(verticalScroll)
+                .padding(LocalAppSpacing.current.value400)
     ) {
         AnalysisResultsCard(
             onClick = onEmailResultsClick,

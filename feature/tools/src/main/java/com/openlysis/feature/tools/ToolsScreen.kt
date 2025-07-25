@@ -39,8 +39,8 @@ internal fun ToolsScreen(
         verticalArrangement = Arrangement.spacedBy(LocalAppSpacing.current.value800),
         modifier =
             modifier
-                .padding(LocalAppSpacing.current.value400)
                 .verticalScroll(scrollState)
+                .padding(LocalAppSpacing.current.value400)
     ) {
         SectionScaffold(
             title = stringResource(R.string.message_analysis_tools_section_title),
