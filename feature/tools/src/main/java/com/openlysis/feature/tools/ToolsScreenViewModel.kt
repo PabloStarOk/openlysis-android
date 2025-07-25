@@ -4,20 +4,13 @@ import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.openlysis.core.outcome.Outcome
-import com.openlysis.data.analysis.core.di.EmailAnalysesRepository
-import com.openlysis.data.analysis.core.di.SmsAnalysesRepository
 import com.openlysis.data.analysis.core.repository.AnalysesRepository
 import com.openlysis.data.analysis.core.request.AnalyzeFile
-import com.openlysis.data.analysis.core.request.AnalyzeMessage
 import com.openlysis.data.analysis.core.request.AnalyzeUrl
 import com.openlysis.data.analysis.core.request.Attachment
-import com.openlysis.data.analysis.core.request.Message
 import com.openlysis.data.analysis.model.analysis.FileMultiAnalysis
 import com.openlysis.data.analysis.model.analysis.UrlMultiAnalysis
-import com.openlysis.data.analysis.model.message.MessageAnalysis
-import com.openlysis.data.analysis.model.message.MessageType
 import com.openlysis.data.attachment.AttachmentFactory
-import com.openlysis.feature.tools.components.MessageState
 import com.openlysis.feature.tools.data.AnalysisRequestState
 import com.openlysis.feature.tools.data.AnalysisSettings
 import com.openlysis.feature.tools.data.AttachedFileData
@@ -37,8 +30,6 @@ import javax.inject.Inject
  * ViewModel responsible for managing message, file and URL analyses functionality in the tools screen.
  *
  * @property attachmentFactory Factory for creating [Attachment] objects from [AttachedFileData] objects
- * @property emailAnalysisRepo Repository for analyzing email messages
- * @property smsAnalysisRepo Repository for analyzing SMS messages
  * @property fileAnalysisRepo Repository for analyzing individual files
  * @property urlAnalysisRepo Repository for analyzing URLs
  * @property fileAttachmentSettings Settings for file attachments configuration
@@ -49,10 +40,6 @@ internal class ToolsScreenViewModel
     @Inject
     constructor(
         private val attachmentFactory: AttachmentFactory,
-        @EmailAnalysesRepository private val emailAnalysisRepo:
-            AnalysesRepository<AnalyzeMessage, MessageAnalysis>,
-        @SmsAnalysesRepository private val smsAnalysisRepo:
-            AnalysesRepository<AnalyzeMessage, MessageAnalysis>,
         private val fileAnalysisRepo: AnalysesRepository<AnalyzeFile, FileMultiAnalysis>,
         private val urlAnalysisRepo: AnalysesRepository<AnalyzeUrl, UrlMultiAnalysis>,
         val fileAttachmentSettings: FileAttachmentSettings,
@@ -66,84 +53,6 @@ internal class ToolsScreenViewModel
         private var currentAnalysisRequestJob: Job? = null
 
         val currentAnalysisRequest = _currentAnalysisRequest.asStateFlow()
-
-        /**
-         * Initiates the analysis of a message with optional attachments.
-         *
-         * The result of the analysis request can be observed from [currentAnalysisRequest].
-         *
-         * @param type The type of message to be analyzed
-         * @param messageState Current state of the message containing sender, subject and content
-         * @param attachedFiles Optional list of files attached to the message
-         */
-        fun startMessageAnalysis(
-            type: MessageType,
-            messageState: MessageState,
-            attachedFiles: List<AttachedFileData>?
-        ) {
-            _currentAnalysisRequest.value = AnalysisRequestState.InProgress
-            val attachments = mutableListOf<Attachment>()
-            attachedFiles?.forEach {
-                val outcome =
-                    attachmentFactory.create(
-                        it.uri,
-                        it.password
-                    )
-
-                when (outcome) {
-                    is Outcome.Success -> attachments.add(outcome.value)
-                    is Outcome.Failure -> {
-                        _currentAnalysisRequest.value = AnalysisRequestState.Failure(outcome.error)
-                        return
-                    }
-                }
-            }
-
-            val message =
-                Message(
-                    type = type,
-                    sender = messageState.sender,
-                    subject = messageState.subject,
-                    content = messageState.content,
-                    attachments = attachments
-                )
-
-            val defaultReanalyze =
-                when (type) {
-                    MessageType.Email -> analysisSettings.reanalyzeEmails
-                    MessageType.Sms -> analysisSettings.reanalyzeSms
-                }
-
-            val request =
-                AnalyzeMessage(
-                    message = message,
-                    reanalyze = defaultReanalyze,
-                    countryCode = analysisSettings.defaultCountryCode
-                )
-
-            currentAnalysisRequestJob =
-                viewModelScope.launch {
-                    try {
-                        val outcome =
-                            when (type) {
-                                MessageType.Email -> emailAnalysisRepo.analyze(request)
-                                MessageType.Sms -> smsAnalysisRepo.analyze(request)
-                            }
-                        _currentAnalysisRequest.value =
-                            when (outcome) {
-                                is Outcome.Success ->
-                                    AnalysisRequestState.Success.Message(outcome.value)
-
-                                is Outcome.Failure -> AnalysisRequestState.Failure(outcome.error)
-                            }
-                    } finally {
-                        for (closeable in attachments) {
-                            closeable.close()
-                        }
-                    }
-                }
-            currentAnalysisRequestJob?.invokeOnCompletion { currentAnalysisRequestJob = null }
-        }
 
         /**
          * Initiates the analysis of a single file.

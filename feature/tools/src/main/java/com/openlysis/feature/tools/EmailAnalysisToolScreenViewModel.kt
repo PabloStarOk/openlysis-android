@@ -1,6 +1,5 @@
 package com.openlysis.feature.tools
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.openlysis.core.outcome.Outcome
 import com.openlysis.data.analysis.core.di.EmailAnalysesRepository
@@ -15,16 +14,15 @@ import com.openlysis.feature.tools.data.AnalysisRequestState
 import com.openlysis.feature.tools.data.AnalysisSettings
 import com.openlysis.feature.tools.data.AttachedFileData
 import com.openlysis.feature.tools.data.FileAttachmentSettings
+import com.openlysis.feature.tools.model.AnalysisToolScreenViewModel
 import com.openlysis.feature.tools.model.AttachedFileError
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.collections.forEach
 import kotlin.collections.plus
@@ -46,8 +44,7 @@ internal class EmailAnalysisToolScreenViewModel
         private val attachmentFactory: AttachmentFactory,
         @EmailAnalysesRepository private val emailRepository:
             AnalysesRepository<AnalyzeMessage, MessageAnalysis>
-    ) : ViewModel() {
-        private var requestJob: Job? = null
+    ) : AnalysisToolScreenViewModel() {
         private val _uiState =
             MutableStateFlow<EmailAnalysisToolUiState>(EmailAnalysisToolUiState())
         val uiState = _uiState.asStateFlow()
@@ -168,7 +165,7 @@ internal class EmailAnalysisToolScreenViewModel
          * Starts the analysis of the email message and its attachments.
          * Updates the UI state based on the analysis outcome.
          */
-        fun startAnalysis() {
+        override suspend fun handleStartAnalysis() {
             _uiState.update { it.copy(requestState = AnalysisRequestState.InProgress) }
             val attachments = mutableListOf<Attachment>()
             uiState.value.attachedFiles.values.forEach {
@@ -207,40 +204,32 @@ internal class EmailAnalysisToolScreenViewModel
                     countryCode = analysisSettings.defaultCountryCode
                 )
 
-            requestJob =
-                viewModelScope.launch {
-                    try {
-                        val outcome = emailRepository.analyze(request)
-                        _uiState.update {
-                            when (outcome) {
-                                is Outcome.Success ->
-                                    it.copy(
-                                        requestState =
-                                            AnalysisRequestState.Success.Message(
-                                                outcome.value
-                                            )
+            try {
+                val outcome = emailRepository.analyze(request)
+                _uiState.update {
+                    when (outcome) {
+                        is Outcome.Success ->
+                            it.copy(
+                                requestState =
+                                    AnalysisRequestState.Success.Message(
+                                        outcome.value
                                     )
+                            )
 
-                                is Outcome.Failure ->
-                                    it.copy(
-                                        requestState = AnalysisRequestState.Failure(outcome.error)
-                                    )
-                            }
-                        }
-                    } finally {
-                        for (closeable in attachments) {
-                            closeable.close()
-                        }
+                        is Outcome.Failure ->
+                            it.copy(
+                                requestState = AnalysisRequestState.Failure(outcome.error)
+                            )
                     }
                 }
-            requestJob?.invokeOnCompletion { requestJob = null }
+            } finally {
+                for (closeable in attachments) {
+                    closeable.close()
+                }
+            }
         }
 
-        /**
-         * Cancels the current analysis request and resets the request state.
-         */
-        fun cancelRequest() {
-            requestJob?.cancel()
+        override fun onCancelRequest() {
             _uiState.update { it.copy(requestState = AnalysisRequestState.None) }
         }
 
