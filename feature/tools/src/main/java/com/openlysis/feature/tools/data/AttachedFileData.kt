@@ -14,6 +14,7 @@ import kotlinx.parcelize.Parcelize
  * @property displayName The display name of the file.
  * @property size The size of the file in bytes.
  * @property password Optional password for the file, defaults to an empty string.
+ * @property error Optional error associated with the file, defaults to null.
  */
 @Parcelize
 @Stable
@@ -23,5 +24,5 @@ internal data class AttachedFileData(
     val displayName: String,
     val size: Long,
     val password: String? = null,
-    val error: AttachedFileError? = null // TODO: Add error to docs.
+    val error: AttachedFileError? = null
 ) : Parcelable

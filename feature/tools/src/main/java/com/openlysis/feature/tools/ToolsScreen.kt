@@ -12,13 +12,14 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.openlysis.core.designsystem.components.SectionTitle
 import com.openlysis.core.designsystem.theme.OpenlysisTheme
 import com.openlysis.core.designsystem.theme.size.LocalAppSpacing
 import com.openlysis.feature.tools.components.ToolCard
 import com.openlysis.feature.tools.data.Tool
 import com.openlysis.feature.tools.data.ToolCategory
+import com.openlysis.feature.tools.data.ToolsDataSource
+import com.openlysis.feature.tools.data.ToolsRepository
 
 /**
  * Display the analysis tools screen with sections for message and data analysis tools.
@@ -32,7 +33,7 @@ import com.openlysis.feature.tools.data.ToolCategory
 internal fun ToolsScreen(
     onToolClick: (ToolCategory) -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: ToolsScreenViewModel = hiltViewModel()
+    toolsRepository: ToolsRepository
 ) {
     val scrollState = rememberScrollState()
     Column(
@@ -45,7 +46,7 @@ internal fun ToolsScreen(
         SectionScaffold(
             title = stringResource(R.string.message_analysis_tools_section_title),
             content = {
-                viewModel.toolsRepository.getMessageAnalysisTools().forEach {
+                toolsRepository.getMessageAnalysisTools().forEach {
                     MapToolCard(
                         tool = it,
                         onClick = { onToolClick(it.category) }
@@ -57,7 +58,7 @@ internal fun ToolsScreen(
         SectionScaffold(
             title = stringResource(R.string.other_analysis_tools_section_title),
             content = {
-                viewModel.toolsRepository.getDataAnalysisTools().forEach {
+                toolsRepository.getDataAnalysisTools().forEach {
                     MapToolCard(
                         tool = it,
                         onClick = { onToolClick(it.category) }
@@ -114,7 +115,8 @@ private fun MapToolCard(
 private fun ToolsScreenPreview() {
     OpenlysisTheme(darkTheme = false) {
         ToolsScreen(
-            onToolClick = { }
+            onToolClick = { },
+            toolsRepository = ToolsDataSource()
         )
     }
 }

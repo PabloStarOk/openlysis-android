@@ -24,10 +24,10 @@ import com.openlysis.feature.tools.FileAnalysisToolScreenViewModel
 import com.openlysis.feature.tools.SmsAnalysisToolScreen
 import com.openlysis.feature.tools.SmsAnalysisToolScreenViewModel
 import com.openlysis.feature.tools.ToolsScreen
-import com.openlysis.feature.tools.ToolsScreenViewModel
 import com.openlysis.feature.tools.UrlAnalysisToolScreen
 import com.openlysis.feature.tools.UrlAnalysisToolScreenViewModel
 import com.openlysis.feature.tools.data.ToolCategory
+import com.openlysis.feature.tools.data.ToolsDataSource
 import kotlinx.serialization.Serializable
 
 /**
@@ -128,7 +128,7 @@ fun NavGraphBuilder.toolsScreen(
                         ToolCategory.Url -> navController.navigate(UrlAnalysisToolRoute)
                     }
                 },
-                viewModel = hiltViewModel<ToolsScreenViewModel>()
+                toolsRepository = ToolsDataSource()
             )
         }
 
