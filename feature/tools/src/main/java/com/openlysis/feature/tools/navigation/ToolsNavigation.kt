@@ -6,8 +6,6 @@ import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
@@ -28,6 +26,7 @@ import com.openlysis.feature.tools.SmsAnalysisToolScreenViewModel
 import com.openlysis.feature.tools.ToolsScreen
 import com.openlysis.feature.tools.ToolsScreenViewModel
 import com.openlysis.feature.tools.UrlAnalysisToolScreen
+import com.openlysis.feature.tools.UrlAnalysisToolScreenViewModel
 import com.openlysis.feature.tools.data.ToolCategory
 import kotlinx.serialization.Serializable
 
@@ -129,7 +128,7 @@ fun NavGraphBuilder.toolsScreen(
                         ToolCategory.Url -> navController.navigate(UrlAnalysisToolRoute)
                     }
                 },
-                viewModel = getSharedViewModel(backStackEntry, navController)
+                viewModel = hiltViewModel<ToolsScreenViewModel>()
             )
         }
 
@@ -199,29 +198,10 @@ fun NavGraphBuilder.toolsScreen(
             }
         ) { backStackEntry ->
             UrlAnalysisToolScreen(
-                viewModel = getSharedViewModel(backStackEntry, navController),
+                viewModel = hiltViewModel<UrlAnalysisToolScreenViewModel>(),
                 onAnalysisStart = onUrlAnalysisStart,
                 onTopBarUpdate = onTopBarUpdate
             )
         }
     }
-}
-
-/**
- * Retrieves a shared [ToolsScreenViewModel] instance that persists across navigation within the tools graph.
- *
- * @param backStackEntry The current navigation back stack entry
- * @param navController The navigation controller used to retrieve the graph entry
- * @return A shared instance of [ToolsScreenViewModel]
- */
-@Composable
-private fun getSharedViewModel(
-    backStackEntry: NavBackStackEntry,
-    navController: NavController
-): ToolsScreenViewModel {
-    val graphBackStackEntry =
-        remember(backStackEntry) {
-            navController.getBackStackEntry(ToolsBaseRoute)
-        }
-    return hiltViewModel<ToolsScreenViewModel>(graphBackStackEntry)
 }

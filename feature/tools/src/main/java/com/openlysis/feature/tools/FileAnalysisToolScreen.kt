@@ -9,7 +9,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.openlysis.core.designsystem.components.bar.TopBarState
 import com.openlysis.data.analysis.model.analysis.FileMultiAnalysis
-import com.openlysis.feature.tools.FileAnalysisToolScreenViewModel
 import com.openlysis.feature.tools.components.AttachFilesSection
 import com.openlysis.feature.tools.components.ToolScreenScaffold
 import com.openlysis.feature.tools.data.AnalysisRequestState

@@ -24,8 +24,6 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
-import kotlin.collections.forEach
-import kotlin.collections.plus
 
 /**
  * ViewModel for the Email Analysis Tool screen.

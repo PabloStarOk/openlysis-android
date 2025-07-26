@@ -43,7 +43,6 @@ import com.openlysis.feature.tools.data.AnalysisRequestState
  * @param submitButtonIconAlt The content description for the submit button icon.
  * @param submitEnabled Controls whether the submit button is enabled or disabled.
  * @param modifier Modifier for styling (defaults to [Modifier]).
- * @param canSubmit Optional callback to determine if submission is allowed.
  * @param content The content to display inside the scrollable area of the scaffold.
  */
 @Composable
@@ -58,8 +57,7 @@ internal fun ToolScreenScaffold(
     submitButtonIconAlt: String,
     submitEnabled: Boolean,
     modifier: Modifier = Modifier,
-    canSubmit: (() -> Boolean)? = null,
-    content: @Composable ColumnScope.(requestSubmit: () -> Unit) -> Unit
+    content: @Composable ColumnScope.() -> Unit
 ) {
     LaunchedEffect(Unit) {
         onTopBarUpdate(
@@ -82,10 +80,8 @@ internal fun ToolScreenScaffold(
     }
 
     val onSubmit = {
-        if (canSubmit == null || canSubmit()) {
-            onSubmitRequest()
-            showRequestStateDialog = true
-        }
+        onSubmitRequest()
+        showRequestStateDialog = true
     }
 
     Column {
@@ -100,7 +96,7 @@ internal fun ToolScreenScaffold(
                         horizontal = LocalAppSpacing.current.value600
                     ).weight(1f)
         ) {
-            content(onSubmit)
+            content()
         }
 
         HorizontalDivider(
