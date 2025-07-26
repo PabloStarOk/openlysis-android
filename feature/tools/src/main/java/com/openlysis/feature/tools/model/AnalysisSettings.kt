@@ -1,4 +1,4 @@
-package com.openlysis.feature.tools.data
+package com.openlysis.feature.tools.model
 
 import androidx.compose.runtime.Immutable
 

@@ -7,8 +7,8 @@ import com.openlysis.data.analysis.core.request.AnalyzeMessage
 import com.openlysis.data.analysis.core.request.Message
 import com.openlysis.data.analysis.model.message.MessageAnalysis
 import com.openlysis.data.analysis.model.message.MessageType
-import com.openlysis.feature.tools.data.AnalysisRequestState
-import com.openlysis.feature.tools.data.AnalysisSettings
+import com.openlysis.feature.tools.model.AnalysisRequestState
+import com.openlysis.feature.tools.model.AnalysisSettings
 import com.openlysis.feature.tools.model.AnalysisToolScreenViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

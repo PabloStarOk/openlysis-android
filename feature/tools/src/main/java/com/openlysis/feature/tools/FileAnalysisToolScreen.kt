@@ -11,8 +11,8 @@ import com.openlysis.core.designsystem.components.bar.TopBarState
 import com.openlysis.data.analysis.model.analysis.FileMultiAnalysis
 import com.openlysis.feature.tools.components.AttachFilesSection
 import com.openlysis.feature.tools.components.ToolScreenScaffold
-import com.openlysis.feature.tools.data.AnalysisRequestState
-import com.openlysis.feature.tools.data.AttachedFileData
+import com.openlysis.feature.tools.model.AnalysisRequestState
+import com.openlysis.feature.tools.model.AttachedFileData
 import com.openlysis.feature.tools.model.AttachedFileError
 import com.openlysis.feature.tools.util.showAttachmentErrorUiMessage
 

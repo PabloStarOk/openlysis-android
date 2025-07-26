@@ -22,7 +22,7 @@ import com.openlysis.core.designsystem.theme.type.LocalAppTypography
 import com.openlysis.data.analysis.model.analysis.UrlMultiAnalysis
 import com.openlysis.feature.tools.components.ToolScreenScaffold
 import com.openlysis.feature.tools.components.ToolSection
-import com.openlysis.feature.tools.data.AnalysisRequestState
+import com.openlysis.feature.tools.model.AnalysisRequestState
 
 /**
  * Composable screen for URL analysis that allows users to input and analyze URLs.

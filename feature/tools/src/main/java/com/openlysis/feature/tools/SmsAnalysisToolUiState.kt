@@ -1,8 +1,8 @@
 package com.openlysis.feature.tools
 
 import androidx.compose.runtime.Immutable
-import com.openlysis.feature.tools.components.MessageState
-import com.openlysis.feature.tools.data.AnalysisRequestState
+import com.openlysis.feature.tools.model.AnalysisRequestState
+import com.openlysis.feature.tools.model.MessageData
 
 /**
  * UI state for the SMS Analysis Tool.
@@ -13,7 +13,7 @@ import com.openlysis.feature.tools.data.AnalysisRequestState
  */
 @Immutable
 internal data class SmsAnalysisToolUiState(
-    val message: MessageState = MessageState(),
+    val message: MessageData = MessageData(),
     val canRequestAnalysis: Boolean = message.requiredFieldsSatisfied,
     val requestState: AnalysisRequestState = AnalysisRequestState.None
 )

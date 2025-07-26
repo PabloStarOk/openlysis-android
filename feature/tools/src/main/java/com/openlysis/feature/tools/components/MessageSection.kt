@@ -11,6 +11,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.openlysis.core.designsystem.components.TextInput
 import com.openlysis.core.designsystem.theme.OpenlysisTheme
 import com.openlysis.feature.tools.R
+import com.openlysis.feature.tools.model.MessageData
 
 /**
  * Section for entering message details for a message analysis tool. Includes sender, subject (if email), and content.
@@ -26,7 +27,7 @@ import com.openlysis.feature.tools.R
  */
 @Composable
 internal fun MessageSection(
-    state: MessageState,
+    state: MessageData,
     onSenderChange: (String) -> Unit,
     onContentChange: (String) -> Unit,
     title: String,
@@ -83,7 +84,7 @@ internal fun MessageSection(
 private fun MessageSectionPreview() {
     OpenlysisTheme(darkTheme = false) {
         MessageSection(
-            state = MessageState(),
+            state = MessageData(),
             onSenderChange = { },
             onContentChange = { },
             title = "Test Title",

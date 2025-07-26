@@ -1,10 +1,9 @@
-package com.openlysis.feature.tools.data
+package com.openlysis.feature.tools.model
 
 import android.net.Uri
 import android.os.Parcelable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
-import com.openlysis.feature.tools.model.AttachedFileError
 import kotlinx.parcelize.Parcelize
 
 /**

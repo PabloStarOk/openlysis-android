@@ -1,11 +1,11 @@
-package com.openlysis.feature.tools.components
+package com.openlysis.feature.tools.model
 
 import android.os.Parcelable
 import androidx.compose.runtime.Stable
 import kotlinx.parcelize.Parcelize
 
 /**
- * State holder for [MessageSection].
+ * Data class representing a message.
  *
  * @property sender The sender of the message.
  * @property subject The subject of the message, nullable.
@@ -13,7 +13,7 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 @Stable
-internal data class MessageState(
+internal data class MessageData(
     val sender: String = "",
     val subject: String? = null,
     val content: String = ""

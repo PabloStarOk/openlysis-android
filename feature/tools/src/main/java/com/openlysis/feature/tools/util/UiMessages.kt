@@ -4,8 +4,8 @@ import android.content.Context
 import android.text.format.Formatter
 import com.openlysis.feature.tools.MessageUiNotifier
 import com.openlysis.feature.tools.R
-import com.openlysis.feature.tools.data.FileAttachmentSettings
 import com.openlysis.feature.tools.model.AttachedFileError
+import com.openlysis.feature.tools.model.FileAttachmentSettings
 
 /**
  * Displays a UI message for file attachment errors.

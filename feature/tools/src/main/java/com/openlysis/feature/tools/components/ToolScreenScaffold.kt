@@ -27,7 +27,7 @@ import com.openlysis.core.designsystem.modifier.SizeType
 import com.openlysis.core.designsystem.theme.LocalAppColorScheme
 import com.openlysis.core.designsystem.theme.OpenlysisTheme
 import com.openlysis.core.designsystem.theme.size.LocalAppSpacing
-import com.openlysis.feature.tools.data.AnalysisRequestState
+import com.openlysis.feature.tools.model.AnalysisRequestState
 
 /**
  * A scaffold for tool screens. This composable provides a consistent layout structure for tool-related screens

@@ -1,4 +1,4 @@
-package com.openlysis.feature.tools.data
+package com.openlysis.feature.tools.model
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes

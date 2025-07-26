@@ -1,4 +1,4 @@
-package com.openlysis.feature.tools.data
+package com.openlysis.feature.tools.model
 
 /**
  * Interface for repositories that provide lists of analysis tools used within the application.

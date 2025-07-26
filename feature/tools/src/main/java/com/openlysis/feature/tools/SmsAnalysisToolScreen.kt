@@ -9,7 +9,7 @@ import com.openlysis.core.designsystem.components.bar.TopBarState
 import com.openlysis.data.analysis.model.message.MessageAnalysis
 import com.openlysis.feature.tools.components.MessageSection
 import com.openlysis.feature.tools.components.ToolScreenScaffold
-import com.openlysis.feature.tools.data.AnalysisRequestState
+import com.openlysis.feature.tools.model.AnalysisRequestState
 
 /**
  * Composable screen for SMS analysis tool.

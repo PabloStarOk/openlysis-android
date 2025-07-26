@@ -1,9 +1,4 @@
-package com.openlysis.feature.tools.data
-
-import com.openlysis.feature.tools.data.ToolCategory.Email
-import com.openlysis.feature.tools.data.ToolCategory.File
-import com.openlysis.feature.tools.data.ToolCategory.Sms
-import com.openlysis.feature.tools.data.ToolCategory.Url
+package com.openlysis.feature.tools.model
 
 /**
  * Represents the categories available for tools.

@@ -16,10 +16,10 @@ import com.openlysis.core.designsystem.components.SectionTitle
 import com.openlysis.core.designsystem.theme.OpenlysisTheme
 import com.openlysis.core.designsystem.theme.size.LocalAppSpacing
 import com.openlysis.feature.tools.components.ToolCard
-import com.openlysis.feature.tools.data.Tool
-import com.openlysis.feature.tools.data.ToolCategory
-import com.openlysis.feature.tools.data.ToolsDataSource
-import com.openlysis.feature.tools.data.ToolsRepository
+import com.openlysis.feature.tools.model.Tool
+import com.openlysis.feature.tools.model.ToolCategory
+import com.openlysis.feature.tools.model.ToolsDataSource
+import com.openlysis.feature.tools.model.ToolsRepository
 
 /**
  * Display the analysis tools screen with sections for message and data analysis tools.
@@ -27,7 +27,7 @@ import com.openlysis.feature.tools.data.ToolsRepository
  *
  * @param onToolClick Callback invoked when a tool card is clicked, with the corresponding [ToolCategory]
  * @param modifier Optional [Modifier] to apply to the top-level layout container
- * @param viewModel The view model handling the business logic and data operations
+ * @param toolsRepository Repository with the available tools of the app
  */
 @Composable
 internal fun ToolsScreen(

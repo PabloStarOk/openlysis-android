@@ -29,8 +29,8 @@ import com.openlysis.core.designsystem.theme.OpenlysisTheme
 import com.openlysis.core.designsystem.theme.size.LocalAppSpacing
 import com.openlysis.core.designsystem.theme.type.LocalAppTypography
 import com.openlysis.feature.tools.R
-import com.openlysis.feature.tools.data.AttachedFileData
-import com.openlysis.feature.tools.data.FileAttachmentSettings
+import com.openlysis.feature.tools.model.AttachedFileData
+import com.openlysis.feature.tools.model.FileAttachmentSettings
 
 /**
  * Section for attaching files to be analyzed.

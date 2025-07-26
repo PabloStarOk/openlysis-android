@@ -1,4 +1,4 @@
-package com.openlysis.feature.tools.data
+package com.openlysis.feature.tools.model
 
 import com.openlysis.core.outcome.AppError
 import com.openlysis.data.analysis.model.analysis.FileMultiAnalysis

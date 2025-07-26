@@ -26,8 +26,8 @@ import com.openlysis.feature.tools.SmsAnalysisToolScreenViewModel
 import com.openlysis.feature.tools.ToolsScreen
 import com.openlysis.feature.tools.UrlAnalysisToolScreen
 import com.openlysis.feature.tools.UrlAnalysisToolScreenViewModel
-import com.openlysis.feature.tools.data.ToolCategory
-import com.openlysis.feature.tools.data.ToolsDataSource
+import com.openlysis.feature.tools.model.ToolCategory
+import com.openlysis.feature.tools.model.ToolsDataSource
 import kotlinx.serialization.Serializable
 
 /**

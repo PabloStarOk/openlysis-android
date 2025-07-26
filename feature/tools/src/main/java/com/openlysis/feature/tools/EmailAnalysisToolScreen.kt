@@ -15,7 +15,7 @@ import com.openlysis.data.analysis.model.message.MessageAnalysis
 import com.openlysis.feature.tools.components.AttachFilesSection
 import com.openlysis.feature.tools.components.MessageSection
 import com.openlysis.feature.tools.components.ToolScreenScaffold
-import com.openlysis.feature.tools.data.AnalysisRequestState
+import com.openlysis.feature.tools.model.AnalysisRequestState
 import com.openlysis.feature.tools.util.showAttachmentErrorUiMessage
 
 /**

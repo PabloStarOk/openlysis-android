@@ -1,7 +1,7 @@
 package com.openlysis.feature.tools
 
 import androidx.compose.runtime.Immutable
-import com.openlysis.feature.tools.data.AnalysisRequestState
+import com.openlysis.feature.tools.model.AnalysisRequestState
 
 /**
  * UI state for the URL Analysis Tool.

@@ -4,8 +4,8 @@ import com.openlysis.BuildConfig
 import com.openlysis.data.database.LocalStoragePreferences
 import com.openlysis.data.remote.ApiClientSettings
 import com.openlysis.data.remote.ApiCredentials
-import com.openlysis.feature.tools.data.AnalysisSettings
-import com.openlysis.feature.tools.data.FileAttachmentSettings
+import com.openlysis.feature.tools.model.AnalysisSettings
+import com.openlysis.feature.tools.model.FileAttachmentSettings
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

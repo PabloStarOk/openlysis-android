@@ -57,7 +57,7 @@ import com.openlysis.core.outcome.AppError
 import com.openlysis.data.analysis.core.error.RepositoryError
 import com.openlysis.data.attachment.AttachmentCreationError
 import com.openlysis.feature.tools.R
-import com.openlysis.feature.tools.data.AnalysisRequestState
+import com.openlysis.feature.tools.model.AnalysisRequestState
 import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.seconds
 

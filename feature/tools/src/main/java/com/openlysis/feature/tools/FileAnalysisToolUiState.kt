@@ -1,8 +1,8 @@
 package com.openlysis.feature.tools
 
 import androidx.compose.runtime.Immutable
-import com.openlysis.feature.tools.data.AnalysisRequestState
-import com.openlysis.feature.tools.data.AttachedFileData
+import com.openlysis.feature.tools.model.AnalysisRequestState
+import com.openlysis.feature.tools.model.AttachedFileData
 
 /**
  * UI state for the File Analysis Tool.

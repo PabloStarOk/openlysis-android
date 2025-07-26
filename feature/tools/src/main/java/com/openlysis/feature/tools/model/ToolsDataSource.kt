@@ -1,4 +1,4 @@
-package com.openlysis.feature.tools.data
+package com.openlysis.feature.tools.model
 
 import com.openlysis.core.designsystem.icon.AppIconsIds
 import com.openlysis.feature.tools.R

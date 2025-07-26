@@ -2,9 +2,9 @@ package com.openlysis.feature.tools
 
 import android.net.Uri
 import androidx.compose.runtime.Immutable
-import com.openlysis.feature.tools.components.MessageState
-import com.openlysis.feature.tools.data.AnalysisRequestState
-import com.openlysis.feature.tools.data.AttachedFileData
+import com.openlysis.feature.tools.model.AnalysisRequestState
+import com.openlysis.feature.tools.model.AttachedFileData
+import com.openlysis.feature.tools.model.MessageData
 
 /**
  * UI state for the Email Analysis Tool feature.
@@ -18,7 +18,7 @@ import com.openlysis.feature.tools.data.AttachedFileData
  */
 @Immutable
 internal data class EmailAnalysisToolUiState(
-    val message: MessageState = MessageState(),
+    val message: MessageData = MessageData(),
     val attachedFiles: Map<Uri, AttachedFileData> = emptyMap(),
     val invalidAttachedFiles: Set<AttachedFileData> = emptySet(),
     val canRequestAnalysis: Boolean = false,
