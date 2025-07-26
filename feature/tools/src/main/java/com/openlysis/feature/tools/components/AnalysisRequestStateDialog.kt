@@ -54,7 +54,7 @@ import com.openlysis.core.designsystem.theme.radius.LocalAppRadius
 import com.openlysis.core.designsystem.theme.size.LocalAppSpacing
 import com.openlysis.core.designsystem.theme.type.LocalAppTypography
 import com.openlysis.core.outcome.AppError
-import com.openlysis.data.analysis.core.error.RepositoryError
+import com.openlysis.core.outcome.NetworkError
 import com.openlysis.data.attachment.AttachmentCreationError
 import com.openlysis.feature.tools.R
 import com.openlysis.feature.tools.model.AnalysisRequestState
@@ -307,7 +307,7 @@ private fun ActionButtons(
         remember(requestState) {
             derivedStateOf {
                 requestState is AnalysisRequestState.Failure &&
-                    requestState.error !is RepositoryError.BadRequest
+                    requestState.error !is NetworkError.BadRequest
             }
         }
 
@@ -444,24 +444,24 @@ private data class DialogState(
 
     private fun getAnalysisErrorString(error: AppError): Int =
         when (error) {
-            is RepositoryError -> getRepositoryErrorString(error)
+            is NetworkError -> getNetworkErrorString(error)
             is AttachmentCreationError -> R.string.error_attachment_creation
             else -> R.string.error_analysis_repository_generic
         }
 
-    private fun getRepositoryErrorString(error: RepositoryError): Int =
+    private fun getNetworkErrorString(error: NetworkError): Int =
         when (error) {
-            RepositoryError.BadRequest -> R.string.error_analysis_repository_bad_request
-            RepositoryError.AccessDenied -> R.string.error_analysis_repository_generic
-            RepositoryError.Network -> R.string.error_analysis_repository_network
-            RepositoryError.NotFound -> R.string.error_analysis_repository_generic
-            RepositoryError.OperationCanceled ->
+            NetworkError.BadRequest -> R.string.error_analysis_repository_bad_request
+            NetworkError.AccessDenied -> R.string.error_analysis_repository_generic
+            NetworkError.Network -> R.string.error_analysis_repository_network
+            NetworkError.NotFound -> R.string.error_analysis_repository_generic
+            NetworkError.OperationCanceled ->
                 R.string.error_analysis_repository_operation_canceled
-            RepositoryError.Server -> R.string.error_analysis_repository_server
-            RepositoryError.ServerUnreachable ->
+            NetworkError.Server -> R.string.error_analysis_repository_server
+            NetworkError.ServerUnreachable ->
                 R.string.error_analysis_repository_unreachable_server
-            RepositoryError.Unavailable -> R.string.error_analysis_repository_unavailable
-            RepositoryError.Unknown -> R.string.error_analysis_repository_unknown
+            NetworkError.Unavailable -> R.string.error_analysis_repository_unavailable
+            NetworkError.Unknown -> R.string.error_analysis_repository_unknown
         }
 }
 

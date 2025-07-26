@@ -1,7 +1,7 @@
 package com.openlysis.data.remote
 
+import com.openlysis.core.outcome.NetworkError
 import com.openlysis.core.outcome.Outcome
-import com.openlysis.data.analysis.core.error.RepositoryError
 import okhttp3.ResponseBody.Companion.toResponseBody
 import retrofit2.Response
 import java.io.IOException
@@ -40,7 +40,7 @@ internal abstract class NetworkApiCaller {
      * Executes the given API call safely, catching common network and HTTP exceptions.
      *
      * @param apiCall The suspend function representing the API call to execute.
-     * @return An [Outcome] containing the successful result if successful, or a [RepositoryError] otherwise.
+     * @return An [Outcome] containing the successful result if successful, or a [NetworkError] otherwise.
      */
     protected suspend fun <TResult> callApiSafely(
         apiCall: suspend () -> Response<TResult>
@@ -52,22 +52,22 @@ internal abstract class NetworkApiCaller {
             } else {
                 val error =
                     when (response.code()) {
-                        400 -> RepositoryError.BadRequest
-                        401, 403 -> RepositoryError.AccessDenied
-                        404 -> RepositoryError.NotFound
-                        503 -> RepositoryError.Unavailable
-                        in 500..599 -> RepositoryError.Server
-                        else -> RepositoryError.Unknown
+                        400 -> NetworkError.BadRequest
+                        401, 403 -> NetworkError.AccessDenied
+                        404 -> NetworkError.NotFound
+                        503 -> NetworkError.Unavailable
+                        in 500..599 -> NetworkError.Server
+                        else -> NetworkError.Unknown
                     }
                 Outcome.Failure(error)
             }
         } catch (_: ConnectException) {
-            Outcome.Failure(RepositoryError.ServerUnreachable)
+            Outcome.Failure(NetworkError.ServerUnreachable)
         } catch (_: UnknownHostException) {
-            Outcome.Failure(RepositoryError.ServerUnreachable)
+            Outcome.Failure(NetworkError.ServerUnreachable)
         } catch (_: IOException) {
-            Outcome.Failure(RepositoryError.Network)
+            Outcome.Failure(NetworkError.Network)
         } catch (_: CancellationException) {
-            Outcome.Failure(RepositoryError.OperationCanceled)
+            Outcome.Failure(NetworkError.OperationCanceled)
         }
 }

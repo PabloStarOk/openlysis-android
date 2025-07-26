@@ -65,7 +65,7 @@ import com.openlysis.feature.results.DetailsUiState
 import com.openlysis.feature.results.R
 import com.openlysis.feature.results.components.AnalysisStatusBadge
 import com.openlysis.feature.results.components.AnalysisVerdictBadge
-import com.openlysis.feature.results.util.getRepositoryErrorMessage
+import com.openlysis.feature.results.util.getNetworkErrorMessage
 import kotlinx.coroutines.delay
 import kotlinx.datetime.toKotlinInstant
 
@@ -155,7 +155,7 @@ internal fun <TResult : Model> DetailsScreenScaffold(
             } else if (uiState is DetailsUiState.Failure) {
                 val error = uiState.error
                 Text(
-                    text = getRepositoryErrorMessage(error),
+                    text = getNetworkErrorMessage(error),
                     color = LocalAppColorScheme.current.text.danger.secondary,
                     style = LocalAppTypography.current.bodyBase,
                     textAlign = TextAlign.Center,

@@ -11,4 +11,6 @@ dependencies {
     ksp(libs.google.dagger.hilt.compiler)
 
     implementation(projects.core.data.analysis.model)
+
+    api(projects.core.common)
 }

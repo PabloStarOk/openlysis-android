@@ -65,7 +65,7 @@ import com.openlysis.core.designsystem.theme.radius.LocalAppRadius
 import com.openlysis.core.designsystem.theme.size.LocalAppSpacing
 import com.openlysis.core.designsystem.theme.type.LocalAppTypography
 import com.openlysis.core.outcome.AppError
-import com.openlysis.data.analysis.core.error.RepositoryError
+import com.openlysis.core.outcome.NetworkError
 import com.openlysis.feature.auth.component.HeroSection
 import com.openlysis.feature.auth.model.AuthenticationStatus
 import com.openlysis.feature.auth.model.AuthenticationType
@@ -571,12 +571,12 @@ private fun PasswordRequirementItem(
 
 private fun getErrorResourceId(error: AppError): Int =
     when (error) {
-        is RepositoryError.BadRequest -> R.string.error_sign_up
-        is RepositoryError.AccessDenied -> R.string.error_sign_in
-        is RepositoryError.Server -> R.string.error_server
-        is RepositoryError.Network -> R.string.error_network
-        is RepositoryError.ServerUnreachable -> R.string.error_server_unreachable
-        is RepositoryError.Unavailable -> R.string.error_unavailable
+        is NetworkError.BadRequest -> R.string.error_sign_up
+        is NetworkError.AccessDenied -> R.string.error_sign_in
+        is NetworkError.Server -> R.string.error_server
+        is NetworkError.Network -> R.string.error_network
+        is NetworkError.ServerUnreachable -> R.string.error_server_unreachable
+        is NetworkError.Unavailable -> R.string.error_unavailable
         else -> R.string.error_generic
     }
 

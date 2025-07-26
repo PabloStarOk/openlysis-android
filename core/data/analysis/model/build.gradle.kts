@@ -4,7 +4,6 @@ plugins {
 }
 
 dependencies {
-    api(projects.core.common)
     compileOnly(libs.moshi.kotlin)
     ksp(libs.moshi.kotlin.codegen)
 }

@@ -1,8 +1,8 @@
 package com.openlysis.data.database.source
 
 import android.util.Log
+import com.openlysis.core.outcome.NetworkError
 import com.openlysis.core.outcome.Outcome
-import com.openlysis.data.analysis.core.error.RepositoryError
 import com.openlysis.data.analysis.core.source.AnalysesLocalDataSource
 import com.openlysis.data.analysis.model.common.Model
 import com.openlysis.data.database.dao.ExistsDao
@@ -74,14 +74,14 @@ internal abstract class LocalDataSource<TModel>(
      * Retrieves a model by its ID.
      *
      * @param id The unique identifier of the model.
-     * @return [Outcome] containing the model if found, or [Outcome.Failure] with [RepositoryError.NotFound] if not found.
+     * @return [Outcome] containing the model if found, or [Outcome.Failure] with [NetworkError.NotFound] if not found.
      */
     override suspend fun getById(id: String): Outcome<TModel> {
         if (existsDao.exists(id)) {
             return Outcome.Success(handleGetById(id))
         }
 
-        return Outcome.Failure(RepositoryError.NotFound)
+        return Outcome.Failure(NetworkError.NotFound)
     }
 
     /**

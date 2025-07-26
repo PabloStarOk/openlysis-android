@@ -46,7 +46,7 @@ import com.openlysis.feature.results.components.VerdictStats
 import com.openlysis.feature.results.components.preview.AnalysisPreview
 import com.openlysis.feature.results.components.preview.FiltersDialog
 import com.openlysis.feature.results.components.preview.RefreshButton
-import com.openlysis.feature.results.util.getRepositoryErrorMessage
+import com.openlysis.feature.results.util.getNetworkErrorMessage
 import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.seconds
 
@@ -266,7 +266,7 @@ private fun StatusMessage(
 
     val message =
         if (loadingState is LoadingState.Error) {
-            getRepositoryErrorMessage(loadingState.error)
+            getNetworkErrorMessage(loadingState.error)
         } else if (noPreviews) {
             stringResource(R.string.analyses_limit_reached_no_analyses)
         } else {

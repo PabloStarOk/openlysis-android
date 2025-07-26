@@ -37,7 +37,6 @@ dependencies {
 
     implementation(projects.core.designsystem)
     implementation(projects.core.data.auth)
-    implementation(projects.core.data.analysis.core)
 
     ksp(libs.google.dagger.hilt.compiler)
 
