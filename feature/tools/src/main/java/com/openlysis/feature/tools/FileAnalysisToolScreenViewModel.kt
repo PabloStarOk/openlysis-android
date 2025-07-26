@@ -1,6 +1,5 @@
 package com.openlysis.feature.tools
 
-import androidx.lifecycle.viewModelScope
 import com.openlysis.core.outcome.Outcome
 import com.openlysis.data.analysis.core.repository.AnalysesRepository
 import com.openlysis.data.analysis.core.request.AnalyzeFile
@@ -15,9 +14,6 @@ import com.openlysis.feature.tools.model.AttachedFileError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.distinctUntilChangedBy
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
@@ -39,14 +35,7 @@ internal class FileAnalysisToolScreenViewModel
     ) : AnalysisToolScreenViewModel() {
         private val _uiState = MutableStateFlow(FileAnalysisToolUiState())
         val uiState = _uiState.asStateFlow()
-        val attachmentSettings =
-            attachmentSettings.copy(
-                maxFilesAmount = 1
-            )
-
-        init {
-            validateRequestSubmission()
-        }
+        val attachmentSettings = attachmentSettings.copy(maxFilesAmount = 1)
 
         /**
          * Adds a file to the UI state after validating its size.
@@ -63,7 +52,11 @@ internal class FileAnalysisToolScreenViewModel
                     }
 
                 val validatedFile = if (error == null) file else file.copy(error = error)
-                it.copy(file = validatedFile, isFileAttached = true)
+                it.copy(
+                    file = validatedFile,
+                    isFileAttached = true,
+                    canRequestAnalysis = error == null
+                )
             }
         }
 
@@ -84,7 +77,13 @@ internal class FileAnalysisToolScreenViewModel
          */
         fun removeFile() {
             if (uiState.value.file == null) return
-            _uiState.update { it.copy(file = null, isFileAttached = false) }
+            _uiState.update {
+                it.copy(
+                    file = null,
+                    isFileAttached = false,
+                    canRequestAnalysis = false
+                )
+            }
         }
 
         override suspend fun handleStartAnalysis() {
@@ -130,15 +129,5 @@ internal class FileAnalysisToolScreenViewModel
 
         override fun onCancelRequest() {
             _uiState.update { it.copy(requestState = AnalysisRequestState.None) }
-        }
-
-        private fun validateRequestSubmission() {
-            _uiState
-                .distinctUntilChangedBy { it.file }
-                .onEach {
-                    _uiState.update {
-                        it.copy(canRequestAnalysis = it.file != null && it.file.error == null)
-                    }
-                }.launchIn(viewModelScope)
         }
     }

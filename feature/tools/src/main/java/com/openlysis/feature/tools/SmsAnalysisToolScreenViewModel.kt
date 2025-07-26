@@ -1,6 +1,5 @@
 package com.openlysis.feature.tools
 
-import androidx.lifecycle.viewModelScope
 import com.openlysis.core.outcome.Outcome
 import com.openlysis.data.analysis.core.di.SmsAnalysesRepository
 import com.openlysis.data.analysis.core.repository.AnalysesRepository
@@ -14,9 +13,6 @@ import com.openlysis.feature.tools.model.AnalysisToolScreenViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.distinctUntilChangedBy
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
@@ -37,10 +33,6 @@ internal class SmsAnalysisToolScreenViewModel
         private val _uiState = MutableStateFlow(SmsAnalysisToolUiState())
         val uiState = _uiState.asStateFlow()
 
-        init {
-            validateRequestSubmission()
-        }
-
         /**
          * Updates the sender field of the message in the UI state.
          *
@@ -48,7 +40,11 @@ internal class SmsAnalysisToolScreenViewModel
          */
         fun updateSender(sender: String) {
             _uiState.update {
-                it.copy(message = it.message.copy(sender = sender))
+                val updatedMessage = it.message.copy(sender = sender)
+                it.copy(
+                    message = updatedMessage,
+                    canRequestAnalysis = updatedMessage.requiredFieldsSatisfied
+                )
             }
         }
 
@@ -59,7 +55,11 @@ internal class SmsAnalysisToolScreenViewModel
          */
         fun updateContent(content: String) {
             _uiState.update {
-                it.copy(message = it.message.copy(content = content))
+                val updatedMessage = it.message.copy(content = content)
+                it.copy(
+                    message = updatedMessage,
+                    canRequestAnalysis = updatedMessage.requiredFieldsSatisfied
+                )
             }
         }
 
@@ -95,15 +95,5 @@ internal class SmsAnalysisToolScreenViewModel
 
         override fun onCancelRequest() {
             _uiState.update { it.copy(requestState = AnalysisRequestState.None) }
-        }
-
-        private fun validateRequestSubmission() {
-            _uiState
-                .distinctUntilChangedBy { it.message }
-                .onEach {
-                    _uiState.update {
-                        it.copy(canRequestAnalysis = it.message.submitEnabled)
-                    }
-                }.launchIn(viewModelScope)
         }
     }

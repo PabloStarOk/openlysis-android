@@ -18,6 +18,6 @@ internal data class MessageState(
     val subject: String? = null,
     val content: String = ""
 ) : Parcelable {
-    val submitEnabled: Boolean
+    val requiredFieldsSatisfied: Boolean
         get() = sender.isNotBlank() && content.isNotBlank()
 }

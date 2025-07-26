@@ -1,6 +1,5 @@
 package com.openlysis.feature.tools
 
-import androidx.lifecycle.viewModelScope
 import com.openlysis.core.outcome.Outcome
 import com.openlysis.data.analysis.core.di.EmailAnalysesRepository
 import com.openlysis.data.analysis.core.repository.AnalysesRepository
@@ -19,9 +18,6 @@ import com.openlysis.feature.tools.model.AttachedFileError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.distinctUntilChangedBy
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
@@ -47,11 +43,6 @@ internal class EmailAnalysisToolScreenViewModel
             MutableStateFlow<EmailAnalysisToolUiState>(EmailAnalysisToolUiState())
         val uiState = _uiState.asStateFlow()
 
-        init {
-            validateRequestSubmission()
-            validateAttachmentLimit()
-        }
-
         /**
          * Updates the sender field in the message.
          *
@@ -60,7 +51,10 @@ internal class EmailAnalysisToolScreenViewModel
         fun updateSender(sender: String) {
             _uiState.update {
                 val updatedMessage = it.message.copy(sender = sender)
-                it.copy(message = updatedMessage)
+                it.copy(
+                    message = updatedMessage,
+                    canRequestAnalysis = updatedMessage.requiredFieldsSatisfied
+                )
             }
         }
 
@@ -72,7 +66,10 @@ internal class EmailAnalysisToolScreenViewModel
         fun updateSubject(subject: String) {
             _uiState.update {
                 val updatedMessage = it.message.copy(subject = subject)
-                it.copy(message = updatedMessage)
+                it.copy(
+                    message = updatedMessage,
+                    canRequestAnalysis = updatedMessage.requiredFieldsSatisfied
+                )
             }
         }
 
@@ -84,7 +81,10 @@ internal class EmailAnalysisToolScreenViewModel
         fun updateContent(content: String) {
             _uiState.update {
                 val updatedMessage = it.message.copy(content = content)
-                it.copy(message = updatedMessage)
+                it.copy(
+                    message = updatedMessage,
+                    canRequestAnalysis = updatedMessage.requiredFieldsSatisfied
+                )
             }
         }
 
@@ -111,7 +111,11 @@ internal class EmailAnalysisToolScreenViewModel
                     return
                 }
 
-                it.copy(attachedFiles = it.attachedFiles + Pair(newFile.uri, newFile))
+                val updatedAttachedFiles = it.attachedFiles + Pair(newFile.uri, newFile)
+                it.copy(
+                    attachedFiles = updatedAttachedFiles,
+                    canAttachFiles = updatedAttachedFiles.size < attachmentSettings.maxFilesAmount
+                )
             }
         }
 
@@ -147,7 +151,8 @@ internal class EmailAnalysisToolScreenViewModel
                 val mutableAttachedFiles = it.attachedFiles.toMutableMap()
                 mutableAttachedFiles.remove(file.uri)
                 it.copy(
-                    attachedFiles = mutableAttachedFiles
+                    attachedFiles = mutableAttachedFiles,
+                    canAttachFiles = mutableAttachedFiles.size < attachmentSettings.maxFilesAmount
                 )
             }
         }
@@ -229,28 +234,6 @@ internal class EmailAnalysisToolScreenViewModel
 
         override fun onCancelRequest() {
             _uiState.update { it.copy(requestState = AnalysisRequestState.None) }
-        }
-
-        private fun validateRequestSubmission() {
-            _uiState
-                .distinctUntilChangedBy { it.message }
-                .onEach {
-                    _uiState.update {
-                        it.copy(canRequestAnalysis = it.message.submitEnabled)
-                    }
-                }.launchIn(viewModelScope)
-        }
-
-        private fun validateAttachmentLimit() {
-            _uiState
-                .distinctUntilChangedBy { it.attachedFiles }
-                .onEach {
-                    _uiState.update {
-                        val canAttachFiles =
-                            it.attachedFiles.size < attachmentSettings.maxFilesAmount
-                        it.copy(canAttachFiles = canAttachFiles)
-                    }
-                }.launchIn(viewModelScope)
         }
 
         private fun addInvalidAttachedFile(

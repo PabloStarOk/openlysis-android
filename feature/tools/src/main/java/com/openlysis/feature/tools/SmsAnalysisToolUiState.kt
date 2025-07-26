@@ -14,6 +14,6 @@ import com.openlysis.feature.tools.data.AnalysisRequestState
 @Immutable
 internal data class SmsAnalysisToolUiState(
     val message: MessageState = MessageState(),
-    val canRequestAnalysis: Boolean = message.submitEnabled,
+    val canRequestAnalysis: Boolean = message.requiredFieldsSatisfied,
     val requestState: AnalysisRequestState = AnalysisRequestState.None
 )
