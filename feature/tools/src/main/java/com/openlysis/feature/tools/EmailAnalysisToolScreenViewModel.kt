@@ -1,5 +1,6 @@
 package com.openlysis.feature.tools
 
+import androidx.lifecycle.viewModelScope
 import com.openlysis.core.outcome.Outcome
 import com.openlysis.data.analysis.core.di.EmailAnalysesRepository
 import com.openlysis.data.analysis.core.repository.AnalysesRepository
@@ -18,6 +19,9 @@ import com.openlysis.feature.tools.model.FileAttachmentSettings
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
@@ -43,6 +47,10 @@ internal class EmailAnalysisToolScreenViewModel
             MutableStateFlow<EmailAnalysisToolUiState>(EmailAnalysisToolUiState())
         val uiState = _uiState.asStateFlow()
 
+        init {
+            validateRequestSubmission()
+        }
+
         /**
          * Updates the sender field in the message.
          *
@@ -51,10 +59,7 @@ internal class EmailAnalysisToolScreenViewModel
         fun updateSender(sender: String) {
             _uiState.update {
                 val updatedMessage = it.message.copy(sender = sender)
-                it.copy(
-                    message = updatedMessage,
-                    canRequestAnalysis = updatedMessage.requiredFieldsSatisfied
-                )
+                it.copy(message = updatedMessage)
             }
         }
 
@@ -66,10 +71,7 @@ internal class EmailAnalysisToolScreenViewModel
         fun updateSubject(subject: String) {
             _uiState.update {
                 val updatedMessage = it.message.copy(subject = subject)
-                it.copy(
-                    message = updatedMessage,
-                    canRequestAnalysis = updatedMessage.requiredFieldsSatisfied
-                )
+                it.copy(message = updatedMessage)
             }
         }
 
@@ -81,10 +83,7 @@ internal class EmailAnalysisToolScreenViewModel
         fun updateContent(content: String) {
             _uiState.update {
                 val updatedMessage = it.message.copy(content = content)
-                it.copy(
-                    message = updatedMessage,
-                    canRequestAnalysis = updatedMessage.requiredFieldsSatisfied
-                )
+                it.copy(message = updatedMessage)
             }
         }
 
@@ -96,22 +95,18 @@ internal class EmailAnalysisToolScreenViewModel
          */
         fun attachFile(newFile: AttachedFileData) {
             _uiState.update {
-                if (it.attachedFiles.containsKey(newFile.uri)) {
-                    addInvalidAttachedFile(AttachedFileError.AlreadyAttached, newFile)
-                    return
-                }
+                val alreadyAttached =
+                    it.attachedFiles.any { existing -> existing.value.uri == newFile.uri }
+                var error =
+                    when {
+                        alreadyAttached -> AttachedFileError.AlreadyAttached
+                        newFile.size < 1 -> AttachedFileError.NoData
+                        newFile.size > attachmentSettings.maxFileSize -> AttachedFileError.TooLarge
+                        else -> null
+                    }
 
-                if (newFile.size < 1) {
-                    addInvalidAttachedFile(AttachedFileError.NoData, newFile)
-                    return
-                }
-
-                if (newFile.size > attachmentSettings.maxFileSize) {
-                    addInvalidAttachedFile(AttachedFileError.TooLarge, newFile)
-                    return
-                }
-
-                val updatedAttachedFiles = it.attachedFiles + Pair(newFile.uri, newFile)
+                val validatedFile = newFile.copy(error = error)
+                val updatedAttachedFiles = it.attachedFiles + Pair(newFile.id, validatedFile)
                 it.copy(
                     attachedFiles = updatedAttachedFiles,
                     canAttachFiles = updatedAttachedFiles.size < attachmentSettings.maxFilesAmount
@@ -129,14 +124,13 @@ internal class EmailAnalysisToolScreenViewModel
             file: AttachedFileData,
             newPassword: String
         ) {
-            _uiState.update {
-                if (!it.attachedFiles.containsKey(file.uri)) {
-                    it
-                    return
-                }
+            if (!uiState.value.attachedFiles.containsKey(file.id)) {
+                return
+            }
 
+            _uiState.update {
                 val mutableAttachedFiles = it.attachedFiles.toMutableMap()
-                mutableAttachedFiles[file.uri] = file.copy(password = newPassword)
+                mutableAttachedFiles[file.id] = file.copy(password = newPassword)
                 it.copy(attachedFiles = mutableAttachedFiles)
             }
         }
@@ -149,19 +143,12 @@ internal class EmailAnalysisToolScreenViewModel
         fun detachFile(file: AttachedFileData) {
             _uiState.update {
                 val mutableAttachedFiles = it.attachedFiles.toMutableMap()
-                mutableAttachedFiles.remove(file.uri)
+                mutableAttachedFiles.remove(file.id)
                 it.copy(
                     attachedFiles = mutableAttachedFiles,
                     canAttachFiles = mutableAttachedFiles.size < attachmentSettings.maxFilesAmount
                 )
             }
-        }
-
-        /**
-         * Clears the invalid attached files.
-         */
-        fun clearInvalidAttachedFiles() {
-            _uiState.update { it.copy(invalidAttachedFiles = emptySet()) }
         }
 
         /**
@@ -236,17 +223,17 @@ internal class EmailAnalysisToolScreenViewModel
             _uiState.update { it.copy(requestState = AnalysisRequestState.None) }
         }
 
-        private fun addInvalidAttachedFile(
-            error: AttachedFileError,
-            file: AttachedFileData
-        ) {
-            _uiState.update {
-                val fileWithError = file.copy(error = error)
-                it.invalidAttachedFiles.toMutableSet().removeIf { existing ->
-                    existing.uri == file.uri
-                }
-
-                it.copy(invalidAttachedFiles = it.invalidAttachedFiles + fileWithError)
-            }
+        private fun validateRequestSubmission() {
+            uiState
+                .distinctUntilChanged { old, new ->
+                    old.message == new.message && old.attachedFiles == new.attachedFiles
+                }.onEach {
+                    _uiState.update {
+                        val canRequestAnalysis =
+                            it.message.requiredFieldsSatisfied &&
+                                it.attachedFiles.all { it.value.error == null }
+                        it.copy(canRequestAnalysis = canRequestAnalysis)
+                    }
+                }.launchIn(viewModelScope)
         }
     }

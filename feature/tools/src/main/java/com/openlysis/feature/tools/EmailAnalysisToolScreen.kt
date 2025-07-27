@@ -61,7 +61,7 @@ internal fun EmailAnalysisToolScreen(
         )
 
         AttachFilesSection(
-            attachedFiles = uiState.attachedFiles.values.toList() + uiState.invalidAttachedFiles,
+            attachedFiles = uiState.attachedFiles.values.toList(),
             onFileAttach = viewModel::attachFile,
             onFileDetach = viewModel::detachFile,
             onFilePasswordChange = viewModel::updateAttachedFilePassword,
