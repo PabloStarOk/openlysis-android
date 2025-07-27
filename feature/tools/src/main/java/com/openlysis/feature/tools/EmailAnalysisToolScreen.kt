@@ -68,7 +68,8 @@ internal fun EmailAnalysisToolScreen(
             enabled = uiState.canAttachFiles,
             title = stringResource(R.string.email_message_tool_file_section_title),
             description = stringResource(R.string.email_message_tool_file_section_description),
-            settings = viewModel.attachmentSettings
+            settings = viewModel.attachmentSettings,
+            pickMultipleFiles = true
         )
     }
 }

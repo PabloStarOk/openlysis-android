@@ -102,6 +102,8 @@ internal class EmailAnalysisToolScreenViewModel
                         alreadyAttached -> AttachedFileError.AlreadyAttached
                         newFile.size < 1 -> AttachedFileError.NoData
                         newFile.size > attachmentSettings.maxFileSize -> AttachedFileError.TooLarge
+                        it.attachedFiles.size >= attachmentSettings.maxFilesAmount ->
+                            AttachedFileError.LimitReached
                         else -> null
                     }
 

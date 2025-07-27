@@ -59,7 +59,8 @@ internal fun FileAnalysisToolScreen(
             enabled = !uiState.isFileAttached,
             title = stringResource(R.string.file_tool_section_title),
             description = stringResource(R.string.file_tool_section_description),
-            settings = viewModel.attachmentSettings
+            settings = viewModel.attachmentSettings,
+            pickMultipleFiles = false
         )
     }
 }

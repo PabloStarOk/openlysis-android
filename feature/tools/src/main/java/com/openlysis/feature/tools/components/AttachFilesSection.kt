@@ -69,6 +69,7 @@ import com.openlysis.feature.tools.model.FileAttachmentSettings
  * @param title The title of the section.
  * @param description The description of the section.
  * @param settings Settings to configure and show file attachment limitations.
+ * @param pickMultipleFiles If to allow the user to pick multiple files when browsing the files to be attached.
  * @param modifier Modifier for styling.
  */
 @Composable
@@ -81,15 +82,28 @@ internal fun AttachFilesSection(
     title: String,
     description: String,
     settings: FileAttachmentSettings,
+    pickMultipleFiles: Boolean,
     modifier: Modifier = Modifier
 ) {
     val contentResolver = LocalContext.current.contentResolver
-    val getContentContract = remember { ActivityResultContracts.GetContent() }
-    val selectFileLauncher =
-        rememberLauncherForActivityResult(getContentContract) {
-            if (it != null) {
-                val fileData = getFileDataFromUri(it, contentResolver)
-                onFileAttach(fileData)
+    val launcherResultHandler =
+        if (pickMultipleFiles) {
+            val contract = remember { ActivityResultContracts.GetMultipleContents() }
+            rememberLauncherForActivityResult(contract) {
+                handleMultipleContentsContract(
+                    uris = it,
+                    contentResolver = contentResolver,
+                    onFileAttach = onFileAttach
+                )
+            }
+        } else {
+            val contract = remember { ActivityResultContracts.GetContent() }
+            rememberLauncherForActivityResult(contract) {
+                handleContentContract(
+                    uri = it,
+                    contentResolver = contentResolver,
+                    onFileAttach = onFileAttach
+                )
             }
         }
 
@@ -120,7 +134,7 @@ internal fun AttachFilesSection(
         )
 
         AttachFileButton(
-            onClick = { selectFileLauncher.launch(settings.mimeTypeFilter) },
+            onClick = { launcherResultHandler.launch(settings.mimeTypeFilter) },
             maxFileSize = settings.maxFileSize,
             maxFilesAmount = settings.maxFilesAmount,
             enabled = enabled,
@@ -403,6 +417,28 @@ private fun EditPasswordDialogButtons(
     }
 }
 
+private fun handleMultipleContentsContract(
+    uris: List<Uri>,
+    contentResolver: ContentResolver,
+    onFileAttach: (AttachedFileData) -> Unit
+) {
+    uris.forEach {
+        val fileData = getFileDataFromUri(it, contentResolver)
+        onFileAttach(fileData)
+    }
+}
+
+private fun handleContentContract(
+    uri: Uri?,
+    contentResolver: ContentResolver,
+    onFileAttach: (AttachedFileData) -> Unit
+) {
+    if (uri != null) {
+        val fileData = getFileDataFromUri(uri, contentResolver)
+        onFileAttach(fileData)
+    }
+}
+
 /**
  * Retrieves file data from the given Uri using the provided ContentResolver.
  *
@@ -460,7 +496,8 @@ private fun AttachFilesSectionPreview() {
             enabled = true,
             title = "Test title",
             description = "This is a description",
-            settings = FileAttachmentSettings(maxFilesAmount = 1, maxFileSize = 1048576)
+            settings = FileAttachmentSettings(maxFilesAmount = 1, maxFileSize = 1048576),
+            pickMultipleFiles = false
         )
     }
 }
