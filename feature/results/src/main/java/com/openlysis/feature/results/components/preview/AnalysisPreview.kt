@@ -4,8 +4,6 @@ import android.os.Build
 import android.text.format.DateFormat
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -15,15 +13,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -79,120 +76,127 @@ internal fun AnalysisPreview(
 
     val showRefreshButton =
         remember(state.status) {
-            state.status == AnalysisStatus.Queued ||
-                state.status == AnalysisStatus.InProgress
+            state.status == AnalysisStatus.Queued || state.status == AnalysisStatus.InProgress
         }
 
-    Card(
-        colors =
-            CardDefaults
-                .cardColors()
-                .copy(containerColor = Color.Transparent),
+    Surface(
+        color = LocalAppColorScheme.current.background.default.primary,
         border =
             BorderStroke(
                 width = 1.dp,
-                color = LocalAppColorScheme.current.border.brand.primary
+                color = LocalAppColorScheme.current.border.default.primary
             ),
-        shape = RoundedCornerShape(LocalAppRadius.current.value100),
+        shape = RoundedCornerShape(LocalAppRadius.current.value200),
+        shadowElevation = 2.dp,
         modifier = modifier
     ) {
-        Column(
-            modifier =
-                Modifier
-                    .background(LocalAppColorScheme.current.background.brand.tertiary)
-                    .border(width = 1.dp, color = LocalAppColorScheme.current.border.brand.primary)
-                    .padding(
-                        vertical = LocalAppSpacing.current.value300,
-                        horizontal = LocalAppSpacing.current.value400
-                    ).fillMaxWidth()
-        ) {
-            Text(
-                text = headerLabel,
-                style = LocalAppTypography.current.bodyXSmall,
-                color = LocalAppColorScheme.current.text.default.secondary
+        Column {
+            PreviewHeader(
+                headerLabel = headerLabel,
+                headerContent = state.headerContent,
+                modifier = Modifier.fillMaxWidth()
             )
 
-            Text(
-                text = state.headerContent,
-                style = LocalAppTypography.current.bodyBaseStrong,
-                color = LocalAppColorScheme.current.text.default.primary,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
+            HorizontalDivider(color = LocalAppColorScheme.current.border.default.primary)
+
+            PreviewBody(
+                analysisStatus = state.status,
+                date = formattedDate,
+                verdict = state.verdict,
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            HorizontalDivider(color = LocalAppColorScheme.current.border.default.primary)
+
+            PreviewButtons(
+                onDetailsClick = onDetailsClick,
+                onRefreshClick = onRefreshClick,
+                showRefreshButton = showRefreshButton,
+                isRefreshing = isRefreshing,
+                modifier = Modifier.fillMaxWidth()
             )
         }
+    }
+}
 
-        Column(
-            verticalArrangement = Arrangement.spacedBy(LocalAppSpacing.current.value300),
+@Composable
+private fun PreviewHeader(
+    headerLabel: String,
+    headerContent: String,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier =
+            modifier
+                .padding(
+                    vertical = LocalAppSpacing.current.value300,
+                    horizontal = LocalAppSpacing.current.value400
+                )
+    ) {
+        Text(
+            text = headerLabel,
+            style = LocalAppTypography.current.bodyXSmall,
+            color = LocalAppColorScheme.current.text.default.secondary
+        )
+
+        Text(
+            text = headerContent,
+            style = LocalAppTypography.current.bodyBase,
+            color = LocalAppColorScheme.current.text.default.primary,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
+    }
+}
+
+@Composable
+private fun PreviewBody(
+    analysisStatus: AnalysisStatus,
+    date: String,
+    verdict: Verdict,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(LocalAppSpacing.current.value300),
+        modifier = modifier.padding(LocalAppSpacing.current.value400)
+    ) {
+        AnalysisStatusBadge(
+            status = analysisStatus,
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(LocalAppSpacing.current.value300),
             modifier =
                 Modifier
-                    .padding(LocalAppSpacing.current.value400)
                     .fillMaxWidth()
+                    .height(IntrinsicSize.Min)
         ) {
-            AnalysisStatusBadge(
-                status = state.status,
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(LocalAppSpacing.current.value300),
+            PreviewBodyInfoCard(
+                label = stringResource(R.string.analysis_preview_started_date_label),
                 modifier =
                     Modifier
-                        .fillMaxWidth()
-                        .height(IntrinsicSize.Min)
+                        .weight(1f)
+                        .fillMaxHeight()
             ) {
-                PreviewInfo(
-                    label = stringResource(R.string.analysis_preview_started_date_label),
-                    modifier =
-                        Modifier
-                            .weight(1f)
-                            .fillMaxHeight()
-                ) {
-                    Text(
-                        text = formattedDate,
-                        style = LocalAppTypography.current.bodySmall,
-                        color = LocalAppColorScheme.current.text.default.primary,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
-
-                PreviewInfo(
-                    label = stringResource(R.string.analysis_preview_verdict_label),
-                    modifier =
-                        Modifier
-                            .weight(1f)
-                            .fillMaxHeight()
-                ) {
-                    AnalysisVerdictBadge(
-                        verdict = state.verdict,
-                        size = SizeType.Small
-                    )
-                }
+                Text(
+                    text = date,
+                    style = LocalAppTypography.current.bodySmall,
+                    color = LocalAppColorScheme.current.text.default.primary,
+                    modifier = Modifier.fillMaxWidth()
+                )
             }
 
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(LocalAppSpacing.current.value300),
-                modifier = Modifier.fillMaxWidth()
+            PreviewBodyInfoCard(
+                label = stringResource(R.string.analysis_preview_verdict_label),
+                modifier =
+                    Modifier
+                        .weight(1f)
+                        .fillMaxHeight()
             ) {
-                if (showRefreshButton) {
-                    RefreshButton(
-                        onRefreshClick = onRefreshClick,
-                        isRefreshing = isRefreshing,
-                        displayLabel = true,
-                        modifier = Modifier.weight(1f)
-                    )
-                }
-
-                AppButton(
-                    type = ButtonType.Primary,
-                    size = SizeType.Default,
-                    onClick = onDetailsClick,
-                    displayLabel = true,
-                    displayIcon = true,
-                    label = stringResource(R.string.analysis_preview_details_button_label),
-                    icon = AppIcons.Document,
-                    iconAlt =
-                        stringResource(R.string.analysis_preview_details_button_icon_alt),
-                    modifier = Modifier.weight(1f)
+                AnalysisVerdictBadge(
+                    verdict = verdict,
+                    size = SizeType.Small
                 )
             }
         }
@@ -200,27 +204,54 @@ internal fun AnalysisPreview(
 }
 
 @Composable
-private fun PreviewInfo(
+private fun PreviewButtons(
+    onDetailsClick: () -> Unit,
+    onRefreshClick: () -> Unit,
+    showRefreshButton: Boolean,
+    isRefreshing: Boolean,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(LocalAppSpacing.current.value300),
+        modifier = modifier.padding(LocalAppSpacing.current.value100)
+    ) {
+        if (showRefreshButton) {
+            RefreshButton(
+                onRefreshClick = onRefreshClick,
+                isRefreshing = isRefreshing,
+                displayLabel = true,
+                type = ButtonType.Tertiary,
+                size = SizeType.Small,
+                modifier = Modifier.weight(1f)
+            )
+        }
+
+        AppButton(
+            type = ButtonType.Tertiary,
+            size = SizeType.Small,
+            onClick = onDetailsClick,
+            displayLabel = true,
+            displayIcon = true,
+            label = stringResource(R.string.analysis_preview_details_button_label),
+            icon = AppIcons.Document,
+            iconAlt =
+                stringResource(R.string.analysis_preview_details_button_icon_alt),
+            modifier = Modifier.weight(1f)
+        )
+    }
+}
+
+@Composable
+private fun PreviewBodyInfoCard(
     label: String,
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit
 ) {
-    Column(
-        verticalArrangement =
-            Arrangement.spacedBy(
-                space = LocalAppSpacing.current.value200,
-                alignment = Alignment.CenterVertically
-            ),
-        modifier =
-            modifier
-                .clip(RoundedCornerShape(LocalAppRadius.current.value100))
-                .background(LocalAppColorScheme.current.background.brand.tertiary)
-                .padding(LocalAppSpacing.current.value200)
-    ) {
+    Column(modifier = modifier) {
         Text(
             text = label,
-            style = LocalAppTypography.current.bodySmallStrong,
-            color = LocalAppColorScheme.current.text.default.primary,
+            style = LocalAppTypography.current.bodyXSmall,
+            color = LocalAppColorScheme.current.text.default.secondary,
             modifier = Modifier.fillMaxWidth()
         )
 

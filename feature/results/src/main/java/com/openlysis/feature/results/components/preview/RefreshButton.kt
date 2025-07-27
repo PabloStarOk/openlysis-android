@@ -33,14 +33,25 @@ import com.openlysis.feature.results.R
  * @param isRefreshing Boolean indicating whether the refresh action is in progress
  * @param displayLabel Boolean determining if the button label should be shown
  * @param modifier [Modifier] to be applied to the component
+ * @param size The size of the button.
  */
 @Composable
 internal fun RefreshButton(
     onRefreshClick: () -> Unit,
     isRefreshing: Boolean,
     displayLabel: Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    type: ButtonType = ButtonType.Secondary,
+    size: SizeType = SizeType.Default
 ) {
+    val loadingIndicatorSize =
+        when (size) {
+            SizeType.Large -> 56.dp
+            SizeType.Default -> 48.dp
+            SizeType.Small -> 40.dp
+            SizeType.ExtraSmall -> 32.dp
+        }
+
     AnimatedContent(
         targetState = isRefreshing,
         transitionSpec = {
@@ -63,7 +74,7 @@ internal fun RefreshButton(
         if (state) {
             Box(
                 contentAlignment = Alignment.Center,
-                modifier = modifier.size(48.dp)
+                modifier = modifier.size(loadingIndicatorSize)
             ) {
                 CircularProgressIndicator(
                     color = LocalAppColorScheme.current.icon.brand.primary,
@@ -72,8 +83,8 @@ internal fun RefreshButton(
             }
         } else {
             AppButton(
-                type = ButtonType.Secondary,
-                size = SizeType.Default,
+                type = type,
+                size = size,
                 onClick = onRefreshClick,
                 displayLabel = displayLabel,
                 displayIcon = true,
