@@ -22,6 +22,6 @@ internal data class AttachedFileData(
     val uri: Uri,
     val displayName: String,
     val size: Long,
-    val password: String? = null,
+    val password: String = "",
     val error: AttachedFileError? = null
 ) : Parcelable

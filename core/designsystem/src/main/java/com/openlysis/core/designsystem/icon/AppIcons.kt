@@ -101,4 +101,13 @@ object AppIcons {
 
     val Login
         @Composable get() = ImageVector.vectorResource(R.drawable.login_icon)
+
+    val Key
+        @Composable get() = ImageVector.vectorResource(R.drawable.key_icon)
+
+    val Edit
+        @Composable get() = ImageVector.vectorResource(R.drawable.edit_icon)
+
+    val Upload
+        @Composable get() = ImageVector.vectorResource(R.drawable.upload_icon)
 }

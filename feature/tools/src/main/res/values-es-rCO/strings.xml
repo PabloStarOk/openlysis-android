@@ -26,18 +26,37 @@
     <string name="analyze_message_content_input_label">Contenido</string>
 
     <string name="attached_file_header_icon_alt">Ícono de archivo</string>
+    <string name="attached_file_header_error_icon_alt">Ícono de alerta en forma de octagono</string>
     <string name="attached_file_detach_button_icon_alt">Ícono para quitar archivo</string>
-    <string name="attached_file_password_input_label">Contraseña opcional</string>
-    <string name="attached_file_show_password_button_icon_alt">Ícono para mostrar contraseña</string>
-    <string name="attached_file_hide_password_button_icon_alt">Ícono para ocultar contraseña</string>
+    <string name="attached_file_password_label">Contraseña</string>
+    <string name="attached_file_add_password_button_label">Añadir contraseña</string>
+    <string name="attached_file_add_password_button_icon_alt">Ícono de llave</string>
+    <string name="attached_file_edit_password_button_icon_alt">Ícono de editar</string>
+    <string name="attached_file_error_no_data">Archivo vacío.</string>
+    <string name="attached_file_error_already_attached">Este archivo ya esta adjunto.</string>
+    <string name="attached_file_error_too_large">Archivo demasiado grande.</string>
+    <string name="attached_file_error_limit_reached">Límite de archivos alcanzado.</string>
+
+    <string name="attached_file_password_dialog_title">Contraseña del Archivo</string>
+    <string name="attached_file_password_dialog_description">Algunos archivos protegidos requieren de una contraseña para ser analizados eficazmente.</string>
+    <string name="attached_file_password_dialog_file_name_label">Nombre del Archivo</string>
+    <string name="attached_file_password_dialog_input_label">Contraseña opcional</string>
+    <string name="attached_file_password_dialog_show_button_icon_alt">Ícono para mostrar contraseña</string>
+    <string name="attached_file_password_dialog_hide_button_icon_alt">Ícono para ocultar contraseña</string>
+    <string name="attached_file_password_dialog_cancel_button_label">Cancel</string>
+    <string name="attached_file_password_dialog_cancel_button_icon_alt">Icono de cancelar, símbolo X</string>
+    <string name="attached_file_password_dialog_apply_button_label">Aplicar</string>
+    <string name="attached_file_password_dialog_apply_button_icon_alt">Ícono de marca de verificación</string>
 
     <string name="attach_file_warning_alert">Por privacidad, nunca adjuntes archivos privados o confidenciales.</string>
     <plurals name="attach_file_limit_message">
         <item quantity="one">Puedes añadir un archivo de hasta %s de tamaño.</item>
         <item quantity="other">Puedes añadir hasta %d archivos, de %s cada uno como máximo.</item>
     </plurals>
-    <string name="attach_file_button_label">Agregar archivo</string>
-    <string name="attach_file_button_icon_alt">Icono para agregar archivo</string>
+    <string name="attach_file_button_label">Buscar archivos</string>
+    <string name="attach_file_button_disabled_label">Límite de archivos alcanzado</string>
+    <string name="attach_file_button_on_click_label">Buscar archivos para ser analizados</string>
+    <string name="attach_file_button_icon_alt">Icono de cargar archivo</string>
 
     <string name="email_message_tool_screen_title">Analizar Correo Electrónico</string>
     <string name="email_message_tool_section_title">Mensaje de Correo Electrónico</string>
@@ -73,11 +92,6 @@
     <string name="analysis_request_state_dialog_retry_button_icon_alt">Icono de reintentar, flecha circular</string>
     <string name="analysis_request_state_dialog_back_button_label">Volver</string>
     <string name="analysis_request_state_dialog_back_button_icon_alt">Icono de retroceder, flecha hacia la izquierda</string>
-
-    <string name="info_file_already_attached">Este archivo ya está adjunto.</string>
-    <string name="error_file_uri_null">No se pudo agregar el archivo debido a un error inesperado.</string>
-    <string name="error_file_too_large">El tamaño del archivo debe ser igual o menor a %s.</string>
-    <string name="error_file_size_zero">No se pudo agregar el archivo porque no contiene información.</string>
 
     <string name="error_analysis_repository_generic">Ocurrió un error inesperado. Por favor, inténtalo de nuevo.</string>
     <string name="error_analysis_repository_bad_request">Ocurrió un error de validación. Verifica que los datos ingresados sean correctos.</string>

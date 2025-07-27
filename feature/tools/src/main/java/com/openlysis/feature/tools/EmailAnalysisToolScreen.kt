@@ -2,9 +2,7 @@ package com.openlysis.feature.tools
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -16,7 +14,6 @@ import com.openlysis.feature.tools.components.AttachFilesSection
 import com.openlysis.feature.tools.components.MessageSection
 import com.openlysis.feature.tools.components.ToolScreenScaffold
 import com.openlysis.feature.tools.model.AnalysisRequestState
-import com.openlysis.feature.tools.util.showAttachmentErrorUiMessage
 
 /**
  * Composable screen for email analysis tool that allows users to input email details and attachments.
@@ -33,25 +30,8 @@ internal fun EmailAnalysisToolScreen(
     onTopBarUpdate: (TopBarState) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val context = LocalContext.current
-    val messageUiNotifier = remember { MessageUiNotifier(context) }
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val requestState = uiState.requestState
-    if (uiState.invalidAttachedFiles.isNotEmpty()) {
-        uiState.invalidAttachedFiles.forEach {
-            if (it.error == null) {
-                return@forEach
-            }
-            showAttachmentErrorUiMessage(
-                context = context,
-                messageUiNotifier = messageUiNotifier,
-                error = it.error,
-                attachmentSettings = viewModel.attachmentSettings
-            )
-        }
-
-        viewModel.clearInvalidAttachedFiles()
-    }
 
     ToolScreenScaffold(
         onSubmitRequest = viewModel::startAnalysis,
@@ -81,7 +61,7 @@ internal fun EmailAnalysisToolScreen(
         )
 
         AttachFilesSection(
-            attachedFiles = uiState.attachedFiles.values.toList(),
+            attachedFiles = uiState.attachedFiles.values.toList() + uiState.invalidAttachedFiles,
             onFileAttach = viewModel::attachFile,
             onFileDetach = viewModel::detachFile,
             onFilePasswordChange = viewModel::updateAttachedFilePassword,

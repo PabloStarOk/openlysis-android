@@ -2,9 +2,7 @@ package com.openlysis.feature.tools
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.openlysis.core.designsystem.components.bar.TopBarState
@@ -13,8 +11,6 @@ import com.openlysis.feature.tools.components.AttachFilesSection
 import com.openlysis.feature.tools.components.ToolScreenScaffold
 import com.openlysis.feature.tools.model.AnalysisRequestState
 import com.openlysis.feature.tools.model.AttachedFileData
-import com.openlysis.feature.tools.model.AttachedFileError
-import com.openlysis.feature.tools.util.showAttachmentErrorUiMessage
 
 /**
  * Composable screen for file analysis tool.
@@ -31,21 +27,8 @@ internal fun FileAnalysisToolScreen(
     onTopBarUpdate: (TopBarState) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val context = LocalContext.current
-    val messageUiNotifier = remember { MessageUiNotifier(context) }
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val requestState = uiState.requestState
-
-    if (uiState.isFileAttached && uiState.file?.error != null) {
-        val file = uiState.file as AttachedFileData
-        showAttachmentErrorUiMessage(
-            context = context,
-            messageUiNotifier = messageUiNotifier,
-            error = file.error as AttachedFileError,
-            attachmentSettings = viewModel.attachmentSettings
-        )
-        viewModel.removeFile()
-    }
 
     ToolScreenScaffold(
         onSubmitRequest = viewModel::startAnalysis,

@@ -26,18 +26,37 @@
     <string name="analyze_message_content_input_label">Content</string>
 
     <string name="attached_file_header_icon_alt">File icon</string>
+    <string name="attached_file_header_error_icon_alt">Alert icon, octagon shape</string>
     <string name="attached_file_detach_button_icon_alt">Detach file icon</string>
-    <string name="attached_file_password_input_label">Optional password</string>
-    <string name="attached_file_show_password_button_icon_alt">Show password icon</string>
-    <string name="attached_file_hide_password_button_icon_alt">Hide password icon</string>
+    <string name="attached_file_password_label">Password</string>
+    <string name="attached_file_add_password_button_label">Add password</string>
+    <string name="attached_file_add_password_button_icon_alt">Key icon</string>
+    <string name="attached_file_edit_password_button_icon_alt">Edit icon</string>
+    <string name="attached_file_error_no_data">Empty file.</string>
+    <string name="attached_file_error_already_attached">This file is already attached.</string>
+    <string name="attached_file_error_too_large">File too large.</string>
+    <string name="attached_file_error_limit_reached">File limit reached.</string>
+
+    <string name="attached_file_password_dialog_title">File Password</string>
+    <string name="attached_file_password_dialog_description">Some protected files require a password to be analyzed effectively.</string>
+    <string name="attached_file_password_dialog_file_name_label">File Name</string>
+    <string name="attached_file_password_dialog_input_label">Optional password</string>
+    <string name="attached_file_password_dialog_show_button_icon_alt">Show password icon</string>
+    <string name="attached_file_password_dialog_hide_button_icon_alt">Hide password icon</string>
+    <string name="attached_file_password_dialog_cancel_button_label">Cancel</string>
+    <string name="attached_file_password_dialog_cancel_button_icon_alt">Cancel icon, X symbol</string>
+    <string name="attached_file_password_dialog_apply_button_label">Apply</string>
+    <string name="attached_file_password_dialog_apply_button_icon_alt">Checkmark icon</string>
 
     <string name="attach_file_warning_alert">For privacy, never attach private or confidential files.</string>
     <plurals name="attach_file_limit_message">
         <item quantity="one">You can attach a file up to %s in size.</item>
         <item quantity="other">You can attach up to %d files, each up to %s in size.</item>
     </plurals>
-    <string name="attach_file_button_label">Add File</string>
-    <string name="attach_file_button_icon_alt">Add file icon</string>
+    <string name="attach_file_button_label">Browse files</string>
+    <string name="attach_file_button_disabled_label">File limit reached</string>
+    <string name="attach_file_button_on_click_label">Browse files to be analyzed</string>
+    <string name="attach_file_button_icon_alt">Upload file icon</string>
 
     <string name="email_message_tool_screen_title">Analyze Email</string>
     <string name="email_message_tool_section_title">Email Message</string>
@@ -73,11 +92,6 @@
     <string name="analysis_request_state_dialog_retry_button_icon_alt">Retry icon, circular arrow</string>
     <string name="analysis_request_state_dialog_back_button_label">Back</string>
     <string name="analysis_request_state_dialog_back_button_icon_alt">Back icon, left-pointing arrow</string>
-
-    <string name="info_file_already_attached">This file is already attached.</string>
-    <string name="error_file_uri_null">File could not be added due to an unexpected error.</string>
-    <string name="error_file_too_large">The file size must be less than or equal to %s.</string>
-    <string name="error_file_size_zero">File could not be added because has not data.</string>
 
     <string name="error_analysis_repository_generic">An unexpected error occurred. Please try again.</string>
     <string name="error_analysis_repository_bad_request">A validation error occurred. Please verify the data you entered is correct.</string>
