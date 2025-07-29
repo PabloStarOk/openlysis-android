@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="notifications_sms_analysis_channel_name">Automated SMS Analysis</string>
+    <string name="notifications_sms_analysis_channel_description">These notifications pertain to the automated analysis of SMS messages. When an SMS is received, the app notifies the user to decide whether to analyze it. If the user agrees, the analysis begins, and subsequent updates are reflected in the notification.</string>
+
+    <string name="notifications_sms_analyze_title">Analyze SMS</string>
+    <string name="notifications_sms_analyze_content">A new SMS message has been received from %s.</string>
+    <string name="notifications_sms_analyze_primary_action_label">Analyze</string>
+    <string name="notifications_sms_analyze_cancel_action_label">Cancel</string>
+</resources>
