@@ -14,9 +14,9 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.net.toUri
 import com.openlysis.core.designsystem.icon.AppIconsIds
+import com.openlysis.data.analysis.model.analysis.AnalysisStatus
+import com.openlysis.data.analysis.model.common.Verdict
 import com.openlysis.notification.constant.Notifications
-import com.openlysis.notification.constant.SmsAnalysis
-import com.openlysis.notification.receiver.AnalyzableSmsReceiver
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -33,9 +33,36 @@ internal class SystemTrayNotifier
     constructor(
         @ApplicationContext private val context: Context
     ) : Notifier {
+        private val completedAnalysisStringResources =
+            mapOf(
+                Verdict.Unknown to
+                    Pair(
+                        R.string.worker_notification_title_sms_analysis_completed_generic,
+                        R.string.worker_notification_content_sms_analysis_completed_unknown
+                    ),
+                Verdict.Undetected to
+                    Pair(
+                        R.string.worker_notification_title_sms_analysis_completed_generic,
+                        R.string.worker_notification_content_sms_analysis_completed_undetected
+                    ),
+                Verdict.Suspicious to
+                    Pair(
+                        R.string.worker_notification_title_sms_analysis_completed_suspicious,
+                        R.string.worker_notification_content_sms_analysis_completed_suspicious
+                    ),
+                Verdict.Malicious to
+                    Pair(
+                        R.string.worker_notification_title_sms_analysis_completed_malicious,
+                        R.string.worker_notification_content_sms_analysis_completed_malicious
+                    )
+            )
+
         override fun notifyAnalyzableSms(
             sms: SmsMessage,
-            smsFormat: String
+            smsFormat: String,
+            notificationId: Int,
+            analyzeIntent: Intent,
+            cancelIntent: Intent
         ) = with(context) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
                 checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) !=
@@ -46,9 +73,109 @@ internal class SystemTrayNotifier
 
             createSmsNotificationChannel()
 
-            val notificationId = Random.nextInt(from = 1, until = Int.MAX_VALUE)
-            val notification = createSmsNotification(notificationId, sms, smsFormat)
+            val analyzePendingIntent =
+                analyzeIntent.asUniquePending(
+                    notificationId,
+                    this,
+                    ANALYZE_REQUEST_CODE
+                )
+            val cancelPendingIntent =
+                cancelIntent.asUniquePending(
+                    notificationId,
+                    this,
+                    CANCEL_REQUEST_CODE
+                )
+
+            val notification = createSmsNotification(sms, analyzePendingIntent, cancelPendingIntent)
             NotificationManagerCompat.from(this).notify(notificationId, notification)
+        }
+
+        override fun notifyMessageAnalysisFinalization(
+            messageSender: String,
+            analysisStatus: AnalysisStatus,
+            analysisVerdict: Verdict
+        ) = with(context) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+                checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) !=
+                PackageManager.PERMISSION_GRANTED
+            ) {
+                return
+            }
+
+            val notificationId = Random.nextInt()
+            val notification =
+                createMessageAnalysisNotification(
+                    messageSender,
+                    analysisStatus,
+                    analysisVerdict
+                )
+            NotificationManagerCompat.from(this).notify(notificationId, notification)
+        }
+
+        override fun createMessageAnalysisNotification(
+            messageSender: String,
+            analysisStatus: AnalysisStatus,
+            analysisVerdict: Verdict
+        ): Notification {
+            val isFinalStatus =
+                analysisStatus != AnalysisStatus.Queued &&
+                    analysisStatus != AnalysisStatus.InProgress
+
+            val (contentTitle, contentText) =
+                when (analysisStatus) {
+                    AnalysisStatus.Completed -> {
+                        val (titleResId, textResId) =
+                            completedAnalysisStringResources.getValue(analysisVerdict)
+                        val contentTitle = context.getString(titleResId)
+                        val contentText = context.getString(textResId, messageSender)
+                        Pair(contentTitle, contentText)
+                    }
+                    AnalysisStatus.Failed, AnalysisStatus.Timeout -> {
+                        val contentTitle =
+                            context.getString(
+                                R.string.worker_notification_title_sms_analysis_failed
+                            )
+
+                        val contentText =
+                            context.getString(
+                                R.string.worker_notification_content_sms_analysis_failed
+                            )
+                        Pair(contentTitle, contentText)
+                    }
+                    AnalysisStatus.Queued, AnalysisStatus.InProgress -> {
+                        val contentTitle =
+                            context.getString(
+                                R.string.worker_notification_title_sms_analysis_in_progress
+                            )
+                        val contentText =
+                            context.getString(
+                                R.string.worker_notification_content_sms_analysis_in_progress
+                            )
+                        Pair(contentTitle, contentText)
+                    }
+                }
+
+            // TODO: Add action to retry in case of failure.
+            return NotificationCompat
+                .Builder(context, Notifications.SMS_ANALYSIS_NOTIFICATION_CHANNEL_ID)
+                .apply {
+                    setSmallIcon(AppIconsIds.Openlysis)
+                    setPriority(NotificationCompat.PRIORITY_HIGH)
+
+                    if (isFinalStatus) {
+                        setAutoCancel(true)
+                    } else {
+                        setOngoing(true)
+                        setProgress(0, 0, true)
+                    }
+
+                    setContentTitle(contentTitle)
+                    setContentText(contentText)
+
+                    if (analysisStatus == AnalysisStatus.Completed) {
+                        setStyle(NotificationCompat.BigTextStyle().bigText(contentText))
+                    }
+                }.build()
         }
 
         private fun Context.createSmsNotificationChannel() {
@@ -73,24 +200,10 @@ internal class SystemTrayNotifier
         }
 
         private fun Context.createSmsNotification(
-            notificationId: Int,
             sms: SmsMessage,
-            smsFormat: String
+            analyzePendingIntent: PendingIntent,
+            cancelPendingIntent: PendingIntent
         ): Notification {
-            val analyzeIntent =
-                smsAnalysisIntent(
-                    notificationId,
-                    SmsAnalysis.SubAction.Analyze,
-                    sms,
-                    smsFormat
-                )
-            val cancelIntent =
-                smsAnalysisIntent(
-                    notificationId,
-                    SmsAnalysis.SubAction.Cancel,
-                    sms,
-                    smsFormat
-                )
             val content =
                 getString(
                     R.string.notifications_sms_analyze_content,
@@ -106,40 +219,36 @@ internal class SystemTrayNotifier
                 .addAction(
                     AppIconsIds.Search,
                     getString(R.string.notifications_sms_analyze_primary_action_label),
-                    analyzeIntent
+                    analyzePendingIntent
                 ).addAction(
                     AppIconsIds.Cross,
                     getString(R.string.notifications_sms_analyze_cancel_action_label),
-                    cancelIntent
+                    cancelPendingIntent
                 ).setAutoCancel(true)
                 .build()
         }
 
-        private fun Context.smsAnalysisIntent(
+        private fun Intent.asUniquePending(
             notificationId: Int,
-            subAction: SmsAnalysis.SubAction,
-            sms: SmsMessage,
-            smsFormat: String
+            context: Context,
+            requestCode: Int
         ): PendingIntent {
-            val intent =
-                Intent(context, AnalyzableSmsReceiver::class.java).apply {
-                    action = SmsAnalysis.SMS_ANALYSIS_AVAILABLE_INTENT
-                    data =
-                        Notifications.NOTIFICATION_DATA_URI_PLACEHOLDER
-                            .format(
-                                notificationId
-                            ).toUri()
-                            .normalizeScheme()
-                    putExtra(SmsAnalysis.EXTRA_NOTIFICATION_ID, notificationId)
-                    putExtra(SmsAnalysis.EXTRA_SUB_ACTION, subAction.toString())
-                    putExtra(SmsAnalysis.EXTRA_SMS_PDU, sms.pdu)
-                    putExtra(SmsAnalysis.EXTRA_SMS_FORMAT, smsFormat)
-                }
+            data =
+                Notifications.NOTIFICATION_DATA_URI_PLACEHOLDER
+                    .format(notificationId)
+                    .toUri()
+                    .normalizeScheme()
+
             return PendingIntent.getBroadcast(
+                context,
+                requestCode,
                 this,
-                subAction.ordinal,
-                intent,
                 PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
             )
+        }
+
+        private companion object {
+            const val ANALYZE_REQUEST_CODE = 0
+            const val CANCEL_REQUEST_CODE = 1
         }
     }

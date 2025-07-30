@@ -126,6 +126,7 @@ dependencies {
     implementation(projects.core.data.remote)
     implementation(projects.core.data.database)
     implementation(projects.core.data.datastore)
+    implementation(projects.core.data.work)
     implementation(projects.core.notification)
 
     coreLibraryDesugaring(libs.android.tools.desugar)

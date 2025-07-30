@@ -34,6 +34,7 @@ dependencies {
     implementation(projects.core.common)
     implementation(projects.core.data.analysis.model)
     implementation(projects.core.data.analysis.core)
+    implementation(projects.core.notification)
     implementation(projects.feature.tools)
 
     compileOnly(libs.google.dagger.hilt)

@@ -1,20 +1,15 @@
 package com.openlysis.data.work
 
-import android.Manifest
 import android.app.Notification
 import android.content.Context
-import android.content.pm.PackageManager
 import android.content.pm.ServiceInfo
 import android.os.Build
 import android.telephony.SmsMessage
 import android.util.Log
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
-import com.openlysis.core.designsystem.icon.AppIconsIds
 import com.openlysis.core.network.AppDispatcher
 import com.openlysis.core.network.di.Dispatcher
 import com.openlysis.core.outcome.Outcome
@@ -27,12 +22,12 @@ import com.openlysis.data.analysis.model.common.Verdict
 import com.openlysis.data.analysis.model.message.MessageAnalysis
 import com.openlysis.data.analysis.model.message.MessageType
 import com.openlysis.feature.tools.model.AnalysisSettings
+import com.openlysis.notification.Notifier
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
-import kotlin.random.Random
 
 /**
  * Worker for analyzing SMS messages in the background.
@@ -44,6 +39,7 @@ import kotlin.random.Random
  * @param coroutineDispatcher Dispatcher for coroutine execution.
  * @param smsRepository Repository for SMS analysis operations.
  * @param analysisSettings Settings for SMS analysis.
+ * @param notifier Notifier for message analysis notifications.
  */
 @HiltWorker
 class SmsAnalysisWorker
@@ -54,16 +50,16 @@ class SmsAnalysisWorker
         @Dispatcher(AppDispatcher.IO) private val coroutineDispatcher: CoroutineDispatcher,
         @SmsAnalysesRepository private val smsRepository:
             AnalysesRepository<AnalyzeMessage, MessageAnalysis>,
-        private val analysisSettings: AnalysisSettings
+        private val analysisSettings: AnalysisSettings,
+        private val notifier: Notifier
     ) : CoroutineWorker(context, workerParameters) {
-        private var notificationId: Int = -1
+        private var notificationId: Int = DEFAULT_NOTIFICATION_ID
 
         override suspend fun doWork(): Result =
             withContext(coroutineDispatcher) {
                 notificationId = inputData.getInt(NOTIFICATION_ID_KEY, notificationId)
-                if (notificationId == -1) {
-                    Log.e(LOGGING_TAG, "Notification ID was not found.")
-                    return@withContext Result.failure()
+                if (notificationId == DEFAULT_NOTIFICATION_ID) {
+                    throw IllegalStateException("Notification ID was not found.")
                 }
 
                 val pdu =
@@ -85,17 +81,17 @@ class SmsAnalysisWorker
             }
 
         override suspend fun getForegroundInfo(): ForegroundInfo {
-            val notification =
-                notificationBuilder {
-                    setContentTitle(
-                        applicationContext.getString(
-                            R.string.worker_notification_title_sms_analysis_starting
-                        )
-                    )
-                    setAutoCancel(false)
-                    setOngoing(true)
-                }
+            notificationId = inputData.getInt(NOTIFICATION_ID_KEY, notificationId)
+            if (notificationId == DEFAULT_NOTIFICATION_ID) {
+                throw IllegalStateException("Notification ID was not found.")
+            }
 
+            val notification =
+                notifier.createMessageAnalysisNotification(
+                    "",
+                    AnalysisStatus.Queued,
+                    Verdict.Unknown
+                )
             return buildForegroundInfo(notificationId, notification)
         }
 
@@ -147,7 +143,7 @@ class SmsAnalysisWorker
             messageSender: String,
             analysisId: String
         ): Result {
-            notifyInProgress()
+            notifyInProgress(messageSender)
             var isResultFinal = false
             while (!isResultFinal) {
                 delay(POLLING_FREQUENCY_MS)
@@ -163,30 +159,24 @@ class SmsAnalysisWorker
                     status != AnalysisStatus.InProgress
 
                 if (isResultFinal) {
-                    notifyFinished(messageSender, status, outcome.value.verdict)
+                    notifier.notifyMessageAnalysisFinalization(
+                        messageSender,
+                        status,
+                        outcome.value.verdict
+                    )
                 }
             }
 
-            return Result.success()
+            return Result.failure()
         }
 
-        private suspend fun notifyInProgress() {
+        private suspend fun notifyInProgress(messageSender: String) {
             val notification =
-                notificationBuilder {
-                    setContentTitle(
-                        applicationContext.getString(
-                            R.string.worker_notification_title_sms_analysis_in_progress
-                        )
-                    )
-                    setContentText(
-                        applicationContext.getString(
-                            R.string.worker_notification_content_sms_analysis_in_progress
-                        )
-                    )
-                    setProgress(0, 0, true)
-                    setOngoing(true)
-                }
-
+                notifier.createMessageAnalysisNotification(
+                    messageSender,
+                    AnalysisStatus.Queued,
+                    Verdict.Unknown
+                )
             try {
                 setForeground(buildForegroundInfo(notificationId, notification))
             } catch (ex: IllegalStateException) {
@@ -194,87 +184,15 @@ class SmsAnalysisWorker
             }
         }
 
-        private fun notifyFinished(
-            messageSender: String,
-            status: AnalysisStatus,
-            verdict: Verdict
-        ) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
-                applicationContext.checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) !=
-                PackageManager.PERMISSION_GRANTED
-            ) {
-                return
-            }
-
-            val notificationId = Random.nextInt()
-            val notification =
-                notificationBuilder {
-                    // TODO: Add action to retry.
-                    if (status == AnalysisStatus.Completed) {
-                        val (title, rawText) = getCompletedAnalysisStringResources(verdict)
-                        val formattedText = applicationContext.getString(rawText, messageSender)
-                        setContentTitle(applicationContext.getString(title))
-                        setContentText(formattedText)
-                        setStyle(NotificationCompat.BigTextStyle().bigText(formattedText))
-                    } else {
-                        setContentTitle(
-                            applicationContext.getString(
-                                R.string.worker_notification_title_sms_analysis_failed
-                            )
-                        )
-                        setContentText(
-                            applicationContext.getString(
-                                R.string.worker_notification_content_sms_analysis_failed
-                            )
-                        )
-                    }
-                    setAutoCancel(true)
-                    setOngoing(false)
-                }
-
-            NotificationManagerCompat.from(applicationContext).notify(notificationId, notification)
-        }
-
-        // TODO: Add pending intent to use when user taps the notification.
-        private fun notificationBuilder(
-            customize: NotificationCompat.Builder.() -> NotificationCompat.Builder
-        ): Notification =
-            NotificationCompat
-                .Builder(applicationContext, NOTIFICATION_CHANNEL_ID)
-                .setSmallIcon(AppIconsIds.Openlysis)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .customize()
-                .build()
-
-        private fun getCompletedAnalysisStringResources(verdict: Verdict): Pair<Int, Int> =
-            when (verdict) {
-                Verdict.Unknown ->
-                    Pair(
-                        R.string.worker_notification_title_sms_analysis_completed_generic,
-                        R.string.worker_notification_content_sms_analysis_completed_unknown
-                    )
-                Verdict.Undetected ->
-                    Pair(
-                        R.string.worker_notification_title_sms_analysis_completed_generic,
-                        R.string.worker_notification_content_sms_analysis_completed_undetected
-                    )
-                Verdict.Suspicious ->
-                    Pair(
-                        R.string.worker_notification_title_sms_analysis_completed_suspicious,
-                        R.string.worker_notification_content_sms_analysis_completed_suspicious
-                    )
-                Verdict.Malicious ->
-                    Pair(
-                        R.string.worker_notification_title_sms_analysis_completed_malicious,
-                        R.string.worker_notification_content_sms_analysis_completed_malicious
-                    )
-            }
-
         private fun onAnalysisFailure(
             messageSender: String,
             failure: Outcome.Failure
         ) {
-            notifyFinished(messageSender, AnalysisStatus.Failed, Verdict.Unknown)
+            notifier.notifyMessageAnalysisFinalization(
+                messageSender,
+                AnalysisStatus.Failed,
+                Verdict.Unknown
+            )
             Log.e(LOGGING_TAG, "Analysis failed due to a ${failure.error}")
         }
 
@@ -299,7 +217,7 @@ class SmsAnalysisWorker
             const val NOTIFICATION_ID_KEY = "notificationId"
             const val SMS_MESSAGE_PDU_KEY = "smsMessagePdu"
             const val SMS_MESSAGE_FORMAT_KEY = "smsMessageFormat"
-            private const val NOTIFICATION_CHANNEL_ID = "com.openlysis.SMS_ANALYSIS_NOTIFICATIONS"
+            const val DEFAULT_NOTIFICATION_ID = Int.MIN_VALUE
             private const val POLLING_FREQUENCY_MS = 3000L
             private const val LOGGING_TAG = "SmsAnalysisWorker"
         }

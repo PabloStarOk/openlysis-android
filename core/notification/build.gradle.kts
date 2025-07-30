@@ -27,12 +27,9 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
-    implementation(libs.androidx.workmanager.runtime)
-    implementation(libs.androidx.workmanager.runtime.ktx)
-    implementation(libs.androidx.hilt.workmanager)
 
     implementation(projects.core.designsystem)
-    implementation(projects.core.data.work)
+    implementation(projects.core.data.analysis.model)
 
     compileOnly(libs.google.dagger.hilt)
 
