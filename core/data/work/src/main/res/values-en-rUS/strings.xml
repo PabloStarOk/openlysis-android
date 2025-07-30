@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="worker_notification_title_sms_analysis_starting">SMS analysis starting</string>
+    <string name="worker_notification_title_sms_analysis_in_progress">SMS analysis in progress</string>
+    <string name="worker_notification_title_sms_analysis_completed_generic">SMS analysis completed</string>
+    <string name="worker_notification_title_sms_analysis_completed_suspicious">Detected SMS as suspicious</string>
+    <string name="worker_notification_title_sms_analysis_completed_malicious">Detected SMS as malicious</string>
+    <string name="worker_notification_title_sms_analysis_failed">SMS analysis failed</string>
+
+    <string name="worker_notification_content_sms_analysis_in_progress">The SMS analysis is in progress.</string>
+    <string name="worker_notification_content_sms_analysis_completed_unknown">The verdict of the SMS message from %s is unknown.</string>
+    <string name="worker_notification_content_sms_analysis_completed_undetected">The analysis of an SMS message from %s was detected as clean.</string>
+    <string name="worker_notification_content_sms_analysis_completed_suspicious">The analysis of an SMS message from %s was detected as suspicious.</string>
+    <string name="worker_notification_content_sms_analysis_completed_malicious">The analysis of an SMS message from %s was detected as malicious.</string>
+    <string name="worker_notification_content_sms_analysis_failed">The SMS analysis failed.</string>
+</resources>

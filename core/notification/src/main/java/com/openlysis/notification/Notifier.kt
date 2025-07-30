@@ -9,7 +9,11 @@ interface Notifier {
     /**
      * Notifies that an SMS message is analyzable.
      *
-     * @param message The SMS message to be analyzed.
+     * @param sms The SMS message to be analyzed.
+     * @param smsFormat The format of the SMS message.
      */
-    fun notifyAnalyzableSms(message: SmsMessage)
+    fun notifyAnalyzableSms(
+        sms: SmsMessage,
+        smsFormat: String
+    )
 }

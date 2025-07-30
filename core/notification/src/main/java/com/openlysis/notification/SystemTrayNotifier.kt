@@ -33,21 +33,23 @@ internal class SystemTrayNotifier
     constructor(
         @ApplicationContext private val context: Context
     ) : Notifier {
-        override fun notifyAnalyzableSms(message: SmsMessage) =
-            with(context) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
-                    checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) !=
-                    PackageManager.PERMISSION_GRANTED
-                ) {
-                    return
-                }
-
-                createSmsNotificationChannel()
-
-                val notificationId = Random.nextInt(from = 1, until = Int.MAX_VALUE)
-                val notification = createSmsNotification(notificationId, message)
-                NotificationManagerCompat.from(this).notify(notificationId, notification)
+        override fun notifyAnalyzableSms(
+            sms: SmsMessage,
+            smsFormat: String
+        ) = with(context) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+                checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) !=
+                PackageManager.PERMISSION_GRANTED
+            ) {
+                return
             }
+
+            createSmsNotificationChannel()
+
+            val notificationId = Random.nextInt(from = 1, until = Int.MAX_VALUE)
+            val notification = createSmsNotification(notificationId, sms, smsFormat)
+            NotificationManagerCompat.from(this).notify(notificationId, notification)
+        }
 
         private fun Context.createSmsNotificationChannel() {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
@@ -72,16 +74,27 @@ internal class SystemTrayNotifier
 
         private fun Context.createSmsNotification(
             notificationId: Int,
-            message: SmsMessage
+            sms: SmsMessage,
+            smsFormat: String
         ): Notification {
             val analyzeIntent =
-                smsAnalysisIntent(notificationId, SmsAnalysis.SubAction.Analyze)
+                smsAnalysisIntent(
+                    notificationId,
+                    SmsAnalysis.SubAction.Analyze,
+                    sms,
+                    smsFormat
+                )
             val cancelIntent =
-                smsAnalysisIntent(notificationId, SmsAnalysis.SubAction.Cancel)
+                smsAnalysisIntent(
+                    notificationId,
+                    SmsAnalysis.SubAction.Cancel,
+                    sms,
+                    smsFormat
+                )
             val content =
                 getString(
                     R.string.notifications_sms_analyze_content,
-                    message.displayOriginatingAddress
+                    sms.displayOriginatingAddress
                 )
             return NotificationCompat
                 .Builder(context, Notifications.SMS_ANALYSIS_NOTIFICATION_CHANNEL_ID)
@@ -104,7 +117,9 @@ internal class SystemTrayNotifier
 
         private fun Context.smsAnalysisIntent(
             notificationId: Int,
-            subAction: SmsAnalysis.SubAction
+            subAction: SmsAnalysis.SubAction,
+            sms: SmsMessage,
+            smsFormat: String
         ): PendingIntent {
             val intent =
                 Intent(context, AnalyzableSmsReceiver::class.java).apply {
@@ -117,12 +132,14 @@ internal class SystemTrayNotifier
                             .normalizeScheme()
                     putExtra(SmsAnalysis.EXTRA_NOTIFICATION_ID, notificationId)
                     putExtra(SmsAnalysis.EXTRA_SUB_ACTION, subAction.toString())
+                    putExtra(SmsAnalysis.EXTRA_SMS_PDU, sms.pdu)
+                    putExtra(SmsAnalysis.EXTRA_SMS_FORMAT, smsFormat)
                 }
             return PendingIntent.getBroadcast(
                 this,
                 subAction.ordinal,
                 intent,
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
             )
         }
     }

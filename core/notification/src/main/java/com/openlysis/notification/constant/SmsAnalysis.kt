@@ -21,6 +21,16 @@ internal object SmsAnalysis {
     const val EXTRA_SUB_ACTION = "com.openlysis.Analysis.SMS_ANALYSIS_AVAILABLE_SUB_ACTION"
 
     /**
+     * Extra key for the SMS PDU.
+     */
+    const val EXTRA_SMS_PDU = "com.openlysis.Analysis.SMS_ANALYSIS_PDU"
+
+    /**
+     * Extra key for the SMS format.
+     */
+    const val EXTRA_SMS_FORMAT = "com.openlysis.Analysis.SMS_ANALYSIS_FORMAT"
+
+    /**
      * Sub-actions for SMS analysis notifications.
      */
     internal enum class SubAction {

@@ -113,6 +113,7 @@ dependencies {
     implementation(libs.androidx.navigation)
     implementation(libs.google.dagger.hilt)
     implementation(libs.androidx.splashscreen)
+    implementation(libs.androidx.hilt.workmanager)
 
     implementation(projects.core.designsystem)
     implementation(projects.feature.tools)
@@ -125,6 +126,7 @@ dependencies {
     implementation(projects.core.data.remote)
     implementation(projects.core.data.database)
     implementation(projects.core.data.datastore)
+    implementation(projects.core.notification)
 
     coreLibraryDesugaring(libs.android.tools.desugar)
 
