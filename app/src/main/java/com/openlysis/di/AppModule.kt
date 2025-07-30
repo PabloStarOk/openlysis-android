@@ -3,7 +3,6 @@ package com.openlysis.di
 import com.openlysis.BuildConfig
 import com.openlysis.data.database.LocalStoragePreferences
 import com.openlysis.data.remote.ApiClientSettings
-import com.openlysis.data.remote.ApiCredentials
 import com.openlysis.feature.tools.model.AnalysisSettings
 import com.openlysis.feature.tools.model.FileAttachmentSettings
 import dagger.Module
@@ -32,11 +31,6 @@ internal object AppModule {
             }
         return ApiClientSettings(baseUrl = URI(url).toURL())
     }
-
-    // TODO: Implement repository for encrypted API credentials.
-    @Singleton
-    @Provides
-    fun provideApiCredentials(): ApiCredentials = ApiCredentials("TODO")
 
     // TODO: Implement repository for user preferences.
     @Singleton
