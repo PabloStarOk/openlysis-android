@@ -10,7 +10,9 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.OutOfQuotaPolicy
 import androidx.work.WorkManager
 import androidx.work.workDataOf
-import com.openlysis.data.work.SmsAnalysisWorker
+import com.openlysis.data.work.SmsAnalysisRefreshWorker
+import com.openlysis.data.work.SmsAnalysisStartWorker
+import com.openlysis.data.work.constant.SmsAnalysisWorkers
 
 /**
  * BroadcastReceiver that handles SMS analysis-related actions.
@@ -29,13 +31,13 @@ internal class AnalyzableSmsReceiver : BroadcastReceiver() {
         val notificationId =
             intent.getIntExtra(
                 EXTRA_NOTIFICATION_ID,
-                SmsAnalysisWorker.DEFAULT_NOTIFICATION_ID
+                SmsAnalysisWorkers.DEFAULT_INVALID_NOTIFICATION_ID
             )
         val actionTypeString = intent.getStringExtra(EXTRA_SUB_ACTION)
         val smsPdu = intent.getByteArrayExtra(EXTRA_SMS_PDU)
         val smsFormat = intent.getStringExtra(EXTRA_SMS_FORMAT)
 
-        if (notificationId == SmsAnalysisWorker.DEFAULT_NOTIFICATION_ID) {
+        if (notificationId == SmsAnalysisWorkers.DEFAULT_INVALID_NOTIFICATION_ID) {
             throw IllegalStateException("Notification ID was not found.")
         }
 
@@ -56,20 +58,32 @@ internal class AnalyzableSmsReceiver : BroadcastReceiver() {
                         .setRequiredNetworkType(networkType = NetworkType.CONNECTED)
                         .build()
 
-                val smsAnalysisWorker =
-                    OneTimeWorkRequestBuilder<SmsAnalysisWorker>()
+                val smsAnalysisStartWorker =
+                    OneTimeWorkRequestBuilder<SmsAnalysisStartWorker>()
                         .setConstraints(constraints)
                         .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
                         .setInputData(
                             workDataOf(
-                                SmsAnalysisWorker.NOTIFICATION_ID_KEY to notificationId,
-                                SmsAnalysisWorker.SMS_MESSAGE_PDU_KEY to smsPdu,
-                                SmsAnalysisWorker.SMS_MESSAGE_FORMAT_KEY to smsFormat
+                                SmsAnalysisStartWorker.SMS_MESSAGE_PDU_KEY to smsPdu,
+                                SmsAnalysisStartWorker.SMS_MESSAGE_FORMAT_KEY to smsFormat
+                            )
+                        ).build()
+
+                val smsAnalysisRefreshWorker =
+                    OneTimeWorkRequestBuilder<SmsAnalysisRefreshWorker>()
+                        .setConstraints(constraints)
+                        .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
+                        .setInputData(
+                            workDataOf(
+                                SmsAnalysisWorkers.NOTIFICATION_ID_KEY to notificationId
                             )
                         ).build()
 
                 val workManager = WorkManager.Companion.getInstance(context)
-                workManager.enqueue(smsAnalysisWorker)
+                workManager
+                    .beginWith(smsAnalysisStartWorker)
+                    .then(smsAnalysisRefreshWorker)
+                    .enqueue()
             }
             SubAction.Cancel -> {
                 NotificationManagerCompat.from(context).cancel(notificationId)
