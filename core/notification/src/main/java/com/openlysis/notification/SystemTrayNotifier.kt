@@ -62,7 +62,8 @@ internal class SystemTrayNotifier
             smsFormat: String,
             notificationId: Int,
             analyzeIntent: Intent,
-            cancelIntent: Intent
+            cancelIntent: Intent,
+            tapIntent: Intent
         ) = with(context) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
                 checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) !=
@@ -85,8 +86,21 @@ internal class SystemTrayNotifier
                     this,
                     CANCEL_REQUEST_CODE
                 )
+            val tapPendingIntent =
+                PendingIntent.getActivity(
+                    context,
+                    CONTENT_TAP_REQUEST_CODE,
+                    tapIntent,
+                    PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
+                )
 
-            val notification = createSmsNotification(sms, analyzePendingIntent, cancelPendingIntent)
+            val notification =
+                createSmsNotification(
+                    sms,
+                    analyzePendingIntent,
+                    cancelPendingIntent,
+                    tapPendingIntent
+                )
             NotificationManagerCompat.from(this).notify(notificationId, notification)
         }
 
@@ -202,7 +216,8 @@ internal class SystemTrayNotifier
         private fun Context.createSmsNotification(
             sms: SmsMessage,
             analyzePendingIntent: PendingIntent,
-            cancelPendingIntent: PendingIntent
+            cancelPendingIntent: PendingIntent,
+            tapIntent: PendingIntent
         ): Notification {
             val content =
                 getString(
@@ -224,7 +239,8 @@ internal class SystemTrayNotifier
                     AppIconsIds.Cross,
                     getString(R.string.notifications_sms_analyze_cancel_action_label),
                     cancelPendingIntent
-                ).setAutoCancel(true)
+                ).setContentIntent(tapIntent)
+                .setAutoCancel(true)
                 .build()
         }
 
@@ -250,5 +266,6 @@ internal class SystemTrayNotifier
         private companion object {
             const val ANALYZE_REQUEST_CODE = 0
             const val CANCEL_REQUEST_CODE = 1
+            const val CONTENT_TAP_REQUEST_CODE = 2
         }
     }

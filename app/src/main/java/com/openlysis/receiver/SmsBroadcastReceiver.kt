@@ -1,10 +1,14 @@
 package com.openlysis.receiver
 
 import android.content.BroadcastReceiver
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.provider.Telephony
 import android.telephony.SmsMessage
+import androidx.core.net.toUri
+import com.openlysis.core.link.DeepLinks
 import com.openlysis.notification.Notifier
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -32,7 +36,13 @@ internal class SmsBroadcastReceiver : BroadcastReceiver() {
 
         smsMessages.forEach {
             val sms = it
-            val notificationId = sms.emailBody?.hashCode() ?: sms.messageBody.hashCode()
+            val messageBody = sms.messageBody ?: sms.emailBody ?: ""
+
+            if (messageBody.isBlank()) {
+                return@forEach
+            }
+
+            val notificationId = messageBody.hashCode()
             val analyzeIntent =
                 context.smsAnalysisIntent(
                     notificationId,
@@ -48,12 +58,26 @@ internal class SmsBroadcastReceiver : BroadcastReceiver() {
                     smsFormat
                 )
 
+            val encodedSender = Uri.encode(it.displayOriginatingAddress)
+            val encodedContent = Uri.encode(messageBody)
+            val tapIntent =
+                Intent().apply {
+                    action = Intent.ACTION_VIEW
+                    data =
+                        DeepLinks.Tools.Sms
+                            .createUri(encodedSender, encodedContent)
+                            .toUri()
+                    component =
+                        ComponentName(context.packageName, DeepLinks.OPENLYSIS_ACTIVITY_NAME)
+                }
+
             notifier.notifyAnalyzableSms(
                 sms,
                 smsFormat,
                 notificationId,
                 analyzeIntent,
-                cancelIntent
+                cancelIntent,
+                tapIntent
             )
         }
     }

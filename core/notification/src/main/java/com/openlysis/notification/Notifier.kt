@@ -16,15 +16,17 @@ interface Notifier {
      * @param sms The SMS message to be analyzed.
      * @param smsFormat The format of the SMS message.
      * @param notificationId An [Int] to identify the notification.
-     * @param analyzeIntent An [Intent] to execute when user request an analysis for the SMS from the notification.
-     * @param cancelIntent An [Intent] to execute when user request to cancel the notification.
+     * @param analyzeIntent An [Intent] to execute when user requests an analysis for the SMS from the notification.
+     * @param cancelIntent An [Intent] to execute when user requests to cancel the notification.
+     * @param tapIntent An [Intent] to execute when the user taps the notification.
      */
     fun notifyAnalyzableSms(
         sms: SmsMessage,
         smsFormat: String,
         notificationId: Int,
         analyzeIntent: Intent,
-        cancelIntent: Intent
+        cancelIntent: Intent,
+        tapIntent: Intent
     )
 
     /**

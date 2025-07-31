@@ -12,8 +12,10 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import androidx.navigation.navDeepLink
 import androidx.navigation.navigation
 import com.openlysis.core.designsystem.components.bar.TopBarState
+import com.openlysis.core.link.DeepLinks
 import com.openlysis.data.analysis.model.analysis.FileMultiAnalysis
 import com.openlysis.data.analysis.model.analysis.UrlMultiAnalysis
 import com.openlysis.data.analysis.model.message.MessageAnalysis
@@ -151,6 +153,7 @@ fun NavGraphBuilder.toolsScreen(
         }
 
         composable<SmsAnalysisToolRoute>(
+            deepLinks = listOf(navDeepLink { uriPattern = DeepLinks.Tools.Sms.URI_PATTERN }),
             enterTransition = {
                 slideIntoContainer(towards = SlideDirection.Down) +
                     fadeIn()
