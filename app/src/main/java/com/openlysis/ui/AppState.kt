@@ -1,6 +1,7 @@
 package com.openlysis.ui
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -33,10 +34,20 @@ import com.openlysis.navigation.TopLevelDestination
 @Composable
 internal fun rememberAppState(isUserSignedIn: Boolean): AppState {
     val navController = rememberNavController()
+    val topBarState =
+        remember {
+            mutableStateOf(
+                TopBarState(
+                    title = "",
+                    hasMenu = false
+                )
+            )
+        }
     return remember(navController, isUserSignedIn) {
         AppState(
             navController = navController,
-            isUserSignedIn = isUserSignedIn
+            isUserSignedIn = isUserSignedIn,
+            _topBarState = topBarState
         )
     }
 }
@@ -50,7 +61,8 @@ internal fun rememberAppState(isUserSignedIn: Boolean): AppState {
 @Stable
 internal class AppState(
     val navController: NavHostController,
-    private val isUserSignedIn: Boolean
+    private val isUserSignedIn: Boolean,
+    private val _topBarState: MutableState<TopBarState>
 ) {
     val startRootDestinationRoute =
         if (isUserSignedIn) {
@@ -80,15 +92,7 @@ internal class AppState(
 
     val topLevelDestinations: List<TopLevelDestination> = TopLevelDestination.entries
 
-    private val topBarMutableState =
-        mutableStateOf(
-            TopBarState(
-                title = "",
-                hasMenu = false
-            )
-        )
-
-    val topBarState: State<TopBarState> = topBarMutableState
+    val topBarState: State<TopBarState> = _topBarState
 
     /**
      * Updates the state of the top bar with the provided new state.
@@ -96,7 +100,7 @@ internal class AppState(
      * @param newState The new [TopBarState] to be applied to the top bar.
      */
     fun updateTopBarState(newState: TopBarState) {
-        topBarMutableState.value = newState
+        _topBarState.value = newState
     }
 
     /**
