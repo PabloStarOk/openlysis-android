@@ -2,9 +2,9 @@ package com.openlysis.notification
 
 import android.app.Notification
 import android.content.Intent
-import android.telephony.SmsMessage
 import com.openlysis.data.analysis.model.analysis.AnalysisStatus
 import com.openlysis.data.analysis.model.common.Verdict
+import com.openlysis.data.analysis.model.message.Message
 
 /**
  * Interface for notifying.
@@ -13,16 +13,14 @@ interface Notifier {
     /**
      * Notifies that an SMS message is analyzable.
      *
-     * @param sms The SMS message to be analyzed.
-     * @param smsFormat The format of the SMS message.
+     * @param message The SMS message to be analyzed.
      * @param notificationId An [Int] to identify the notification.
      * @param analyzeIntent An [Intent] to execute when user requests an analysis for the SMS from the notification.
      * @param cancelIntent An [Intent] to execute when user requests to cancel the notification.
      * @param tapIntent An [Intent] to execute when the user taps the notification.
      */
     fun notifyAnalyzableSms(
-        sms: SmsMessage,
-        smsFormat: String,
+        message: Message,
         notificationId: Int,
         analyzeIntent: Intent,
         cancelIntent: Intent,

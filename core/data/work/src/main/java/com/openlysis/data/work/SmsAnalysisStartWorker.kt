@@ -3,7 +3,6 @@ package com.openlysis.data.work
 import android.content.Context
 import android.content.pm.ServiceInfo
 import android.os.Build
-import android.telephony.SmsMessage
 import android.util.Log
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
@@ -53,31 +52,29 @@ class SmsAnalysisStartWorker
     ) : CoroutineWorker(context, workerParameters) {
         override suspend fun doWork(): Result =
             withContext(coroutineDispatcher) {
-                val pdu =
-                    inputData.getByteArray(SMS_MESSAGE_PDU_KEY)
+                val messageSender =
+                    inputData.getString(MESSAGE_SENDER_KEY)
                         ?: return@withContext Result.failure()
-                val format =
-                    inputData.getString(SMS_MESSAGE_FORMAT_KEY)
+                val messageBody =
+                    inputData.getString(MESSAGE_BODY_KEY)
                         ?: return@withContext Result.failure()
-                val smsMessage = SmsMessage.createFromPdu(pdu, format)
 
-                val request = createAnalysisRequest(smsMessage)
+                val request = createAnalysisRequest(messageSender, messageBody)
                 val outcome = smsRepository.analyze(request)
 
                 when (outcome) {
                     is Outcome.Success -> {
-                        val sender = outcome.value.message.sender
                         val analysisId = outcome.value.id
                         Result.success(
                             workDataOf(
-                                SmsAnalysisRefreshWorker.MESSAGE_SENDER_KEY to sender,
+                                SmsAnalysisRefreshWorker.MESSAGE_SENDER_KEY to messageSender,
                                 SmsAnalysisRefreshWorker.ANALYSIS_ID_KEY to analysisId
                             )
                         )
                     }
                     is Outcome.Failure -> {
                         notifier.notifyMessageAnalysisFinalization(
-                            smsMessage.displayOriginatingAddress,
+                            messageSender,
                             AnalysisStatus.Failed,
                             Verdict.Unknown
                         )
@@ -110,33 +107,16 @@ class SmsAnalysisStartWorker
             }
         }
 
-        private fun createAnalysisRequest(smsMessage: SmsMessage): AnalyzeMessage {
-            val sender =
-                if (smsMessage.isEmail &&
-                    smsMessage.emailFrom != null &&
-                    smsMessage.emailFrom.isNotBlank()
-                ) {
-                    smsMessage.emailFrom
-                } else {
-                    smsMessage.originatingAddress
-                }
-
-            val content =
-                if (smsMessage.isEmail &&
-                    smsMessage.emailBody != null &&
-                    smsMessage.emailBody.isNotBlank()
-                ) {
-                    smsMessage.emailBody
-                } else {
-                    smsMessage.messageBody
-                }
-
+        private fun createAnalysisRequest(
+            sender: String,
+            body: String
+        ): AnalyzeMessage {
             val message =
                 Message(
                     type = MessageType.Sms,
-                    sender = sender ?: "",
-                    subject = smsMessage.pseudoSubject,
-                    content = content,
+                    sender = sender,
+                    subject = "",
+                    content = body,
                     attachments = null
                 )
 
@@ -148,8 +128,12 @@ class SmsAnalysisStartWorker
         }
 
         companion object {
-            const val SMS_MESSAGE_PDU_KEY = "smsMessagePdu"
-            const val SMS_MESSAGE_FORMAT_KEY = "smsMessageFormat"
+            /** Key for the sender of the message in input data. */
+            const val MESSAGE_SENDER_KEY = "messageSender"
+
+            /** Key for the body of the message in input data. */
+            const val MESSAGE_BODY_KEY = "messageBody"
+
             private const val LOGGING_TAG = "SmsAnalysisSWorker"
         }
     }

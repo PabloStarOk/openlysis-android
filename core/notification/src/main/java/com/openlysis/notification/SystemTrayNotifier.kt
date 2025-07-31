@@ -9,13 +9,13 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
-import android.telephony.SmsMessage
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.net.toUri
 import com.openlysis.core.designsystem.icon.AppIconsIds
 import com.openlysis.data.analysis.model.analysis.AnalysisStatus
 import com.openlysis.data.analysis.model.common.Verdict
+import com.openlysis.data.analysis.model.message.Message
 import com.openlysis.notification.constant.Notifications
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
@@ -58,8 +58,7 @@ internal class SystemTrayNotifier
             )
 
         override fun notifyAnalyzableSms(
-            sms: SmsMessage,
-            smsFormat: String,
+            message: Message,
             notificationId: Int,
             analyzeIntent: Intent,
             cancelIntent: Intent,
@@ -96,7 +95,7 @@ internal class SystemTrayNotifier
 
             val notification =
                 createSmsNotification(
-                    sms,
+                    message,
                     analyzePendingIntent,
                     cancelPendingIntent,
                     tapPendingIntent
@@ -214,7 +213,7 @@ internal class SystemTrayNotifier
         }
 
         private fun Context.createSmsNotification(
-            sms: SmsMessage,
+            message: Message,
             analyzePendingIntent: PendingIntent,
             cancelPendingIntent: PendingIntent,
             tapIntent: PendingIntent
@@ -222,7 +221,7 @@ internal class SystemTrayNotifier
             val content =
                 getString(
                     R.string.notifications_sms_analyze_content,
-                    sms.displayOriginatingAddress
+                    message.sender
                 )
             return NotificationCompat
                 .Builder(context, Notifications.SMS_ANALYSIS_NOTIFICATION_CHANNEL_ID)

@@ -9,11 +9,16 @@ import android.provider.Telephony
 import android.telephony.SmsMessage
 import androidx.core.net.toUri
 import com.openlysis.core.link.DeepLinks
+import com.openlysis.data.analysis.model.message.Message
+import com.openlysis.data.analysis.model.message.MessageType
 import com.openlysis.notification.Notifier
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 private const val EXTRA_SMS_FORMAT = "format"
+
+// TODO: Add and update docs.
+// TODO: Remove workaround in AppState.
 
 /**
  * BroadcastReceiver that listens for incoming SMS messages.
@@ -34,65 +39,77 @@ internal class SmsBroadcastReceiver : BroadcastReceiver() {
             throw IllegalStateException("Broadcast was received but SMS format was null.")
         }
 
-        smsMessages.forEach {
-            val sms = it
-            val messageBody = sms.messageBody ?: sms.emailBody ?: ""
+        val unifiedMessages = smsMessages.toUnifiedMessages()
+        val analyzableMessages = unifiedMessages.filter { it.content.isNotBlank() }
+        analyzableMessages.forEach { postNotification(context, it) }
+    }
 
-            if (messageBody.isBlank()) {
-                return@forEach
+    private fun postNotification(
+        context: Context,
+        message: Message
+    ) {
+        val notificationId = message.content.hashCode()
+        val analyzeIntent =
+            context.smsAnalysisIntent(
+                notificationId,
+                SmsAnalysisAvailableBroadcastReceiver.SubAction.Analyze,
+                message
+            )
+        val cancelIntent =
+            context.smsAnalysisIntent(
+                notificationId,
+                SmsAnalysisAvailableBroadcastReceiver.SubAction.Cancel,
+                message
+            )
+
+        val encodedSender = Uri.encode(message.sender)
+        val encodedContent = Uri.encode(message.content)
+        val tapIntent =
+            Intent().apply {
+                action = Intent.ACTION_VIEW
+                data =
+                    DeepLinks.Tools.Sms
+                        .createUri(encodedSender, encodedContent)
+                        .toUri()
+                component = ComponentName(context.packageName, DeepLinks.OPENLYSIS_ACTIVITY_NAME)
             }
 
-            val notificationId = messageBody.hashCode()
-            val analyzeIntent =
-                context.smsAnalysisIntent(
-                    notificationId,
-                    SmsAnalysisAvailableBroadcastReceiver.SubAction.Analyze,
-                    sms,
-                    smsFormat
-                )
-            val cancelIntent =
-                context.smsAnalysisIntent(
-                    notificationId,
-                    SmsAnalysisAvailableBroadcastReceiver.SubAction.Cancel,
-                    sms,
-                    smsFormat
-                )
-
-            val encodedSender = Uri.encode(it.displayOriginatingAddress)
-            val encodedContent = Uri.encode(messageBody)
-            val tapIntent =
-                Intent().apply {
-                    action = Intent.ACTION_VIEW
-                    data =
-                        DeepLinks.Tools.Sms
-                            .createUri(encodedSender, encodedContent)
-                            .toUri()
-                    component =
-                        ComponentName(context.packageName, DeepLinks.OPENLYSIS_ACTIVITY_NAME)
-                }
-
-            notifier.notifyAnalyzableSms(
-                sms,
-                smsFormat,
-                notificationId,
-                analyzeIntent,
-                cancelIntent,
-                tapIntent
-            )
-        }
+        notifier.notifyAnalyzableSms(
+            message,
+            notificationId,
+            analyzeIntent,
+            cancelIntent,
+            tapIntent
+        )
     }
 
     private fun Context.smsAnalysisIntent(
         notificationId: Int,
         subAction: SmsAnalysisAvailableBroadcastReceiver.SubAction,
-        sms: SmsMessage,
-        smsFormat: String
+        message: Message
     ): Intent =
         Intent(this, SmsAnalysisAvailableBroadcastReceiver::class.java).apply {
             action = SmsAnalysisAvailableBroadcastReceiver.SMS_ANALYSIS_AVAILABLE_INTENT
             putExtra(SmsAnalysisAvailableBroadcastReceiver.EXTRA_NOTIFICATION_ID, notificationId)
             putExtra(SmsAnalysisAvailableBroadcastReceiver.EXTRA_SUB_ACTION, subAction.toString())
-            putExtra(SmsAnalysisAvailableBroadcastReceiver.EXTRA_SMS_PDU, sms.pdu)
-            putExtra(SmsAnalysisAvailableBroadcastReceiver.EXTRA_SMS_FORMAT, smsFormat)
+            putExtra(SmsAnalysisAvailableBroadcastReceiver.EXTRA_MESSAGE_SENDER, message.sender)
+            putExtra(SmsAnalysisAvailableBroadcastReceiver.EXTRA_MESSAGE_BODY, message.content)
         }
+
+    private fun Array<SmsMessage>.toUnifiedMessages(): List<Message> {
+        val messagesBySender = this.groupBy(keySelector = { it.originatingAddress ?: "" })
+        return messagesBySender.flatMap { group ->
+            group.value
+                .groupBy { msg -> msg.timestampMillis }
+                .map {
+                    val content = it.value.joinToString { it.messageBody ?: it.emailBody ?: "" }
+                    Message(
+                        type = MessageType.Sms,
+                        sender = group.key,
+                        content = content,
+                        subject = null
+                    )
+                }
+        }
+    }
 }

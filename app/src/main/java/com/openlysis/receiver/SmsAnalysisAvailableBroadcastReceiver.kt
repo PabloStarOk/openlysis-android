@@ -34,8 +34,8 @@ internal class SmsAnalysisAvailableBroadcastReceiver : BroadcastReceiver() {
                 SmsAnalysisWorkers.DEFAULT_INVALID_NOTIFICATION_ID
             )
         val actionTypeString = intent.getStringExtra(EXTRA_SUB_ACTION)
-        val smsPdu = intent.getByteArrayExtra(EXTRA_SMS_PDU)
-        val smsFormat = intent.getStringExtra(EXTRA_SMS_FORMAT)
+        val messageSender = intent.getStringExtra(EXTRA_MESSAGE_SENDER)
+        val messageBody = intent.getStringExtra(EXTRA_MESSAGE_BODY)
 
         if (notificationId == SmsAnalysisWorkers.DEFAULT_INVALID_NOTIFICATION_ID) {
             throw IllegalStateException("Notification ID was not found.")
@@ -45,8 +45,12 @@ internal class SmsAnalysisAvailableBroadcastReceiver : BroadcastReceiver() {
             throw IllegalStateException("Broadcast was received but request type is invalid.")
         }
 
-        if (smsFormat == null) {
-            throw IllegalStateException("Broadcast was received but SMS format was null.")
+        if (messageSender == null) {
+            throw IllegalStateException("Broadcast was received but message sender is invalid.")
+        }
+
+        if (messageBody == null) {
+            throw IllegalStateException("Broadcast was received but message body was null.")
         }
 
         val subAction = SubAction.valueOf(actionTypeString)
@@ -64,8 +68,8 @@ internal class SmsAnalysisAvailableBroadcastReceiver : BroadcastReceiver() {
                         .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
                         .setInputData(
                             workDataOf(
-                                SmsAnalysisStartWorker.SMS_MESSAGE_PDU_KEY to smsPdu,
-                                SmsAnalysisStartWorker.SMS_MESSAGE_FORMAT_KEY to smsFormat
+                                SmsAnalysisStartWorker.MESSAGE_SENDER_KEY to messageSender,
+                                SmsAnalysisStartWorker.MESSAGE_BODY_KEY to messageBody
                             )
                         ).build()
 
@@ -112,14 +116,14 @@ internal class SmsAnalysisAvailableBroadcastReceiver : BroadcastReceiver() {
         const val EXTRA_SUB_ACTION = "com.openlysis.Analysis.SMS_ANALYSIS_AVAILABLE_SUB_ACTION"
 
         /**
-         * Extra key for the SMS PDU.
+         * Extra key for the message sender in the SMS analysis intent.
          */
-        const val EXTRA_SMS_PDU = "com.openlysis.Analysis.SMS_ANALYSIS_PDU"
+        const val EXTRA_MESSAGE_SENDER = "com.openlysis.Analysis.MESSAGE_SENDER"
 
         /**
-         * Extra key for the SMS format.
+         * Extra key for the message body in the SMS analysis intent.
          */
-        const val EXTRA_SMS_FORMAT = "com.openlysis.Analysis.SMS_ANALYSIS_FORMAT"
+        const val EXTRA_MESSAGE_BODY = "com.openlysis.Analysis.MESSAGE_BODY"
     }
 
     /**
