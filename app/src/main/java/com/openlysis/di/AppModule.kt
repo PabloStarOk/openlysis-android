@@ -1,9 +1,9 @@
 package com.openlysis.di
 
 import com.openlysis.BuildConfig
+import com.openlysis.data.analysis.model.common.AnalysisSettings
 import com.openlysis.data.database.LocalStoragePreferences
 import com.openlysis.data.remote.ApiClientSettings
-import com.openlysis.feature.tools.model.AnalysisSettings
 import com.openlysis.feature.tools.model.FileAttachmentSettings
 import dagger.Module
 import dagger.Provides

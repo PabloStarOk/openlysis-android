@@ -29,15 +29,13 @@ dependencies {
     implementation(libs.androidx.workmanager.runtime)
     implementation(libs.androidx.workmanager.runtime.ktx)
     implementation(libs.androidx.hilt.workmanager)
+    implementation(libs.google.dagger.hilt)
 
     implementation(projects.core.designsystem)
     implementation(projects.core.common)
     implementation(projects.core.data.analysis.model)
     implementation(projects.core.data.analysis.core)
     implementation(projects.core.notification)
-    implementation(projects.feature.tools)
-
-    compileOnly(libs.google.dagger.hilt)
 
     ksp(libs.google.dagger.hilt.compiler)
     ksp(libs.androidx.hilt.compiler)

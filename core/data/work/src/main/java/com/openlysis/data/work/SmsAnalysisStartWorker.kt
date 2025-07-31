@@ -18,10 +18,10 @@ import com.openlysis.data.analysis.core.repository.AnalysesRepository
 import com.openlysis.data.analysis.core.request.AnalyzeMessage
 import com.openlysis.data.analysis.core.request.Message
 import com.openlysis.data.analysis.model.analysis.AnalysisStatus
+import com.openlysis.data.analysis.model.common.AnalysisSettings
 import com.openlysis.data.analysis.model.common.Verdict
 import com.openlysis.data.analysis.model.message.MessageAnalysis
 import com.openlysis.data.analysis.model.message.MessageType
-import com.openlysis.feature.tools.model.AnalysisSettings
 import com.openlysis.notification.Notifier
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
