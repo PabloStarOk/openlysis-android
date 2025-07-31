@@ -19,7 +19,7 @@ import com.openlysis.data.work.constant.SmsAnalysisWorkers
  * Listens for broadcasts indicating that an SMS analysis or cancellation
  * should be performed, triggered from a notification action.
  */
-internal class AnalyzableSmsReceiver : BroadcastReceiver() {
+internal class SmsAnalysisAvailableBroadcastReceiver : BroadcastReceiver() {
     override fun onReceive(
         context: Context,
         intent: Intent

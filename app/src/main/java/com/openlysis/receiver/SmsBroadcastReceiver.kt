@@ -36,14 +36,14 @@ internal class SmsBroadcastReceiver : BroadcastReceiver() {
             val analyzeIntent =
                 context.smsAnalysisIntent(
                     notificationId,
-                    AnalyzableSmsReceiver.SubAction.Analyze,
+                    SmsAnalysisAvailableBroadcastReceiver.SubAction.Analyze,
                     sms,
                     smsFormat
                 )
             val cancelIntent =
                 context.smsAnalysisIntent(
                     notificationId,
-                    AnalyzableSmsReceiver.SubAction.Cancel,
+                    SmsAnalysisAvailableBroadcastReceiver.SubAction.Cancel,
                     sms,
                     smsFormat
                 )
@@ -60,15 +60,15 @@ internal class SmsBroadcastReceiver : BroadcastReceiver() {
 
     private fun Context.smsAnalysisIntent(
         notificationId: Int,
-        subAction: AnalyzableSmsReceiver.SubAction,
+        subAction: SmsAnalysisAvailableBroadcastReceiver.SubAction,
         sms: SmsMessage,
         smsFormat: String
     ): Intent =
-        Intent(this, AnalyzableSmsReceiver::class.java).apply {
-            action = AnalyzableSmsReceiver.SMS_ANALYSIS_AVAILABLE_INTENT
-            putExtra(AnalyzableSmsReceiver.EXTRA_NOTIFICATION_ID, notificationId)
-            putExtra(AnalyzableSmsReceiver.EXTRA_SUB_ACTION, subAction.toString())
-            putExtra(AnalyzableSmsReceiver.EXTRA_SMS_PDU, sms.pdu)
-            putExtra(AnalyzableSmsReceiver.EXTRA_SMS_FORMAT, smsFormat)
+        Intent(this, SmsAnalysisAvailableBroadcastReceiver::class.java).apply {
+            action = SmsAnalysisAvailableBroadcastReceiver.SMS_ANALYSIS_AVAILABLE_INTENT
+            putExtra(SmsAnalysisAvailableBroadcastReceiver.EXTRA_NOTIFICATION_ID, notificationId)
+            putExtra(SmsAnalysisAvailableBroadcastReceiver.EXTRA_SUB_ACTION, subAction.toString())
+            putExtra(SmsAnalysisAvailableBroadcastReceiver.EXTRA_SMS_PDU, sms.pdu)
+            putExtra(SmsAnalysisAvailableBroadcastReceiver.EXTRA_SMS_FORMAT, smsFormat)
         }
 }

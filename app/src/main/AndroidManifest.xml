@@ -41,7 +41,7 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".receiver.AnalyzableSmsReceiver" android:exported="false">
+        <receiver android:name=".receiver.SmsAnalysisAvailableBroadcastReceiver" android:exported="false">
             <intent-filter>
                 <action android:name="com.openlysis.Analysis.SMS_ANALYSIS_AVAILABLE" />
             </intent-filter>
