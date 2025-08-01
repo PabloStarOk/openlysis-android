@@ -105,10 +105,13 @@ internal fun MessageAnalysisDetailsScreen(
                                 analysis.message.sender
                             )
                         )
-                        analysis.message.subject?.let {
+
+                        if (analysis.message.subject?.isNotBlank() == true) {
                             add(
                                 Pair(
-                                    stringResource(R.string.details_screen_message_subject_label),
+                                    stringResource(
+                                        R.string.details_screen_message_subject_label
+                                    ),
                                     analysis.message.subject as String
                                 )
                             )
