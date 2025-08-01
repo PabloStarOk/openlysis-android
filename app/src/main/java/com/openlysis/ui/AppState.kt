@@ -28,11 +28,10 @@ import com.openlysis.navigation.TopLevelDestination
 /**
  * Creates and remembers an instance of [AppState].
  *
- * @param isUserSignedIn If the user is signed in.
  * @return An instance of [AppState] that is remembered across recompositions.
  */
 @Composable
-internal fun rememberAppState(isUserSignedIn: Boolean): AppState {
+internal fun rememberAppState(): AppState {
     val navController = rememberNavController()
     val topBarState =
         remember {
@@ -43,10 +42,9 @@ internal fun rememberAppState(isUserSignedIn: Boolean): AppState {
                 )
             )
         }
-    return remember(navController, isUserSignedIn) {
+    return remember(navController) {
         AppState(
             navController = navController,
-            isUserSignedIn = isUserSignedIn,
             _topBarState = topBarState
         )
     }
@@ -56,21 +54,12 @@ internal fun rememberAppState(isUserSignedIn: Boolean): AppState {
  * The overall state of the application.
  *
  * @property navController The [NavHostController] used for navigating between screens.
- * @property isUserSignedIn If the user is signed in.
  */
 @Stable
 internal class AppState(
     val navController: NavHostController,
-    private val isUserSignedIn: Boolean,
     private val _topBarState: MutableState<TopBarState>
 ) {
-    val startRootDestinationRoute =
-        if (isUserSignedIn) {
-            RootDestination.TopLevel.startBaseRoute
-        } else {
-            RootDestination.Authentication.startBaseRoute
-        }
-
     val currentDestination: NavDestination?
         @Composable get() {
             val currentEntry =

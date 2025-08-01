@@ -104,10 +104,6 @@ internal fun App(
 @Composable
 private fun AppPreview() {
     OpenlysisTheme(darkTheme = false) {
-        App(
-            rememberAppState(
-                isUserSignedIn = false
-            )
-        )
+        App(rememberAppState())
     }
 }

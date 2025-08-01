@@ -42,7 +42,7 @@ internal fun AppNavHost(
     val navController = appState.navController
     NavHost(
         navController = navController,
-        startDestination = appState.startRootDestinationRoute,
+        startDestination = RootDestination.TopLevel.startBaseRoute,
         modifier = modifier
     ) {
         authScreen(

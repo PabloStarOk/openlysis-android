@@ -10,12 +10,13 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.openlysis.core.designsystem.theme.OpenlysisTheme
+import com.openlysis.navigation.RootDestination
 import com.openlysis.ui.App
 import com.openlysis.ui.rememberAppState
 import dagger.hilt.android.AndroidEntryPoint
@@ -67,8 +68,14 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-            val isUserSignedIn = remember(uiState) { uiState.isUserSignedIn() }
-            val appState = rememberAppState(isUserSignedIn = isUserSignedIn)
+            val appState = rememberAppState()
+
+            LaunchedEffect(uiState) {
+                if (uiState is MainActivityUiState.Success && !uiState.isUserSignedIn()) {
+                    appState.navigateToRootDestination(RootDestination.Authentication)
+                }
+            }
+
             OpenlysisTheme {
                 App(appState)
             }
