@@ -106,7 +106,8 @@ internal class SystemTrayNotifier
         override fun notifyMessageAnalysisFinalization(
             messageSender: String,
             analysisStatus: AnalysisStatus,
-            analysisVerdict: Verdict
+            analysisVerdict: Verdict,
+            tapPendingIntent: Intent?
         ) = with(context) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
                 checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) !=
@@ -120,7 +121,8 @@ internal class SystemTrayNotifier
                 createMessageAnalysisNotification(
                     messageSender,
                     analysisStatus,
-                    analysisVerdict
+                    analysisVerdict,
+                    tapPendingIntent
                 )
             NotificationManagerCompat.from(this).notify(notificationId, notification)
         }
@@ -128,7 +130,8 @@ internal class SystemTrayNotifier
         override fun createMessageAnalysisNotification(
             messageSender: String,
             analysisStatus: AnalysisStatus,
-            analysisVerdict: Verdict
+            analysisVerdict: Verdict,
+            tapIntent: Intent?
         ): Notification {
             val isFinalStatus =
                 analysisStatus != AnalysisStatus.Queued &&
@@ -187,6 +190,17 @@ internal class SystemTrayNotifier
 
                     if (analysisStatus == AnalysisStatus.Completed) {
                         setStyle(NotificationCompat.BigTextStyle().bigText(contentText))
+                    }
+
+                    if (tapIntent != null) {
+                        val tapPendingIntent =
+                            PendingIntent.getActivity(
+                                context,
+                                CONTENT_TAP_REQUEST_CODE,
+                                tapIntent,
+                                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                            )
+                        setContentIntent(tapPendingIntent)
                     }
                 }.build()
         }

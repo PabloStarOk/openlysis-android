@@ -76,7 +76,8 @@ class SmsAnalysisStartWorker
                         notifier.notifyMessageAnalysisFinalization(
                             messageSender,
                             AnalysisStatus.Failed,
-                            Verdict.Unknown
+                            Verdict.Unknown,
+                            null
                         )
                         Log.e(LOGGING_TAG, "Analysis failed due to a ${outcome.error}")
                         Result.failure()
@@ -90,7 +91,8 @@ class SmsAnalysisStartWorker
                 notifier.createMessageAnalysisNotification(
                     "",
                     AnalysisStatus.Queued,
-                    Verdict.Unknown
+                    Verdict.Unknown,
+                    null
                 )
 
             return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {

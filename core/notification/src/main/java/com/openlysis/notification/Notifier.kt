@@ -33,11 +33,13 @@ interface Notifier {
      * @param messageSender The sender of the message.
      * @param analysisStatus The final status of the analysis.
      * @param analysisVerdict The verdict of the analysis.
+     * @param tapIntent An optional [Intent] to execute when the user taps the notification.
      */
     fun notifyMessageAnalysisFinalization(
         messageSender: String,
         analysisStatus: AnalysisStatus,
-        analysisVerdict: Verdict
+        analysisVerdict: Verdict,
+        tapIntent: Intent?
     )
 
     /**
@@ -46,11 +48,13 @@ interface Notifier {
      * @param messageSender The sender of the message.
      * @param analysisStatus The status of the analysis.
      * @param analysisVerdict The verdict of the analysis.
+     * @param tapIntent An optional [Intent] to execute when the user taps the notification.
      * @return A [Notification] representing for the specified message analysis state.
      */
     fun createMessageAnalysisNotification(
         messageSender: String,
         analysisStatus: AnalysisStatus,
-        analysisVerdict: Verdict
+        analysisVerdict: Verdict,
+        tapIntent: Intent?
     ): Notification
 }

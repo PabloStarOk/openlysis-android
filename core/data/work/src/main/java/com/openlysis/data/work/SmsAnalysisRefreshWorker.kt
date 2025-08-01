@@ -1,13 +1,17 @@
 package com.openlysis.data.work
 
+import android.content.ComponentName
 import android.content.Context
+import android.content.Intent
 import android.content.pm.ServiceInfo
 import android.os.Build
 import android.util.Log
+import androidx.core.net.toUri
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
+import com.openlysis.core.link.DeepLinks
 import com.openlysis.core.network.AppDispatcher
 import com.openlysis.core.network.di.Dispatcher
 import com.openlysis.core.outcome.Outcome
@@ -17,6 +21,7 @@ import com.openlysis.data.analysis.core.request.AnalyzeMessage
 import com.openlysis.data.analysis.model.analysis.AnalysisStatus
 import com.openlysis.data.analysis.model.common.Verdict
 import com.openlysis.data.analysis.model.message.MessageAnalysis
+import com.openlysis.data.analysis.model.message.MessageType
 import com.openlysis.data.work.constant.SmsAnalysisWorkers.DEFAULT_INVALID_NOTIFICATION_ID
 import com.openlysis.data.work.constant.SmsAnalysisWorkers.NOTIFICATION_ID_KEY
 import com.openlysis.notification.Notifier
@@ -76,7 +81,8 @@ class SmsAnalysisRefreshWorker
                     notifier.notifyMessageAnalysisFinalization(
                         messageSender,
                         AnalysisStatus.Failed,
-                        Verdict.Unknown
+                        Verdict.Unknown,
+                        buildTapIntent(analysisId)
                     )
                     Log.e(LOGGING_TAG, "Analysis failed due to a ${failure.error}")
                     return Result.failure()
@@ -92,7 +98,12 @@ class SmsAnalysisRefreshWorker
                 }
             }
 
-            notifier.notifyMessageAnalysisFinalization(messageSender, status, verdict)
+            notifier.notifyMessageAnalysisFinalization(
+                messageSender,
+                status,
+                verdict,
+                buildTapIntent(analysisId)
+            )
             return Result.success()
         }
 
@@ -108,11 +119,17 @@ class SmsAnalysisRefreshWorker
                 throw IllegalStateException("SMS message sender was not found.")
             }
 
+            val analysisId = inputData.getString(ANALYSIS_ID_KEY)
+            if (analysisId == null) {
+                throw IllegalStateException("Analysis ID was not found.")
+            }
+
             val notification =
                 notifier.createMessageAnalysisNotification(
                     messageSender,
                     AnalysisStatus.Queued,
-                    Verdict.Unknown
+                    Verdict.Unknown,
+                    buildTapIntent(analysisId)
                 )
 
             return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -128,6 +145,17 @@ class SmsAnalysisRefreshWorker
                 )
             }
         }
+
+        private fun buildTapIntent(analysisId: String): Intent =
+            Intent().apply {
+                action = Intent.ACTION_VIEW
+                data =
+                    DeepLinks.Results.Message
+                        .createUri(MessageType.Sms.toString(), analysisId)
+                        .toUri()
+                component =
+                    ComponentName(applicationContext.packageName, DeepLinks.OPENLYSIS_ACTIVITY_NAME)
+            }
 
         companion object {
             internal const val MESSAGE_SENDER_KEY = "messageSender"
