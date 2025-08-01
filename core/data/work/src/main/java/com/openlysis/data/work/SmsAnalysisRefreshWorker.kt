@@ -78,7 +78,7 @@ class SmsAnalysisRefreshWorker
                 val outcome = smsRepository.getUpdatedById(analysisId)
                 if (outcome !is Outcome.Success) {
                     val failure = outcome as Outcome.Failure
-                    notifier.notifyMessageAnalysisFinalization(
+                    notifier.notifyMessageAnalysis(
                         messageSender,
                         AnalysisStatus.Failed,
                         Verdict.Unknown,
@@ -98,7 +98,7 @@ class SmsAnalysisRefreshWorker
                 }
             }
 
-            notifier.notifyMessageAnalysisFinalization(
+            notifier.notifyMessageAnalysis(
                 messageSender,
                 status,
                 verdict,

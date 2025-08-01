@@ -73,7 +73,7 @@ class SmsAnalysisStartWorker
                         )
                     }
                     is Outcome.Failure -> {
-                        notifier.notifyMessageAnalysisFinalization(
+                        notifier.notifyMessageAnalysis(
                             messageSender,
                             AnalysisStatus.Failed,
                             Verdict.Unknown,

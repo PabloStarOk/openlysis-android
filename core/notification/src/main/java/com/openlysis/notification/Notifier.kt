@@ -5,6 +5,7 @@ import android.content.Intent
 import com.openlysis.data.analysis.model.analysis.AnalysisStatus
 import com.openlysis.data.analysis.model.common.Verdict
 import com.openlysis.data.analysis.model.message.Message
+import kotlin.random.Random
 
 /**
  * Interface for notifying.
@@ -28,18 +29,20 @@ interface Notifier {
     )
 
     /**
-     * Notifies that the analysis of a message has been finalized.
+     * Notifies that the status of a message analysis.
      *
      * @param messageSender The sender of the message.
      * @param analysisStatus The final status of the analysis.
      * @param analysisVerdict The verdict of the analysis.
      * @param tapIntent An optional [Intent] to execute when the user taps the notification.
+     * @param notificationId An optional [Int] to use as the ID of the notification.
      */
-    fun notifyMessageAnalysisFinalization(
+    fun notifyMessageAnalysis(
         messageSender: String,
         analysisStatus: AnalysisStatus,
         analysisVerdict: Verdict,
-        tapIntent: Intent?
+        tapIntent: Intent?,
+        notificationId: Int = Random.nextInt()
     )
 
     /**

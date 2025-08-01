@@ -20,7 +20,6 @@ import com.openlysis.notification.constant.Notifications
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.random.Random
 
 /**
  * Notifier implementation that displays notifications in the system tray.
@@ -103,11 +102,12 @@ internal class SystemTrayNotifier
             NotificationManagerCompat.from(this).notify(notificationId, notification)
         }
 
-        override fun notifyMessageAnalysisFinalization(
+        override fun notifyMessageAnalysis(
             messageSender: String,
             analysisStatus: AnalysisStatus,
             analysisVerdict: Verdict,
-            tapPendingIntent: Intent?
+            tapPendingIntent: Intent?,
+            notificationId: Int
         ) = with(context) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
                 checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) !=
@@ -116,7 +116,6 @@ internal class SystemTrayNotifier
                 return
             }
 
-            val notificationId = Random.nextInt()
             val notification =
                 createMessageAnalysisNotification(
                     messageSender,

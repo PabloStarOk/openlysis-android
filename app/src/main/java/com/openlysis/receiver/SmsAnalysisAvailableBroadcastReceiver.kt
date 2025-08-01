@@ -10,16 +10,24 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.OutOfQuotaPolicy
 import androidx.work.WorkManager
 import androidx.work.workDataOf
+import com.openlysis.data.analysis.model.analysis.AnalysisStatus
+import com.openlysis.data.analysis.model.common.Verdict
 import com.openlysis.data.work.SmsAnalysisRefreshWorker
 import com.openlysis.data.work.SmsAnalysisStartWorker
 import com.openlysis.data.work.constant.SmsAnalysisWorkers
+import com.openlysis.notification.Notifier
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 /**
  * BroadcastReceiver that handles SMS analysis-related actions.
  * Listens for broadcasts indicating that an SMS analysis or cancellation
  * should be performed, triggered from a notification action.
  */
+@AndroidEntryPoint
 internal class SmsAnalysisAvailableBroadcastReceiver : BroadcastReceiver() {
+    @Inject lateinit var notifier: Notifier
+
     override fun onReceive(
         context: Context,
         intent: Intent
@@ -88,6 +96,14 @@ internal class SmsAnalysisAvailableBroadcastReceiver : BroadcastReceiver() {
                     .beginWith(smsAnalysisStartWorker)
                     .then(smsAnalysisRefreshWorker)
                     .enqueue()
+
+                notifier.notifyMessageAnalysis(
+                    messageSender,
+                    AnalysisStatus.Queued,
+                    Verdict.Unknown,
+                    tapIntent = null,
+                    notificationId = notificationId
+                )
             }
             SubAction.Cancel -> {
                 NotificationManagerCompat.from(context).cancel(notificationId)
