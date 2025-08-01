@@ -3,7 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:installLocation="internalOnly">
 
+    <uses-feature android:name="android.hardware.telephony" android:required="false"/>
+
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.RECEIVE_SMS"/>
+    <uses-permission android:name="android.permission.READ_SMS"/>
 
     <application
         android:allowBackup="true"
@@ -22,12 +26,35 @@
             android:name=".MainActivity"
             android:exported="true"
             android:theme="@style/Theme.Openlysis.Splash">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="https" android:host="www.openlysis.com" />
+            </intent-filter>
+
         </activity>
+
+        <receiver android:name=".receiver.SmsBroadcastReceiver"
+            android:exported="true"
+            android:permission="android.permission.BROADCAST_SMS">
+            <intent-filter android:priority="1000">
+                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name=".receiver.SmsAnalysisAvailableBroadcastReceiver" android:exported="false">
+            <intent-filter>
+                <action android:name="com.openlysis.Analysis.SMS_ANALYSIS_AVAILABLE" />
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

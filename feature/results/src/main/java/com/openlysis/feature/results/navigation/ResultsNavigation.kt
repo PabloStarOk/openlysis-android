@@ -14,9 +14,11 @@ import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import androidx.navigation.navDeepLink
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
 import com.openlysis.core.designsystem.components.bar.TopBarState
+import com.openlysis.core.link.DeepLinks
 import com.openlysis.data.analysis.model.message.MessageType
 import com.openlysis.feature.results.EmailPreviewsScreenViewModel
 import com.openlysis.feature.results.FileMultiAnalysisDetailsScreen
@@ -203,6 +205,7 @@ fun NavGraphBuilder.resultsScreen(
         }
 
         composable<MessageAnalysisDetailsRoute>(
+            deepLinks = listOf(navDeepLink { uriPattern = DeepLinks.Results.Message.URI_PATTERN }),
             enterTransition = { slideIntoContainer(towards = SlideDirection.Down) + fadeIn() },
             exitTransition = { slideOutOfContainer(towards = SlideDirection.Up) + fadeOut() }
         ) { backStackEntry ->

@@ -7,4 +7,17 @@
     <string name="notifications_sms_analyze_content">Se ha recibido un nuevo mensaje SMS de %s.</string>
     <string name="notifications_sms_analyze_primary_action_label">Analizar</string>
     <string name="notifications_sms_analyze_cancel_action_label">Cancelar</string>
+
+    <string name="worker_notification_title_sms_analysis_in_progress">Análisis de SMS en progreso</string>
+    <string name="worker_notification_title_sms_analysis_completed_generic">Análisis de SMS completado</string>
+    <string name="worker_notification_title_sms_analysis_completed_suspicious">SMS detectado como sospechoso</string>
+    <string name="worker_notification_title_sms_analysis_completed_malicious">SMS detectado como malicioso</string>
+    <string name="worker_notification_title_sms_analysis_failed">El análisis de SMS falló</string>
+
+    <string name="worker_notification_content_sms_analysis_in_progress">El análisis de SMS está en progreso.</string>
+    <string name="worker_notification_content_sms_analysis_completed_unknown">El veredicto del mensaje SMS de %s es desconocido.</string>
+    <string name="worker_notification_content_sms_analysis_completed_undetected">El análisis de un mensaje SMS de %s fue detectado como limpio.</string>
+    <string name="worker_notification_content_sms_analysis_completed_suspicious">El análisis de un mensaje SMS de %s fue detectado como sospechoso.</string>
+    <string name="worker_notification_content_sms_analysis_completed_malicious">El análisis de un mensaje SMS de %s fue detectado como malicioso.</string>
+    <string name="worker_notification_content_sms_analysis_failed">El análisis de SMS falló.</string>
 </resources>

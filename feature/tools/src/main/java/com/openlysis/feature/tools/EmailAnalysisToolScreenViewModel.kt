@@ -7,11 +7,11 @@ import com.openlysis.data.analysis.core.repository.AnalysesRepository
 import com.openlysis.data.analysis.core.request.AnalyzeMessage
 import com.openlysis.data.analysis.core.request.Attachment
 import com.openlysis.data.analysis.core.request.Message
+import com.openlysis.data.analysis.model.common.AnalysisSettings
 import com.openlysis.data.analysis.model.message.MessageAnalysis
 import com.openlysis.data.analysis.model.message.MessageType
 import com.openlysis.data.attachment.AttachmentFactory
 import com.openlysis.feature.tools.model.AnalysisRequestState
-import com.openlysis.feature.tools.model.AnalysisSettings
 import com.openlysis.feature.tools.model.AnalysisToolScreenViewModel
 import com.openlysis.feature.tools.model.AttachedFileData
 import com.openlysis.feature.tools.model.AttachedFileError

@@ -1,14 +1,17 @@
 package com.openlysis.feature.tools
 
+import android.net.Uri
+import androidx.lifecycle.SavedStateHandle
+import com.openlysis.core.link.DeepLinks
 import com.openlysis.core.outcome.Outcome
 import com.openlysis.data.analysis.core.di.SmsAnalysesRepository
 import com.openlysis.data.analysis.core.repository.AnalysesRepository
 import com.openlysis.data.analysis.core.request.AnalyzeMessage
 import com.openlysis.data.analysis.core.request.Message
+import com.openlysis.data.analysis.model.common.AnalysisSettings
 import com.openlysis.data.analysis.model.message.MessageAnalysis
 import com.openlysis.data.analysis.model.message.MessageType
 import com.openlysis.feature.tools.model.AnalysisRequestState
-import com.openlysis.feature.tools.model.AnalysisSettings
 import com.openlysis.feature.tools.model.AnalysisToolScreenViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,12 +29,22 @@ import javax.inject.Inject
 internal class SmsAnalysisToolScreenViewModel
     @Inject
     constructor(
+        savedStateHandle: SavedStateHandle,
         private val analysisSettings: AnalysisSettings,
         @SmsAnalysesRepository private val smsRepository:
             AnalysesRepository<AnalyzeMessage, MessageAnalysis>
     ) : AnalysisToolScreenViewModel() {
         private val _uiState = MutableStateFlow(SmsAnalysisToolUiState())
         val uiState = _uiState.asStateFlow()
+
+        init {
+            val deepLinkedSender =
+                savedStateHandle.get<String?>(DeepLinks.Tools.Sms.ENCODED_SENDER_KEY)
+            val deepLinkedContent =
+                savedStateHandle.get<String?>(DeepLinks.Tools.Sms.ENCODED_CONTENT_KEY)
+            if (deepLinkedSender != null) updateSender(Uri.decode(deepLinkedSender))
+            if (deepLinkedContent != null) updateContent(Uri.decode(deepLinkedContent))
+        }
 
         /**
          * Updates the sender field of the message in the UI state.

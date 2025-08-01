@@ -4,9 +4,9 @@ import com.openlysis.core.outcome.Outcome
 import com.openlysis.data.analysis.core.repository.AnalysesRepository
 import com.openlysis.data.analysis.core.request.AnalyzeFile
 import com.openlysis.data.analysis.model.analysis.FileMultiAnalysis
+import com.openlysis.data.analysis.model.common.AnalysisSettings
 import com.openlysis.data.attachment.AttachmentFactory
 import com.openlysis.feature.tools.model.AnalysisRequestState
-import com.openlysis.feature.tools.model.AnalysisSettings
 import com.openlysis.feature.tools.model.AnalysisToolScreenViewModel
 import com.openlysis.feature.tools.model.AttachedFileData
 import com.openlysis.feature.tools.model.AttachedFileError
