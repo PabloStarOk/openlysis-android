@@ -101,7 +101,12 @@ fun NavGraphBuilder.permissionsScreen(
     }
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        composable<NotificationsPermissionRoute> {
+        composable<NotificationsPermissionRoute>(
+            enterTransition = enterTransition,
+            exitTransition = exitTransition,
+            popEnterTransition = popEnterTransition,
+            popExitTransition = popExitTransition
+        ) {
             PermissionScreen(
                 onPermissionAllowed = onPermissionAllowed,
                 onSkipRequest = onSkipPermission,
