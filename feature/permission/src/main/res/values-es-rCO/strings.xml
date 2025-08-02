@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="screen_permission_sms_hero_icon_alt">Ícono de mensaje de texto SMS</string>
+    <string name="screen_permission_sms_hero_title">Analiza SMS Automáticamente</string>
+    <string name="screen_permission_sms_hero_description">Permite que Openlysis detecte SMS analizables para que podamos notificarte al instante.</string>
+    <string name="screen_permission_sms_illustration_alt">Ilustración de una persona revisando mensajes en su celular.</string>
+    <string name="screen_permission_sms_allow_button_label">Permitir</string>
+    <string name="screen_permission_sms_skip_button_label">Omitir</string>
+</resources>

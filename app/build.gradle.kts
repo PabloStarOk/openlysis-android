@@ -119,6 +119,7 @@ dependencies {
     implementation(projects.feature.tools)
     implementation(projects.feature.results)
     implementation(projects.feature.auth)
+    implementation(projects.feature.permission)
     implementation(projects.core.common)
     implementation(projects.core.data.analysis.model)
     implementation(projects.core.data.analysis.core)

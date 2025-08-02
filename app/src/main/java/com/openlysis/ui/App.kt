@@ -38,13 +38,16 @@ internal fun App(
     val navController = appState.navController
     val isAuthDestination = appState.isAuthDestination
     val isTopLevelDestination = appState.currentTopLevelDestination != null
+    val isPermissionDestination = appState.isPermissionDestination
     val density = LocalDensity.current
 
     val topBarVisible = remember { MutableTransitionState(false) }
     val navBarVisible = remember { MutableTransitionState(false) }
 
-    LaunchedEffect(isTopLevelDestination, isAuthDestination) {
-        topBarVisible.targetState = !isTopLevelDestination && !isAuthDestination
+    LaunchedEffect(isTopLevelDestination, isAuthDestination, isPermissionDestination) {
+        topBarVisible.targetState = !isTopLevelDestination &&
+            !isAuthDestination &&
+            !isPermissionDestination
         navBarVisible.targetState = isTopLevelDestination
     }
 

@@ -18,8 +18,11 @@ import com.openlysis.feature.auth.model.AuthenticationType
 import com.openlysis.feature.auth.navigation.AuthBaseRoute
 import com.openlysis.feature.auth.navigation.WelcomeRoute
 import com.openlysis.feature.auth.navigation.navigateToAuthentication
+import com.openlysis.feature.permission.navigation.SmsPermissionRoute
+import com.openlysis.feature.permission.navigation.navigateToSmsPermission
 import com.openlysis.feature.results.navigation.navigateToResults
 import com.openlysis.feature.tools.navigation.navigateToTools
+import com.openlysis.navigation.AppPermission
 import com.openlysis.navigation.AuthDestination
 import com.openlysis.navigation.RootDestination
 import com.openlysis.navigation.TemporarySettings
@@ -77,6 +80,12 @@ internal class AppState(
         @Composable get() =
             currentDestination?.hierarchy?.any {
                 it.hasRoute(AuthBaseRoute::class)
+            } == true
+
+    val isPermissionDestination: Boolean
+        @Composable get() =
+            currentDestination?.hierarchy?.any {
+                it.hasRoute(SmsPermissionRoute::class)
             } == true
 
     val topLevelDestinations: List<TopLevelDestination> = TopLevelDestination.entries
@@ -176,5 +185,21 @@ internal class AppState(
             }
 
         navController.navigate(route = root.startBaseRoute, navOptions = navOptions)
+    }
+
+    /**
+     * Navigates to the permission request screen for the specified [AppPermission].
+     *
+     * @param appPermission The [AppPermission] to request from the user.
+     */
+    fun askForPermission(appPermission: AppPermission) {
+        val navOptions =
+            navOptions {
+                launchSingleTop = true
+            }
+
+        when (appPermission) {
+            AppPermission.ReceiveSms -> navController.navigateToSmsPermission(navOptions)
+        }
     }
 }

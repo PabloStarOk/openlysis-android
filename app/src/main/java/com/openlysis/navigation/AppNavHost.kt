@@ -17,6 +17,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.openlysis.data.analysis.model.message.MessageType
 import com.openlysis.feature.auth.navigation.authScreen
+import com.openlysis.feature.permission.navigation.permissionsScreen
 import com.openlysis.feature.results.navigation.ResultType
 import com.openlysis.feature.results.navigation.navigateToFileMultiAnalysisDetails
 import com.openlysis.feature.results.navigation.navigateToMessageAnalysisDetails
@@ -122,6 +123,13 @@ internal fun AppNavHost(
                     slideOutOfContainer(SlideDirection.Down) + fadeOut()
                 }
             }
+        )
+
+        permissionsScreen(
+            onSmsSkipPermission = navController::popBackStack,
+            onSmsPermissionAllowed = navController::popBackStack,
+            enterTransition = { fadeIn() },
+            exitTransition = { fadeOut() }
         )
 
         composable<TemporarySettings> {
