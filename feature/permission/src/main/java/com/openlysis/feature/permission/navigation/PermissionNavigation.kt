@@ -1,6 +1,8 @@
 package com.openlysis.feature.permission.navigation
 
 import android.Manifest
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
@@ -24,6 +26,13 @@ import kotlinx.serialization.Serializable
 data object SmsPermissionRoute
 
 /**
+ * Route for accessing the notifications permission screen.
+ */
+@Serializable
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
+data object NotificationsPermissionRoute
+
+/**
  * Navigates to the SMS permission screen using the provided [NavOptions].
  *
  * @param navOptions Navigation options to customize the navigation behavior.
@@ -32,18 +41,27 @@ fun NavController.navigateToSmsPermission(navOptions: NavOptions) =
     this.navigate(SmsPermissionRoute, navOptions)
 
 /**
- * Adds the SMS permission screen to the navigation graph.
+ * Navigates to the notifications permission screen using the provided [NavOptions].
  *
- * @param onSmsPermissionAllowed Callback invoked when the SMS permission is granted by the user.
- * @param onSmsSkipPermission Callback invoked when the user chooses to skip or deny granting the SMS permission.
+ * @param navOptions Navigation options to customize the navigation behavior.
+ */
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
+fun NavController.navigateToNotificationsPermission(navOptions: NavOptions) =
+    this.navigate(NotificationsPermissionRoute, navOptions)
+
+/**
+ * Adds the permissions screen to the navigation graph.
+ *
+ * @param onPermissionAllowed Callback invoked when the permission of the current screen is granted by the user.
+ * @param onSkipPermission Callback invoked when the user chooses to skip or deny the permission of the current screen.
  * @param enterTransition Transition to use when entering the screen.
  * @param exitTransition Transition to use when exiting the screen.
  * @param popEnterTransition Transition to use when re-entering the screen via back navigation. Defaults to [enterTransition].
  * @param popExitTransition Transition to use when popping the screen from the back stack. Defaults to [exitTransition].
  */
 fun NavGraphBuilder.permissionsScreen(
-    onSmsPermissionAllowed: () -> Unit,
-    onSmsSkipPermission: () -> Unit,
+    onPermissionAllowed: () -> Unit,
+    onSkipPermission: () -> Unit,
     enterTransition: (
     AnimatedContentTransitionScope<NavBackStackEntry>.()
     -> @JvmSuppressWildcards EnterTransition?
@@ -68,8 +86,8 @@ fun NavGraphBuilder.permissionsScreen(
         popExitTransition = popExitTransition
     ) {
         PermissionScreen(
-            onPermissionAllowed = onSmsPermissionAllowed,
-            onSkipRequest = onSmsSkipPermission,
+            onPermissionAllowed = onPermissionAllowed,
+            onSkipRequest = onSkipPermission,
             permission = Manifest.permission.RECEIVE_SMS,
             heroIcon = AppIcons.Sms,
             heroIconAlt = stringResource(R.string.screen_permission_sms_hero_icon_alt),
@@ -80,5 +98,41 @@ fun NavGraphBuilder.permissionsScreen(
             allowLabel = stringResource(R.string.screen_permission_sms_allow_button_label),
             skipLabel = stringResource(R.string.screen_permission_sms_skip_button_label)
         )
+    }
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        composable<NotificationsPermissionRoute> {
+            PermissionScreen(
+                onPermissionAllowed = onPermissionAllowed,
+                onSkipRequest = onSkipPermission,
+                permission = Manifest.permission.POST_NOTIFICATIONS,
+                heroIcon = AppIcons.Bell,
+                heroIconAlt =
+                    stringResource(
+                        R.string.screen_permission_notifications_hero_icon_alt
+                    ),
+                heroTitle = stringResource(R.string.screen_permission_notifications_hero_title),
+                heroDescription =
+                    stringResource(
+                        R.string.screen_permission_notifications_hero_description
+                    ),
+                illustration =
+                    ImageVector.vectorResource(
+                        R.drawable.illustration_notifications
+                    ),
+                illustrationAlt =
+                    stringResource(
+                        R.string.screen_permission_notifications_illustration_alt
+                    ),
+                allowLabel =
+                    stringResource(
+                        R.string.screen_permission_notifications_allow_button_label
+                    ),
+                skipLabel =
+                    stringResource(
+                        R.string.screen_permission_notifications_skip_button_label
+                    )
+            )
+        }
     }
 }

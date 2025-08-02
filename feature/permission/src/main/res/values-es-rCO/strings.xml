@@ -6,4 +6,11 @@
     <string name="screen_permission_sms_illustration_alt">Ilustración de una persona revisando mensajes en su celular.</string>
     <string name="screen_permission_sms_allow_button_label">Permitir</string>
     <string name="screen_permission_sms_skip_button_label">Omitir</string>
+
+    <string name="screen_permission_notifications_hero_icon_alt">Ícono de campana de notificación</string>
+    <string name="screen_permission_notifications_hero_title">Recibe Alertas de Análisis</string>
+    <string name="screen_permission_notifications_hero_description">Recibe una alerta cuando un SMS esté listo para analizar, sin necesidad de revisar la app.</string>
+    <string name="screen_permission_notifications_illustration_alt">Ilustración de una persona junto a un teléfono con notificaciones.</string>
+    <string name="screen_permission_notifications_allow_button_label">Sí, notificarme</string>
+    <string name="screen_permission_notifications_skip_button_label">Omitir</string>
 </resources>

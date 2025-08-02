@@ -110,4 +110,7 @@ object AppIcons {
 
     val Upload
         @Composable get() = ImageVector.vectorResource(R.drawable.upload_icon)
+
+    val Bell
+        @Composable get() = ImageVector.vectorResource(R.drawable.bell_icon)
 }

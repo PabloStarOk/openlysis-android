@@ -5,6 +5,7 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.animation.PropertyValuesHolder
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
@@ -80,11 +81,17 @@ class MainActivity : ComponentActivity() {
                 val requireSmsPermission =
                     context.checkSelfPermission(Manifest.permission.RECEIVE_SMS) !=
                         PackageManager.PERMISSION_GRANTED
+                val requireNotificationsPermission =
+                    Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+                        context.checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) !=
+                        PackageManager.PERMISSION_GRANTED
 
                 if (!uiState.isUserSignedIn()) {
                     appState.navigateToRootDestination(RootDestination.Authentication)
                 } else if (requireSmsPermission) {
                     appState.askForPermission(AppPermission.ReceiveSms)
+                } else if (requireNotificationsPermission) {
+                    appState.askForPermission(AppPermission.PostNotifications)
                 }
             }
 

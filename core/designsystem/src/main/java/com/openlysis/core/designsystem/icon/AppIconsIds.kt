@@ -74,4 +74,6 @@ object AppIconsIds {
     @DrawableRes val Edit = R.drawable.edit_icon
 
     @DrawableRes val Upload = R.drawable.upload_icon
+
+    @DrawableRes val Bell = R.drawable.bell_icon
 }

@@ -1,5 +1,6 @@
 package com.openlysis.ui
 
+import android.os.Build
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.Stable
@@ -18,7 +19,9 @@ import com.openlysis.feature.auth.model.AuthenticationType
 import com.openlysis.feature.auth.navigation.AuthBaseRoute
 import com.openlysis.feature.auth.navigation.WelcomeRoute
 import com.openlysis.feature.auth.navigation.navigateToAuthentication
+import com.openlysis.feature.permission.navigation.NotificationsPermissionRoute
 import com.openlysis.feature.permission.navigation.SmsPermissionRoute
+import com.openlysis.feature.permission.navigation.navigateToNotificationsPermission
 import com.openlysis.feature.permission.navigation.navigateToSmsPermission
 import com.openlysis.feature.results.navigation.navigateToResults
 import com.openlysis.feature.tools.navigation.navigateToTools
@@ -85,7 +88,11 @@ internal class AppState(
     val isPermissionDestination: Boolean
         @Composable get() =
             currentDestination?.hierarchy?.any {
-                it.hasRoute(SmsPermissionRoute::class)
+                it.hasRoute(SmsPermissionRoute::class) ||
+                    (
+                        Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+                            it.hasRoute(NotificationsPermissionRoute::class)
+                    )
             } == true
 
     val topLevelDestinations: List<TopLevelDestination> = TopLevelDestination.entries
@@ -198,8 +205,13 @@ internal class AppState(
                 launchSingleTop = true
             }
 
-        when (appPermission) {
-            AppPermission.ReceiveSms -> navController.navigateToSmsPermission(navOptions)
+        when {
+            appPermission == AppPermission.ReceiveSms ->
+                navController.navigateToSmsPermission(navOptions)
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+                appPermission == AppPermission.PostNotifications -> {
+                navController.navigateToNotificationsPermission(navOptions)
+            }
         }
     }
 }

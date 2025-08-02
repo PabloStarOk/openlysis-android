@@ -126,8 +126,8 @@ internal fun AppNavHost(
         )
 
         permissionsScreen(
-            onSmsSkipPermission = navController::popBackStack,
-            onSmsPermissionAllowed = navController::popBackStack,
+            onSkipPermission = navController::popBackStack,
+            onPermissionAllowed = navController::popBackStack,
             enterTransition = { fadeIn() },
             exitTransition = { fadeOut() }
         )
