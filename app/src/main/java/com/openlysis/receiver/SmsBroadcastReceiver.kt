@@ -17,9 +17,6 @@ import javax.inject.Inject
 
 private const val EXTRA_SMS_FORMAT = "format"
 
-// TODO: Add and update docs.
-// TODO: Remove workaround in AppState.
-
 /**
  * BroadcastReceiver that listens for incoming SMS messages.
  */
