@@ -16,12 +16,12 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.flow.updateAndGet
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toKotlinInstant
 import kotlinx.datetime.toLocalDateTime
+import java.util.concurrent.ConcurrentHashMap
 
 /**
  * Abstract base ViewModel for managing paginated previews of analysis results.
@@ -34,6 +34,7 @@ internal abstract class PreviewsScreenViewModel<TResult : Model>(
 ) : ViewModel() {
     private var nextPage = 1
     private val pageSize = 10
+    private val loadedPreviews = ConcurrentHashMap.newKeySet<AnalysisPreviewState>()
 
     val defaultFiltersState = FiltersState.Default
 
@@ -49,32 +50,56 @@ internal abstract class PreviewsScreenViewModel<TResult : Model>(
      * Loads a paginated batch of analysis previews.
      */
     fun loadPreviews() {
+        _uiState.update { it.copy(loadingState = LoadingState.InProgress) }
         viewModelScope.launch {
-            handleLoadPreviews()
+            val outcome = repository.getManyPaged(nextPage, pageSize)
+            val newResults =
+                when (outcome) {
+                    is Outcome.Success -> outcome.value
+                    is Outcome.Failure -> {
+                        _uiState.update {
+                            it.copy(
+                                loadingState = LoadingState.Error(outcome.error)
+                            )
+                        }
+                        return@launch
+                    }
+                }
+
+            _uiState.update { currentState ->
+                val existingPreviewsIds = loadedPreviews.map { it.id }
+                val newUniquePreviews =
+                    newResults
+                        .filterNot { it.id in existingPreviewsIds }
+                        .map { convertToPreview(it) }
+
+                loadedPreviews.addAll(newUniquePreviews)
+                val filteredPreviews = filterLoadedPreviews(currentState.filtersState)
+                currentState.copy(
+                    previews = filteredPreviews.toList(),
+                    verdictStats = calculateVerdictStats(filteredPreviews),
+                    canLoadMore = newResults.size >= pageSize,
+                    loadingState = LoadingState.Idle
+                )
+            }
+
+            if (uiState.value.canLoadMore) nextPage++
         }
     }
 
     /**
-     * Reloads the previews using the new filters.
+     * Applies filters with the loaded previews and update the UI state.
      *
      * @param newFiltersState The new filter configuration to be applied
      */
     fun updateFilters(newFiltersState: FiltersState) {
+        val filteredPreviews = filterLoadedPreviews(newFiltersState)
         _uiState.update {
             it.copy(
-                previews = emptyList(),
+                previews = filteredPreviews.toList(),
+                verdictStats = calculateVerdictStats(filteredPreviews),
                 filtersState = newFiltersState
             )
-        }
-        val targetPage = 1.coerceAtLeast(nextPage - 1)
-        nextPage = 1
-        viewModelScope.launch {
-            while (nextPage <= targetPage) {
-                handleLoadPreviews()
-                if (uiState.value.loadingState is LoadingState.Error) {
-                    break
-                }
-            }
         }
     }
 
@@ -155,52 +180,12 @@ internal abstract class PreviewsScreenViewModel<TResult : Model>(
     }
 
     /**
-     * Handles the loading of analysis previews in a paginated manner.
-     */
-    private suspend fun handleLoadPreviews() {
-        _uiState.update { it.copy(loadingState = LoadingState.InProgress) }
-        val outcome = repository.getManyPaged(nextPage, pageSize)
-        val newResults =
-            when (outcome) {
-                is Outcome.Success -> outcome.value
-                is Outcome.Failure -> {
-                    _uiState.update {
-                        it.copy(
-                            loadingState = LoadingState.Error(outcome.error)
-                        )
-                    }
-                    return
-                }
-            }
-
-        val newState =
-            _uiState.updateAndGet { currentState ->
-                val existingPreviewsIds = currentState.previews.map { it.id }
-                val newUniquePreviews =
-                    newResults
-                        .filterNot { it.id in existingPreviewsIds }
-                        .map { convertToPreview(it) }
-
-                val allFilteredPreviews = applyFilters(currentState.previews + newUniquePreviews)
-                currentState.copy(
-                    previews = allFilteredPreviews,
-                    verdictStats = calculateVerdictStats(allFilteredPreviews),
-                    canLoadMore = newResults.size >= pageSize,
-                    loadingState = LoadingState.Idle
-                )
-            }
-        if (newState.canLoadMore) nextPage++
-    }
-
-    /**
-     * Applies filtering and sorting operations to a list of analysis preview states based on the current UI state filters.
+     * Applies filtering and sorting operations to [loadedPreviews] based on the specified state filters.
      *
-     * @param previews The list of analysis preview states to filter and sort
-     * @return A filtered and sorted list of analysis preview states that match the current filter criteria
+     * @param filtersState The filters to be applied to the [loadedPreviews].
+     * @return A filtered and sorted set of analysis preview states that match the filter criteria
      */
-    private fun applyFilters(previews: List<AnalysisPreviewState>): List<AnalysisPreviewState> {
-        val filtersState = uiState.value.filtersState
-
+    private fun filterLoadedPreviews(filtersState: FiltersState): Set<AnalysisPreviewState> {
         val startDate =
             Instant
                 .fromEpochMilliseconds(filtersState.startDateMillis)
@@ -214,7 +199,7 @@ internal abstract class PreviewsScreenViewModel<TResult : Model>(
                 .date
 
         var filteredPreviews =
-            previews
+            loadedPreviews
                 .filter {
                     val analysisDate =
                         it.startedDate
@@ -227,7 +212,7 @@ internal abstract class PreviewsScreenViewModel<TResult : Model>(
                 .filter { it.status in filtersState.selectedStatuses }
 
         filtersState.sortingFields.forEach { filteredPreviews = sortPreviews(filteredPreviews, it) }
-        return filteredPreviews
+        return filteredPreviews.toSet()
     }
 
     /**
