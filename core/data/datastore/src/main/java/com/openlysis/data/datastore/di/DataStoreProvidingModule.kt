@@ -6,12 +6,15 @@ import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import androidx.datastore.dataStoreFile
 import com.openlysis.core.data.datastore.EncryptedUserAuthData
+import com.openlysis.core.data.datastore.UserPreferences
 import com.openlysis.core.network.AppDispatcher
 import com.openlysis.core.network.di.ApplicationScope
 import com.openlysis.core.network.di.Dispatcher
-import com.openlysis.data.datastore.EncryptedUserAuthDataSerializer
 import com.openlysis.data.datastore.cipher.CipherKeyProvider
 import com.openlysis.data.datastore.constant.EncryptionParams
+import com.openlysis.data.datastore.constant.ProtoFileNames
+import com.openlysis.data.datastore.serializer.EncryptedUserAuthDataSerializer
+import com.openlysis.data.datastore.serializer.UserPreferencesSerializer
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,7 +26,7 @@ import java.security.KeyStore
 import javax.inject.Singleton
 
 /**
- * Dagger Hilt module that provides dependencies related to DataStore for encrypted user authentication data.
+ * Dagger Hilt module for providing DataStore-related dependencies.
  * Installed in the SingletonComponent to ensure single instance across the application.
  */
 @Module
@@ -45,7 +48,26 @@ internal object DataStoreProvidingModule {
                     produceNewData = { EncryptedUserAuthData.getDefaultInstance() }
                 )
         ) {
-            context.dataStoreFile("encrypted_user_auth_data.pb")
+            context.dataStoreFile(ProtoFileNames.ENCRYPTED_USER_AUTH_DATA)
+        }
+
+    @Singleton
+    @Provides
+    fun provideUserPreferencesDataStore(
+        @ApplicationContext context: Context,
+        @Dispatcher(AppDispatcher.IO) ioDispatcher: CoroutineDispatcher,
+        @ApplicationScope scope: CoroutineScope,
+        serializer: UserPreferencesSerializer
+    ): DataStore<UserPreferences> =
+        DataStoreFactory.create(
+            serializer = serializer,
+            scope = CoroutineScope(scope.coroutineContext + ioDispatcher),
+            corruptionHandler =
+                ReplaceFileCorruptionHandler<UserPreferences>(
+                    produceNewData = { UserPreferences.getDefaultInstance() }
+                )
+        ) {
+            context.dataStoreFile(ProtoFileNames.USER_PREFERENCES)
         }
 
     @Singleton

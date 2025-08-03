@@ -1,16 +1,20 @@
 package com.openlysis
 
+import com.openlysis.navigation.AppPermission
+
 /**
  * The UI state for MainActivity.
  */
 internal sealed interface MainActivityUiState {
     /**
-     * UI state when the user is signed in.
+     * Success UI state.
      *
-     * @property isUserSignedIn Indicates if the user is signed in.
+     * @property userSignedIn Indicates if the user is signed in.
+     * @property pendingPermissions Permissions pending to be asked to the user.
      */
     data class Success(
-        val userSignedIn: Boolean
+        val userSignedIn: Boolean,
+        val pendingPermissions: List<AppPermission>
     ) : MainActivityUiState
 
     /**

@@ -9,6 +9,7 @@ import androidx.compose.animation.ExitTransition
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -16,6 +17,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.openlysis.core.designsystem.icon.AppIcons
 import com.openlysis.feature.permission.PermissionScreen
+import com.openlysis.feature.permission.PermissionScreenViewModel
 import com.openlysis.feature.permission.R
 import kotlinx.serialization.Serializable
 
@@ -86,6 +88,7 @@ fun NavGraphBuilder.permissionsScreen(
         popExitTransition = popExitTransition
     ) {
         PermissionScreen(
+            viewModel = hiltViewModel<PermissionScreenViewModel>(),
             onPermissionAllowed = onPermissionAllowed,
             onSkipRequest = onSkipPermission,
             permission = Manifest.permission.RECEIVE_SMS,
@@ -108,6 +111,7 @@ fun NavGraphBuilder.permissionsScreen(
             popExitTransition = popExitTransition
         ) {
             PermissionScreen(
+                viewModel = hiltViewModel<PermissionScreenViewModel>(),
                 onPermissionAllowed = onPermissionAllowed,
                 onSkipRequest = onSkipPermission,
                 permission = Manifest.permission.POST_NOTIFICATIONS,

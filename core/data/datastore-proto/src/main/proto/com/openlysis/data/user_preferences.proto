@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+option java_package = "com.openlysis.core.data.datastore";
+option java_multiple_files = true;
+
+message UserPreferences {
+    map<string, bool> askedPermissions = 1;
+}

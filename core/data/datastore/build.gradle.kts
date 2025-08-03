@@ -31,6 +31,7 @@ dependencies {
     api(projects.core.data.datastoreProto)
 
     implementation(projects.core.data.auth)
+    implementation(projects.core.data.user)
     implementation(projects.core.common)
 
     compileOnly(libs.google.dagger.hilt)

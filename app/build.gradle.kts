@@ -124,6 +124,7 @@ dependencies {
     implementation(projects.core.data.analysis.model)
     implementation(projects.core.data.analysis.core)
     implementation(projects.core.data.auth)
+    implementation(projects.core.data.user)
     implementation(projects.core.data.remote)
     implementation(projects.core.data.database)
     implementation(projects.core.data.datastore)

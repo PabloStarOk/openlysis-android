@@ -41,6 +41,7 @@ import com.openlysis.core.designsystem.theme.type.LocalAppTypography
 /**
  * Composable screen for requesting a specific permission from the user.
  *
+ * @param viewModel The ViewModel handling permission state and updates.
  * @param onPermissionAllowed Callback invoked when the permission is granted.
  * @param onSkipRequest Callback invoked when the user skips or denies the permission request.
  * @param permission The permission string to request (e.g., android.permission.SMS).
@@ -56,6 +57,44 @@ import com.openlysis.core.designsystem.theme.type.LocalAppTypography
  */
 @Composable
 internal fun PermissionScreen(
+    viewModel: PermissionScreenViewModel,
+    onPermissionAllowed: () -> Unit,
+    onSkipRequest: () -> Unit,
+    permission: String,
+    heroIcon: ImageVector,
+    heroIconAlt: String,
+    heroTitle: String,
+    heroDescription: String,
+    illustration: ImageVector,
+    illustrationAlt: String,
+    allowLabel: String,
+    skipLabel: String,
+    modifier: Modifier = Modifier
+) {
+    PermissionScreen(
+        onPermissionAllowed = {
+            viewModel.setPermission(permission, granted = true)
+            onPermissionAllowed()
+        },
+        onSkipRequest = {
+            viewModel.setPermission(permission, granted = false)
+            onSkipRequest()
+        },
+        permission,
+        heroIcon,
+        heroIconAlt,
+        heroTitle,
+        heroDescription,
+        illustration,
+        illustrationAlt,
+        allowLabel,
+        skipLabel,
+        modifier
+    )
+}
+
+@Composable
+private fun PermissionScreen(
     onPermissionAllowed: () -> Unit,
     onSkipRequest: () -> Unit,
     permission: String,

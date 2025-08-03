@@ -2,6 +2,8 @@ package com.openlysis.data.datastore.di
 
 import com.openlysis.data.auth.UserAuthLocalDataSource
 import com.openlysis.data.datastore.EncryptedUserAuthLocalDataSource
+import com.openlysis.data.datastore.UserPreferencesLocalDataSource
+import com.openlysis.data.user.UserDataLocalDataSource
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -20,4 +22,10 @@ internal abstract class DataStoreBindingModule {
     abstract fun bindUserAuthLocalDataSource(
         impl: EncryptedUserAuthLocalDataSource
     ): UserAuthLocalDataSource
+
+    @Singleton
+    @Binds
+    abstract fun bindUserDataLocalDataSource(
+        impl: UserPreferencesLocalDataSource
+    ): UserDataLocalDataSource
 }

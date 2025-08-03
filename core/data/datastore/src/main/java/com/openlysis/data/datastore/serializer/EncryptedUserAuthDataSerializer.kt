@@ -1,4 +1,4 @@
-package com.openlysis.data.datastore
+package com.openlysis.data.datastore.serializer
 
 import android.util.Log
 import androidx.datastore.core.CorruptionException
