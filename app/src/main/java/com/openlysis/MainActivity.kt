@@ -13,6 +13,7 @@ import androidx.activity.viewModels
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.core.animation.doOnEnd
+import androidx.core.animation.doOnStart
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.openlysis.core.designsystem.theme.OpenlysisTheme
@@ -48,6 +49,14 @@ class MainActivity : ComponentActivity() {
                         ).apply {
                             interpolator = AccelerateDecelerateInterpolator()
                             duration = 400
+
+                            doOnStart {
+                                viewProvider.iconView.setLayerType(View.LAYER_TYPE_HARDWARE, null)
+                            }
+
+                            doOnEnd {
+                                viewProvider.iconView.setLayerType(View.LAYER_TYPE_NONE, null)
+                            }
                         }
                 } catch (_: NullPointerException) {
                     null
