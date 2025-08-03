@@ -32,17 +32,26 @@ class MainActivity : ComponentActivity() {
 
         splashScreen.setKeepOnScreenCondition { viewModel.uiState.value.shouldKeepSplashScreen() }
         splashScreen.setOnExitAnimationListener { viewProvider ->
-            val iconRotation =
-                PropertyValuesHolder.ofFloat(View.ROTATION, viewProvider.iconView.rotation, 360f)
             val rotateIcon =
-                ObjectAnimator
-                    .ofPropertyValuesHolder(
-                        viewProvider.iconView,
-                        iconRotation
-                    ).apply {
-                        interpolator = AccelerateDecelerateInterpolator()
-                        duration = 400
-                    }
+                try {
+                    val iconRotation =
+                        PropertyValuesHolder.ofFloat(
+                            View.ROTATION,
+                            viewProvider.iconView.rotation,
+                            360f
+                        )
+
+                    ObjectAnimator
+                        .ofPropertyValuesHolder(
+                            viewProvider.iconView,
+                            iconRotation
+                        ).apply {
+                            interpolator = AccelerateDecelerateInterpolator()
+                            duration = 400
+                        }
+                } catch (_: NullPointerException) {
+                    null
+                }
 
             val splashTranslation =
                 PropertyValuesHolder.ofFloat(
@@ -60,10 +69,15 @@ class MainActivity : ComponentActivity() {
                         duration = 200
                     }
 
-            val animatorSet = AnimatorSet()
-            animatorSet.play(rotateIcon).before(slideSplashDown)
-            animatorSet.doOnEnd { viewProvider.remove() }
-            animatorSet.start()
+            if (rotateIcon != null) {
+                val animatorSet = AnimatorSet()
+                animatorSet.play(rotateIcon).before(slideSplashDown)
+                animatorSet.doOnEnd { viewProvider.remove() }
+                animatorSet.start()
+            } else {
+                slideSplashDown.doOnEnd { viewProvider.remove() }
+                slideSplashDown.start()
+            }
         }
 
         setContent {
