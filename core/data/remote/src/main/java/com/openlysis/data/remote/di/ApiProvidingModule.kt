@@ -2,11 +2,11 @@ package com.openlysis.data.remote.di
 
 import com.openlysis.core.network.AppDispatcher
 import com.openlysis.core.network.di.Dispatcher
-import com.openlysis.data.analysis.core.di.EmailAnalysesRemoteDataSource
-import com.openlysis.data.analysis.core.di.SmsAnalysesRemoteDataSource
-import com.openlysis.data.analysis.core.request.AnalyzeMessage
-import com.openlysis.data.analysis.core.source.AnalysesRemoteDataSource
+import com.openlysis.data.analysis.di.EmailAnalysesRemoteDataSource
+import com.openlysis.data.analysis.di.SmsAnalysesRemoteDataSource
 import com.openlysis.data.analysis.model.message.MessageAnalysis
+import com.openlysis.data.analysis.request.AnalyzeMessage
+import com.openlysis.data.analysis.source.AnalysesRemoteDataSource
 import com.openlysis.data.remote.ApiClientSettings
 import com.openlysis.data.remote.AuthenticationApi
 import com.openlysis.data.remote.OpenlysisApi

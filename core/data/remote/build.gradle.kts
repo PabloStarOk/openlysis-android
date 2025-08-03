@@ -8,8 +8,7 @@ dependencies {
     implementation(libs.retrofit.converter.moshi)
     implementation(libs.kotlinx.coroutines.core)
 
-    implementation(projects.core.data.analysis.model)
-    implementation(projects.core.data.analysis.core)
+    implementation(projects.core.data.analysis)
     implementation(projects.core.data.auth)
     implementation(projects.core.common)
 

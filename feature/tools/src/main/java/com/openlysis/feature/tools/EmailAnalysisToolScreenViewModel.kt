@@ -2,14 +2,14 @@ package com.openlysis.feature.tools
 
 import androidx.lifecycle.viewModelScope
 import com.openlysis.core.outcome.Outcome
-import com.openlysis.data.analysis.core.di.EmailAnalysesRepository
-import com.openlysis.data.analysis.core.repository.AnalysesRepository
-import com.openlysis.data.analysis.core.request.AnalyzeMessage
-import com.openlysis.data.analysis.core.request.Attachment
-import com.openlysis.data.analysis.core.request.Message
+import com.openlysis.data.analysis.di.EmailAnalysesRepository
 import com.openlysis.data.analysis.model.common.AnalysisSettings
 import com.openlysis.data.analysis.model.message.MessageAnalysis
 import com.openlysis.data.analysis.model.message.MessageType
+import com.openlysis.data.analysis.repository.AnalysesRepository
+import com.openlysis.data.analysis.request.AnalyzeMessage
+import com.openlysis.data.analysis.request.Attachment
+import com.openlysis.data.analysis.request.Message
 import com.openlysis.data.attachment.AttachmentFactory
 import com.openlysis.feature.tools.model.AnalysisRequestState
 import com.openlysis.feature.tools.model.AnalysisToolScreenViewModel

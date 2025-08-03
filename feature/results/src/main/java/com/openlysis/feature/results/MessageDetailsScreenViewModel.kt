@@ -1,10 +1,10 @@
 package com.openlysis.feature.results
 
-import com.openlysis.data.analysis.core.di.EmailAnalysesRepository
-import com.openlysis.data.analysis.core.repository.AnalysesRepository
-import com.openlysis.data.analysis.core.request.AnalyzeMessage
+import com.openlysis.data.analysis.di.EmailAnalysesRepository
 import com.openlysis.data.analysis.model.analysis.AnalysisStatus
 import com.openlysis.data.analysis.model.message.MessageAnalysis
+import com.openlysis.data.analysis.repository.AnalysesRepository
+import com.openlysis.data.analysis.request.AnalyzeMessage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

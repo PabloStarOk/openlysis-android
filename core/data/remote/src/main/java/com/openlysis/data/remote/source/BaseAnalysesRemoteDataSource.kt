@@ -1,10 +1,10 @@
 package com.openlysis.data.remote.source
 
 import com.openlysis.core.outcome.Outcome
-import com.openlysis.data.analysis.core.request.Attachment
-import com.openlysis.data.analysis.core.response.AnalyzeResponse
-import com.openlysis.data.analysis.core.source.AnalysesRemoteDataSource
 import com.openlysis.data.analysis.model.common.Model
+import com.openlysis.data.analysis.request.Attachment
+import com.openlysis.data.analysis.response.AnalyzeResponse
+import com.openlysis.data.analysis.source.AnalysesRemoteDataSource
 import com.openlysis.data.remote.AttachmentRequestBody
 import com.openlysis.data.remote.NetworkApiCaller
 import com.openlysis.data.remote.OpenlysisApi

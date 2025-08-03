@@ -1,11 +1,10 @@
 package com.openlysis.data.remote.di
 
-import com.openlysis.data.analysis.core.repository.AnalysesRepository
-import com.openlysis.data.analysis.core.request.AnalyzeFile
-import com.openlysis.data.analysis.core.request.AnalyzeUrl
-import com.openlysis.data.analysis.core.source.AnalysesRemoteDataSource
 import com.openlysis.data.analysis.model.analysis.FileMultiAnalysis
 import com.openlysis.data.analysis.model.analysis.UrlMultiAnalysis
+import com.openlysis.data.analysis.request.AnalyzeFile
+import com.openlysis.data.analysis.request.AnalyzeUrl
+import com.openlysis.data.analysis.source.AnalysesRemoteDataSource
 import com.openlysis.data.auth.UserAuthenticator
 import com.openlysis.data.remote.DefaultUserAuthenticator
 import com.openlysis.data.remote.source.FileMultiAnalysesRemoteDataSource

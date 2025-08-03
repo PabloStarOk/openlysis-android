@@ -49,8 +49,7 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
 
-    implementation(projects.core.data.analysis.model)
-    implementation(projects.core.data.analysis.core)
+    implementation(projects.core.data.analysis)
 
     compileOnly(libs.google.dagger.hilt)
     compileOnly(libs.moshi.kotlin)

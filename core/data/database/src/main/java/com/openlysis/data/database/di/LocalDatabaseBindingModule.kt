@@ -1,11 +1,11 @@
 package com.openlysis.data.database.di
 
-import com.openlysis.data.analysis.core.source.AnalysesLocalDataSource
 import com.openlysis.data.analysis.model.analysis.FileMultiAnalysis
 import com.openlysis.data.analysis.model.analysis.UrlMultiAnalysis
 import com.openlysis.data.analysis.model.reputation.EmailAddressReputation
 import com.openlysis.data.analysis.model.reputation.MultiReputation
 import com.openlysis.data.analysis.model.reputation.PhoneNumberReputation
+import com.openlysis.data.analysis.source.AnalysesLocalDataSource
 import com.openlysis.data.database.source.EmailMultiReputationsLocalDataSource
 import com.openlysis.data.database.source.FileMultiAnalysesLocalDataSource
 import com.openlysis.data.database.source.PhoneMultiReputationsLocalDataSource

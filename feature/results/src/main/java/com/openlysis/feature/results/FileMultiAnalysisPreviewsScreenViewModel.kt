@@ -1,8 +1,8 @@
 package com.openlysis.feature.results
 
-import com.openlysis.data.analysis.core.repository.AnalysesRepository
-import com.openlysis.data.analysis.core.request.AnalyzeFile
 import com.openlysis.data.analysis.model.analysis.FileMultiAnalysis
+import com.openlysis.data.analysis.repository.AnalysesRepository
+import com.openlysis.data.analysis.request.AnalyzeFile
 import com.openlysis.feature.results.components.preview.AnalysisPreviewState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject

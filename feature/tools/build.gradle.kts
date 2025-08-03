@@ -48,8 +48,7 @@ dependencies {
 
     implementation(projects.core.designsystem)
     implementation(projects.core.common)
-    implementation(projects.core.data.analysis.model)
-    implementation(projects.core.data.analysis.core)
+    implementation(projects.core.data.analysis)
     implementation(projects.core.data.attachment)
 
     ksp(libs.google.dagger.hilt.compiler)

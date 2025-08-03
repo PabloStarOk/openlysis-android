@@ -4,13 +4,13 @@ import android.net.Uri
 import androidx.lifecycle.SavedStateHandle
 import com.openlysis.core.link.DeepLinks
 import com.openlysis.core.outcome.Outcome
-import com.openlysis.data.analysis.core.di.SmsAnalysesRepository
-import com.openlysis.data.analysis.core.repository.AnalysesRepository
-import com.openlysis.data.analysis.core.request.AnalyzeMessage
-import com.openlysis.data.analysis.core.request.Message
+import com.openlysis.data.analysis.di.SmsAnalysesRepository
 import com.openlysis.data.analysis.model.common.AnalysisSettings
 import com.openlysis.data.analysis.model.message.MessageAnalysis
 import com.openlysis.data.analysis.model.message.MessageType
+import com.openlysis.data.analysis.repository.AnalysesRepository
+import com.openlysis.data.analysis.request.AnalyzeMessage
+import com.openlysis.data.analysis.request.Message
 import com.openlysis.feature.tools.model.AnalysisRequestState
 import com.openlysis.feature.tools.model.AnalysisToolScreenViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel

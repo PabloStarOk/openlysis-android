@@ -2,9 +2,9 @@ package com.openlysis.data.remote.source
 
 import com.openlysis.core.network.AppDispatcher
 import com.openlysis.core.network.di.Dispatcher
-import com.openlysis.data.analysis.core.request.AnalyzeUrl
-import com.openlysis.data.analysis.core.response.AnalyzeResponse
 import com.openlysis.data.analysis.model.analysis.UrlMultiAnalysis
+import com.openlysis.data.analysis.request.AnalyzeUrl
+import com.openlysis.data.analysis.response.AnalyzeResponse
 import com.openlysis.data.remote.OpenlysisApi
 import kotlinx.coroutines.CoroutineDispatcher
 import retrofit2.Response

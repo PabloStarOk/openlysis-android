@@ -1,6 +1,6 @@
 package com.openlysis.data.remote
 
-import com.openlysis.data.analysis.core.response.AnalyzeResponse
+import com.openlysis.data.analysis.response.AnalyzeResponse
 import com.openlysis.data.remote.constant.ApiEndpoints
 import com.openlysis.data.remote.constant.ApiFields
 import com.openlysis.data.remote.dto.analysis.FileMultiAnalysisDto

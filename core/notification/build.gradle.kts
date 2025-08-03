@@ -30,7 +30,7 @@ dependencies {
 
     implementation(projects.core.designsystem)
     implementation(projects.core.common)
-    implementation(projects.core.data.analysis.model)
+    implementation(projects.core.data.analysis)
 
     compileOnly(libs.google.dagger.hilt)
 

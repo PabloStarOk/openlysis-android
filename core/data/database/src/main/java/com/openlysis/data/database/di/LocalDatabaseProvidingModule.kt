@@ -2,9 +2,8 @@ package com.openlysis.data.database.di
 
 import android.content.Context
 import androidx.room.Room
-import com.openlysis.data.analysis.core.di.EmailAnalysesLocalDataSource
-import com.openlysis.data.analysis.core.di.SmsAnalysesLocalDataSource
-import com.openlysis.data.analysis.core.source.AnalysesLocalDataSource
+import com.openlysis.data.analysis.di.EmailAnalysesLocalDataSource
+import com.openlysis.data.analysis.di.SmsAnalysesLocalDataSource
 import com.openlysis.data.analysis.model.analysis.FileMultiAnalysis
 import com.openlysis.data.analysis.model.analysis.UrlMultiAnalysis
 import com.openlysis.data.analysis.model.message.MessageAnalysis
@@ -12,6 +11,7 @@ import com.openlysis.data.analysis.model.message.MessageType
 import com.openlysis.data.analysis.model.reputation.EmailAddressReputation
 import com.openlysis.data.analysis.model.reputation.MultiReputation
 import com.openlysis.data.analysis.model.reputation.PhoneNumberReputation
+import com.openlysis.data.analysis.source.AnalysesLocalDataSource
 import com.openlysis.data.database.AppDatabase
 import com.openlysis.data.database.LocalStoragePreferences
 import com.openlysis.data.database.constant.AppDatabaseInfo

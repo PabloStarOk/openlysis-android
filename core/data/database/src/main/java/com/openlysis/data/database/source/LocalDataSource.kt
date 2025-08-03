@@ -3,8 +3,8 @@ package com.openlysis.data.database.source
 import android.util.Log
 import com.openlysis.core.outcome.NetworkError
 import com.openlysis.core.outcome.Outcome
-import com.openlysis.data.analysis.core.source.AnalysesLocalDataSource
 import com.openlysis.data.analysis.model.common.Model
+import com.openlysis.data.analysis.source.AnalysesLocalDataSource
 import com.openlysis.data.database.dao.ExistsDao
 import com.openlysis.data.database.dao.QueueDao
 

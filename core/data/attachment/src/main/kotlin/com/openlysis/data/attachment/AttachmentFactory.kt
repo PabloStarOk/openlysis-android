@@ -2,7 +2,7 @@ package com.openlysis.data.attachment
 
 import android.net.Uri
 import com.openlysis.core.outcome.Outcome
-import com.openlysis.data.analysis.core.request.Attachment
+import com.openlysis.data.analysis.request.Attachment
 
 /**
  * Defines a factory for creating attachments from Android URI sources.

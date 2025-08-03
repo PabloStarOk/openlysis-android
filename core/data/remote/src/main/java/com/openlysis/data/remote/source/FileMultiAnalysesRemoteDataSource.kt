@@ -2,9 +2,9 @@ package com.openlysis.data.remote.source
 
 import com.openlysis.core.network.AppDispatcher
 import com.openlysis.core.network.di.Dispatcher
-import com.openlysis.data.analysis.core.request.AnalyzeFile
-import com.openlysis.data.analysis.core.response.AnalyzeResponse
 import com.openlysis.data.analysis.model.analysis.FileMultiAnalysis
+import com.openlysis.data.analysis.request.AnalyzeFile
+import com.openlysis.data.analysis.response.AnalyzeResponse
 import com.openlysis.data.remote.OpenlysisApi
 import com.openlysis.data.remote.constant.ApiFields
 import com.openlysis.data.remote.dto.common.AnalysisType

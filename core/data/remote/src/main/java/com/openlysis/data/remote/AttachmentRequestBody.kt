@@ -1,6 +1,6 @@
 package com.openlysis.data.remote
 
-import com.openlysis.data.analysis.core.request.Attachment
+import com.openlysis.data.analysis.request.Attachment
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody

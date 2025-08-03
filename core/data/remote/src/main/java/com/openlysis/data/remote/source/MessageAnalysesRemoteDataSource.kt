@@ -1,8 +1,8 @@
 package com.openlysis.data.remote.source
 
-import com.openlysis.data.analysis.core.request.AnalyzeMessage
-import com.openlysis.data.analysis.core.response.AnalyzeResponse
 import com.openlysis.data.analysis.model.message.MessageAnalysis
+import com.openlysis.data.analysis.request.AnalyzeMessage
+import com.openlysis.data.analysis.response.AnalyzeResponse
 import com.openlysis.data.remote.OpenlysisApi
 import com.openlysis.data.remote.constant.ApiFields
 import com.openlysis.data.remote.dto.common.AnalysisType

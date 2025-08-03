@@ -15,13 +15,13 @@ import com.openlysis.core.link.DeepLinks
 import com.openlysis.core.network.AppDispatcher
 import com.openlysis.core.network.di.Dispatcher
 import com.openlysis.core.outcome.Outcome
-import com.openlysis.data.analysis.core.di.SmsAnalysesRepository
-import com.openlysis.data.analysis.core.repository.AnalysesRepository
-import com.openlysis.data.analysis.core.request.AnalyzeMessage
+import com.openlysis.data.analysis.di.SmsAnalysesRepository
 import com.openlysis.data.analysis.model.analysis.AnalysisStatus
 import com.openlysis.data.analysis.model.common.Verdict
 import com.openlysis.data.analysis.model.message.MessageAnalysis
 import com.openlysis.data.analysis.model.message.MessageType
+import com.openlysis.data.analysis.repository.AnalysesRepository
+import com.openlysis.data.analysis.request.AnalyzeMessage
 import com.openlysis.data.work.constant.SmsAnalysisWorkers.DEFAULT_INVALID_NOTIFICATION_ID
 import com.openlysis.data.work.constant.SmsAnalysisWorkers.NOTIFICATION_ID_KEY
 import com.openlysis.notification.Notifier

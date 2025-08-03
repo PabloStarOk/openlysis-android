@@ -37,8 +37,7 @@ dependencies {
     implementation(libs.kotlinx.datetime)
 
     implementation(projects.core.designsystem)
-    implementation(projects.core.data.analysis.model)
-    implementation(projects.core.data.analysis.core)
+    implementation(projects.core.data.analysis)
 
     ksp(libs.google.dagger.hilt.compiler)
 

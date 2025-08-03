@@ -2,10 +2,10 @@ package com.openlysis.feature.tools
 
 import android.util.Patterns
 import com.openlysis.core.outcome.Outcome
-import com.openlysis.data.analysis.core.repository.AnalysesRepository
-import com.openlysis.data.analysis.core.request.AnalyzeUrl
 import com.openlysis.data.analysis.model.analysis.UrlMultiAnalysis
 import com.openlysis.data.analysis.model.common.AnalysisSettings
+import com.openlysis.data.analysis.repository.AnalysesRepository
+import com.openlysis.data.analysis.request.AnalyzeUrl
 import com.openlysis.feature.tools.model.AnalysisRequestState
 import com.openlysis.feature.tools.model.AnalysisToolScreenViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel

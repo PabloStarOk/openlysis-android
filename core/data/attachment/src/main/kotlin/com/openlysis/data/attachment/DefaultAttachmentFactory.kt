@@ -5,7 +5,7 @@ import android.net.Uri
 import android.provider.OpenableColumns
 import androidx.core.database.getLongOrNull
 import com.openlysis.core.outcome.Outcome
-import com.openlysis.data.analysis.core.request.Attachment
+import com.openlysis.data.analysis.request.Attachment
 import java.io.FileNotFoundException
 import java.io.InputStream
 
