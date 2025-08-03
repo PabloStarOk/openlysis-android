@@ -1,5 +1,7 @@
 package com.openlysis.data.remote.di
 
+import com.openlysis.core.network.AppDispatcher
+import com.openlysis.core.network.di.Dispatcher
 import com.openlysis.data.analysis.core.di.EmailAnalysesRemoteDataSource
 import com.openlysis.data.analysis.core.di.SmsAnalysesRemoteDataSource
 import com.openlysis.data.analysis.core.request.AnalyzeMessage
@@ -15,6 +17,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineDispatcher
 import okhttp3.OkHttpClient
 import retrofit2.Converter
 import retrofit2.Retrofit
@@ -78,21 +81,25 @@ internal object ApiProvidingModule {
     @Singleton
     @Provides
     fun provideEmailAnalysisRepo(
-        api: OpenlysisApi
+        api: OpenlysisApi,
+        @Dispatcher(AppDispatcher.IO) ioDispatcher: CoroutineDispatcher
     ): AnalysesRemoteDataSource<AnalyzeMessage, MessageAnalysis> =
         MessageAnalysesRemoteDataSource(
             analysisType = AnalysisType.Email,
-            api = api
+            api = api,
+            dispatcher = ioDispatcher
         )
 
     @SmsAnalysesRemoteDataSource
     @Singleton
     @Provides
     fun provideSmsAnalysisRepo(
-        api: OpenlysisApi
+        api: OpenlysisApi,
+        @Dispatcher(AppDispatcher.IO) ioDispatcher: CoroutineDispatcher
     ): AnalysesRemoteDataSource<AnalyzeMessage, MessageAnalysis> =
         MessageAnalysesRemoteDataSource(
             analysisType = AnalysisType.Sms,
-            api = api
+            api = api,
+            dispatcher = ioDispatcher
         )
 }

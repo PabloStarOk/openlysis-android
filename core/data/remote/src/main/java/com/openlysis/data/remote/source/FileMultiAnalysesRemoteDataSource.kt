@@ -1,11 +1,14 @@
 package com.openlysis.data.remote.source
 
+import com.openlysis.core.network.AppDispatcher
+import com.openlysis.core.network.di.Dispatcher
 import com.openlysis.data.analysis.core.request.AnalyzeFile
 import com.openlysis.data.analysis.core.response.AnalyzeResponse
 import com.openlysis.data.analysis.model.analysis.FileMultiAnalysis
 import com.openlysis.data.remote.OpenlysisApi
 import com.openlysis.data.remote.constant.ApiFields
 import com.openlysis.data.remote.dto.common.AnalysisType
+import kotlinx.coroutines.CoroutineDispatcher
 import retrofit2.Response
 import javax.inject.Inject
 
@@ -15,12 +18,14 @@ import javax.inject.Inject
  * Provides methods to analyze files and retrieve multi-analysis results from the remote API.
  *
  * @param api The [OpenlysisApi] used to perform network operations.
+ * @param ioDispatcher The coroutine dispatcher used for network operations.
  */
 internal class FileMultiAnalysesRemoteDataSource
     @Inject
     constructor(
-        api: OpenlysisApi
-    ) : BaseAnalysesRemoteDataSource<AnalyzeFile, FileMultiAnalysis>(api) {
+        api: OpenlysisApi,
+        @Dispatcher(AppDispatcher.IO) ioDispatcher: CoroutineDispatcher
+    ) : BaseAnalysesRemoteDataSource<AnalyzeFile, FileMultiAnalysis>(ioDispatcher, api) {
         /**
          * Analyzes a file by sending it to the API.
          *

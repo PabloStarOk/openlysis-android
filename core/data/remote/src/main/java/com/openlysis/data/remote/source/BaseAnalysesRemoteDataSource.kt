@@ -8,6 +8,7 @@ import com.openlysis.data.analysis.model.common.Model
 import com.openlysis.data.remote.AttachmentRequestBody
 import com.openlysis.data.remote.NetworkApiCaller
 import com.openlysis.data.remote.OpenlysisApi
+import kotlinx.coroutines.CoroutineDispatcher
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -19,11 +20,13 @@ import retrofit2.Response
  *
  * @param TRequest The type of the request object for analysis operations.
  * @param TModel The type of the model returned by analysis operations.
+ * @param dispatcher The coroutine dispatcher used for network operations.
  * @property api The Retrofit service used to perform remote API calls.
  */
 internal abstract class BaseAnalysesRemoteDataSource<TRequest, TModel>(
+    dispatcher: CoroutineDispatcher,
     protected val api: OpenlysisApi
-) : NetworkApiCaller(),
+) : NetworkApiCaller(dispatcher),
     AnalysesRemoteDataSource<TRequest, TModel> where TRequest : Any, TModel : Model {
     override suspend fun analyze(request: TRequest): Outcome<AnalyzeResponse> =
         callApiSafely {

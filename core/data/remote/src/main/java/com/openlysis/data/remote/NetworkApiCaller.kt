@@ -2,6 +2,8 @@ package com.openlysis.data.remote
 
 import com.openlysis.core.outcome.NetworkError
 import com.openlysis.core.outcome.Outcome
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
 import okhttp3.ResponseBody.Companion.toResponseBody
 import retrofit2.Response
 import java.io.IOException
@@ -12,8 +14,12 @@ import kotlin.coroutines.cancellation.CancellationException
 /**
  * Abstract base class for making network API calls.
  * Provides utility methods for safely executing API requests and handling responses.
+ *
+ * @property dispatcher The [CoroutineDispatcher] on which network calls will be executed.
  */
-internal abstract class NetworkApiCaller {
+internal abstract class NetworkApiCaller(
+    private val dispatcher: CoroutineDispatcher
+) {
     /**
      * Converts the response body from a DTO to an application's model type if the response is successful.
      *
@@ -45,29 +51,31 @@ internal abstract class NetworkApiCaller {
     protected suspend fun <TResult> callApiSafely(
         apiCall: suspend () -> Response<TResult>
     ): Outcome<TResult> where TResult : Any =
-        try {
-            val response = apiCall()
-            if (response.isSuccessful) {
-                Outcome.Success(response.body() as TResult)
-            } else {
-                val error =
-                    when (response.code()) {
-                        400 -> NetworkError.BadRequest
-                        401, 403 -> NetworkError.AccessDenied
-                        404 -> NetworkError.NotFound
-                        503 -> NetworkError.Unavailable
-                        in 500..599 -> NetworkError.Server
-                        else -> NetworkError.Unknown
-                    }
-                Outcome.Failure(error)
+        withContext(dispatcher) {
+            try {
+                val response = apiCall()
+                if (response.isSuccessful) {
+                    Outcome.Success(response.body() as TResult)
+                } else {
+                    val error =
+                        when (response.code()) {
+                            400 -> NetworkError.BadRequest
+                            401, 403 -> NetworkError.AccessDenied
+                            404 -> NetworkError.NotFound
+                            503 -> NetworkError.Unavailable
+                            in 500..599 -> NetworkError.Server
+                            else -> NetworkError.Unknown
+                        }
+                    Outcome.Failure(error)
+                }
+            } catch (_: ConnectException) {
+                Outcome.Failure(NetworkError.ServerUnreachable)
+            } catch (_: UnknownHostException) {
+                Outcome.Failure(NetworkError.ServerUnreachable)
+            } catch (_: IOException) {
+                Outcome.Failure(NetworkError.Network)
+            } catch (_: CancellationException) {
+                Outcome.Failure(NetworkError.OperationCanceled)
             }
-        } catch (_: ConnectException) {
-            Outcome.Failure(NetworkError.ServerUnreachable)
-        } catch (_: UnknownHostException) {
-            Outcome.Failure(NetworkError.ServerUnreachable)
-        } catch (_: IOException) {
-            Outcome.Failure(NetworkError.Network)
-        } catch (_: CancellationException) {
-            Outcome.Failure(NetworkError.OperationCanceled)
         }
 }

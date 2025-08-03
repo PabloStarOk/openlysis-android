@@ -1,9 +1,12 @@
 package com.openlysis.data.remote.source
 
+import com.openlysis.core.network.AppDispatcher
+import com.openlysis.core.network.di.Dispatcher
 import com.openlysis.data.analysis.core.request.AnalyzeUrl
 import com.openlysis.data.analysis.core.response.AnalyzeResponse
 import com.openlysis.data.analysis.model.analysis.UrlMultiAnalysis
 import com.openlysis.data.remote.OpenlysisApi
+import kotlinx.coroutines.CoroutineDispatcher
 import retrofit2.Response
 import javax.inject.Inject
 
@@ -13,12 +16,14 @@ import javax.inject.Inject
  * Provides methods to analyze URLs and retrieve multi-analysis results from the remote API.
  *
  * @param api The [OpenlysisApi] used to perform network operations.
+ * @param ioDispatcher The coroutine dispatcher used for network operations.
  */
 internal class UrlMultiAnalysesRemoteDataSource
     @Inject
     constructor(
-        api: OpenlysisApi
-    ) : BaseAnalysesRemoteDataSource<AnalyzeUrl, UrlMultiAnalysis>(api) {
+        api: OpenlysisApi,
+        @Dispatcher(AppDispatcher.IO) ioDispatcher: CoroutineDispatcher
+    ) : BaseAnalysesRemoteDataSource<AnalyzeUrl, UrlMultiAnalysis>(ioDispatcher, api) {
         /**
          * Analyzes the given URL using the provided [AnalyzeUrl] request.
          *
