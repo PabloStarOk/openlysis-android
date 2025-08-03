@@ -14,7 +14,6 @@ android {
         multiDexEnabled = true
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles("consumer-rules.pro")
         buildConfigField("int", "DB_VERSION", "1")
     }
 
