@@ -7,6 +7,7 @@ import android.content.Intent
 import android.net.Uri
 import android.provider.Telephony
 import android.telephony.SmsMessage
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.net.toUri
 import com.openlysis.core.link.DeepLinks
 import com.openlysis.data.analysis.model.message.Message
@@ -46,6 +47,8 @@ internal class SmsBroadcastReceiver : BroadcastReceiver() {
         message: Message
     ) {
         val notificationId = message.content.hashCode()
+        if (existsNotification(context, notificationId)) return
+
         val analyzeIntent =
             context.smsAnalysisIntent(
                 notificationId,
@@ -108,5 +111,13 @@ internal class SmsBroadcastReceiver : BroadcastReceiver() {
                     )
                 }
         }
+    }
+
+    private fun existsNotification(
+        context: Context,
+        notificationId: Int
+    ): Boolean {
+        val activeNotifications = NotificationManagerCompat.from(context).activeNotifications
+        return activeNotifications.any { it.id == notificationId }
     }
 }
