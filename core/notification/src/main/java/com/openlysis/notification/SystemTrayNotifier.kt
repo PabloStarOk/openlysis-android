@@ -193,6 +193,7 @@ internal class SystemTrayNotifier
                         setContentText(contentText)
                         setStyle(NotificationCompat.BigTextStyle().bigText(contentText))
                         setContentIntent(tapPendingIntent)
+                        setColor(BRAND_COLOR)
                     }.build()
 
             NotificationManagerCompat.from(this).notify(notificationId, notification)
@@ -271,6 +272,13 @@ internal class SystemTrayNotifier
                             )
                         setContentIntent(tapPendingIntent)
                     }
+
+                    when (analysisVerdict) {
+                        Verdict.Undetected -> setColor(POSITIVE_COLOR)
+                        Verdict.Suspicious -> setColor(WARNING_COLOR)
+                        Verdict.Malicious -> setColor(DANGER_COLOR)
+                        else -> setColor(BRAND_COLOR)
+                    }
                 }.build()
         }
 
@@ -324,6 +332,7 @@ internal class SystemTrayNotifier
                     cancelPendingIntent
                 ).setContentIntent(tapIntent)
                 .setAutoCancel(true)
+                .setColor(BRAND_COLOR)
                 .build()
         }
 
@@ -347,6 +356,11 @@ internal class SystemTrayNotifier
         }
 
         private companion object {
+            private const val BRAND_COLOR = 0x106FEB
+            private const val POSITIVE_COLOR = 0x14AE5C
+            private const val WARNING_COLOR = 0xE8B931
+            private const val DANGER_COLOR = 0xEC221F
+
             const val ANALYZE_REQUEST_CODE = 0
             const val CANCEL_REQUEST_CODE = 1
             const val CONTENT_TAP_REQUEST_CODE = 2
