@@ -8,6 +8,7 @@
     <string name="notifications_sms_analyze_primary_action_label">Analizar</string>
     <string name="notifications_sms_analyze_cancel_action_label">Cancelar</string>
 
+    <string name="worker_notification_title_sms_analysis_pending_by_internet">Análisis de SMS Pendiente</string>
     <string name="worker_notification_title_sms_analysis_in_progress">Análisis de SMS en progreso</string>
     <string name="worker_notification_title_sms_analysis_completed_generic">Análisis de SMS completado</string>
     <string name="worker_notification_title_sms_analysis_completed_suspicious">SMS sospechoso</string>
@@ -16,6 +17,7 @@
     <string name="worker_notification_title_sms_analysis_error_on_start">Error al iniciar el análisis de SMS</string>
     <string name="worker_notification_title_sms_analysis_error_on_refresh">Error al refrescar el análisis de SMS</string>
 
+    <string name="worker_notification_content_sms_analysis_pending_by_internet">El análisis del mensaje SMS de %s está pendiente. Se iniciará automáticamente cuando haya una conexión de red disponible.</string>
     <string name="worker_notification_content_sms_analysis_in_progress">El análisis del mensaje SMS de %s está en progreso.</string>
     <string name="worker_notification_content_sms_analysis_completed_unknown">El veredicto del mensaje SMS de %s no pudo ser determinado.</string>
     <string name="worker_notification_content_sms_analysis_completed_undetected">El análisis de un mensaje SMS de %s fue detectado como limpio.</string>

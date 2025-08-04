@@ -3,6 +3,8 @@ package com.openlysis.receiver
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import androidx.core.app.NotificationManagerCompat
 import androidx.work.Constraints
 import androidx.work.NetworkType
@@ -64,52 +66,76 @@ internal class SmsAnalysisAvailableBroadcastReceiver : BroadcastReceiver() {
         val subAction = SubAction.valueOf(actionTypeString)
         when (subAction) {
             SubAction.Analyze -> {
-                val constraints =
-                    Constraints
-                        .Builder()
-                        .setRequiredNetworkType(networkType = NetworkType.CONNECTED)
-                        .build()
-
-                val smsAnalysisStartWorker =
-                    OneTimeWorkRequestBuilder<SmsAnalysisStartWorker>()
-                        .setConstraints(constraints)
-                        .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
-                        .setInputData(
-                            workDataOf(
-                                SmsAnalysisWorkers.NOTIFICATION_ID_KEY to notificationId,
-                                SmsAnalysisStartWorker.MESSAGE_SENDER_KEY to messageSender,
-                                SmsAnalysisStartWorker.MESSAGE_BODY_KEY to messageBody
-                            )
-                        ).build()
-
-                val smsAnalysisRefreshWorker =
-                    OneTimeWorkRequestBuilder<SmsAnalysisRefreshWorker>()
-                        .setConstraints(constraints)
-                        .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
-                        .setInputData(
-                            workDataOf(
-                                SmsAnalysisWorkers.NOTIFICATION_ID_KEY to notificationId
-                            )
-                        ).build()
-
-                val workManager = WorkManager.Companion.getInstance(context)
-                workManager
-                    .beginWith(smsAnalysisStartWorker)
-                    .then(smsAnalysisRefreshWorker)
-                    .enqueue()
-
-                notifier.notifyMessageAnalysis(
-                    messageSender,
-                    AnalysisStatus.Queued,
-                    Verdict.Unknown,
-                    tapIntent = null,
-                    notificationId = notificationId
-                )
+                enqueueWorkers(context, notificationId, messageSender, messageBody)
+                if (hasInternetConnection(context)) {
+                    notifier.notifyMessageAnalysis(
+                        messageSender,
+                        AnalysisStatus.Queued,
+                        Verdict.Unknown,
+                        tapIntent = null,
+                        notificationId = notificationId
+                    )
+                } else {
+                    notifier.notifySmsAnalysisPendingByInternet(notificationId, messageSender)
+                }
             }
             SubAction.Cancel -> {
                 NotificationManagerCompat.from(context).cancel(notificationId)
             }
         }
+    }
+
+    private fun enqueueWorkers(
+        context: Context,
+        notificationId: Int,
+        messageSender: String,
+        messageBody: String
+    ) {
+        val constraints =
+            Constraints
+                .Builder()
+                .setRequiredNetworkType(networkType = NetworkType.CONNECTED)
+                .build()
+
+        val smsAnalysisStartWorker =
+            OneTimeWorkRequestBuilder<SmsAnalysisStartWorker>()
+                .setConstraints(constraints)
+                .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
+                .setInputData(
+                    workDataOf(
+                        SmsAnalysisWorkers.NOTIFICATION_ID_KEY to notificationId,
+                        SmsAnalysisStartWorker.MESSAGE_SENDER_KEY to messageSender,
+                        SmsAnalysisStartWorker.MESSAGE_BODY_KEY to messageBody
+                    )
+                ).build()
+
+        val smsAnalysisRefreshWorker =
+            OneTimeWorkRequestBuilder<SmsAnalysisRefreshWorker>()
+                .setConstraints(constraints)
+                .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
+                .setInputData(
+                    workDataOf(
+                        SmsAnalysisWorkers.NOTIFICATION_ID_KEY to notificationId
+                    )
+                ).build()
+
+        val workManager = WorkManager.Companion.getInstance(context)
+        workManager
+            .beginWith(smsAnalysisStartWorker)
+            .then(smsAnalysisRefreshWorker)
+            .enqueue()
+    }
+
+    private fun hasInternetConnection(context: Context): Boolean {
+        val connectivityManager = context.getSystemService(ConnectivityManager::class.java)
+        val currentNetwork = connectivityManager.activeNetwork
+        val capabilities = connectivityManager.getNetworkCapabilities(currentNetwork)
+        val reachInternet =
+            capabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) == true
+        val isValidated =
+            capabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED) == true
+
+        return reachInternet && isValidated
     }
 
     /**

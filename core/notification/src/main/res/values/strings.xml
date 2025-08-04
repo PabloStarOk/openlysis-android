@@ -8,6 +8,7 @@
     <string name="notifications_sms_analyze_primary_action_label">Analyze</string>
     <string name="notifications_sms_analyze_cancel_action_label">Cancel</string>
 
+    <string name="worker_notification_title_sms_analysis_pending_by_internet">Pending SMS analysis</string>
     <string name="worker_notification_title_sms_analysis_in_progress">SMS analysis in progress</string>
     <string name="worker_notification_title_sms_analysis_completed_generic">SMS analysis completed</string>
     <string name="worker_notification_title_sms_analysis_completed_suspicious">Suspicious SMS</string>
@@ -16,6 +17,7 @@
     <string name="worker_notification_title_sms_analysis_error_on_start">Error when starting SMS analysis</string>
     <string name="worker_notification_title_sms_analysis_error_on_refresh">Error when refreshing SMS analysis</string>
 
+    <string name="worker_notification_content_sms_analysis_pending_by_internet">The analysis of the SMS message from %s is pending. It will start automatically when a network connection is available.</string>
     <string name="worker_notification_content_sms_analysis_in_progress">The analysis of the SMS message from %s is in progress.</string>
     <string name="worker_notification_content_sms_analysis_completed_unknown">The verdict of the SMS message from %s could not be determined.</string>
     <string name="worker_notification_content_sms_analysis_completed_undetected">The analysis of an SMS message from %s was detected as clean.</string>

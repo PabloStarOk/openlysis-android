@@ -199,6 +199,40 @@ internal class SystemTrayNotifier
             NotificationManagerCompat.from(this).notify(notificationId, notification)
         }
 
+        override fun notifySmsAnalysisPendingByInternet(
+            notificationId: Int,
+            messageSender: String
+        ) = with(context) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+                checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) !=
+                PackageManager.PERMISSION_GRANTED
+            ) {
+                return
+            }
+
+            val contentTitle =
+                getString(R.string.worker_notification_title_sms_analysis_pending_by_internet)
+            val contentText =
+                getString(
+                    R.string.worker_notification_content_sms_analysis_pending_by_internet,
+                    messageSender
+                )
+
+            val notification =
+                NotificationCompat
+                    .Builder(this, Notifications.SMS_ANALYSIS_NOTIFICATION_CHANNEL_ID)
+                    .apply {
+                        setSmallIcon(AppIconsIds.Openlysis)
+                        setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                        setContentTitle(contentTitle)
+                        setContentText(contentText)
+                        setStyle(NotificationCompat.BigTextStyle().bigText(contentText))
+                        setColor(BRAND_COLOR)
+                    }.build()
+
+            NotificationManagerCompat.from(this).notify(notificationId, notification)
+        }
+
         override fun createMessageAnalysisNotification(
             messageSender: String,
             analysisStatus: AnalysisStatus,

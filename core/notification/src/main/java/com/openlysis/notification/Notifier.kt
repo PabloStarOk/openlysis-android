@@ -64,6 +64,17 @@ interface Notifier {
     )
 
     /**
+     * Notifies that an SMS analysis is pending due to lack of internet connectivity.
+     *
+     * @param notificationId The ID to use for the notification.
+     * @param messageSender The sender of the message awaiting analysis.
+     */
+    fun notifySmsAnalysisPendingByInternet(
+        notificationId: Int,
+        messageSender: String
+    )
+
+    /**
      * Creates a notification of a message analysis based on its state.
      *
      * @param messageSender The sender of the message.
