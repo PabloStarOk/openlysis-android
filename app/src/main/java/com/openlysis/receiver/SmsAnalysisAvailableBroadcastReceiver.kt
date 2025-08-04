@@ -76,6 +76,7 @@ internal class SmsAnalysisAvailableBroadcastReceiver : BroadcastReceiver() {
                         .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
                         .setInputData(
                             workDataOf(
+                                SmsAnalysisWorkers.NOTIFICATION_ID_KEY to notificationId,
                                 SmsAnalysisStartWorker.MESSAGE_SENDER_KEY to messageSender,
                                 SmsAnalysisStartWorker.MESSAGE_BODY_KEY to messageBody
                             )

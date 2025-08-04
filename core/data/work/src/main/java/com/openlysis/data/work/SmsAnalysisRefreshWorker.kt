@@ -64,47 +64,55 @@ class SmsAnalysisRefreshWorker
                 val analysisId =
                     inputData.getString(ANALYSIS_ID_KEY) ?: return@withContext Result.failure()
 
-                pollAnalysis(messageSender, analysisId)
+                val pollOutcome = pollAnalysis(analysisId)
+                val notificationTapIntent = buildTapIntent(analysisId)
+
+                when (pollOutcome) {
+                    is Outcome.Success -> {
+                        val analysis = pollOutcome.value
+                        notifier.notifyMessageAnalysis(
+                            messageSender = messageSender,
+                            analysisStatus = analysis.status,
+                            analysisVerdict = analysis.verdict,
+                            tapIntent = notificationTapIntent
+                        )
+                        Result.success()
+                    }
+                    is Outcome.Failure -> {
+                        Log.e(LOGGING_TAG, "Analysis failed due to a ${pollOutcome.error}")
+                        notifier.notifyMessageAnalysisError(
+                            error = pollOutcome.error,
+                            occurredOnStart = false,
+                            messageSender = messageSender,
+                            tapIntent = notificationTapIntent
+                        )
+                        Result.failure()
+                    }
+                }
             }
 
-        private suspend fun pollAnalysis(
-            messageSender: String,
-            analysisId: String
-        ): Result {
+        private suspend fun pollAnalysis(analysisId: String): Outcome<MessageAnalysis> {
             var isResultFinal = false
             var verdict = Verdict.Unknown
             var status = AnalysisStatus.Queued
+            var outcome: Outcome<MessageAnalysis>? = null
+
             while (!isResultFinal) {
-                val outcome = smsRepository.getUpdatedById(analysisId)
-                if (outcome !is Outcome.Success) {
-                    val failure = outcome as Outcome.Failure
-                    notifier.notifyMessageAnalysis(
-                        messageSender,
-                        AnalysisStatus.Failed,
-                        Verdict.Unknown,
-                        buildTapIntent(analysisId)
-                    )
-                    Log.e(LOGGING_TAG, "Analysis failed due to a ${failure.error}")
-                    return Result.failure()
-                }
+                outcome = smsRepository.getUpdatedById(analysisId)
+                if (outcome !is Outcome.Success) return outcome
 
                 verdict = outcome.value.verdict
                 status = outcome.value.status
                 isResultFinal =
                     status != AnalysisStatus.Queued &&
                     status != AnalysisStatus.InProgress
+
                 if (!isResultFinal) {
                     delay(POLLING_FREQUENCY_MS)
                 }
             }
 
-            notifier.notifyMessageAnalysis(
-                messageSender,
-                status,
-                verdict,
-                buildTapIntent(analysisId)
-            )
-            return Result.success()
+            return outcome as Outcome<MessageAnalysis>
         }
 
         override suspend fun getForegroundInfo(): ForegroundInfo {

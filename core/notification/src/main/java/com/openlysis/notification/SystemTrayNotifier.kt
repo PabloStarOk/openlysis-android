@@ -13,6 +13,8 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.net.toUri
 import com.openlysis.core.designsystem.icon.AppIconsIds
+import com.openlysis.core.outcome.AppError
+import com.openlysis.core.outcome.NetworkError
 import com.openlysis.data.analysis.model.analysis.AnalysisStatus
 import com.openlysis.data.analysis.model.common.Verdict
 import com.openlysis.data.analysis.model.message.Message
@@ -93,7 +95,7 @@ internal class SystemTrayNotifier
                 )
 
             val notification =
-                createSmsNotification(
+                createReceivedSmsNotification(
                     message,
                     analyzePendingIntent,
                     cancelPendingIntent,
@@ -126,6 +128,76 @@ internal class SystemTrayNotifier
             NotificationManagerCompat.from(this).notify(notificationId, notification)
         }
 
+        override fun notifyMessageAnalysisError(
+            error: AppError,
+            occurredOnStart: Boolean,
+            messageSender: String,
+            tapIntent: Intent,
+            notificationId: Int
+        ) = with(context) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+                checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) !=
+                PackageManager.PERMISSION_GRANTED
+            ) {
+                return
+            }
+
+            val contentTitleResId =
+                if (occurredOnStart) {
+                    R.string.worker_notification_title_sms_analysis_error_on_start
+                } else {
+                    R.string.worker_notification_title_sms_analysis_error_on_refresh
+                }
+
+            val actionVerbResId =
+                if (occurredOnStart) {
+                    R.string.worker_notification_content_sms_analysis_error_start_verb
+                } else {
+                    R.string.worker_notification_content_sms_analysis_error_refresh_verb
+                }
+
+            val contentTextResId =
+                when (error) {
+                    is NetworkError.Server ->
+                        R.string.worker_notification_content_sms_analysis_error_server
+                    is NetworkError.Network ->
+                        R.string.worker_notification_content_sms_analysis_error_network
+                    is NetworkError.ServerUnreachable ->
+                        R.string.worker_notification_content_sms_analysis_error_unreachable
+                    is NetworkError.Unavailable ->
+                        R.string.worker_notification_content_sms_analysis_error_unavailable
+                    else -> R.string.worker_notification_content_sms_analysis_error_generic
+                }
+
+            val contentTitle = getString(contentTitleResId)
+            val actionVerb = getString(actionVerbResId)
+            val contentText = getString(contentTextResId, messageSender, actionVerb)
+
+            val tapPendingIntent =
+                PendingIntent.getActivity(
+                    context,
+                    CONTENT_TAP_REQUEST_CODE,
+                    tapIntent,
+                    PendingIntent.FLAG_UPDATE_CURRENT or
+                        PendingIntent.FLAG_IMMUTABLE
+                )
+
+            val notification =
+                NotificationCompat
+                    .Builder(this, Notifications.SMS_ANALYSIS_NOTIFICATION_CHANNEL_ID)
+                    .apply {
+                        setSmallIcon(AppIconsIds.Openlysis)
+                        setPriority(NotificationCompat.PRIORITY_HIGH)
+                        setAutoCancel(true)
+                        setContentTitle(contentTitle)
+                        setContentText(contentText)
+                        setStyle(NotificationCompat.BigTextStyle().bigText(contentText))
+                        setContentIntent(tapPendingIntent)
+                    }.build()
+
+            NotificationManagerCompat.from(this).notify(notificationId, notification)
+        }
+
         override fun createMessageAnalysisNotification(
             messageSender: String,
             analysisStatus: AnalysisStatus,
@@ -153,7 +225,8 @@ internal class SystemTrayNotifier
 
                         val contentText =
                             context.getString(
-                                R.string.worker_notification_content_sms_analysis_failed
+                                R.string.worker_notification_content_sms_analysis_failed,
+                                messageSender
                             )
                         Pair(contentTitle, contentText)
                     }
@@ -164,13 +237,13 @@ internal class SystemTrayNotifier
                             )
                         val contentText =
                             context.getString(
-                                R.string.worker_notification_content_sms_analysis_in_progress
+                                R.string.worker_notification_content_sms_analysis_in_progress,
+                                messageSender
                             )
                         Pair(contentTitle, contentText)
                     }
                 }
 
-            // TODO: Add action to retry in case of failure.
             return NotificationCompat
                 .Builder(context, Notifications.SMS_ANALYSIS_NOTIFICATION_CHANNEL_ID)
                 .apply {
@@ -186,10 +259,7 @@ internal class SystemTrayNotifier
 
                     setContentTitle(contentTitle)
                     setContentText(contentText)
-
-                    if (analysisStatus == AnalysisStatus.Completed) {
-                        setStyle(NotificationCompat.BigTextStyle().bigText(contentText))
-                    }
+                    setStyle(NotificationCompat.BigTextStyle().bigText(contentText))
 
                     if (tapIntent != null) {
                         val tapPendingIntent =
@@ -225,7 +295,7 @@ internal class SystemTrayNotifier
             notificationManager.createNotificationChannel(channel)
         }
 
-        private fun Context.createSmsNotification(
+        private fun Context.createReceivedSmsNotification(
             message: Message,
             analyzePendingIntent: PendingIntent,
             cancelPendingIntent: PendingIntent,
@@ -234,7 +304,8 @@ internal class SystemTrayNotifier
             val content =
                 getString(
                     R.string.notifications_sms_analyze_content,
-                    message.sender
+                    message.sender,
+                    message.content
                 )
             return NotificationCompat
                 .Builder(context, Notifications.SMS_ANALYSIS_NOTIFICATION_CHANNEL_ID)

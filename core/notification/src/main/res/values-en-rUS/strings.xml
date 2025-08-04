@@ -3,21 +3,30 @@
     <string name="notifications_sms_analysis_channel_name">Automated SMS Analysis</string>
     <string name="notifications_sms_analysis_channel_description">These notifications pertain to the automated analysis of SMS messages. When an SMS is received, the app notifies the user to decide whether to analyze it. If the user agrees, the analysis begins, and subsequent updates are reflected in the notification.</string>
 
-    <string name="notifications_sms_analyze_title">Analyze SMS</string>
-    <string name="notifications_sms_analyze_content">A new SMS message has been received from %s.</string>
+    <string name="notifications_sms_analyze_title">New SMS received</string>
+    <string name="notifications_sms_analyze_content">You have received an SMS message from %s: \"%s\". You can analyze it to verify its authenticity.</string>
     <string name="notifications_sms_analyze_primary_action_label">Analyze</string>
     <string name="notifications_sms_analyze_cancel_action_label">Cancel</string>
 
-    <string name="worker_notification_title_sms_analysis_in_progress">SMS Analysis in progress</string>
+    <string name="worker_notification_title_sms_analysis_in_progress">SMS analysis in progress</string>
     <string name="worker_notification_title_sms_analysis_completed_generic">SMS analysis completed</string>
-    <string name="worker_notification_title_sms_analysis_completed_suspicious">Detected SMS as suspicious</string>
-    <string name="worker_notification_title_sms_analysis_completed_malicious">Detected SMS as malicious</string>
+    <string name="worker_notification_title_sms_analysis_completed_suspicious">Suspicious SMS</string>
+    <string name="worker_notification_title_sms_analysis_completed_malicious">Malicious SMS</string>
     <string name="worker_notification_title_sms_analysis_failed">SMS analysis failed</string>
+    <string name="worker_notification_title_sms_analysis_error_on_start">Error when starting SMS analysis</string>
+    <string name="worker_notification_title_sms_analysis_error_on_refresh">Error when refreshing SMS analysis</string>
 
-    <string name="worker_notification_content_sms_analysis_in_progress">The SMS analysis is in progress.</string>
-    <string name="worker_notification_content_sms_analysis_completed_unknown">The verdict of the SMS message from %s is unknown.</string>
+    <string name="worker_notification_content_sms_analysis_in_progress">The analysis of the SMS message from %s is in progress.</string>
+    <string name="worker_notification_content_sms_analysis_completed_unknown">The verdict of the SMS message from %s could not be determined.</string>
     <string name="worker_notification_content_sms_analysis_completed_undetected">The analysis of an SMS message from %s was detected as clean.</string>
     <string name="worker_notification_content_sms_analysis_completed_suspicious">The analysis of an SMS message from %s was detected as suspicious.</string>
     <string name="worker_notification_content_sms_analysis_completed_malicious">The analysis of an SMS message from %s was detected as malicious.</string>
-    <string name="worker_notification_content_sms_analysis_failed">The SMS analysis failed.</string>
+    <string name="worker_notification_content_sms_analysis_failed">The analysis of the SMS message from %s failed.</string>
+    <string name="worker_notification_content_sms_analysis_error_start_verb">start</string>
+    <string name="worker_notification_content_sms_analysis_error_refresh_verb">refresh</string>
+    <string name="worker_notification_content_sms_analysis_error_generic">The analysis of the SMS message from %s could not %s due to an unexpected error.</string>
+    <string name="worker_notification_content_sms_analysis_error_server">The analysis of the SMS message from %s could not %s due to a server error.</string>
+    <string name="worker_notification_content_sms_analysis_error_network">The analysis of the SMS message from %s could not %s due to a network error.</string>
+    <string name="worker_notification_content_sms_analysis_error_unreachable">The analysis of the SMS message from %s could not %s because the server is unavailable.</string>
+    <string name="worker_notification_content_sms_analysis_error_unavailable">The analysis of the SMS message from %s could not %s because this service is currently unavailable.</string>
 </resources>

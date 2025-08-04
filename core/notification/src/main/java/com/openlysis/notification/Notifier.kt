@@ -2,6 +2,7 @@ package com.openlysis.notification
 
 import android.app.Notification
 import android.content.Intent
+import com.openlysis.core.outcome.AppError
 import com.openlysis.data.analysis.model.analysis.AnalysisStatus
 import com.openlysis.data.analysis.model.common.Verdict
 import com.openlysis.data.analysis.model.message.Message
@@ -42,6 +43,23 @@ interface Notifier {
         analysisStatus: AnalysisStatus,
         analysisVerdict: Verdict,
         tapIntent: Intent?,
+        notificationId: Int = Random.nextInt()
+    )
+
+    /**
+     * Notifies that an error occurred during message analysis.
+     *
+     * @param error The [AppError] that occurred.
+     * @param occurredOnStart Indicates if the error happened at the start of the analysis.
+     * @param messageSender The sender of the message related to the error.
+     * @param tapIntent The [Intent] to execute when the user taps the notification.
+     * @param notificationId The ID to use for the notification. Defaults to a random value.
+     */
+    fun notifyMessageAnalysisError(
+        error: AppError,
+        occurredOnStart: Boolean,
+        messageSender: String,
+        tapIntent: Intent,
         notificationId: Int = Random.nextInt()
     )
 

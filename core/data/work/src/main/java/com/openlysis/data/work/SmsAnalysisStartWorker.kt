@@ -1,14 +1,18 @@
 package com.openlysis.data.work
 
+import android.content.ComponentName
 import android.content.Context
+import android.content.Intent
 import android.content.pm.ServiceInfo
 import android.os.Build
 import android.util.Log
+import androidx.core.net.toUri
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import com.openlysis.core.link.DeepLinks
 import com.openlysis.core.network.AppDispatcher
 import com.openlysis.core.network.di.Dispatcher
 import com.openlysis.core.outcome.Outcome
@@ -21,6 +25,8 @@ import com.openlysis.data.analysis.model.message.MessageType
 import com.openlysis.data.analysis.repository.AnalysesRepository
 import com.openlysis.data.analysis.request.AnalyzeMessage
 import com.openlysis.data.analysis.request.Message
+import com.openlysis.data.work.constant.SmsAnalysisWorkers.DEFAULT_INVALID_NOTIFICATION_ID
+import com.openlysis.data.work.constant.SmsAnalysisWorkers.NOTIFICATION_ID_KEY
 import com.openlysis.notification.Notifier
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -52,6 +58,12 @@ class SmsAnalysisStartWorker
     ) : CoroutineWorker(context, workerParameters) {
         override suspend fun doWork(): Result =
             withContext(coroutineDispatcher) {
+                val notificationId =
+                    inputData.getInt(NOTIFICATION_ID_KEY, DEFAULT_INVALID_NOTIFICATION_ID)
+                if (notificationId == DEFAULT_INVALID_NOTIFICATION_ID) {
+                    throw IllegalStateException("Notification ID was not found.")
+                }
+
                 val messageSender =
                     inputData.getString(MESSAGE_SENDER_KEY)
                         ?: return@withContext Result.failure()
@@ -73,11 +85,12 @@ class SmsAnalysisStartWorker
                         )
                     }
                     is Outcome.Failure -> {
-                        notifier.notifyMessageAnalysis(
-                            messageSender,
-                            AnalysisStatus.Failed,
-                            Verdict.Unknown,
-                            null
+                        notifier.notifyMessageAnalysisError(
+                            error = outcome.error,
+                            occurredOnStart = true,
+                            messageSender = messageSender,
+                            tapIntent = buildTapIntent(messageSender, messageBody),
+                            notificationId = notificationId
                         )
                         Log.e(LOGGING_TAG, "Analysis failed due to a ${outcome.error}")
                         Result.failure()
@@ -128,6 +141,20 @@ class SmsAnalysisStartWorker
                 countryCode = analysisSettings.defaultCountryCode
             )
         }
+
+        private fun buildTapIntent(
+            sender: String,
+            content: String
+        ): Intent =
+            Intent().apply {
+                action = Intent.ACTION_VIEW
+                data =
+                    DeepLinks.Tools.Sms
+                        .createUri(sender, content)
+                        .toUri()
+                component =
+                    ComponentName(applicationContext.packageName, DeepLinks.OPENLYSIS_ACTIVITY_NAME)
+            }
 
         companion object {
             /** Key for the sender of the message in input data. */
