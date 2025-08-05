@@ -1,9 +1,11 @@
 package com.openlysis.feature.tools.components
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
@@ -24,14 +26,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
+import com.openlysis.core.designsystem.icon.AppIcons
 import com.openlysis.core.designsystem.theme.LocalAppColorScheme
 import com.openlysis.core.designsystem.theme.OpenlysisTheme
 import com.openlysis.core.designsystem.theme.radius.LocalAppRadius
 import com.openlysis.core.designsystem.theme.size.LocalAppSpacing
 import com.openlysis.core.designsystem.theme.type.LocalAppTypography
+import com.openlysis.feature.tools.R
 
 /**
  * A clickable card that displays information about an available analysis tool.
@@ -57,8 +62,9 @@ internal fun ToolCard(
 
     Surface(
         color = LocalAppColorScheme.current.background.default.primary,
-        border = BorderStroke(1.dp, LocalAppColorScheme.current.border.brand.primary),
+        border = BorderStroke(1.dp, LocalAppColorScheme.current.border.default.primary),
         shape = RoundedCornerShape(LocalAppRadius.current.value100),
+        shadowElevation = 1.dp,
         modifier =
             modifier
                 .height(IntrinsicSize.Min)
@@ -70,7 +76,7 @@ internal fun ToolCard(
                 )
     ) {
         Row(
-            horizontalArrangement = Arrangement.spacedBy(LocalAppSpacing.current.value400),
+            horizontalArrangement = Arrangement.spacedBy(LocalAppSpacing.current.value300),
             verticalAlignment = Alignment.CenterVertically,
             modifier =
                 Modifier
@@ -79,41 +85,90 @@ internal fun ToolCard(
                     ).fillMaxHeight()
                     .height(IntrinsicSize.Max)
         ) {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(LocalAppSpacing.current.value200),
+            ToolCardIcon(
+                icon = icon,
+                iconAlt = iconAlt
+            )
+
+            ToolCardInfo(
+                label = label,
+                description = description,
                 modifier =
                     Modifier
                         .weight(1f)
                         .fillMaxHeight()
-            ) {
-                Text(
-                    text = label,
-                    style = LocalAppTypography.current.bodyBaseStrong,
-                    color = LocalAppColorScheme.current.text.brand.primary,
-                    modifier = Modifier.fillMaxWidth()
-                )
-                Text(
-                    text = description,
-                    style = LocalAppTypography.current.bodySmall,
-                    color = LocalAppColorScheme.current.text.default.secondary,
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
-
-            Icon(
-                icon,
-                contentDescription = iconAlt,
-                tint = LocalAppColorScheme.current.icon.default.primary,
-                modifier = Modifier.size(48.dp)
             )
         }
     }
 }
 
-@Preview(showSystemUi = true)
+@Composable
+private fun ToolCardIcon(
+    icon: ImageVector,
+    iconAlt: String,
+    modifier: Modifier = Modifier
+) {
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier =
+            modifier
+                .background(
+                    color = LocalAppColorScheme.current.background.brand.tertiary,
+                    shape = RoundedCornerShape(LocalAppRadius.current.full)
+                ).padding(LocalAppSpacing.current.value200)
+    ) {
+        Icon(
+            icon,
+            contentDescription = iconAlt,
+            tint = LocalAppColorScheme.current.icon.brand.primary,
+            modifier = Modifier.size(32.dp)
+        )
+    }
+}
+
+@Composable
+private fun ToolCardInfo(
+    label: String,
+    description: String,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(LocalAppSpacing.current.value200),
+        modifier = modifier
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(LocalAppSpacing.current.value050),
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(
+                text = label,
+                style = LocalAppTypography.current.bodyBaseStrong,
+                color = LocalAppColorScheme.current.text.brand.primary,
+                modifier = Modifier.weight(1f)
+            )
+
+            Icon(
+                imageVector = AppIcons.ChevronRight,
+                contentDescription = stringResource(R.string.tool_card_chevron_right_icon_alt),
+                tint = LocalAppColorScheme.current.icon.brand.primary,
+                modifier = Modifier.size(24.dp)
+            )
+        }
+
+        Text(
+            text = description,
+            style = LocalAppTypography.current.bodySmall,
+            color = LocalAppColorScheme.current.text.default.primary,
+            modifier = Modifier.fillMaxWidth()
+        )
+    }
+}
+
+@PreviewLightDark
 @Composable
 private fun ToolCardPreview() {
-    OpenlysisTheme(darkTheme = false) {
+    OpenlysisTheme {
         ToolCard(
             label = "Label",
             description = "Description",

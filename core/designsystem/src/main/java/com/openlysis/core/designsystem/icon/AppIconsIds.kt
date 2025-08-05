@@ -67,6 +67,8 @@ object AppIconsIds {
 
     @DrawableRes val ChevronDown = R.drawable.chevron_down_icon
 
+    @DrawableRes val ChevronRight = R.drawable.chevron_right_icon
+
     @DrawableRes val Login = R.drawable.login_icon
 
     @DrawableRes val Key = R.drawable.key_icon
