@@ -12,8 +12,6 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.OutOfQuotaPolicy
 import androidx.work.WorkManager
 import androidx.work.workDataOf
-import com.openlysis.data.analysis.model.analysis.AnalysisStatus
-import com.openlysis.data.analysis.model.common.Verdict
 import com.openlysis.data.work.SmsAnalysisRefreshWorker
 import com.openlysis.data.work.SmsAnalysisStartWorker
 import com.openlysis.data.work.constant.SmsAnalysisWorkers
@@ -67,15 +65,7 @@ internal class SmsAnalysisAvailableBroadcastReceiver : BroadcastReceiver() {
         when (subAction) {
             SubAction.Analyze -> {
                 enqueueWorkers(context, notificationId, messageSender, messageBody)
-                if (hasInternetConnection(context)) {
-                    notifier.notifyMessageAnalysis(
-                        messageSender,
-                        AnalysisStatus.Queued,
-                        Verdict.Unknown,
-                        tapIntent = null,
-                        notificationId = notificationId
-                    )
-                } else {
+                if (!hasInternetConnection(context)) {
                     notifier.notifySmsAnalysisPendingByInternet(notificationId, messageSender)
                 }
             }

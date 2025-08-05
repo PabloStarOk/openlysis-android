@@ -32,7 +32,6 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
-import kotlin.random.Random
 
 /**
  * Worker for starting SMS messages analyses.
@@ -56,6 +55,8 @@ class SmsAnalysisStartWorker
         private val analysisSettings: AnalysisSettings,
         private val notifier: Notifier
     ) : CoroutineWorker(context, workerParameters) {
+        private var foregroundSet: Boolean = false
+
         override suspend fun doWork(): Result =
             withContext(coroutineDispatcher) {
                 val notificationId =
@@ -71,6 +72,16 @@ class SmsAnalysisStartWorker
                     inputData.getString(MESSAGE_BODY_KEY)
                         ?: return@withContext Result.failure()
 
+                if (!foregroundSet) {
+                    notifier.notifyMessageAnalysis(
+                        notificationId = notificationId,
+                        messageSender = messageSender,
+                        analysisStatus = AnalysisStatus.Queued,
+                        analysisVerdict = Verdict.Unknown,
+                        tapIntent = null
+                    )
+                }
+
                 val request = createAnalysisRequest(messageSender, messageBody)
                 val outcome = smsRepository.analyze(request)
 
@@ -85,24 +96,36 @@ class SmsAnalysisStartWorker
                         )
                     }
                     is Outcome.Failure -> {
+                        Log.e(LOGGING_TAG, "Analysis failed due to a ${outcome.error}")
                         notifier.notifyMessageAnalysisError(
+                            notificationId = notificationId,
                             error = outcome.error,
                             occurredOnStart = true,
                             messageSender = messageSender,
-                            tapIntent = buildTapIntent(messageSender, messageBody),
-                            notificationId = notificationId
+                            tapIntent = buildTapIntent(messageSender, messageBody)
                         )
-                        Log.e(LOGGING_TAG, "Analysis failed due to a ${outcome.error}")
                         Result.failure()
                     }
                 }
             }
 
         override suspend fun getForegroundInfo(): ForegroundInfo {
-            val notificationId = Random.nextInt()
+            foregroundSet = true
+
+            val notificationId =
+                inputData.getInt(NOTIFICATION_ID_KEY, DEFAULT_INVALID_NOTIFICATION_ID)
+            if (notificationId == DEFAULT_INVALID_NOTIFICATION_ID) {
+                throw IllegalStateException("Notification ID was not found.")
+            }
+
+            val messageSender = inputData.getString(MESSAGE_SENDER_KEY)
+            if (messageSender == null) {
+                throw IllegalStateException("SMS message sender was not found.")
+            }
+
             val notification =
                 notifier.createMessageAnalysisNotification(
-                    "",
+                    messageSender,
                     AnalysisStatus.Queued,
                     Verdict.Unknown,
                     null
@@ -130,7 +153,7 @@ class SmsAnalysisStartWorker
                 Message(
                     type = MessageType.Sms,
                     sender = sender,
-                    subject = "",
+                    subject = null,
                     content = body,
                     attachments = null
                 )

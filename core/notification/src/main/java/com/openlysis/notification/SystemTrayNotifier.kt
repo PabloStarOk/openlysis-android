@@ -105,11 +105,11 @@ internal class SystemTrayNotifier
         }
 
         override fun notifyMessageAnalysis(
+            notificationId: Int,
             messageSender: String,
             analysisStatus: AnalysisStatus,
             analysisVerdict: Verdict,
-            tapPendingIntent: Intent?,
-            notificationId: Int
+            tapPendingIntent: Intent?
         ) = with(context) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
                 checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) !=
@@ -129,11 +129,11 @@ internal class SystemTrayNotifier
         }
 
         override fun notifyMessageAnalysisError(
+            notificationId: Int,
             error: AppError,
             occurredOnStart: Boolean,
             messageSender: String,
-            tapIntent: Intent,
-            notificationId: Int
+            tapIntent: Intent
         ) = with(context) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
                 checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) !=

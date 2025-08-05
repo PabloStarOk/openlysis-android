@@ -30,6 +30,7 @@ import dagger.assisted.AssistedInject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
+import kotlin.random.Random
 
 /**
  * Worker for refreshing SMS messages analyses.
@@ -51,6 +52,8 @@ class SmsAnalysisRefreshWorker
             AnalysesRepository<AnalyzeMessage, MessageAnalysis>,
         private val notifier: Notifier
     ) : CoroutineWorker(context, workerParameters) {
+        private var foregroundSet: Boolean = false
+
         override suspend fun doWork(): Result =
             withContext(coroutineDispatcher) {
                 val notificationId =
@@ -64,13 +67,25 @@ class SmsAnalysisRefreshWorker
                 val analysisId =
                     inputData.getString(ANALYSIS_ID_KEY) ?: return@withContext Result.failure()
 
+                if (!foregroundSet) {
+                    notifier.notifyMessageAnalysis(
+                        notificationId = notificationId,
+                        messageSender = messageSender,
+                        analysisStatus = AnalysisStatus.Queued,
+                        analysisVerdict = Verdict.Unknown,
+                        tapIntent = null
+                    )
+                }
+
                 val pollOutcome = pollAnalysis(analysisId)
                 val notificationTapIntent = buildTapIntent(analysisId)
+                val targetNotificationId = if (!foregroundSet) notificationId else Random.nextInt()
 
                 when (pollOutcome) {
                     is Outcome.Success -> {
                         val analysis = pollOutcome.value
                         notifier.notifyMessageAnalysis(
+                            notificationId = targetNotificationId,
                             messageSender = messageSender,
                             analysisStatus = analysis.status,
                             analysisVerdict = analysis.verdict,
@@ -81,6 +96,7 @@ class SmsAnalysisRefreshWorker
                     is Outcome.Failure -> {
                         Log.e(LOGGING_TAG, "Analysis failed due to a ${pollOutcome.error}")
                         notifier.notifyMessageAnalysisError(
+                            notificationId = targetNotificationId,
                             error = pollOutcome.error,
                             occurredOnStart = false,
                             messageSender = messageSender,
@@ -116,6 +132,7 @@ class SmsAnalysisRefreshWorker
         }
 
         override suspend fun getForegroundInfo(): ForegroundInfo {
+            foregroundSet = true
             val notificationId =
                 inputData.getInt(NOTIFICATION_ID_KEY, DEFAULT_INVALID_NOTIFICATION_ID)
             if (notificationId == DEFAULT_INVALID_NOTIFICATION_ID) {
