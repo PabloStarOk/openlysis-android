@@ -7,7 +7,8 @@
     <string name="verdict_stats_last_results_label">Últimos resultados</string>
     <string name="verdict_stats_default_label">Estadísticas</string>
     
-    <string name="analysis_results_section_card_icon_alt">Flecha apuntando a la derecha.</string>
+    <string name="analysis_results_section_card_icon_alt">Ícono de flecha hacia la derecha</string>
+    <string name="analysis_results_section_card_in_progress">Análisis en progreso</string>
     
     <string name="results_screen_emails_card_title">Correos Electrónicos</string>
     <string name="results_screen_sms_card_title">Mensajes de Texto SMS</string>
@@ -17,6 +18,10 @@
     <string name="results_screen_sms_card_description">Revisa los resultados de tus análisis de los mensajes de texto SMS.</string>
     <string name="results_screen_files_card_description">Revisa los resultados de tus análisis de archivos.</string>
     <string name="results_screen_urls_card_description">Revisa los resultados de tus análisis de URLs.</string>
+    <string name="results_screen_emails_card_icon_alt">Ícono de correo</string>
+    <string name="results_screen_sms_card_icon_alt">Ícono de mensaje</string>
+    <string name="results_screen_files_card_icon_alt">Ícono de archivo</string>
+    <string name="results_screen_urls_card_icon_alt">Ícono de enlace</string>
 
     <string name="analysis_status_queued_badge_label">Análisis en cola</string>
     <string name="analysis_status_in_progress_badge_label">Análisis en progreso</string>

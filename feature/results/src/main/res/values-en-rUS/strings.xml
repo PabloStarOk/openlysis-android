@@ -6,8 +6,9 @@
     <string name="verdict_stats_unknown_label">Unknown</string>
     <string name="verdict_stats_last_results_label">Last results</string>
     <string name="verdict_stats_default_label">Stats</string>
-    
-    <string name="analysis_results_section_card_icon_alt">Arrow pointing right.</string>
+
+    <string name="analysis_results_section_card_icon_alt">Chevron right icon</string>
+    <string name="analysis_results_section_card_in_progress">Analyses in progress</string>
 
     <string name="results_screen_emails_card_title">Emails</string>
     <string name="results_screen_sms_card_title">SMS Text Messages</string>
@@ -17,6 +18,10 @@
     <string name="results_screen_sms_card_description">Review the results of your SMS text message analyses.</string>
     <string name="results_screen_files_card_description">Review the results of your file analyses.</string>
     <string name="results_screen_urls_card_description">Review the results of your URL analyses.</string>
+    <string name="results_screen_emails_card_icon_alt">Mail icon</string>
+    <string name="results_screen_sms_card_icon_alt">Message icon</string>
+    <string name="results_screen_files_card_icon_alt">File icon</string>
+    <string name="results_screen_urls_card_icon_alt">Link icon</string>
 
     <string name="analysis_status_queued_badge_label">Analysis queued</string>
     <string name="analysis_status_in_progress_badge_label">Analysis in progress</string>

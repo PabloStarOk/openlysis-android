@@ -10,7 +10,6 @@ import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -20,7 +19,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.openlysis.core.designsystem.theme.LocalAppColorScheme
@@ -36,7 +34,7 @@ import com.openlysis.core.designsystem.theme.type.LocalAppTypography
  * @param value The numeric value to display with animation
  * @param foregroundColor The color for the text elements
  * @param backgroundColor The background color of the item
- * @param smallSize Whether to use a compact layout with smaller text and padding
+ * @param smallSize Whether to use a compact layout with smaller text
  * @param modifier Optional modifier for customizing the layout
  */
 @Composable
@@ -48,18 +46,11 @@ internal fun VerdictStatsItem(
     smallSize: Boolean,
     modifier: Modifier = Modifier
 ) {
-    val verticalPadding =
-        if (smallSize) {
-            LocalAppSpacing.current.value150
-        } else {
-            LocalAppSpacing.current.value050
-        }
-
-    val valueStyle =
+    val valueTextStyle =
         if (smallSize) {
             LocalAppTypography.current.bodyXSmall
         } else {
-            LocalAppTypography.current.bodyBaseStrong
+            LocalAppTypography.current.bodySmall
         }
 
     Column(
@@ -74,7 +65,7 @@ internal fun VerdictStatsItem(
                 .clip(shape = RoundedCornerShape(LocalAppRadius.current.value100))
                 .background(backgroundColor)
                 .padding(
-                    vertical = verticalPadding,
+                    vertical = LocalAppSpacing.current.value050,
                     horizontal = LocalAppSpacing.current.value100
                 ).widthIn(min = 28.dp)
     ) {
@@ -94,18 +85,8 @@ internal fun VerdictStatsItem(
         ) { state ->
             Text(
                 text = state.toString(),
-                style = valueStyle,
+                style = valueTextStyle,
                 color = foregroundColor
-            )
-        }
-
-        if (!smallSize) {
-            Text(
-                text = label,
-                style = LocalAppTypography.current.bodySmall,
-                color = foregroundColor,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
             )
         }
     }

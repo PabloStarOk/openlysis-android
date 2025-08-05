@@ -11,6 +11,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.openlysis.core.designsystem.icon.AppIcons
 import com.openlysis.core.designsystem.theme.size.LocalAppSpacing
 import com.openlysis.feature.results.components.initial.AnalysisResultsCard
 
@@ -51,28 +52,40 @@ internal fun ResultsScreen(
             onClick = onEmailResultsClick,
             title = stringResource(R.string.results_screen_emails_card_title),
             description = stringResource(R.string.results_screen_emails_card_description),
-            verdictStatsState = uiState.emailAnalysesStats
+            icon = AppIcons.Mail,
+            iconAlt = stringResource(R.string.results_screen_emails_card_icon_alt),
+            verdictStatsState = uiState.emailAnalysesStats,
+            analysesInProgress = uiState.emailAnalysesInProgress
         )
 
         AnalysisResultsCard(
             onClick = onSmsResultsClick,
             title = stringResource(R.string.results_screen_sms_card_title),
             description = stringResource(R.string.results_screen_sms_card_description),
-            verdictStatsState = uiState.smsAnalysesStats
+            icon = AppIcons.Sms,
+            iconAlt = stringResource(R.string.results_screen_sms_card_icon_alt),
+            verdictStatsState = uiState.smsAnalysesStats,
+            analysesInProgress = uiState.smsAnalysesInProgress
         )
 
         AnalysisResultsCard(
             onClick = onFileResultsClick,
             title = stringResource(R.string.results_screen_files_card_title),
             description = stringResource(R.string.results_screen_files_card_description),
-            verdictStatsState = uiState.fileAnalysesStats
+            icon = AppIcons.File,
+            iconAlt = stringResource(R.string.results_screen_files_card_icon_alt),
+            verdictStatsState = uiState.fileAnalysesStats,
+            analysesInProgress = uiState.fileAnalysesInProgress
         )
 
         AnalysisResultsCard(
             onClick = onUrlResultsClick,
             title = stringResource(R.string.results_screen_urls_card_title),
             description = stringResource(R.string.results_screen_urls_card_description),
-            verdictStatsState = uiState.urlAnalysesStats
+            icon = AppIcons.Link,
+            iconAlt = stringResource(R.string.results_screen_urls_card_icon_alt),
+            verdictStatsState = uiState.urlAnalysesStats,
+            analysesInProgress = uiState.urlAnalysesInProgress
         )
     }
 }

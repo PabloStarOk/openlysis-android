@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.openlysis.core.outcome.Outcome
 import com.openlysis.data.analysis.di.EmailAnalysesRepository
 import com.openlysis.data.analysis.di.SmsAnalysesRepository
+import com.openlysis.data.analysis.model.analysis.AnalysisStatus
 import com.openlysis.data.analysis.model.analysis.FileMultiAnalysis
 import com.openlysis.data.analysis.model.analysis.MultiAnalysis
 import com.openlysis.data.analysis.model.analysis.UrlMultiAnalysis
@@ -60,36 +61,44 @@ internal class ResultsScreenViewModel
                 val fileOutcome = fileAnalysisRepo.getManyPaged(pageStats, pageSize)
                 val urlOutcome = urlAnalysisRepo.getManyPaged(pageStats, pageSize)
 
-                val emailVerdictStats =
-                    when (emailOutcome) {
-                        is Outcome.Success -> emailOutcome.value.messageCountVerdictStats()
-                        is Outcome.Failure -> VerdictStatsState.Zero
-                    }
+                var emailVerdictStats: VerdictStatsState = VerdictStatsState.Zero
+                var emailAnalysesInProgress = 0
+                if (emailOutcome is Outcome.Success) {
+                    emailVerdictStats = emailOutcome.value.getMessageAnalysesVerdictStats()
+                    emailAnalysesInProgress = emailOutcome.value.countMessageAnalysesInProgress()
+                }
 
-                val smsVerdictStats =
-                    when (smsOutcome) {
-                        is Outcome.Success -> smsOutcome.value.messageCountVerdictStats()
-                        is Outcome.Failure -> VerdictStatsState.Zero
-                    }
+                var smsVerdictStats: VerdictStatsState = VerdictStatsState.Zero
+                var smsAnalysesInProgress = 0
+                if (smsOutcome is Outcome.Success) {
+                    smsVerdictStats = smsOutcome.value.getMessageAnalysesVerdictStats()
+                    smsAnalysesInProgress = smsOutcome.value.countMessageAnalysesInProgress()
+                }
 
-                val fileVerdictStats =
-                    when (fileOutcome) {
-                        is Outcome.Success -> fileOutcome.value.multiCountVerdictStats()
-                        is Outcome.Failure -> VerdictStatsState.Zero
-                    }
+                var fileVerdictStats: VerdictStatsState = VerdictStatsState.Zero
+                var fileAnalysesInProgress = 0
+                if (fileOutcome is Outcome.Success) {
+                    fileVerdictStats = fileOutcome.value.getMultiAnalysesVerdictStats()
+                    fileAnalysesInProgress = fileOutcome.value.countMultiAnalysesInProgress()
+                }
 
-                val urlVerdictStats =
-                    when (urlOutcome) {
-                        is Outcome.Success -> urlOutcome.value.multiCountVerdictStats()
-                        is Outcome.Failure -> VerdictStatsState.Zero
-                    }
+                var urlVerdictStats: VerdictStatsState = VerdictStatsState.Zero
+                var urlAnalysesInProgress = 0
+                if (urlOutcome is Outcome.Success) {
+                    urlVerdictStats = urlOutcome.value.getMultiAnalysesVerdictStats()
+                    urlAnalysesInProgress = urlOutcome.value.countMultiAnalysesInProgress()
+                }
 
                 _uiState.value =
                     ResultsUiState(
                         emailAnalysesStats = emailVerdictStats,
                         smsAnalysesStats = smsVerdictStats,
                         fileAnalysesStats = fileVerdictStats,
-                        urlAnalysesStats = urlVerdictStats
+                        urlAnalysesStats = urlVerdictStats,
+                        emailAnalysesInProgress = emailAnalysesInProgress,
+                        smsAnalysesInProgress = smsAnalysesInProgress,
+                        fileAnalysesInProgress = fileAnalysesInProgress,
+                        urlAnalysesInProgress = urlAnalysesInProgress
                     )
             }
         }
@@ -99,7 +108,7 @@ internal class ResultsScreenViewModel
          *
          * @return [VerdictStatsState] containing counts of different verdicts for the analyses
          */
-        private fun List<MessageAnalysis>.messageCountVerdictStats(): VerdictStatsState =
+        private fun List<MessageAnalysis>.getMessageAnalysesVerdictStats(): VerdictStatsState =
             countVerdictStats(
                 map {
                     it.verdict
@@ -107,12 +116,30 @@ internal class ResultsScreenViewModel
             )
 
         /**
+         * Counts the number of message analyses that are either queued or in progress.
+         *
+         * @receiver List of [MessageAnalysis] objects to check.
+         * @return The count of analyses with status Queued or InProgress.
+         */
+        private fun List<MessageAnalysis>.countMessageAnalysesInProgress(): Int =
+            count { it.status == AnalysisStatus.Queued || it.status == AnalysisStatus.InProgress }
+
+        /**
          * Counts verdict statistics for a list of multi-analyses (URLs or files).
          *
          * @return [VerdictStatsState] containing counts of different final verdicts for the analyses
          */
-        private fun List<MultiAnalysis>.multiCountVerdictStats(): VerdictStatsState =
+        private fun List<MultiAnalysis>.getMultiAnalysesVerdictStats(): VerdictStatsState =
             countVerdictStats(map { it.finalVerdict })
+
+        /**
+         * Counts the number of multi-analyses (e.g., files or URLs) that are either queued or in progress.
+         *
+         * @receiver List of [MultiAnalysis] objects to check.
+         * @return The count of analyses with status Queued or InProgress.
+         */
+        private fun List<MultiAnalysis>.countMultiAnalysesInProgress(): Int =
+            count { it.status == AnalysisStatus.Queued || it.status == AnalysisStatus.InProgress }
 
         /**
          * Calculates statistics for different verdict types from a list of verdicts.

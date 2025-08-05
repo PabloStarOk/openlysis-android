@@ -78,7 +78,6 @@ internal fun ServiceResultsSection(
                     ),
                 label = stringResource(R.string.verdict_stats_default_label),
                 smallSize = true,
-                showUnknown = true,
                 modifier = Modifier.width(IntrinsicSize.Min)
             )
 
