@@ -3,6 +3,7 @@ package com.openlysis.data.remote.source
 import com.openlysis.data.analysis.model.message.MessageAnalysis
 import com.openlysis.data.analysis.request.AnalyzeMessage
 import com.openlysis.data.analysis.response.AnalyzeResponse
+import com.openlysis.data.auth.AuthTokensManager
 import com.openlysis.data.remote.OpenlysisApi
 import com.openlysis.data.remote.constant.ApiFields
 import com.openlysis.data.remote.dto.common.AnalysisType
@@ -16,6 +17,7 @@ import javax.inject.Inject
  * Provides methods to analyze messages (with optional attachments) and retrieve analysis results from the remote API.
  *
  * @param analysisType Type of analysis of the data source, must be email or SMS.
+ * @param authTokensManager The manager for authentication tokens.
  * @param api The [OpenlysisApi] used to perform network operations.
  * @param dispatcher The coroutine dispatcher used for network operations.
  */
@@ -23,9 +25,14 @@ internal class MessageAnalysesRemoteDataSource
     @Inject
     constructor(
         private val analysisType: AnalysisType,
+        authTokensManager: AuthTokensManager,
         api: OpenlysisApi,
         dispatcher: CoroutineDispatcher
-    ) : BaseAnalysesRemoteDataSource<AnalyzeMessage, MessageAnalysis>(dispatcher, api) {
+    ) : BaseAnalysesRemoteDataSource<AnalyzeMessage, MessageAnalysis>(
+            authTokensManager,
+            dispatcher,
+            api
+        ) {
         /**
          * Analyzes a message by preparing its attachments and sending the analysis request.
          *

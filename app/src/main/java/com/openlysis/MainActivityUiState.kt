@@ -23,11 +23,11 @@ internal sealed interface MainActivityUiState {
     data object Loading : MainActivityUiState
 
     /**
-     * Checks if the current state is Success and the user is signed in.
+     * Determines if authentication is required.
      *
-     * @return true if the user is signed in, false otherwise.
+     * @return true if the current state is Success and the user is not signed in, false otherwise.
      */
-    fun isUserSignedIn() = this is Success && this.userSignedIn
+    fun shouldAuthenticate() = this is Success && !this.userSignedIn
 
     /**
      * Checks if the splash screen should be kept visible.

@@ -3,9 +3,7 @@ package com.openlysis.data.datastore.serializer
 import androidx.datastore.core.CorruptionException
 import androidx.datastore.core.Serializer
 import com.google.protobuf.InvalidProtocolBufferException
-import com.openlysis.core.data.datastore.EncryptedUserAuthData
 import com.openlysis.core.data.datastore.UserPreferences
-import com.openlysis.data.datastore.cipher.CryptoCipher
 import java.io.InputStream
 import java.io.OutputStream
 import javax.inject.Inject

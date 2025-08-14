@@ -1,9 +1,0 @@
-syntax = "proto3";
-
-option java_package = "com.openlysis.core.data.datastore";
-option java_multiple_files = true;
-
-message EncryptedUserAuthData {
-    bool is_signed_in = 1;
-    optional string api_key = 2;
-}

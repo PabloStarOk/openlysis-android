@@ -7,12 +7,14 @@ import com.openlysis.data.analysis.di.SmsAnalysesRemoteDataSource
 import com.openlysis.data.analysis.model.message.MessageAnalysis
 import com.openlysis.data.analysis.request.AnalyzeMessage
 import com.openlysis.data.analysis.source.AnalysesRemoteDataSource
+import com.openlysis.data.auth.AuthTokensManager
 import com.openlysis.data.remote.ApiClientSettings
 import com.openlysis.data.remote.AuthenticationApi
 import com.openlysis.data.remote.OpenlysisApi
 import com.openlysis.data.remote.dto.common.AnalysisType
-import com.openlysis.data.remote.interceptor.ApiKeyHeaderInterceptor
+import com.openlysis.data.remote.interceptor.AuthHeaderInterceptor
 import com.openlysis.data.remote.source.MessageAnalysesRemoteDataSource
+import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -35,13 +37,19 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 internal object ApiProvidingModule {
+    @HttpClient(AppHttpClient.Analysis)
     @Singleton
     @Provides
-    fun provideHttpClient(apiKeyInterceptor: ApiKeyHeaderInterceptor): OkHttpClient =
+    fun provideAnalysisHttpClient(authHeaderInterceptor: AuthHeaderInterceptor): OkHttpClient =
         OkHttpClient
             .Builder()
-            .addInterceptor(apiKeyInterceptor)
+            .addInterceptor(authHeaderInterceptor)
             .build()
+
+    @HttpClient(AppHttpClient.Authentication)
+    @Singleton
+    @Provides
+    fun provideAuthHttpClient(): OkHttpClient = OkHttpClient()
 
     @Singleton
     @Provides
@@ -49,14 +57,18 @@ internal object ApiProvidingModule {
 
     @Singleton
     @Provides
-    fun provideOpenlysisApi(
+    fun provideMoshi(): Moshi = Moshi.Builder().build()
+
+    @Singleton
+    @Provides
+    fun provideAnalysisApi(
         apiClientSettings: ApiClientSettings,
         converterFactory: Converter.Factory,
-        client: OkHttpClient
+        @HttpClient(AppHttpClient.Analysis) client: OkHttpClient
     ): OpenlysisApi =
         Retrofit
             .Builder()
-            .baseUrl(apiClientSettings.baseUrl)
+            .baseUrl(apiClientSettings.analysisApiBaseUrl)
             .addConverterFactory(converterFactory)
             .client(client)
             .build()
@@ -67,11 +79,11 @@ internal object ApiProvidingModule {
     fun provideAuthenticationApi(
         apiClientSettings: ApiClientSettings,
         converterFactory: Converter.Factory,
-        client: OkHttpClient
+        @HttpClient(AppHttpClient.Authentication) client: OkHttpClient
     ): AuthenticationApi =
         Retrofit
             .Builder()
-            .baseUrl(apiClientSettings.baseUrl)
+            .baseUrl(apiClientSettings.authApiBaseUrl)
             .addConverterFactory(converterFactory)
             .client(client)
             .build()
@@ -81,11 +93,13 @@ internal object ApiProvidingModule {
     @Singleton
     @Provides
     fun provideEmailAnalysisRepo(
+        authTokensManager: AuthTokensManager,
         api: OpenlysisApi,
         @Dispatcher(AppDispatcher.IO) ioDispatcher: CoroutineDispatcher
     ): AnalysesRemoteDataSource<AnalyzeMessage, MessageAnalysis> =
         MessageAnalysesRemoteDataSource(
             analysisType = AnalysisType.Email,
+            authTokensManager = authTokensManager,
             api = api,
             dispatcher = ioDispatcher
         )
@@ -94,11 +108,13 @@ internal object ApiProvidingModule {
     @Singleton
     @Provides
     fun provideSmsAnalysisRepo(
+        authTokensManager: AuthTokensManager,
         api: OpenlysisApi,
         @Dispatcher(AppDispatcher.IO) ioDispatcher: CoroutineDispatcher
     ): AnalysesRemoteDataSource<AnalyzeMessage, MessageAnalysis> =
         MessageAnalysesRemoteDataSource(
             analysisType = AnalysisType.Sms,
+            authTokensManager = authTokensManager,
             api = api,
             dispatcher = ioDispatcher
         )

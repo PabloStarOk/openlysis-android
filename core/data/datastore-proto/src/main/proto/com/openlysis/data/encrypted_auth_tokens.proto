@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+option java_package = "com.openlysis.core.data.datastore";
+option java_multiple_files = true;
+
+message EncryptedAuthTokens {
+    optional Token access_token = 1;
+    optional Token refresh_token = 2;
+}
+
+message Token {
+    string value = 1;
+    int64 expires_at_seconds = 2;
+}

@@ -5,11 +5,11 @@ import com.squareup.moshi.JsonClass
 /**
  * Data transfer object for sign-in requests.
  *
- * @property userName The user's username.
+ * @property email The user's email address.
  * @property password The user's password.
  */
 @JsonClass(generateAdapter = true)
 internal data class SignInRequest(
-    val userName: String,
+    val email: String,
     val password: String
 )

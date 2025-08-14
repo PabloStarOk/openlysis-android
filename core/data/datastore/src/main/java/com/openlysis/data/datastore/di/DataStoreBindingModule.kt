@@ -1,7 +1,7 @@
 package com.openlysis.data.datastore.di
 
-import com.openlysis.data.auth.UserAuthLocalDataSource
-import com.openlysis.data.datastore.EncryptedUserAuthLocalDataSource
+import com.openlysis.data.auth.AuthTokensLocalDataSource
+import com.openlysis.data.datastore.EncryptedAuthTokensLocalDataSource
 import com.openlysis.data.datastore.UserPreferencesLocalDataSource
 import com.openlysis.data.user.UserDataLocalDataSource
 import dagger.Binds
@@ -20,8 +20,8 @@ internal abstract class DataStoreBindingModule {
     @Singleton
     @Binds
     abstract fun bindUserAuthLocalDataSource(
-        impl: EncryptedUserAuthLocalDataSource
-    ): UserAuthLocalDataSource
+        impl: EncryptedAuthTokensLocalDataSource
+    ): AuthTokensLocalDataSource
 
     @Singleton
     @Binds

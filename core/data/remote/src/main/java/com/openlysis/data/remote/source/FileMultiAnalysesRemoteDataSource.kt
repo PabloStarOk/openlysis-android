@@ -5,6 +5,7 @@ import com.openlysis.core.network.di.Dispatcher
 import com.openlysis.data.analysis.model.analysis.FileMultiAnalysis
 import com.openlysis.data.analysis.request.AnalyzeFile
 import com.openlysis.data.analysis.response.AnalyzeResponse
+import com.openlysis.data.auth.AuthTokensManager
 import com.openlysis.data.remote.OpenlysisApi
 import com.openlysis.data.remote.constant.ApiFields
 import com.openlysis.data.remote.dto.common.AnalysisType
@@ -17,15 +18,21 @@ import javax.inject.Inject
  *
  * Provides methods to analyze files and retrieve multi-analysis results from the remote API.
  *
+ * @param authTokensManager The manager for authentication tokens.
  * @param api The [OpenlysisApi] used to perform network operations.
  * @param ioDispatcher The coroutine dispatcher used for network operations.
  */
 internal class FileMultiAnalysesRemoteDataSource
     @Inject
     constructor(
+        authTokensManager: AuthTokensManager,
         api: OpenlysisApi,
         @Dispatcher(AppDispatcher.IO) ioDispatcher: CoroutineDispatcher
-    ) : BaseAnalysesRemoteDataSource<AnalyzeFile, FileMultiAnalysis>(ioDispatcher, api) {
+    ) : BaseAnalysesRemoteDataSource<AnalyzeFile, FileMultiAnalysis>(
+            authTokensManager,
+            ioDispatcher,
+            api
+        ) {
         /**
          * Analyzes a file by sending it to the API.
          *

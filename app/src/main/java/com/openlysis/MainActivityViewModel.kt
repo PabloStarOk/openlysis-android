@@ -2,7 +2,7 @@ package com.openlysis
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.openlysis.data.auth.UserAuthDataRepository
+import com.openlysis.data.auth.AuthTokensManager
 import com.openlysis.data.user.UserDataRepository
 import com.openlysis.data.user.model.Permission
 import com.openlysis.navigation.AppPermission
@@ -16,28 +16,28 @@ import javax.inject.Inject
 /**
  * ViewModel for MainActivity.
  *
- * @param userAuthDataRepository Repository to observe user authentication state.
+ * @param authTokensManager An [AuthTokensManager] to observe user authentication state.
  * @param userDataRepository Repository to observe user data.
  */
 @HiltViewModel
 internal class MainActivityViewModel
     @Inject
     constructor(
-        userAuthDataRepository: UserAuthDataRepository,
+        authTokensManager: AuthTokensManager,
         userDataRepository: UserDataRepository
     ) : ViewModel() {
         val uiState: StateFlow<MainActivityUiState> =
-            userAuthDataRepository.data
+            authTokensManager.data
                 .combine(
                     userDataRepository.data
-                ) { userAuthData, userData ->
+                ) { authTokens, userData ->
                     val pendingPermissions =
                         AppPermission.entries
                             .filter { shouldAskPermission(it, userData.askedPermissions) }
                             .sortedByDescending { it.ordinal }
 
                     MainActivityUiState.Success(
-                        userSignedIn = userAuthData.isSignedIn,
+                        userSignedIn = authTokens.canRefresh,
                         pendingPermissions = pendingPermissions
                     )
                 }.stateIn(

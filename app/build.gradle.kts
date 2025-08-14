@@ -50,8 +50,14 @@ android {
 
             buildConfigField(
                 "String",
-                "API_BASE_URL",
-                localProperties.getProperty("API_BASE_URL_PROD")
+                "ANALYSIS_API_BASE_URL",
+                localProperties.getProperty("ANALYSIS_API_BASE_URL_PROD")
+            )
+
+            buildConfigField(
+                "String",
+                "AUTH_API_BASE_URL",
+                localProperties.getProperty("AUTH_API_BASE_URL_PROD")
             )
 
             buildConfigField(
@@ -70,8 +76,14 @@ android {
         debug {
             buildConfigField(
                 "String",
-                "API_BASE_URL",
-                localProperties.getProperty("API_BASE_URL")
+                "ANALYSIS_API_BASE_URL",
+                localProperties.getProperty("ANALYSIS_API_BASE_URL")
+            )
+
+            buildConfigField(
+                "String",
+                "AUTH_API_BASE_URL",
+                localProperties.getProperty("AUTH_API_BASE_URL")
             )
 
             buildConfigField(

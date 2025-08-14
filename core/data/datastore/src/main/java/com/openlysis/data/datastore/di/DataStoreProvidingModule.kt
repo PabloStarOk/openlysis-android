@@ -5,7 +5,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import androidx.datastore.dataStoreFile
-import com.openlysis.core.data.datastore.EncryptedUserAuthData
+import com.openlysis.core.data.datastore.EncryptedAuthTokens
 import com.openlysis.core.data.datastore.UserPreferences
 import com.openlysis.core.network.AppDispatcher
 import com.openlysis.core.network.di.ApplicationScope
@@ -13,7 +13,7 @@ import com.openlysis.core.network.di.Dispatcher
 import com.openlysis.data.datastore.cipher.CipherKeyProvider
 import com.openlysis.data.datastore.constant.EncryptionParams
 import com.openlysis.data.datastore.constant.ProtoFileNames
-import com.openlysis.data.datastore.serializer.EncryptedUserAuthDataSerializer
+import com.openlysis.data.datastore.serializer.EncryptedAuthTokensSerializer
 import com.openlysis.data.datastore.serializer.UserPreferencesSerializer
 import dagger.Module
 import dagger.Provides
@@ -38,14 +38,14 @@ internal object DataStoreProvidingModule {
         @ApplicationContext context: Context,
         @Dispatcher(AppDispatcher.IO) ioDispatcher: CoroutineDispatcher,
         @ApplicationScope scope: CoroutineScope,
-        serializer: EncryptedUserAuthDataSerializer
-    ): DataStore<EncryptedUserAuthData> =
+        serializer: EncryptedAuthTokensSerializer
+    ): DataStore<EncryptedAuthTokens> =
         DataStoreFactory.create(
             serializer = serializer,
             scope = CoroutineScope(scope.coroutineContext + ioDispatcher),
             corruptionHandler =
-                ReplaceFileCorruptionHandler<EncryptedUserAuthData>(
-                    produceNewData = { EncryptedUserAuthData.getDefaultInstance() }
+                ReplaceFileCorruptionHandler<EncryptedAuthTokens>(
+                    produceNewData = { EncryptedAuthTokens.getDefaultInstance() }
                 )
         ) {
             context.dataStoreFile(ProtoFileNames.ENCRYPTED_USER_AUTH_DATA)

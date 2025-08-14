@@ -1,7 +1,9 @@
 package com.openlysis.data.auth.di
 
-import com.openlysis.data.auth.DefaultUserAuthDataRepository
-import com.openlysis.data.auth.UserAuthDataRepository
+import com.openlysis.data.auth.AuthTokensManager
+import com.openlysis.data.auth.DefaultAuthTokensManager
+import com.openlysis.data.auth.DefaultTokenExpirationWatcher
+import com.openlysis.data.auth.TokenExpirationWatcher
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -17,7 +19,11 @@ import javax.inject.Singleton
 internal abstract class AuthBindingModule {
     @Singleton
     @Binds
-    abstract fun bindUserAuthDataRepository(
-        impl: DefaultUserAuthDataRepository
-    ): UserAuthDataRepository
+    abstract fun bindUserAuthDataRepository(impl: DefaultAuthTokensManager): AuthTokensManager
+
+    @Singleton
+    @Binds
+    abstract fun bindTokenExpirationWatcher(
+        impl: DefaultTokenExpirationWatcher
+    ): TokenExpirationWatcher
 }

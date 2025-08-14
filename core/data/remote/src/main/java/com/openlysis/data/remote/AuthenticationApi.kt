@@ -1,7 +1,8 @@
 package com.openlysis.data.remote
 
 import com.openlysis.data.remote.constant.ApiEndpoints
-import com.openlysis.data.remote.dto.authentication.SignInResponse
+import com.openlysis.data.remote.dto.authentication.AuthTokensDto
+import com.openlysis.data.remote.dto.request.SignInRefreshRequest
 import com.openlysis.data.remote.dto.request.SignInRequest
 import com.openlysis.data.remote.dto.request.SignUpRequest
 import retrofit2.Response
@@ -27,10 +28,21 @@ internal interface AuthenticationApi {
      * Authenticates a user and returns a sign-in response.
      *
      * @param request The sign-in request body containing credentials.
-     * @return A [Response] containing [SignInResponse] if successful.
+     * @return A [Response] containing [AuthTokensDto] if successful.
      */
     @POST(ApiEndpoints.SIGN_IN)
     suspend fun signIn(
         @Body request: SignInRequest
-    ): Response<SignInResponse>
+    ): Response<AuthTokensDto>
+
+    /**
+     * Refreshes authentication tokens using a refresh token.
+     *
+     * @param refreshToken The request body containing the refresh token.
+     * @return A [Response] containing new [AuthTokensDto] if successful.
+     */
+    @POST(ApiEndpoints.SIGN_IN_REFRESH)
+    suspend fun signInRefresh(
+        @Body refreshToken: SignInRefreshRequest
+    ): Response<AuthTokensDto>
 }

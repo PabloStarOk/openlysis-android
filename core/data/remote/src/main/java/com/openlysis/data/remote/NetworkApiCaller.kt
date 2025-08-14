@@ -48,7 +48,7 @@ internal abstract class NetworkApiCaller(
      * @param apiCall The suspend function representing the API call to execute.
      * @return An [Outcome] containing the successful result if successful, or a [NetworkError] otherwise.
      */
-    protected suspend fun <TResult> callApiSafely(
+    protected open suspend fun <TResult> callApiSafely(
         apiCall: suspend () -> Response<TResult>
     ): Outcome<TResult> where TResult : Any =
         withContext(dispatcher) {
@@ -57,25 +57,51 @@ internal abstract class NetworkApiCaller(
                 if (response.isSuccessful) {
                     Outcome.Success(response.body() as TResult)
                 } else {
-                    val error =
-                        when (response.code()) {
-                            400 -> NetworkError.BadRequest
-                            401, 403 -> NetworkError.AccessDenied
-                            404 -> NetworkError.NotFound
-                            503 -> NetworkError.Unavailable
-                            in 500..599 -> NetworkError.Server
-                            else -> NetworkError.Unknown
-                        }
-                    Outcome.Failure(error)
+                    Outcome.Failure(getErrorFromCode(response.code()))
                 }
-            } catch (_: ConnectException) {
-                Outcome.Failure(NetworkError.ServerUnreachable)
-            } catch (_: UnknownHostException) {
-                Outcome.Failure(NetworkError.ServerUnreachable)
-            } catch (_: IOException) {
-                Outcome.Failure(NetworkError.Network)
-            } catch (_: CancellationException) {
-                Outcome.Failure(NetworkError.OperationCanceled)
+            } catch (ex: Exception) {
+                Outcome.Failure(getErrorFromExceptionOrThrow(ex))
             }
+        }
+
+    /**
+     * Executes the given API call that does not return a body (i.e., `Unit`), safely catching network and HTTP exceptions.
+     *
+     * @param apiCall The suspend function representing the API call to execute.
+     * @return An [Outcome] containing `Unit` if successful, or a [NetworkError] otherwise.
+     */
+    protected open suspend fun callApiSafelyWithoutResponse(
+        apiCall: suspend () -> Response<Unit>
+    ): Outcome<Unit> =
+        withContext(dispatcher) {
+            try {
+                val response = apiCall()
+                if (response.isSuccessful) {
+                    Outcome.Success(Unit)
+                } else {
+                    Outcome.Failure(getErrorFromCode(response.code()))
+                }
+            } catch (ex: Exception) {
+                Outcome.Failure(getErrorFromExceptionOrThrow(ex))
+            }
+        }
+
+    private fun getErrorFromCode(code: Int): NetworkError =
+        when (code) {
+            400 -> NetworkError.BadRequest
+            401, 403 -> NetworkError.AccessDenied
+            404 -> NetworkError.NotFound
+            503 -> NetworkError.Unavailable
+            in 500..599 -> NetworkError.Server
+            else -> NetworkError.Unknown
+        }
+
+    private fun getErrorFromExceptionOrThrow(ex: Exception): NetworkError =
+        when (ex) {
+            is ConnectException -> NetworkError.ServerUnreachable
+            is UnknownHostException -> NetworkError.ServerUnreachable
+            is IOException -> NetworkError.Network
+            is CancellationException -> NetworkError.OperationCanceled
+            else -> throw ex
         }
 }

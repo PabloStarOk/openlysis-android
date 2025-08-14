@@ -99,7 +99,7 @@ class MainActivity : ComponentActivity() {
                 if (uiState !is MainActivityUiState.Success) return@LaunchedEffect
                 val successUiState = uiState as MainActivityUiState.Success
 
-                if (!uiState.isUserSignedIn()) {
+                if (uiState.shouldAuthenticate()) {
                     appState.navigateToRootDestination(RootDestination.Authentication)
                     return@LaunchedEffect
                 }

@@ -4,9 +4,9 @@ import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.openlysis.core.outcome.Outcome
-import com.openlysis.data.auth.UserAuthData
-import com.openlysis.data.auth.UserAuthDataRepository
+import com.openlysis.data.auth.AuthTokensManager
 import com.openlysis.data.auth.UserAuthenticator
+import com.openlysis.data.auth.model.AuthTokens
 import com.openlysis.feature.auth.model.AuthenticationStatus
 import com.openlysis.feature.auth.model.AuthenticationType
 import com.openlysis.feature.auth.model.PasswordRequirement
@@ -27,7 +27,7 @@ import kotlinx.coroutines.launch
  * ViewModel for the authentication screen.
  *
  * @param authenticator Handles user authentication logic.
- * @param userAuthDataRepository Repository for persisting user authentication data.
+ * @param authTokensManager The manager for user authentication tokens.
  * @param authType The type of authentication (SignIn or SignUp) for this ViewModel instance.
  */
 @HiltViewModel(assistedFactory = AuthScreenViewModel.Factory::class)
@@ -35,10 +35,10 @@ internal class AuthScreenViewModel
     @AssistedInject
     constructor(
         private val authenticator: UserAuthenticator,
-        private val userAuthDataRepository: UserAuthDataRepository,
+        private val authTokensManager: AuthTokensManager,
         @Assisted authType: AuthenticationType
     ) : ViewModel() {
-        private var userAuthData = UserAuthData(isSignedIn = false, apiKey = null)
+        private var authTokens = AuthTokens(accessToken = null, refreshToken = null)
         private val _uiState = MutableStateFlow<AuthUiState>(AuthUiState(authType))
         val uiState = _uiState.asStateFlow()
 
@@ -112,15 +112,13 @@ internal class AuthScreenViewModel
          * to the repository if authentication was successful.
          */
         fun persistCredentials() {
-            if (userAuthData.apiKey == null ||
-                uiState.value.authStatus !is AuthenticationStatus.Success
-            ) {
+            val areTokensNull = authTokens.accessToken == null || authTokens.refreshToken == null
+            if (areTokensNull || uiState.value.authStatus !is AuthenticationStatus.Success) {
                 return
             }
 
             viewModelScope.launch {
-                userAuthDataRepository.saveApiKey(userAuthData.apiKey as String)
-                userAuthDataRepository.setSignedIn(userAuthData.isSignedIn)
+                authTokensManager.saveTokens(authTokens)
             }
         }
 
@@ -146,11 +144,7 @@ internal class AuthScreenViewModel
 
             when (outcome) {
                 is Outcome.Success -> {
-                    userAuthData =
-                        UserAuthData(
-                            isSignedIn = true,
-                            apiKey = outcome.value
-                        )
+                    authTokens = outcome.value
                     _uiState.update {
                         it.copy(
                             authStatus = AuthenticationStatus.Success

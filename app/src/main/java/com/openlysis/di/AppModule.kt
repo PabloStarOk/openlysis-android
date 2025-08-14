@@ -23,13 +23,23 @@ internal object AppModule {
     @Singleton
     @Provides
     fun provideApiClientSettings(): ApiClientSettings {
-        val url =
-            if (BuildConfig.API_BASE_URL.endsWith('/')) {
-                BuildConfig.API_BASE_URL
+        val analysisApiUrl =
+            if (BuildConfig.ANALYSIS_API_BASE_URL.endsWith('/')) {
+                BuildConfig.ANALYSIS_API_BASE_URL
             } else {
-                "${BuildConfig.API_BASE_URL}/"
+                "${BuildConfig.ANALYSIS_API_BASE_URL}/"
             }
-        return ApiClientSettings(baseUrl = URI(url).toURL())
+
+        val authApiUrl =
+            if (BuildConfig.AUTH_API_BASE_URL.endsWith('/')) {
+                BuildConfig.AUTH_API_BASE_URL
+            } else {
+                "${BuildConfig.AUTH_API_BASE_URL}/"
+            }
+        return ApiClientSettings(
+            analysisApiBaseUrl = URI(analysisApiUrl).toURL(),
+            authApiBaseUrl = URI(authApiUrl).toURL()
+        )
     }
 
     // TODO: Implement repository for user preferences.

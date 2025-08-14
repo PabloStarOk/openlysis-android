@@ -1,5 +1,10 @@
 package com.openlysis.data.remote.dto.common
 
+import com.openlysis.data.remote.dto.common.AnalysisType.Email
+import com.openlysis.data.remote.dto.common.AnalysisType.File
+import com.openlysis.data.remote.dto.common.AnalysisType.Sms
+import com.openlysis.data.remote.dto.common.AnalysisType.Url
+
 /**
  * Type of an analysis.
  *
