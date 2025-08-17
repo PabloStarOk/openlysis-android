@@ -27,4 +27,9 @@ interface AuthTokensManager {
      * @return [Outcome] indicating success or failure if an error occurs while ensuring.
      */
     suspend fun ensureTokensValidity(): Outcome<Unit>
+
+    /**
+     * Deletes the current authentication tokens which causes the user is not authenticated anymore.
+     */
+    suspend fun deleteTokens()
 }
