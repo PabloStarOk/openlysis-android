@@ -4,9 +4,11 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.util.Log
 import androidx.datastore.core.DataStore
+import com.openlysis.core.data.datastore.ThemeConfigProto
 import com.openlysis.core.data.datastore.UserPreferences
 import com.openlysis.data.user.UserDataLocalDataSource
 import com.openlysis.data.user.model.Permission
+import com.openlysis.data.user.model.ThemeConfig
 import com.openlysis.data.user.model.UserData
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
@@ -40,7 +42,11 @@ internal class UserPreferencesLocalDataSource
                             isGrantedFromSystem = isGrantedFromSystem
                         )
                     }
-                UserData(askedPermissions = permissions)
+
+                UserData(
+                    askedPermissions = permissions,
+                    themeConfig = it.themeConfig.toThemeConfig()
+                )
             }
 
         override suspend fun addOrUpdateAskedPermission(
@@ -58,4 +64,35 @@ internal class UserPreferencesLocalDataSource
                 Log.e("UserPreferences", "Failed to update permission.", ioException)
             }
         }
+
+        override suspend fun setThemeConfig(themeConfig: ThemeConfig) {
+            try {
+                userPreferencesDataStore.updateData {
+                    val themeConfigProto =
+                        when (themeConfig) {
+                            ThemeConfig.System -> ThemeConfigProto.THEME_CONFIG_PROTO_SYSTEM
+                            ThemeConfig.Light -> ThemeConfigProto.THEME_CONFIG_PROTO_LIGHT
+                            ThemeConfig.Dark -> ThemeConfigProto.THEME_CONFIG_PROTO_DARK
+                        }
+
+                    it
+                        .toBuilder()
+                        .setThemeConfig(themeConfigProto)
+                        .build()
+                }
+            } catch (ioException: IOException) {
+                Log.e("UserPreferences", "Failed to set theme config.", ioException)
+            }
+        }
+
+        private fun ThemeConfigProto.toThemeConfig(): ThemeConfig =
+            when (this) {
+                ThemeConfigProto.UNRECOGNIZED,
+                ThemeConfigProto.THEME_CONFIG_PROTO_UNSPECIFIED,
+                ThemeConfigProto.THEME_CONFIG_PROTO_SYSTEM -> ThemeConfig.System
+
+                ThemeConfigProto.THEME_CONFIG_PROTO_LIGHT -> ThemeConfig.Light
+
+                ThemeConfigProto.THEME_CONFIG_PROTO_DARK -> ThemeConfig.Dark
+            }
     }
