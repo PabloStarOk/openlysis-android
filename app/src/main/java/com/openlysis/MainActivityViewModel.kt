@@ -38,6 +38,7 @@ internal class MainActivityViewModel
 
                     MainActivityUiState.Success(
                         userSignedIn = authTokens.canRefresh,
+                        userThemeConfig = userData.themeConfig,
                         pendingPermissions = pendingPermissions
                     )
                 }.stateIn(

@@ -1,5 +1,6 @@
 package com.openlysis.data.user
 
+import com.openlysis.data.user.model.ThemeConfig
 import com.openlysis.data.user.model.UserData
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -21,5 +22,9 @@ internal class DefaultUserDataRepository
             granted: Boolean
         ) {
             localDataSource.addOrUpdateAskedPermission(permission, granted)
+        }
+
+        override suspend fun setThemeConfig(themeConfig: ThemeConfig) {
+            localDataSource.setThemeConfig(themeConfig)
         }
     }

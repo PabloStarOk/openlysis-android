@@ -8,13 +8,11 @@ import androidx.compose.animation.core.EaseInOut
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import com.openlysis.data.analysis.model.message.MessageType
 import com.openlysis.feature.auth.navigation.authScreen
 import com.openlysis.feature.permission.navigation.permissionsScreen
@@ -24,6 +22,7 @@ import com.openlysis.feature.results.navigation.navigateToMessageAnalysisDetails
 import com.openlysis.feature.results.navigation.navigateToPreviews
 import com.openlysis.feature.results.navigation.navigateToUrlMultiAnalysisDetails
 import com.openlysis.feature.results.navigation.resultsScreen
+import com.openlysis.feature.settings.navigation.settingsScreen
 import com.openlysis.feature.tools.navigation.ToolsRoute
 import com.openlysis.feature.tools.navigation.toolsScreen
 import com.openlysis.ui.AppState
@@ -132,9 +131,24 @@ internal fun AppNavHost(
             exitTransition = { fadeOut() }
         )
 
-        composable<TemporarySettings> {
-            Text(text = "Settings screen.")
-        }
+        settingsScreen(
+            enterTransition = {
+                val isTopLevelDest = appState.isTopLevelDestination(this.initialState.destination)
+                if (isTopLevelDest) {
+                    fromTopDestinationEnterTransition(SlideDirection.Left)
+                } else {
+                    slideIntoContainer(SlideDirection.Up) + fadeIn()
+                }
+            },
+            exitTransition = {
+                val isTopLevelDest = appState.isTopLevelDestination(this.targetState.destination)
+                if (isTopLevelDest) {
+                    toTopDestinationExitTransition(SlideDirection.Right)
+                } else {
+                    slideOutOfContainer(SlideDirection.Down) + fadeOut()
+                }
+            }
+        )
     }
 }
 

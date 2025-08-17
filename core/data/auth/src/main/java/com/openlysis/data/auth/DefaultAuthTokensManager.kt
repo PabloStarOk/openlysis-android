@@ -76,7 +76,11 @@ internal class DefaultAuthTokensManager
                 }
             }
 
-        private suspend fun invalidateTokens() = localDataSource.deleteTokens()
+        override suspend fun deleteTokens() {
+            localDataSource.deleteTokens()
+        }
+
+        private suspend fun invalidateTokens() = deleteTokens()
 
         private fun watchRefreshTokenExpiration() {
             localDataSource.data

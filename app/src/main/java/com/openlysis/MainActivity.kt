@@ -10,6 +10,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.core.animation.doOnEnd
@@ -109,7 +110,9 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
-            OpenlysisTheme {
+            OpenlysisTheme(
+                darkTheme = uiState.shouldUseDarkTheme(isSystemInDarkTheme())
+            ) {
                 App(appState)
             }
         }

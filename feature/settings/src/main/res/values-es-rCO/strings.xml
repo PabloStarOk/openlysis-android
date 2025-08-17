@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="screen_settings_section_theme_title">Apariencia</string>
+    <string name="screen_settings_section_theme_label_system">Sistema</string>
+    <string name="screen_settings_section_theme_label_light">Claro</string>
+    <string name="screen_settings_section_theme_label_dark">Oscuro</string>
+    <string name="screen_settings_section_account_title">Cuenta</string>
+    <string name="screen_settings_section_account_button_label_sign_out">Cerrar sesión</string>
+    <string name="screen_settings_section_account_button_icon_alt_sign_out">Icono de cerrar sesión: puerta con flecha</string>
+</resources>

@@ -1,5 +1,6 @@
 package com.openlysis.data.user
 
+import com.openlysis.data.user.model.ThemeConfig
 import com.openlysis.data.user.model.UserData
 import kotlinx.coroutines.flow.Flow
 
@@ -22,4 +23,11 @@ interface UserDataRepository {
         permission: String,
         granted: Boolean
     )
+
+    /**
+     * Sets the user's theme configuration.
+     *
+     * @param themeConfig The [ThemeConfig] to be applied.
+     */
+    suspend fun setThemeConfig(themeConfig: ThemeConfig)
 }

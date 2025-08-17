@@ -24,11 +24,11 @@ import com.openlysis.feature.permission.navigation.SmsPermissionRoute
 import com.openlysis.feature.permission.navigation.navigateToNotificationsPermission
 import com.openlysis.feature.permission.navigation.navigateToSmsPermission
 import com.openlysis.feature.results.navigation.navigateToResults
+import com.openlysis.feature.settings.navigation.navigateToSettings
 import com.openlysis.feature.tools.navigation.navigateToTools
 import com.openlysis.navigation.AppPermission
 import com.openlysis.navigation.AuthDestination
 import com.openlysis.navigation.RootDestination
-import com.openlysis.navigation.TemporarySettings
 import com.openlysis.navigation.TopLevelDestination
 
 /**
@@ -125,7 +125,7 @@ internal class AppState(
         when (destination) {
             TopLevelDestination.Tools -> navController.navigateToTools(navOptions)
             TopLevelDestination.Results -> navController.navigateToResults(navOptions)
-            TopLevelDestination.Settings -> navController.navigate(TemporarySettings, navOptions)
+            TopLevelDestination.Settings -> navController.navigateToSettings(navOptions)
         }
     }
 

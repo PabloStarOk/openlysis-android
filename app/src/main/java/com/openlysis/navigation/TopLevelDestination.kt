@@ -6,9 +6,9 @@ import com.openlysis.R
 import com.openlysis.core.designsystem.icon.AppIconsIds
 import com.openlysis.feature.results.navigation.ResultsBaseRoute
 import com.openlysis.feature.results.navigation.ResultsRoute
+import com.openlysis.feature.settings.navigation.SettingsRoute
 import com.openlysis.feature.tools.navigation.ToolsBaseRoute
 import com.openlysis.feature.tools.navigation.ToolsRoute
-import kotlinx.serialization.Serializable
 import kotlin.reflect.KClass
 
 /**
@@ -45,9 +45,6 @@ internal enum class TopLevelDestination(
         iconResId = AppIconsIds.Settings,
         iconAltResId = R.string.nav_bar_settings_icon_alt,
         navBarItemLabelResId = R.string.nav_bar_settings_label,
-        route = TemporarySettings::class
+        route = SettingsRoute::class
     )
 }
-
-@Serializable
-internal object TemporarySettings

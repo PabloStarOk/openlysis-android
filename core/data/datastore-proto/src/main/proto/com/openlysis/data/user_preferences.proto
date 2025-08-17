@@ -1,8 +1,12 @@
 syntax = "proto3";
 
+import "com/openlysis/data/theme_config_proto.proto";
+
 option java_package = "com.openlysis.core.data.datastore";
 option java_multiple_files = true;
 
 message UserPreferences {
     map<string, bool> askedPermissions = 1;
+
+    ThemeConfigProto theme_config = 2;
 }
