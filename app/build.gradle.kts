@@ -132,6 +132,7 @@ dependencies {
     implementation(projects.feature.results)
     implementation(projects.feature.auth)
     implementation(projects.feature.permission)
+    implementation(projects.feature.settings)
     implementation(projects.core.common)
     implementation(projects.core.data.analysis)
     implementation(projects.core.data.auth)

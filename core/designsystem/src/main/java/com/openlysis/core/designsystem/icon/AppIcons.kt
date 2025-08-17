@@ -116,4 +116,7 @@ object AppIcons {
 
     val Bell
         @Composable get() = ImageVector.vectorResource(R.drawable.bell_icon)
+
+    val LogOut
+        @Composable get() = ImageVector.vectorResource(R.drawable.log_out_icon)
 }

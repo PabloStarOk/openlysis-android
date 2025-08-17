@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="screen_settings_section_theme_title">Theme</string>
+    <string name="screen_settings_section_theme_label_system">System</string>
+    <string name="screen_settings_section_theme_label_light">Light</string>
+    <string name="screen_settings_section_theme_label_dark">Dark</string>
+    <string name="screen_settings_section_account_title">Account</string>
+    <string name="screen_settings_section_account_button_label_sign_out">Sign out</string>
+    <string name="screen_settings_section_account_button_icon_alt_sign_out">Sign out icon: door with arrow</string>
+</resources>
