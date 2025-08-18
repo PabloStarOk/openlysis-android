@@ -54,6 +54,8 @@ fun ConfirmationDialog(
     alertType: AlertType = AlertType.Warning,
     alertText: String = ""
 ) {
+    val shape = RoundedCornerShape(LocalAppRadius.current.value100)
+
     Dialog(
         onDismissRequest = onCancel
     ) {
@@ -61,11 +63,14 @@ fun ConfirmationDialog(
             verticalArrangement = Arrangement.spacedBy(LocalAppSpacing.current.value600),
             modifier =
                 modifier
-                    .clip(RoundedCornerShape(LocalAppRadius.current.value100))
-                    .background(LocalAppColorScheme.current.background.default.primary)
-                    .border(
+                    .clip(shape)
+                    .background(
+                        color = LocalAppColorScheme.current.background.default.primary,
+                        shape = shape
+                    ).border(
                         width = 1.dp,
-                        color = LocalAppColorScheme.current.border.default.primary
+                        color = LocalAppColorScheme.current.border.default.primary,
+                        shape = shape
                     ).padding(all = LocalAppSpacing.current.value600)
         ) {
             Column(
