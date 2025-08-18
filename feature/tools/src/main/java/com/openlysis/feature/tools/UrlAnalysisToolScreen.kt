@@ -58,7 +58,7 @@ internal fun UrlAnalysisToolScreen(
         submitButtonLabel = stringResource(R.string.analyze_button_label),
         submitButtonIconAlt = stringResource(R.string.analyze_button_icon_alt),
         modifier = modifier
-    ) {
+    ) { onSubmit ->
         ToolSection(
             title = stringResource(R.string.url_tool_section_title),
             description = stringResource(R.string.url_tool_section_description)
@@ -90,7 +90,7 @@ internal fun UrlAnalysisToolScreen(
                         keyboardType = KeyboardType.Uri,
                         imeAction = ImeAction.Send
                     ),
-                keyboardActions = KeyboardActions(onSend = { viewModel.startAnalysis() })
+                keyboardActions = KeyboardActions(onSend = { onSubmit() })
             )
         }
     }

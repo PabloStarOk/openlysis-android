@@ -44,6 +44,7 @@ import com.openlysis.feature.tools.model.AnalysisRequestState
  * @param submitEnabled Controls whether the submit button is enabled or disabled.
  * @param modifier Modifier for styling (defaults to [Modifier]).
  * @param content The content to display inside the scrollable area of the scaffold.
+ *        Receives a callback to be invoked when the submit action is requested.
  */
 @Composable
 internal fun ToolScreenScaffold(
@@ -57,7 +58,7 @@ internal fun ToolScreenScaffold(
     submitButtonIconAlt: String,
     submitEnabled: Boolean,
     modifier: Modifier = Modifier,
-    content: @Composable ColumnScope.() -> Unit
+    content: @Composable ColumnScope.(() -> Unit) -> Unit
 ) {
     LaunchedEffect(Unit) {
         onTopBarUpdate(
@@ -96,7 +97,7 @@ internal fun ToolScreenScaffold(
                         horizontal = LocalAppSpacing.current.value600
                     ).weight(1f)
         ) {
-            content()
+            content(onSubmit)
         }
 
         HorizontalDivider(
