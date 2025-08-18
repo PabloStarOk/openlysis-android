@@ -15,6 +15,11 @@ interface AuthTokensManager {
     val data: StateFlow<AuthTokens>
 
     /**
+     * Indicates whether the authentication tokens have been loaded.
+     */
+    val isLoaded: Boolean
+
+    /**
      * Saves the provided authentication tokens.
      *
      * @param authTokens The authentication tokens to be saved.

@@ -31,6 +31,10 @@ internal class MainActivityViewModel
                 .combine(
                     userDataRepository.data
                 ) { authTokens, userData ->
+                    if (!authTokensManager.isLoaded) {
+                        return@combine MainActivityUiState.Loading
+                    }
+
                     val pendingPermissions =
                         AppPermission.entries
                             .filter { shouldAskPermission(it, userData.askedPermissions) }

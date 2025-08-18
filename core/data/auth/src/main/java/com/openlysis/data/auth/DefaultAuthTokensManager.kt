@@ -40,13 +40,16 @@ internal class DefaultAuthTokensManager
 
         override val data: StateFlow<AuthTokens> =
             localDataSource.data
-                .onStart {
-                    watchRefreshTokenExpiration()
-                }.stateIn(
+                .onStart { watchRefreshTokenExpiration() }
+                .onEach { _isLoaded = true }
+                .stateIn(
                     scope = appScope,
                     started = SharingStarted.WhileSubscribed(5_000),
                     initialValue = AuthTokens(accessToken = null, refreshToken = null)
                 )
+
+        private var _isLoaded = false
+        override val isLoaded: Boolean get() = _isLoaded
 
         override suspend fun saveTokens(authTokens: AuthTokens) =
             localDataSource.saveTokens(authTokens)
