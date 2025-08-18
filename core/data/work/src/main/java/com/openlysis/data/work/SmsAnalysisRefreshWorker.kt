@@ -22,15 +22,14 @@ import com.openlysis.data.analysis.model.message.MessageAnalysis
 import com.openlysis.data.analysis.model.message.MessageType
 import com.openlysis.data.analysis.repository.AnalysesRepository
 import com.openlysis.data.analysis.request.AnalyzeMessage
-import com.openlysis.data.work.constant.SmsAnalysisWorkers.DEFAULT_INVALID_NOTIFICATION_ID
-import com.openlysis.data.work.constant.SmsAnalysisWorkers.NOTIFICATION_ID_KEY
+import com.openlysis.data.work.utils.extractNotificationId
+import com.openlysis.data.work.utils.getPersistentNotificationId
 import com.openlysis.notification.Notifier
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
-import kotlin.random.Random
 
 /**
  * Worker for refreshing SMS messages analyses.
@@ -56,11 +55,7 @@ class SmsAnalysisRefreshWorker
 
         override suspend fun doWork(): Result =
             withContext(coroutineDispatcher) {
-                val notificationId =
-                    inputData.getInt(NOTIFICATION_ID_KEY, DEFAULT_INVALID_NOTIFICATION_ID)
-                if (notificationId == DEFAULT_INVALID_NOTIFICATION_ID) {
-                    throw IllegalStateException("Notification ID was not found.")
-                }
+                val notificationId = inputData.extractNotificationId()
 
                 val messageSender =
                     inputData.getString(MESSAGE_SENDER_KEY) ?: return@withContext Result.failure()
@@ -79,13 +74,13 @@ class SmsAnalysisRefreshWorker
 
                 val pollOutcome = pollAnalysis(analysisId)
                 val notificationTapIntent = buildTapIntent(analysisId)
-                val targetNotificationId = if (!foregroundSet) notificationId else Random.nextInt()
+                val persistentNotificationId = getPersistentNotificationId(foregroundSet)
 
                 when (pollOutcome) {
                     is Outcome.Success -> {
                         val analysis = pollOutcome.value
                         notifier.notifyMessageAnalysis(
-                            notificationId = targetNotificationId,
+                            notificationId = persistentNotificationId,
                             messageSender = messageSender,
                             analysisStatus = analysis.status,
                             analysisVerdict = analysis.verdict,
@@ -96,7 +91,7 @@ class SmsAnalysisRefreshWorker
                     is Outcome.Failure -> {
                         Log.e(LOGGING_TAG, "Analysis failed due to a ${pollOutcome.error}")
                         notifier.notifyMessageAnalysisError(
-                            notificationId = targetNotificationId,
+                            notificationId = persistentNotificationId,
                             error = pollOutcome.error,
                             occurredOnStart = false,
                             messageSender = messageSender,
@@ -133,11 +128,7 @@ class SmsAnalysisRefreshWorker
 
         override suspend fun getForegroundInfo(): ForegroundInfo {
             foregroundSet = true
-            val notificationId =
-                inputData.getInt(NOTIFICATION_ID_KEY, DEFAULT_INVALID_NOTIFICATION_ID)
-            if (notificationId == DEFAULT_INVALID_NOTIFICATION_ID) {
-                throw IllegalStateException("Notification ID was not found.")
-            }
+            val notificationId = inputData.extractNotificationId()
 
             val messageSender = inputData.getString(MESSAGE_SENDER_KEY)
             if (messageSender == null) {

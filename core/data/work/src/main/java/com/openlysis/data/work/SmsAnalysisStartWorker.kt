@@ -25,8 +25,8 @@ import com.openlysis.data.analysis.model.message.MessageType
 import com.openlysis.data.analysis.repository.AnalysesRepository
 import com.openlysis.data.analysis.request.AnalyzeMessage
 import com.openlysis.data.analysis.request.Message
-import com.openlysis.data.work.constant.SmsAnalysisWorkers.DEFAULT_INVALID_NOTIFICATION_ID
-import com.openlysis.data.work.constant.SmsAnalysisWorkers.NOTIFICATION_ID_KEY
+import com.openlysis.data.work.utils.extractNotificationId
+import com.openlysis.data.work.utils.getPersistentNotificationId
 import com.openlysis.notification.Notifier
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -59,18 +59,12 @@ class SmsAnalysisStartWorker
 
         override suspend fun doWork(): Result =
             withContext(coroutineDispatcher) {
-                val notificationId =
-                    inputData.getInt(NOTIFICATION_ID_KEY, DEFAULT_INVALID_NOTIFICATION_ID)
-                if (notificationId == DEFAULT_INVALID_NOTIFICATION_ID) {
-                    throw IllegalStateException("Notification ID was not found.")
-                }
+                val notificationId = inputData.extractNotificationId()
 
                 val messageSender =
-                    inputData.getString(MESSAGE_SENDER_KEY)
-                        ?: return@withContext Result.failure()
+                    inputData.getString(MESSAGE_SENDER_KEY) ?: return@withContext Result.failure()
                 val messageBody =
-                    inputData.getString(MESSAGE_BODY_KEY)
-                        ?: return@withContext Result.failure()
+                    inputData.getString(MESSAGE_BODY_KEY) ?: return@withContext Result.failure()
 
                 if (!foregroundSet) {
                     notifier.notifyMessageAnalysis(
@@ -97,8 +91,9 @@ class SmsAnalysisStartWorker
                     }
                     is Outcome.Failure -> {
                         Log.e(LOGGING_TAG, "Analysis failed due to a ${outcome.error}")
+                        val persistentNotificationId = getPersistentNotificationId(foregroundSet)
                         notifier.notifyMessageAnalysisError(
-                            notificationId = notificationId,
+                            notificationId = persistentNotificationId,
                             error = outcome.error,
                             occurredOnStart = true,
                             messageSender = messageSender,
@@ -111,12 +106,7 @@ class SmsAnalysisStartWorker
 
         override suspend fun getForegroundInfo(): ForegroundInfo {
             foregroundSet = true
-
-            val notificationId =
-                inputData.getInt(NOTIFICATION_ID_KEY, DEFAULT_INVALID_NOTIFICATION_ID)
-            if (notificationId == DEFAULT_INVALID_NOTIFICATION_ID) {
-                throw IllegalStateException("Notification ID was not found.")
-            }
+            val notificationId = inputData.extractNotificationId()
 
             val messageSender = inputData.getString(MESSAGE_SENDER_KEY)
             if (messageSender == null) {
