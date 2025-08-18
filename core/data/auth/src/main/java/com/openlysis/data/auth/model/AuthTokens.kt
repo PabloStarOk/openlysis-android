@@ -13,10 +13,10 @@ data class AuthTokens(
     /**
      * Returns `true` if the refresh token exists and is not expired.
      */
-    val canRefresh = refreshToken?.isExpired == false
+    val canRefresh get() = refreshToken?.isExpired == false
 
     /**
      * Indicates if the access token has expired and should be refreshed.
      */
-    val shouldRefresh = accessToken?.isExpired == true
+    val shouldRefresh get() = accessToken?.isExpired == true
 }

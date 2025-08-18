@@ -9,6 +9,7 @@ import jakarta.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
@@ -52,7 +53,7 @@ internal class DefaultAuthTokensManager
 
         override suspend fun ensureTokensValidity(): Outcome<Unit> =
             refreshMutex.withLock {
-                val authTokens = data.value
+                val authTokens = data.first { it.accessToken != null }
                 if (!authTokens.shouldRefresh) {
                     return Outcome.Success(Unit)
                 }
