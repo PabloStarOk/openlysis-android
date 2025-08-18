@@ -6,10 +6,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.openlysis.core.designsystem.components.ConfirmationDialog
 import com.openlysis.core.designsystem.components.button.AppButton
 import com.openlysis.core.designsystem.components.button.AppRadioButton
 import com.openlysis.core.designsystem.components.button.ButtonType
@@ -56,6 +60,8 @@ private fun SettingsScreen(
     onSignOutRequest: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    var showSignOutConfirmationDialog by rememberSaveable { mutableStateOf(false) }
+
     Column(
         verticalArrangement = Arrangement.spacedBy(LocalAppSpacing.current.value800),
         modifier = modifier.padding(LocalAppSpacing.current.value400)
@@ -64,7 +70,22 @@ private fun SettingsScreen(
             selectedTheme = selectedTheme,
             onThemeSelected = onThemeSelected
         )
-        AccountSection(onSignOutRequest = onSignOutRequest)
+        AccountSection(onSignOutRequest = { showSignOutConfirmationDialog = true })
+    }
+
+    if (showSignOutConfirmationDialog) {
+        ConfirmationDialog(
+            title = stringResource(R.string.screen_settings_section_account_dialog_title_sign_out),
+            description =
+                stringResource(
+                    R.string.screen_settings_section_account_dialog_description_sign_out
+                ),
+            onConfirm = {
+                showSignOutConfirmationDialog = false
+                onSignOutRequest()
+            },
+            onCancel = { showSignOutConfirmationDialog = false }
+        )
     }
 }
 
