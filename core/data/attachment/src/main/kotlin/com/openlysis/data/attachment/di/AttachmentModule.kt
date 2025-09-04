@@ -21,5 +21,5 @@ internal object AttachmentModule {
     @Provides
     fun provideAttachmentFactory(
         @ApplicationContext context: Context
-    ): AttachmentFactory = DefaultAttachmentFactory(context.contentResolver)
+    ): AttachmentFactory = DefaultAttachmentFactory(context)
 }
