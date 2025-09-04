@@ -2,6 +2,7 @@ package com.openlysis.feature.tools.components
 
 import android.content.ContentResolver
 import android.net.Uri
+import android.provider.MediaStore
 import android.provider.OpenableColumns
 import android.text.format.Formatter
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -42,6 +43,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.core.database.getLongOrNull
+import androidx.core.database.getStringOrNull
 import com.openlysis.core.designsystem.components.TextInput
 import com.openlysis.core.designsystem.components.alert.Alert
 import com.openlysis.core.designsystem.components.alert.AlertType
@@ -57,6 +59,7 @@ import com.openlysis.core.designsystem.theme.type.LocalAppTypography
 import com.openlysis.feature.tools.R
 import com.openlysis.feature.tools.model.AttachedFileData
 import com.openlysis.feature.tools.model.FileAttachmentSettings
+import kotlin.random.Random
 
 /**
  * Section for attaching files to be analyzed.
@@ -453,12 +456,17 @@ private fun getFileDataFromUri(
     val cursor =
         contentResolver.query(
             fileUri,
-            arrayOf(OpenableColumns.DISPLAY_NAME, OpenableColumns.SIZE),
+            arrayOf(
+                OpenableColumns.DISPLAY_NAME,
+                OpenableColumns.SIZE,
+                MediaStore.MediaColumns.TITLE
+            ),
             null,
             null,
             null
         )
 
+    val defaultFileName = "unknown_name"
     var displayName = ""
     var fileSize: Long = -1
     cursor?.use {
@@ -468,7 +476,10 @@ private fun getFileDataFromUri(
 
         val nameIndex = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)
         val sizeIndex = it.getColumnIndex(OpenableColumns.SIZE)
-        displayName = it.getString(nameIndex)
+        val titleIndex = it.getColumnIndex(MediaStore.MediaColumns.TITLE)
+        displayName =
+            it.getStringOrNull(nameIndex) ?: it.getStringOrNull(titleIndex)
+                ?: "${defaultFileName}_${Random.nextInt()}"
         fileSize = it.getLongOrNull(sizeIndex) ?: -1
     }
 
