@@ -12,7 +12,7 @@ import com.squareup.moshi.JsonClass
  * @property sender The sender of the message.
  * @property content The content of the message.
  * @property subject The subject of the message, nullable.
- * @property messageHashValues Hash values associated with the message.
+ * @property hashValues Hash values associated with the message.
  */
 @JsonClass(generateAdapter = true)
 internal data class MessageInformationDto(
@@ -20,7 +20,7 @@ internal data class MessageInformationDto(
     val sender: String,
     val content: String,
     val subject: String?,
-    val messageHashValues: HashValues
+    val hashValues: HashValues
 ) {
     /**
      * Converts this DTO to the domain model [Message].

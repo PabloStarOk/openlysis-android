@@ -35,7 +35,7 @@ internal data class MessageAnalysisDto(
             id = id,
             startedDate = Instant.parse(startedDate),
             message = messageInformation.convertToModel(),
-            hashValues = messageInformation.messageHashValues,
+            hashValues = messageInformation.hashValues,
             status = AnalysisStatus.parse(status),
             verdict = Verdict.parse(verdict),
             urlMultiAnalyses = results.urlMultiAnalyses.map { a -> a.convertToModel() },
