@@ -5,8 +5,9 @@ import com.openlysis.data.analysis.model.analysis.UrlMultiAnalysis
 import com.openlysis.data.analysis.model.common.HashValues
 import com.openlysis.data.analysis.model.common.Verdict
 import com.squareup.moshi.JsonClass
+import kotlinx.datetime.Instant
+import kotlinx.datetime.toJavaInstant
 import java.net.URI
-import java.time.Instant
 
 /**
  * Data Transfer Object (DTO) for the [UrlMultiAnalysis] model.
@@ -39,7 +40,7 @@ internal data class UrlMultiAnalysisDto(
     internal fun convertToModel(): UrlMultiAnalysis =
         UrlMultiAnalysis(
             id = id,
-            startedDate = Instant.parse(startedDate),
+            startedDate = Instant.parse(startedDate).toJavaInstant(),
             status = AnalysisStatus.parse(status),
             finalVerdict = Verdict.parse(finalVerdict),
             avgThreatScore = averageThreatScore,

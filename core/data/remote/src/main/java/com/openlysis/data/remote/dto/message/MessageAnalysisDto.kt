@@ -4,7 +4,8 @@ import com.openlysis.data.analysis.model.analysis.AnalysisStatus
 import com.openlysis.data.analysis.model.common.Verdict
 import com.openlysis.data.analysis.model.message.MessageAnalysis
 import com.squareup.moshi.JsonClass
-import java.time.Instant
+import kotlinx.datetime.Instant
+import kotlinx.datetime.toJavaInstant
 
 /**
  * Data Transfer Object (DTO) for the [MessageAnalysis] model.
@@ -33,7 +34,7 @@ internal data class MessageAnalysisDto(
     internal fun convertToModel(): MessageAnalysis =
         MessageAnalysis(
             id = id,
-            startedDate = Instant.parse(startedDate),
+            startedDate = Instant.parse(startedDate).toJavaInstant(),
             message = messageInformation.convertToModel(),
             hashValues = messageInformation.hashValues,
             status = AnalysisStatus.parse(status),
