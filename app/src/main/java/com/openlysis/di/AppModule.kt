@@ -10,6 +10,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import java.net.URI
+import java.net.URL
 import java.util.Locale
 import javax.inject.Singleton
 
@@ -22,25 +23,12 @@ import javax.inject.Singleton
 internal object AppModule {
     @Singleton
     @Provides
-    fun provideApiClientSettings(): ApiClientSettings {
-        val analysisApiUrl =
-            if (BuildConfig.ANALYSIS_API_BASE_URL.endsWith('/')) {
-                BuildConfig.ANALYSIS_API_BASE_URL
-            } else {
-                "${BuildConfig.ANALYSIS_API_BASE_URL}/"
-            }
-
-        val authApiUrl =
-            if (BuildConfig.AUTH_API_BASE_URL.endsWith('/')) {
-                BuildConfig.AUTH_API_BASE_URL
-            } else {
-                "${BuildConfig.AUTH_API_BASE_URL}/"
-            }
-        return ApiClientSettings(
-            analysisApiBaseUrl = URI(analysisApiUrl).toURL(),
-            authApiBaseUrl = URI(authApiUrl).toURL()
+    fun provideApiClientSettings(): ApiClientSettings =
+        ApiClientSettings(
+            analysisApiBaseUrl = getSafeUrl(BuildConfig.ANALYSIS_API_BASE_URL),
+            authApiBaseUrl = getSafeUrl(BuildConfig.AUTH_API_BASE_URL),
+            analysisUpdatesSignalRHubUrl = getSafeUrl(BuildConfig.ANALYSIS_UPDATES_SIGNALR_HUB_URL)
         )
-    }
 
     // TODO: Implement repository for user preferences.
     @Singleton
@@ -81,5 +69,10 @@ internal object AppModule {
             reanalyzeUrls = true,
             reanalyzeFiles = true
         )
+    }
+
+    private fun getSafeUrl(input: String): URL {
+        val sanitizedUrl = if (input.endsWith('/')) input else "$input/"
+        return URI(sanitizedUrl).toURL()
     }
 }

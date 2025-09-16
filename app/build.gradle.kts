@@ -61,6 +61,12 @@ android {
             )
 
             buildConfigField(
+                "String",
+                "ANALYSIS_UPDATES_SIGNALR_HUB_URL",
+                localProperties.getProperty("ANALYSIS_UPDATES_SIGNALR_HUB_URL_PROD")
+            )
+
+            buildConfigField(
                 "Integer",
                 "MAX_ATTACHMENT_FILES",
                 localProperties.getProperty("MAX_ATTACHMENT_FILES_PROD")
@@ -84,6 +90,12 @@ android {
                 "String",
                 "AUTH_API_BASE_URL",
                 localProperties.getProperty("AUTH_API_BASE_URL")
+            )
+
+            buildConfigField(
+                "String",
+                "ANALYSIS_UPDATES_SIGNALR_HUB_URL",
+                localProperties.getProperty("ANALYSIS_UPDATES_SIGNALR_HUB_URL")
             )
 
             buildConfigField(
