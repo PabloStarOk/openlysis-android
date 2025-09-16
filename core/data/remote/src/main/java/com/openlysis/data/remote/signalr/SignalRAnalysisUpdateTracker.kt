@@ -42,12 +42,16 @@ internal class SignalRAnalysisUpdateTracker<
     override val updates: Flow<TAnalysis> = _updates.asSharedFlow()
 
     override suspend fun track(vararg analysisIds: String) {
-        connectionProvider.connect<TDto>(hubMethod, this::handleIncomingUpdate, dtoClass)
+        if (analysisIds.isEmpty()) return
+
         trackedAnalyses.addAll(analysisIds)
+        connectionProvider.connect<TDto>(hubMethod, this::handleIncomingUpdate, dtoClass)
         untrackNonUpdatable(*analysisIds)
     }
 
     override suspend fun untrack(vararg analysisIds: String) {
+        if (analysisIds.isEmpty()) return
+
         trackedAnalyses.removeAll(analysisIds)
         disconnectIfNoTrackedAnalyses()
     }
