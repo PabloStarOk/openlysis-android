@@ -164,13 +164,17 @@ internal object ApiProvidingModule {
         hubConnection: HubConnection,
         @ApplicationScope appScope: CoroutineScope,
         @Dispatcher(AppDispatcher.IO) ioDispatcher: CoroutineDispatcher
-    ): SignalRConnectionProvider =
-        DefaultSignalRConnectionProvider(
-            stopDelayMillis = 10_000,
-            hubConnection,
-            appScope,
-            ioDispatcher
-        )
+    ): SignalRConnectionProvider {
+        val provider =
+            DefaultSignalRConnectionProvider(
+                stopDelayMillis = 10_000,
+                hubConnection,
+                appScope,
+                ioDispatcher
+            )
+        provider.listenForConnectionEvents()
+        return provider
+    }
 
     @MessageAnalysisUpdateTracker(MessageType.Email)
     @Singleton

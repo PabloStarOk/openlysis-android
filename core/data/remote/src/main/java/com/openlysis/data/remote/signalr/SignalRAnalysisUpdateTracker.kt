@@ -9,6 +9,7 @@ import com.openlysis.data.remote.signalr.dto.BaseAnalysisDto
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import java.util.concurrent.ConcurrentHashMap
@@ -40,6 +41,7 @@ internal class SignalRAnalysisUpdateTracker<
     private val trackedAnalyses = ConcurrentHashMap.newKeySet<String>()
     private val _updates = MutableSharedFlow<TAnalysis>(extraBufferCapacity = 32)
     override val updates: Flow<TAnalysis> = _updates.asSharedFlow()
+    override val isTracking: StateFlow<Boolean> = connectionProvider.isConnected
 
     override suspend fun track(vararg analysisIds: String) {
         if (analysisIds.isEmpty()) return

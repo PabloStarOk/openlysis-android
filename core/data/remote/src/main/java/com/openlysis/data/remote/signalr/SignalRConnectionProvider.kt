@@ -1,11 +1,17 @@
 package com.openlysis.data.remote.signalr
 
+import kotlinx.coroutines.flow.StateFlow
 import kotlin.reflect.KClass
 
 /**
  * Provides methods to connect to SignalR Hubs.
  */
 internal interface SignalRConnectionProvider {
+    /**
+     * A [StateFlow] representing the current connection status to the SignalR hub.
+     */
+    val isConnected: StateFlow<Boolean>
+
     /**
      * Establishes a connection to a SignalR hub method and sets up a handler for incoming DTOs.
      *

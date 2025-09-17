@@ -9,6 +9,9 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.rx3.await
 import kotlinx.coroutines.sync.Mutex
@@ -35,6 +38,16 @@ internal class DefaultSignalRConnectionProvider(
     private val connectionMutex = Mutex()
     private var stopConnectionJob: Job? = null
     private val activeConnections = ConcurrentHashMap.newKeySet<SignalRHubMethod>()
+
+    private val _isConnected = MutableStateFlow<Boolean>(false)
+    override val isConnected: StateFlow<Boolean> = _isConnected.asStateFlow()
+
+    /**
+     * Start listening for SignalR hub connection events.
+     */
+    fun listenForConnectionEvents() {
+        hubConnection.onClosed { _isConnected.value = false }
+    }
 
     override suspend fun <TDto : Any> connect(
         hubMethod: SignalRHubMethod,
@@ -64,17 +77,15 @@ internal class DefaultSignalRConnectionProvider(
         }
     }
 
-    private suspend fun ensureHubConnected(): Boolean =
+    private suspend fun ensureHubConnected() =
         withContext(ioDispatcher) {
-            if (hubConnection.connectionState != HubConnectionState.DISCONNECTED) {
-                return@withContext true
-            }
+            if (hubConnection.connectionState != HubConnectionState.DISCONNECTED) return@withContext
 
             try {
                 hubConnection.start().await()
-                return@withContext true
+                _isConnected.value = true
             } catch (_: IOException) {
-                return@withContext false
+                _isConnected.value = false
             }
         }
 
