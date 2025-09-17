@@ -91,4 +91,9 @@ internal class DefaultAnalysesRepository<TRequest, TModel>
             remoteResultsOutcome
         }
     }
+
+    override suspend fun updateLocally(model: TModel) {
+        if (!localDs.exists(model)) return
+        localDs.update(model)
+    }
 }

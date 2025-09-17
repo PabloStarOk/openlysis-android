@@ -7,14 +7,20 @@ import com.openlysis.data.analysis.model.analysis.AnalysisStatus
 import com.openlysis.data.analysis.model.common.Model
 import com.openlysis.data.analysis.model.common.Verdict
 import com.openlysis.data.analysis.repository.AnalysesRepository
+import com.openlysis.data.analysis.service.AnalysisUpdateTracker
 import com.openlysis.feature.results.components.VerdictStatsState
 import com.openlysis.feature.results.components.preview.AnalysisPreviewState
 import com.openlysis.feature.results.components.preview.FiltersState
 import com.openlysis.feature.results.components.preview.SortableField
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Instant
@@ -28,9 +34,13 @@ import java.util.concurrent.ConcurrentHashMap
  *
  * @param TResult The type of analysis result model, must extend [Model]
  * @property repository Repository for accessing and managing analysis data
+ * @property updateTracker Tracker for analysis updates
+ * @property appScope Application-level coroutine scope
  */
 internal abstract class PreviewsScreenViewModel<TResult : Model>(
-    private val repository: AnalysesRepository<*, TResult>
+    private val repository: AnalysesRepository<*, TResult>,
+    private val updateTracker: AnalysisUpdateTracker<TResult>,
+    private val appScope: CoroutineScope
 ) : ViewModel() {
     private var nextPage = 1
     private val pageSize = 10
@@ -44,7 +54,15 @@ internal abstract class PreviewsScreenViewModel<TResult : Model>(
                 filtersState = defaultFiltersState
             )
         )
-    val uiState = _uiState.asStateFlow()
+    val uiState =
+        _uiState
+            .onStart {
+                startReactingToTrackerUpdates()
+            }.stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5_000L),
+                initialValue = PreviewsUiState(filtersState = defaultFiltersState)
+            )
 
     /**
      * Loads a paginated batch of analysis previews.
@@ -73,6 +91,7 @@ internal abstract class PreviewsScreenViewModel<TResult : Model>(
                         .filterNot { it.id in existingPreviewsIds }
                         .map { convertToPreview(it) }
 
+                trackUpdatablePreviews(newUniquePreviews)
                 loadedPreviews.addAll(newUniquePreviews)
                 val filteredPreviews = filterLoadedPreviews(currentState.filtersState)
                 currentState.copy(
@@ -179,6 +198,11 @@ internal abstract class PreviewsScreenViewModel<TResult : Model>(
         }
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        untrackUpdatablePreviews()
+    }
+
     /**
      * Applies filtering and sorting operations to [loadedPreviews] based on the specified state filters.
      *
@@ -255,4 +279,68 @@ internal abstract class PreviewsScreenViewModel<TResult : Model>(
             maliciousVerdicts = previews.count { it.verdict == Verdict.Malicious },
             unknownVerdicts = previews.count { it.verdict == Verdict.Unknown }
         )
+
+    /**
+     * Subscribes to analysis update events from the update tracker and handles them.
+     */
+    private fun startReactingToTrackerUpdates() {
+        updateTracker.updates
+            .onEach { handleAnalysisUpdate(it) }
+            .launchIn(viewModelScope)
+    }
+
+    /**
+     * Tracks previews that are updatable (Queued or InProgress) using the update tracker.
+     *
+     * @param previews List of [AnalysisPreviewState] to check and track if updatable.
+     */
+    private suspend fun trackUpdatablePreviews(previews: List<AnalysisPreviewState>) {
+        val updatablePreviewsIds =
+            previews
+                .filter {
+                    it.status == AnalysisStatus.Queued ||
+                        it.status == AnalysisStatus.InProgress
+                }.map { it.id }
+
+        updateTracker.track(*updatablePreviewsIds.toTypedArray())
+    }
+
+    /**
+     * Remove all tracked previews that are currently updatable (Queued or InProgress) using the update tracker.
+     * This is typically called when the ViewModel is being cleared to ensure no unnecessary tracking remains.
+     */
+    private fun untrackUpdatablePreviews() {
+        var updatablePreviewsIds =
+            loadedPreviews
+                .filter {
+                    it.status == AnalysisStatus.Queued ||
+                        it.status == AnalysisStatus.InProgress
+                }.map { it.id }
+
+        appScope.launch {
+            updateTracker.untrack(*updatablePreviewsIds.toTypedArray())
+        }
+    }
+
+    /**
+     * Handles an incoming analysis update by updating the local repository and UI state.
+     *
+     * @param updatedAnalysis The updated analysis result to process.
+     */
+    private suspend fun handleAnalysisUpdate(updatedAnalysis: TResult) {
+        repository.updateLocally(updatedAnalysis)
+        val updatedPreview = convertToPreview(updatedAnalysis)
+
+        _uiState.update { currentState ->
+            val existingPreviewsMap =
+                currentState.previews.associateBy { it.id }.toMutableMap()
+            existingPreviewsMap[updatedPreview.id] = updatedPreview
+            val existingPreviewsList = existingPreviewsMap.map { it.value }
+            currentState
+                .copy(
+                    previews = existingPreviewsList,
+                    verdictStats = calculateVerdictStats(existingPreviewsList)
+                )
+        }
+    }
 }
