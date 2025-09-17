@@ -44,7 +44,7 @@ internal abstract class PreviewsScreenViewModel<TResult : Model>(
 ) : ViewModel() {
     private var nextPage = 1
     private val pageSize = 10
-    private val loadedPreviews = ConcurrentHashMap.newKeySet<AnalysisPreviewState>()
+    private val loadedPreviews = ConcurrentHashMap<String, AnalysisPreviewState>()
 
     val defaultFiltersState = FiltersState.Default
 
@@ -85,14 +85,14 @@ internal abstract class PreviewsScreenViewModel<TResult : Model>(
                 }
 
             _uiState.update { currentState ->
-                val existingPreviewsIds = loadedPreviews.map { it.id }
+                val existingPreviewsIds = loadedPreviews.keys
                 val newUniquePreviews =
                     newResults
                         .filterNot { it.id in existingPreviewsIds }
                         .map { convertToPreview(it) }
 
                 trackUpdatablePreviews(newUniquePreviews)
-                loadedPreviews.addAll(newUniquePreviews)
+                loadedPreviews.putAll(newUniquePreviews.associateBy { it.id })
                 val filteredPreviews = filterLoadedPreviews(currentState.filtersState)
                 currentState.copy(
                     previews = filteredPreviews.toList(),
@@ -223,7 +223,7 @@ internal abstract class PreviewsScreenViewModel<TResult : Model>(
                 .date
 
         var filteredPreviews =
-            loadedPreviews
+            loadedPreviews.values
                 .filter {
                     val analysisDate =
                         it.startedDate
@@ -311,7 +311,7 @@ internal abstract class PreviewsScreenViewModel<TResult : Model>(
      */
     private fun untrackUpdatablePreviews() {
         var updatablePreviewsIds =
-            loadedPreviews
+            loadedPreviews.values
                 .filter {
                     it.status == AnalysisStatus.Queued ||
                         it.status == AnalysisStatus.InProgress
@@ -330,10 +330,12 @@ internal abstract class PreviewsScreenViewModel<TResult : Model>(
     private suspend fun handleAnalysisUpdate(updatedAnalysis: TResult) {
         repository.updateLocally(updatedAnalysis)
         val updatedPreview = convertToPreview(updatedAnalysis)
+        loadedPreviews[updatedPreview.id] = updatedPreview
 
         _uiState.update { currentState ->
-            val existingPreviewsMap =
-                currentState.previews.associateBy { it.id }.toMutableMap()
+            if (!currentState.previews.contains(updatedPreview)) return
+
+            val existingPreviewsMap = currentState.previews.associateBy { it.id }.toMutableMap()
             existingPreviewsMap[updatedPreview.id] = updatedPreview
             val existingPreviewsList = existingPreviewsMap.map { it.value }
             currentState
