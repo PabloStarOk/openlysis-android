@@ -40,15 +40,11 @@ import com.openlysis.core.designsystem.modifier.SizeType
 import com.openlysis.core.designsystem.theme.LocalAppColorScheme
 import com.openlysis.core.designsystem.theme.size.LocalAppSpacing
 import com.openlysis.core.designsystem.theme.type.LocalAppTypography
-import com.openlysis.data.analysis.model.analysis.AnalysisStatus
 import com.openlysis.data.analysis.model.common.Model
 import com.openlysis.feature.results.components.VerdictStats
 import com.openlysis.feature.results.components.preview.AnalysisPreview
 import com.openlysis.feature.results.components.preview.FiltersDialog
-import com.openlysis.feature.results.components.preview.RefreshButton
 import com.openlysis.feature.results.util.getNetworkErrorMessage
-import kotlinx.coroutines.delay
-import kotlin.time.Duration.Companion.seconds
 
 /**
  * Screen to display the previews of analysis results.
@@ -108,16 +104,6 @@ internal fun <TResult : Model> PreviewsScreen(
                 remainingAnalyses <= 2
             }
         }
-    val showRefreshAllButton by
-        remember(uiState.previews) {
-            derivedStateOf {
-                uiState.previews.any {
-                    it.status == AnalysisStatus.Queued ||
-                        it.status == AnalysisStatus.InProgress
-                }
-            }
-        }
-    var isRefreshingPreviews by rememberSaveable { mutableStateOf(false) }
     var showFiltersDialog by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(shouldLoadMore) {
@@ -162,22 +148,6 @@ internal fun <TResult : Model> PreviewsScreen(
                         icon = AppIcons.Filter,
                         iconAlt = stringResource(R.string.previews_screen_filter_button_icon_alt)
                     )
-
-                    if (showRefreshAllButton) {
-                        RefreshButton(
-                            onRefreshClick = {
-                                isRefreshingPreviews = true
-                                viewModel.refreshAllPreviews(
-                                    onFinished = {
-                                        delay(1.seconds)
-                                        isRefreshingPreviews = false
-                                    }
-                                )
-                            },
-                            isRefreshing = isRefreshingPreviews,
-                            displayLabel = false
-                        )
-                    }
                 }
             }
         }
@@ -186,22 +156,10 @@ internal fun <TResult : Model> PreviewsScreen(
             items = uiState.previews,
             key = { preview -> preview.id }
         ) { preview ->
-            var isRefreshing by remember { mutableStateOf(false) }
             AnalysisPreview(
                 onDetailsClick = { onPreviewDetailsClick(preview.id) },
-                onRefreshClick = {
-                    isRefreshing = true
-                    viewModel.refreshPreview(
-                        id = preview.id,
-                        onFinished = {
-                            delay(1.seconds)
-                            isRefreshing = false
-                        }
-                    )
-                },
                 headerLabel = previewCardHeaderLabel,
-                state = preview,
-                isRefreshing = isRefreshing
+                state = preview
             )
         }
 

@@ -119,4 +119,7 @@ object AppIcons {
 
     val LogOut
         @Composable get() = ImageVector.vectorResource(R.drawable.log_out_icon)
+
+    val CloudOff
+        @Composable get() = ImageVector.vectorResource(R.drawable.cloud_off_icon)
 }

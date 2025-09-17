@@ -25,7 +25,7 @@ internal class UrlMultiAnalysisPreviewsScreenViewModel
         updateTracker: AnalysisUpdateTracker<UrlMultiAnalysis>,
         @ApplicationScope appScope: CoroutineScope
     ) : PreviewsScreenViewModel<UrlMultiAnalysis>(repository, updateTracker, appScope) {
-        override fun convertToPreview(result: UrlMultiAnalysis): AnalysisPreviewState =
+        override fun handlePreviewConversion(result: UrlMultiAnalysis): AnalysisPreviewState =
             AnalysisPreviewState(
                 id = result.id,
                 headerContent = result.url.toString(),

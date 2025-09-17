@@ -25,7 +25,7 @@ internal class FileMultiAnalysisPreviewsScreenViewModel
         updateTracker: AnalysisUpdateTracker<FileMultiAnalysis>,
         @ApplicationScope appScope: CoroutineScope
     ) : PreviewsScreenViewModel<FileMultiAnalysis>(repository, updateTracker, appScope) {
-        override fun convertToPreview(result: FileMultiAnalysis): AnalysisPreviewState =
+        override fun handlePreviewConversion(result: FileMultiAnalysis): AnalysisPreviewState =
             AnalysisPreviewState(
                 id = result.id,
                 headerContent = result.fileMetadata.name,

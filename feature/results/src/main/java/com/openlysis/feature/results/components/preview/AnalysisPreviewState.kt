@@ -12,11 +12,19 @@ import java.time.Instant
  * @property startedDate Timestamp when the analysis was initiated
  * @property status Current status of the analysis
  * @property verdict Verdict of the analysis
+ * @property isRefreshing If the preview is being refreshed.
  */
 internal data class AnalysisPreviewState(
     val id: String,
     val headerContent: String,
     val startedDate: Instant,
     val status: AnalysisStatus,
-    val verdict: Verdict
-)
+    val verdict: Verdict,
+    val isRefreshing: Boolean = false
+) {
+    /**
+     * Checks if the analysis is in a state that can be refreshed (i.e., not a final state).
+     */
+    fun isRefreshable(): Boolean =
+        status == AnalysisStatus.Queued || status == AnalysisStatus.InProgress
+}

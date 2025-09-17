@@ -3,6 +3,12 @@ package com.openlysis.feature.results.components.preview
 import android.os.Build
 import android.text.format.DateFormat
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,14 +18,21 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -40,6 +53,7 @@ import com.openlysis.data.analysis.model.common.Verdict
 import com.openlysis.feature.results.R
 import com.openlysis.feature.results.components.AnalysisStatusBadge
 import com.openlysis.feature.results.components.AnalysisVerdictBadge
+import kotlinx.coroutines.delay
 import kotlinx.datetime.toKotlinInstant
 import java.time.Instant
 
@@ -47,19 +61,15 @@ import java.time.Instant
  * A composable that displays a preview of an analysis with interactive elements.
  *
  * @param onDetailsClick Callback invoked when the details button is clicked
- * @param onRefreshClick Callback invoked when the refresh button is clicked
  * @param headerLabel The label to display in the header section
  * @param state The current state of the analysis preview
- * @param isRefreshing Boolean indicating whether the preview is currently refreshing
  * @param modifier Optional modifier for customizing the layout
  */
 @Composable
 internal fun AnalysisPreview(
     onDetailsClick: () -> Unit,
-    onRefreshClick: () -> Unit,
     headerLabel: String,
     state: AnalysisPreviewState,
-    isRefreshing: Boolean,
     modifier: Modifier = Modifier
 ) {
     val localContext = LocalContext.current
@@ -74,11 +84,6 @@ internal fun AnalysisPreview(
                 .format(epochMilliseconds)
         }
 
-    val showRefreshButton =
-        remember(state.status) {
-            state.status == AnalysisStatus.Queued || state.status == AnalysisStatus.InProgress
-        }
-
     Surface(
         color = LocalAppColorScheme.current.background.default.primary,
         border =
@@ -90,10 +95,15 @@ internal fun AnalysisPreview(
         shadowElevation = 2.dp,
         modifier = modifier
     ) {
-        Column {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.padding(horizontal = LocalAppSpacing.current.value400)
+        ) {
             PreviewHeader(
                 headerLabel = headerLabel,
                 headerContent = state.headerContent,
+                isRefreshing = state.isRefreshing,
+                isUpdatable = state.isRefreshable(),
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -110,9 +120,6 @@ internal fun AnalysisPreview(
 
             PreviewButtons(
                 onDetailsClick = onDetailsClick,
-                onRefreshClick = onRefreshClick,
-                showRefreshButton = showRefreshButton,
-                isRefreshing = isRefreshing,
                 modifier = Modifier.fillMaxWidth()
             )
         }
@@ -123,29 +130,86 @@ internal fun AnalysisPreview(
 private fun PreviewHeader(
     headerLabel: String,
     headerContent: String,
+    isRefreshing: Boolean,
+    isUpdatable: Boolean,
     modifier: Modifier = Modifier
 ) {
-    Column(
-        modifier =
-            modifier
-                .padding(
-                    vertical = LocalAppSpacing.current.value300,
-                    horizontal = LocalAppSpacing.current.value400
-                )
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(LocalAppSpacing.current.value300),
+        modifier = modifier.padding(vertical = LocalAppSpacing.current.value300)
     ) {
-        Text(
-            text = headerLabel,
-            style = LocalAppTypography.current.bodyXSmall,
-            color = LocalAppColorScheme.current.text.default.secondary
-        )
+        Column(
+            modifier = modifier.weight(1f)
+        ) {
+            Text(
+                text = headerLabel,
+                style = LocalAppTypography.current.bodyXSmall,
+                color = LocalAppColorScheme.current.text.default.secondary
+            )
 
-        Text(
-            text = headerContent,
-            style = LocalAppTypography.current.bodyBase,
-            color = LocalAppColorScheme.current.text.default.primary,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis
-        )
+            Text(
+                text = headerContent,
+                style = LocalAppTypography.current.bodyBase,
+                color = LocalAppColorScheme.current.text.default.primary,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+
+        PreviewHeaderIndicationIcons(isRefreshing, isUpdatable)
+    }
+}
+
+@Composable
+private fun PreviewHeaderIndicationIcons(
+    isRefreshing: Boolean,
+    isUpdatable: Boolean,
+    modifier: Modifier = Modifier
+) {
+    val indicationIconModifier = Modifier.sizeIn(maxWidth = 24.dp, maxHeight = 24.dp)
+    var showCompletedIcon by rememberSaveable { mutableStateOf(false) }
+    var wasRefreshing by rememberSaveable { mutableStateOf(isRefreshing) }
+
+    LaunchedEffect(isRefreshing, isUpdatable) {
+        val isJustCompleted = wasRefreshing && !isRefreshing && !isUpdatable
+        if (isJustCompleted) {
+            showCompletedIcon = true
+            delay(5000)
+            showCompletedIcon = false
+        }
+        wasRefreshing = isRefreshing
+    }
+
+    AnimatedContent(
+        targetState = Triple(isRefreshing, isUpdatable, showCompletedIcon),
+        transitionSpec = { scaleIn() + fadeIn() togetherWith fadeOut() + scaleOut() },
+        modifier = modifier
+    ) { (refreshing, updatable, completed) ->
+        when {
+            refreshing ->
+                CircularProgressIndicator(
+                    color = LocalAppColorScheme.current.icon.brand.primary,
+                    trackColor = LocalAppColorScheme.current.border.default.primary,
+                    modifier = indicationIconModifier
+                )
+            completed ->
+                Icon(
+                    imageVector = AppIcons.Check,
+                    contentDescription =
+                        stringResource(R.string.previews_cards_header_icon_check_alt),
+                    tint = LocalAppColorScheme.current.icon.positive.secondary,
+                    modifier = indicationIconModifier
+                )
+            updatable ->
+                Icon(
+                    imageVector = AppIcons.CloudOff,
+                    contentDescription =
+                        stringResource(R.string.previews_cards_header_icon_cloud_off_alt),
+                    tint = LocalAppColorScheme.current.icon.default.tertiary,
+                    modifier = indicationIconModifier
+                )
+        }
     }
 }
 
@@ -158,7 +222,7 @@ private fun PreviewBody(
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(LocalAppSpacing.current.value300),
-        modifier = modifier.padding(LocalAppSpacing.current.value400)
+        modifier = modifier.padding(vertical = LocalAppSpacing.current.value400)
     ) {
         AnalysisStatusBadge(
             status = analysisStatus,
@@ -206,26 +270,12 @@ private fun PreviewBody(
 @Composable
 private fun PreviewButtons(
     onDetailsClick: () -> Unit,
-    onRefreshClick: () -> Unit,
-    showRefreshButton: Boolean,
-    isRefreshing: Boolean,
     modifier: Modifier = Modifier
 ) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(LocalAppSpacing.current.value300),
-        modifier = modifier.padding(LocalAppSpacing.current.value100)
+        modifier = modifier.padding(vertical = LocalAppSpacing.current.value100)
     ) {
-        if (showRefreshButton) {
-            RefreshButton(
-                onRefreshClick = onRefreshClick,
-                isRefreshing = isRefreshing,
-                displayLabel = true,
-                type = ButtonType.Tertiary,
-                size = SizeType.Small,
-                modifier = Modifier.weight(1f)
-            )
-        }
-
         AppButton(
             type = ButtonType.Tertiary,
             size = SizeType.Small,
@@ -266,7 +316,6 @@ private fun AnalysisPreviewPreview() {
     OpenlysisTheme {
         AnalysisPreview(
             onDetailsClick = { },
-            onRefreshClick = { },
             headerLabel = "Test",
             state =
                 AnalysisPreviewState(
@@ -274,9 +323,9 @@ private fun AnalysisPreviewPreview() {
                     headerContent = "A test",
                     status = AnalysisStatus.Queued,
                     startedDate = Instant.ofEpochSecond(1751766596),
-                    verdict = Verdict.Undetected
-                ),
-            isRefreshing = false
+                    verdict = Verdict.Undetected,
+                    isRefreshing = true
+                )
         )
     }
 }

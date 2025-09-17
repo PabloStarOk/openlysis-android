@@ -80,4 +80,6 @@ object AppIconsIds {
     @DrawableRes val Bell = R.drawable.bell_icon
 
     @DrawableRes val LogOut = R.drawable.log_out_icon
+
+    @DrawableRes val CloudOff = R.drawable.cloud_off_icon
 }

@@ -31,7 +31,7 @@ internal class SmsPreviewsScreenViewModel
         updateTracker: AnalysisUpdateTracker<MessageAnalysis>,
         @ApplicationScope appScope: CoroutineScope
     ) : PreviewsScreenViewModel<MessageAnalysis>(repository, updateTracker, appScope) {
-        override fun convertToPreview(result: MessageAnalysis): AnalysisPreviewState =
+        override fun handlePreviewConversion(result: MessageAnalysis): AnalysisPreviewState =
             AnalysisPreviewState(
                 id = result.id,
                 headerContent = result.message.sender,
