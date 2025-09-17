@@ -333,9 +333,9 @@ internal abstract class PreviewsScreenViewModel<TResult : Model>(
         loadedPreviews[updatedPreview.id] = updatedPreview
 
         _uiState.update { currentState ->
-            if (!currentState.previews.contains(updatedPreview)) return
-
             val existingPreviewsMap = currentState.previews.associateBy { it.id }.toMutableMap()
+            if (!existingPreviewsMap.contains(updatedPreview.id)) return
+
             existingPreviewsMap[updatedPreview.id] = updatedPreview
             val existingPreviewsList = existingPreviewsMap.map { it.value }
             currentState
