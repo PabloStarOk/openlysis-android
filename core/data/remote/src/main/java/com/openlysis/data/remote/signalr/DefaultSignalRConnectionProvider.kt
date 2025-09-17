@@ -39,14 +39,17 @@ internal class DefaultSignalRConnectionProvider(
     private var stopConnectionJob: Job? = null
     private val activeConnections = ConcurrentHashMap.newKeySet<SignalRHubMethod>()
 
-    private val _isConnected = MutableStateFlow<Boolean>(false)
-    override val isConnected: StateFlow<Boolean> = _isConnected.asStateFlow()
+    private val _isAvailable = MutableStateFlow<Boolean>(true)
+    override val isAvailable: StateFlow<Boolean> = _isAvailable.asStateFlow()
 
     /**
      * Start listening for SignalR hub connection events.
      */
     fun listenForConnectionEvents() {
-        hubConnection.onClosed { _isConnected.value = false }
+        hubConnection.onClosed { exception ->
+            if (exception == null) return@onClosed
+            _isAvailable.value = false
+        }
     }
 
     override suspend fun <TDto : Any> connect(
@@ -83,9 +86,9 @@ internal class DefaultSignalRConnectionProvider(
 
             try {
                 hubConnection.start().await()
-                _isConnected.value = true
+                _isAvailable.value = true
             } catch (_: IOException) {
-                _isConnected.value = false
+                _isAvailable.value = false
             }
         }
 

@@ -8,9 +8,9 @@ import kotlin.reflect.KClass
  */
 internal interface SignalRConnectionProvider {
     /**
-     * A [StateFlow] representing the current connection status to the SignalR hub.
+     * A [StateFlow] representing the current connection availability to the SignalR hub.
      */
-    val isConnected: StateFlow<Boolean>
+    val isAvailable: StateFlow<Boolean>
 
     /**
      * Establishes a connection to a SignalR hub method and sets up a handler for incoming DTOs.

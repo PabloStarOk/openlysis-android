@@ -41,7 +41,7 @@ internal class SignalRAnalysisUpdateTracker<
     private val trackedAnalyses = ConcurrentHashMap.newKeySet<String>()
     private val _updates = MutableSharedFlow<TAnalysis>(extraBufferCapacity = 32)
     override val updates: Flow<TAnalysis> = _updates.asSharedFlow()
-    override val isTracking: StateFlow<Boolean> = connectionProvider.isConnected
+    override val isTracking: StateFlow<Boolean> = connectionProvider.isAvailable
 
     override suspend fun track(vararg analysisIds: String) {
         if (analysisIds.isEmpty()) return
