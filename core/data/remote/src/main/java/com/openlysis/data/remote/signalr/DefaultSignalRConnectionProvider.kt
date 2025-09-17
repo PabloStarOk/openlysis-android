@@ -36,8 +36,9 @@ internal class DefaultSignalRConnectionProvider(
     @Dispatcher(AppDispatcher.IO) private val ioDispatcher: CoroutineDispatcher
 ) : SignalRConnectionProvider {
     private val connectionMutex = Mutex()
-    private var stopConnectionJob: Job? = null
     private val activeConnections = ConcurrentHashMap.newKeySet<SignalRHubMethod>()
+    private var stopConnectionJob: Job? = null
+    private var closedIntentionally: Boolean = false
 
     private val _isAvailable = MutableStateFlow<Boolean>(true)
     override val isAvailable: StateFlow<Boolean> = _isAvailable.asStateFlow()
@@ -47,7 +48,7 @@ internal class DefaultSignalRConnectionProvider(
      */
     fun listenForConnectionEvents() {
         hubConnection.onClosed { exception ->
-            if (exception == null) return@onClosed
+            if (exception == null && closedIntentionally) return@onClosed
             _isAvailable.value = false
         }
     }
@@ -84,6 +85,8 @@ internal class DefaultSignalRConnectionProvider(
         withContext(ioDispatcher) {
             if (hubConnection.connectionState != HubConnectionState.DISCONNECTED) return@withContext
 
+            closedIntentionally = false
+
             try {
                 hubConnection.start().await()
                 _isAvailable.value = true
@@ -101,6 +104,7 @@ internal class DefaultSignalRConnectionProvider(
     private suspend fun stop() {
         if (hubConnection.connectionState == HubConnectionState.DISCONNECTED) return
         if (activeConnections.isNotEmpty()) return
+        closedIntentionally = true
         hubConnection.stop().await()
     }
 }
