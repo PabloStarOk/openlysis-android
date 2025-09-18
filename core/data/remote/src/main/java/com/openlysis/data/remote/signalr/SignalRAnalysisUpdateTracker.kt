@@ -38,7 +38,7 @@ internal class SignalRAnalysisUpdateTracker<
     private val repository: AnalysesRepository<*, TAnalysis>,
     private val isAnalysisUpdatableCallback: (TAnalysis) -> Boolean
 ) : AnalysisUpdateTracker<TAnalysis> {
-    private val trackedAnalyses = ConcurrentHashMap.newKeySet<String>()
+    private val trackedAnalyses = ConcurrentHashMap<String, Int>()
     private val _updates = MutableSharedFlow<TAnalysis>(extraBufferCapacity = 32)
     override val updates: Flow<TAnalysis> = _updates.asSharedFlow()
     override val isTracking: StateFlow<Boolean> = connectionProvider.isAvailable
@@ -46,7 +46,10 @@ internal class SignalRAnalysisUpdateTracker<
     override suspend fun track(vararg analysisIds: String) {
         if (analysisIds.isEmpty()) return
 
-        trackedAnalyses.addAll(analysisIds)
+        analysisIds.forEach { id ->
+            val existing = trackedAnalyses.getOrDefault(id, 0)
+            trackedAnalyses[id] = existing + 1
+        }
         connectionProvider.connect<TDto>(hubMethod, this::handleIncomingUpdate, dtoClass)
         untrackNonUpdatable(*analysisIds)
     }
@@ -54,7 +57,11 @@ internal class SignalRAnalysisUpdateTracker<
     override suspend fun untrack(vararg analysisIds: String) {
         if (analysisIds.isEmpty()) return
 
-        trackedAnalyses.removeAll(analysisIds)
+        analysisIds.forEach { id ->
+            val existing = trackedAnalyses[id]
+            if (existing == null) return@forEach
+            if (existing == 1) trackedAnalyses.remove(id) else trackedAnalyses[id] = existing - 1
+        }
         disconnectIfNoTrackedAnalyses()
     }
 
@@ -76,7 +83,7 @@ internal class SignalRAnalysisUpdateTracker<
     private fun handleIncomingUpdate(dto: TDto) {
         val analysis = dto.convertToModel()
 
-        if (!trackedAnalyses.contains(analysis.id)) {
+        if (!trackedAnalyses.containsKey(analysis.id)) {
             return
         }
 
