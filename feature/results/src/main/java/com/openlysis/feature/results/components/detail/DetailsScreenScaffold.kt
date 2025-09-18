@@ -32,7 +32,6 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -74,11 +73,8 @@ import kotlinx.datetime.toKotlinInstant
  *
  * @param onTopBarUpdate Callback to update the top bar state
  * @param onLoadDetails Callback to load the result details to display
- * @param onPollingStart Callback to invoke when polling should start
- * @param onPollingStop Callback to invoke when polling should stop
  * @param screenTitle Title to be displayed in the top bar
  * @param uiState Current UI state of the details screen
- * @param isPolling Indicates if polling is active
  * @param data Data to be displayed in the scaffold
  * @param modifier Optional modifier for customizing the layout
  * @param content Custom content to be displayed within the scaffold when the [TResult] of the [DetailsUiState.Success] is not null.
@@ -87,11 +83,8 @@ import kotlinx.datetime.toKotlinInstant
 internal fun <TResult : Model> DetailsScreenScaffold(
     onTopBarUpdate: (TopBarState) -> Unit,
     onLoadDetails: () -> Unit,
-    onPollingStart: () -> Unit,
-    onPollingStop: () -> Unit,
     screenTitle: String,
     uiState: DetailsUiState<TResult>,
-    isPolling: Boolean,
     data: DetailsScreenScaffoldData?,
     modifier: Modifier = Modifier,
     content: @Composable (TResult) -> Unit
@@ -105,29 +98,22 @@ internal fun <TResult : Model> DetailsScreenScaffold(
         }
     }
 
-    DisposableEffect(Unit) {
-        onPollingStart()
-        onDispose {
-            onPollingStop()
-        }
-    }
-
     val scrollState = rememberScrollState()
-    val shouldShowPollingBar by remember(uiState, isPolling, data) {
+    val shouldShowRefreshingBar by remember(uiState, data) {
         derivedStateOf {
             uiState is DetailsUiState.Success &&
-                isPolling &&
+                uiState.isRefreshing &&
                 data?.status == AnalysisStatus.Queued ||
                 data?.status == AnalysisStatus.InProgress
         }
     }
-    var isPollingVarVisible by rememberSaveable { mutableStateOf(false) }
-    LaunchedEffect(shouldShowPollingBar) {
-        if (shouldShowPollingBar) {
-            isPollingVarVisible = true
+    var isRefreshingBarVisible by rememberSaveable { mutableStateOf(false) }
+    LaunchedEffect(shouldShowRefreshingBar) {
+        if (shouldShowRefreshingBar) {
+            isRefreshingBarVisible = true
         } else {
             delay(5000)
-            isPollingVarVisible = false
+            isRefreshingBarVisible = false
         }
     }
 
@@ -222,11 +208,11 @@ internal fun <TResult : Model> DetailsScreenScaffold(
         if (data == null) return@Column
 
         AnimatedVisibility(
-            visible = isPollingVarVisible,
+            visible = isRefreshingBarVisible,
             enter = expandVertically() + slideInVertically(initialOffsetY = { -it }),
             exit = shrinkVertically() + slideOutVertically(targetOffsetY = { it })
         ) {
-            PollingIndicationBar(
+            RefreshingIndicationBar(
                 status = data.status,
                 modifier = Modifier.fillMaxWidth()
             )
@@ -391,7 +377,7 @@ private fun HeroInformationCard(
 }
 
 @Composable
-private fun PollingIndicationBar(
+private fun RefreshingIndicationBar(
     status: AnalysisStatus,
     modifier: Modifier = Modifier
 ) {

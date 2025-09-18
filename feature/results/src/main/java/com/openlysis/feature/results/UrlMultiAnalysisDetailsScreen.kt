@@ -29,7 +29,6 @@ internal fun UrlMultiAnalysisDetailsScreen(
     modifier: Modifier = Modifier
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val isPolling by viewModel.isPolling.collectAsStateWithLifecycle()
 
     val analysis =
         if (uiState is DetailsUiState.Success) {
@@ -56,11 +55,8 @@ internal fun UrlMultiAnalysisDetailsScreen(
     DetailsScreenScaffold(
         onTopBarUpdate = onTopBarUpdate,
         onLoadDetails = { viewModel.loadAnalysis(analysisId) },
-        onPollingStart = { viewModel.startPolling(analysisId) },
-        onPollingStop = viewModel::stopPolling,
         screenTitle = stringResource(R.string.details_screen_url_title),
         uiState = uiState,
-        isPolling = isPolling,
         data = scaffoldData,
         modifier = modifier
     ) { analysis ->
