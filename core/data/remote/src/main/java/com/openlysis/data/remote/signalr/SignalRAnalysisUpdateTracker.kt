@@ -39,7 +39,7 @@ internal class SignalRAnalysisUpdateTracker<
     private val isAnalysisUpdatableCallback: (TAnalysis) -> Boolean
 ) : AnalysisUpdateTracker<TAnalysis> {
     private val trackedAnalyses = ConcurrentHashMap<String, Int>()
-    private val _updates = MutableSharedFlow<TAnalysis>(extraBufferCapacity = 32)
+    private val _updates = MutableSharedFlow<TAnalysis>(extraBufferCapacity = 32, replay = 16)
     override val updates: Flow<TAnalysis> = _updates.asSharedFlow()
     override val isTracking: StateFlow<Boolean> = connectionProvider.isAvailable
 
