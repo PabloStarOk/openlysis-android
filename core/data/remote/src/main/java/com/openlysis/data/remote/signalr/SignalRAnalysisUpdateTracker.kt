@@ -7,8 +7,8 @@ import com.openlysis.data.analysis.repository.AnalysesRepository
 import com.openlysis.data.analysis.service.AnalysisUpdateTracker
 import com.openlysis.data.remote.signalr.dto.BaseAnalysisDto
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
@@ -40,7 +40,7 @@ internal class SignalRAnalysisUpdateTracker<
 ) : AnalysisUpdateTracker<TAnalysis> {
     private val trackedAnalyses = ConcurrentHashMap<String, Int>()
     private val _updates = MutableSharedFlow<TAnalysis>(extraBufferCapacity = 32, replay = 16)
-    override val updates: Flow<TAnalysis> = _updates.asSharedFlow()
+    override val updates: SharedFlow<TAnalysis> = _updates.asSharedFlow()
     override val isTracking: StateFlow<Boolean> = connectionProvider.isAvailable
 
     override suspend fun track(vararg analysisIds: String) {

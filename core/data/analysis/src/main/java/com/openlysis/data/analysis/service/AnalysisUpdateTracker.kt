@@ -1,7 +1,7 @@
 package com.openlysis.data.analysis.service
 
 import com.openlysis.data.analysis.model.common.Model
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 
 /**
@@ -13,7 +13,7 @@ interface AnalysisUpdateTracker<TAnalysis : Model> {
     /**
      * A flow emitting updates for tracked analysis models.
      */
-    val updates: Flow<TAnalysis>
+    val updates: SharedFlow<TAnalysis>
 
     /**
      * A flow emitting a boolean indicating whether tracking is active.
