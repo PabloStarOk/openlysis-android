@@ -249,6 +249,9 @@ internal abstract class PreviewsScreenViewModel<TResult : Model>(
      * @param updatedAnalysis The updated analysis result to process.
      */
     private suspend fun handleAnalysisUpdate(updatedAnalysis: TResult) {
+        val isPreviewRefreshable = loadedPreviews[updatedAnalysis.id]?.isRefreshable() == true
+        if (!isPreviewRefreshable) return
+
         repository.updateLocally(updatedAnalysis)
         val updatedPreview = convertToPreview(updatedAnalysis)
         loadedPreviews[updatedPreview.id] = updatedPreview
