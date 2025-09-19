@@ -6,12 +6,14 @@ import com.openlysis.core.outcome.Outcome
 import com.openlysis.data.analysis.model.analysis.AnalysisStatus
 import com.openlysis.data.analysis.model.common.Model
 import com.openlysis.data.analysis.repository.AnalysesRepository
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
+import com.openlysis.data.analysis.service.AnalysisUpdateTracker
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
 /**
@@ -19,16 +21,18 @@ import kotlinx.coroutines.launch
  *
  * @param TModel The type of model being displayed, must extend [Model].
  * @property repository The repository used to fetch analysis data.
+ * @property updateTracker Tracker for analysis updates
+ * @param appScope The application-level coroutine scope.
  */
 internal abstract class DetailsScreenViewModel<TModel : Model>(
-    val repository: AnalysesRepository<*, TModel>
+    private val repository: AnalysesRepository<*, TModel>,
+    private val updateTracker: AnalysisUpdateTracker<TModel>,
+    private val appScope: CoroutineScope
 ) : ViewModel() {
-    private var pollingJob: Job? = null
-    private var isResultFinal = false
     private val _uiState = MutableStateFlow<DetailsUiState<TModel>>(DetailsUiState.None)
-    private val _isPolling = MutableStateFlow<Boolean>(false)
     val uiState = _uiState.asStateFlow()
-    val isPolling = _isPolling.asStateFlow()
+
+    private var analysisId: String = ""
 
     /**
      * Loads the analysis details for the given ID.
@@ -36,74 +40,32 @@ internal abstract class DetailsScreenViewModel<TModel : Model>(
      * @param id The ID of the analysis to load.
      */
     fun loadAnalysis(id: String) {
+        analysisId = id
+        _uiState.update { DetailsUiState.Loading }
         viewModelScope.launch {
-            _uiState.update {
-                DetailsUiState.Loading
-            }
-
             val outcome = repository.getById(id)
             when (outcome) {
-                is Outcome.Success ->
+                is Outcome.Success -> {
+                    val analysis = outcome.value
+                    val isUpdatable = analysis.isUpdatable()
+                    if (isUpdatable) reactToTrackerEvents(analysis)
                     _uiState.update {
                         DetailsUiState.Success(
-                            outcome.value
+                            analysis,
+                            isRefreshing = updateTracker.isTracking.value,
+                            isUpdatable
                         )
                     }
-                is Outcome.Failure ->
-                    _uiState.update {
-                        DetailsUiState.Failure(
-                            outcome.error
-                        )
-                    }
+                }
+                is Outcome.Failure -> _uiState.update { DetailsUiState.Failure(outcome.error) }
             }
         }
     }
 
-    /**
-     * Starts polling for analysis updates by ID.
-     *
-     * @param id The ID of the analysis to poll for updates.
-     */
-    fun startPolling(id: String) {
-        if (pollingJob != null || isResultFinal) return
-
-        pollingJob =
-            viewModelScope.launch {
-                while (isActive && !isResultFinal) {
-                    if (!isPolling.value) {
-                        _isPolling.update { true }
-                    }
-                    val outcome = repository.getUpdatedById(id)
-                    if (outcome !is Outcome.Success) {
-                        continue
-                    }
-
-                    _uiState.update { DetailsUiState.Success(outcome.value) }
-                    val status = getStatus(outcome.value)
-                    isResultFinal = status != AnalysisStatus.Queued &&
-                        status != AnalysisStatus.InProgress
-                    if (isResultFinal) {
-                        stopPolling()
-                        break
-                    }
-
-                    delay(3_000L)
-                }
-            }
-    }
-
-    /**
-     * Stops the polling job if it is running and updates the polling state.
-     */
-    fun stopPolling() {
-        pollingJob?.cancel()
-        pollingJob = null
-        _isPolling.update { false }
-    }
-
     override fun onCleared() {
         super.onCleared()
-        stopPolling()
+        if (analysisId.isEmpty()) return
+        appScope.launch { updateTracker.untrack(analysisId) }
     }
 
     /**
@@ -113,4 +75,41 @@ internal abstract class DetailsScreenViewModel<TModel : Model>(
      * @return The [AnalysisStatus] representing the current state of the analysis.
      */
     protected abstract fun getStatus(result: TModel): AnalysisStatus
+
+    private suspend fun reactToTrackerEvents(analysis: TModel) {
+        updateTracker.track(analysis.id)
+        updateTracker.updates
+            .filter { it.id == analysis.id }
+            .onEach(::handleIncomingUpdate)
+            .launchIn(viewModelScope)
+
+        updateTracker.isTracking
+            .onEach(::handleIsTrackingChange)
+            .launchIn(viewModelScope)
+    }
+
+    private suspend fun handleIncomingUpdate(analysis: TModel) {
+        repository.updateLocally(analysis)
+        _uiState.update {
+            DetailsUiState.Success(
+                analysis,
+                isRefreshing = updateTracker.isTracking.value,
+                analysis.isUpdatable()
+            )
+        }
+    }
+
+    private fun handleIsTrackingChange(isTracking: Boolean) {
+        val detailsUiState = uiState.value
+        if (detailsUiState !is DetailsUiState.Success) return
+
+        _uiState.update {
+            detailsUiState.copy(isRefreshing = isTracking)
+        }
+    }
+
+    private fun TModel.isUpdatable(): Boolean {
+        val status = getStatus(this)
+        return status == AnalysisStatus.Queued || status == AnalysisStatus.InProgress
+    }
 }

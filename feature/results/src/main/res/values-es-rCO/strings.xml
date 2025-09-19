@@ -82,6 +82,8 @@
     <string name="filters_chip_checkmark_icon_alt">Ícono de marca de verificación indicando que la etiqueta está seleccionada</string>
 
     <string name="previews_screen_filter_button_icon_alt">Ícono de filtro</string>
+    <string name="previews_cards_header_icon_cloud_off_alt">Ícono de nube con una línea indicando que el análisis no se está refrescando</string>
+    <string name="previews_cards_header_icon_check_alt">Ícono de marca de verificación indicando que el análisis se ha completado</string>
 
     <string name="email_previews_screen_title">Correos Electrónicos</string>
     <string name="email_previews_cards_header_label">Remitente</string>

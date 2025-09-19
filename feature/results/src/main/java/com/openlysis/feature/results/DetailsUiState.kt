@@ -13,9 +13,13 @@ internal sealed interface DetailsUiState<out TAnalysis : Model> {
      * UI state representing a successful analysis result.
      *
      * @property analysis The analysis data.
+     * @property isRefreshing Whether the analysis is being refreshed.
+     * @property isUpdatable Whether the analysis is updatable.
      */
     data class Success<TAnalysis : Model>(
-        val analysis: TAnalysis
+        val analysis: TAnalysis,
+        val isRefreshing: Boolean,
+        val isUpdatable: Boolean
     ) : DetailsUiState<TAnalysis>
 
     /**

@@ -7,8 +7,10 @@ import java.net.URL
  *
  * @property analysisApiBaseUrl The base URL of the analysis API.
  * @property authApiBaseUrl The base URL of the authentication API.
+ * @property analysisUpdatesSignalRHubUrl The URL of the SignalR hub for analysis updates.
  */
 data class ApiClientSettings(
     val analysisApiBaseUrl: URL,
-    val authApiBaseUrl: URL
+    val authApiBaseUrl: URL,
+    val analysisUpdatesSignalRHubUrl: URL
 )

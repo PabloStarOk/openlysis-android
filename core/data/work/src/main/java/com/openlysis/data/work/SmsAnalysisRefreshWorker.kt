@@ -14,7 +14,9 @@ import androidx.work.WorkerParameters
 import com.openlysis.core.link.DeepLinks
 import com.openlysis.core.network.AppDispatcher
 import com.openlysis.core.network.di.Dispatcher
+import com.openlysis.core.outcome.NetworkError
 import com.openlysis.core.outcome.Outcome
+import com.openlysis.data.analysis.di.MessageAnalysisUpdateTracker
 import com.openlysis.data.analysis.di.SmsAnalysesRepository
 import com.openlysis.data.analysis.model.analysis.AnalysisStatus
 import com.openlysis.data.analysis.model.common.Verdict
@@ -22,14 +24,23 @@ import com.openlysis.data.analysis.model.message.MessageAnalysis
 import com.openlysis.data.analysis.model.message.MessageType
 import com.openlysis.data.analysis.repository.AnalysesRepository
 import com.openlysis.data.analysis.request.AnalyzeMessage
+import com.openlysis.data.analysis.service.AnalysisUpdateTracker
 import com.openlysis.data.work.utils.extractNotificationId
 import com.openlysis.data.work.utils.getPersistentNotificationId
 import com.openlysis.notification.Notifier
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.TimeoutCancellationException
+import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeout
+import kotlin.time.Duration.Companion.minutes
 
 /**
  * Worker for refreshing SMS messages analyses.
@@ -38,6 +49,7 @@ import kotlinx.coroutines.withContext
  * @param workerParameters Parameters for the worker.
  * @param coroutineDispatcher Dispatcher for coroutine execution.
  * @param smsRepository Repository for SMS analyses.
+ * @param updateTracker Tracker for analysis updates.
  * @param notifier Notifier for sending notifications.
  */
 @HiltWorker
@@ -49,6 +61,8 @@ class SmsAnalysisRefreshWorker
         @Dispatcher(AppDispatcher.IO) private val coroutineDispatcher: CoroutineDispatcher,
         @SmsAnalysesRepository private val smsRepository:
             AnalysesRepository<AnalyzeMessage, MessageAnalysis>,
+        @MessageAnalysisUpdateTracker(MessageType.Sms)
+        private val updateTracker: AnalysisUpdateTracker<MessageAnalysis>,
         private val notifier: Notifier
     ) : CoroutineWorker(context, workerParameters) {
         private var foregroundSet: Boolean = false
@@ -72,13 +86,14 @@ class SmsAnalysisRefreshWorker
                     )
                 }
 
-                val pollOutcome = pollAnalysis(analysisId)
+                val outcome = awaitAnalysisResult(analysisId)
                 val notificationTapIntent = buildTapIntent(analysisId)
                 val persistentNotificationId = getPersistentNotificationId(foregroundSet)
 
-                when (pollOutcome) {
+                when (outcome) {
                     is Outcome.Success -> {
-                        val analysis = pollOutcome.value
+                        val analysis = outcome.value
+                        smsRepository.updateLocally(analysis)
                         notifier.notifyMessageAnalysis(
                             notificationId = persistentNotificationId,
                             messageSender = messageSender,
@@ -89,10 +104,13 @@ class SmsAnalysisRefreshWorker
                         Result.success()
                     }
                     is Outcome.Failure -> {
-                        Log.e(LOGGING_TAG, "Analysis failed due to a ${pollOutcome.error}")
+                        Log.e(
+                            LOGGING_TAG,
+                            "SMS analysis for sender '$messageSender' and analysisId '$analysisId' failed due to a ${outcome.error}."
+                        )
                         notifier.notifyMessageAnalysisError(
                             notificationId = persistentNotificationId,
-                            error = pollOutcome.error,
+                            error = outcome.error,
                             occurredOnStart = false,
                             messageSender = messageSender,
                             tapIntent = notificationTapIntent
@@ -101,30 +119,6 @@ class SmsAnalysisRefreshWorker
                     }
                 }
             }
-
-        private suspend fun pollAnalysis(analysisId: String): Outcome<MessageAnalysis> {
-            var isResultFinal = false
-            var verdict = Verdict.Unknown
-            var status = AnalysisStatus.Queued
-            var outcome: Outcome<MessageAnalysis>? = null
-
-            while (!isResultFinal) {
-                outcome = smsRepository.getUpdatedById(analysisId)
-                if (outcome !is Outcome.Success) return outcome
-
-                verdict = outcome.value.verdict
-                status = outcome.value.status
-                isResultFinal =
-                    status != AnalysisStatus.Queued &&
-                    status != AnalysisStatus.InProgress
-
-                if (!isResultFinal) {
-                    delay(POLLING_FREQUENCY_MS)
-                }
-            }
-
-            return outcome as Outcome<MessageAnalysis>
-        }
 
         override suspend fun getForegroundInfo(): ForegroundInfo {
             foregroundSet = true
@@ -162,6 +156,44 @@ class SmsAnalysisRefreshWorker
             }
         }
 
+        private suspend fun CoroutineScope.awaitAnalysisResult(
+            analysisId: String
+        ): Outcome<MessageAnalysis> {
+            updateTracker.track(analysisId)
+            val deferredAnalysis =
+                async {
+                    withTimeout(TIMEOUT_MINUTES.minutes) {
+                        updateTracker.updates
+                            .filter { it.id == analysisId }
+                            .first {
+                                it.status != AnalysisStatus.Queued &&
+                                    it.status != AnalysisStatus.InProgress
+                            }
+                    }
+                }
+
+            val updateTrackerMonitorJob =
+                launch {
+                    updateTracker.isTracking.first { !it }
+                    deferredAnalysis.cancel()
+                }
+
+            try {
+                val completedAnalysis = deferredAnalysis.await()
+                updateTrackerMonitorJob.cancel()
+                return Outcome.Success(completedAnalysis)
+            } catch (_: TimeoutCancellationException) {
+                return Outcome.Failure(NetworkError.Unknown)
+            } catch (_: CancellationException) {
+                return Outcome.Failure(NetworkError.Network)
+            } finally {
+                updateTracker.untrack(analysisId)
+                if (updateTrackerMonitorJob.isActive) {
+                    updateTrackerMonitorJob.cancel()
+                }
+            }
+        }
+
         private fun buildTapIntent(analysisId: String): Intent =
             Intent().apply {
                 action = Intent.ACTION_VIEW
@@ -176,7 +208,7 @@ class SmsAnalysisRefreshWorker
         companion object {
             internal const val MESSAGE_SENDER_KEY = "messageSender"
             internal const val ANALYSIS_ID_KEY = "analysisId"
-            private const val POLLING_FREQUENCY_MS = 3000L
+            private const val TIMEOUT_MINUTES = 15
             private const val LOGGING_TAG = "SmsAnalysisRWorker"
         }
     }

@@ -51,4 +51,13 @@ interface AnalysesRepository<TRequest, TModel>
         page: Int,
         pageSize: Int
     ): Outcome<List<TModel>>
+
+    // TODO: Remove updateLocally method and refactor repository instead.
+
+    /**
+     * Updates the given model locally in the repository.
+     *
+     * @param model The model instance to update.
+     */
+    suspend fun updateLocally(model: TModel)
 }

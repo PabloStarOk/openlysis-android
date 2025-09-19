@@ -4,6 +4,7 @@ plugins {
 }
 
 dependencies {
+    implementation(libs.kotlinx.coroutines.core)
     api(projects.core.common)
 
     compileOnly(libs.moshi.kotlin)

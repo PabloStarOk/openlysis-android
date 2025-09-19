@@ -20,15 +20,16 @@ import androidx.navigation.toRoute
 import com.openlysis.core.designsystem.components.bar.TopBarState
 import com.openlysis.core.link.DeepLinks
 import com.openlysis.data.analysis.model.message.MessageType
+import com.openlysis.feature.results.EmailDetailsScreenViewModel
 import com.openlysis.feature.results.EmailPreviewsScreenViewModel
 import com.openlysis.feature.results.FileMultiAnalysisDetailsScreen
 import com.openlysis.feature.results.FileMultiAnalysisDetailsScreenViewModel
 import com.openlysis.feature.results.FileMultiAnalysisPreviewsScreenViewModel
 import com.openlysis.feature.results.MessageAnalysisDetailsScreen
-import com.openlysis.feature.results.MessageDetailsScreenViewModel
 import com.openlysis.feature.results.PreviewsScreen
 import com.openlysis.feature.results.R
 import com.openlysis.feature.results.ResultsScreen
+import com.openlysis.feature.results.SmsDetailsScreenViewModel
 import com.openlysis.feature.results.SmsPreviewsScreenViewModel
 import com.openlysis.feature.results.UrlMultiAnalysisDetailsScreen
 import com.openlysis.feature.results.UrlMultiAnalysisDetailsScreenViewModel
@@ -216,8 +217,15 @@ fun NavGraphBuilder.resultsScreen(
                 } else {
                     R.string.details_screen_sms_title
                 }
+            val viewModel =
+                if (route.messageType == MessageType.Email) {
+                    hiltViewModel<EmailDetailsScreenViewModel>()
+                } else {
+                    hiltViewModel<SmsDetailsScreenViewModel>()
+                }
+
             MessageAnalysisDetailsScreen(
-                viewModel = hiltViewModel<MessageDetailsScreenViewModel>(),
+                viewModel = viewModel,
                 onTopBarUpdate = onTopBarUpdate,
                 screenTitle = stringResource(screenTitleResId),
                 analysisId = route.analysisId

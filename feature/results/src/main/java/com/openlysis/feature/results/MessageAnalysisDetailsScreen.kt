@@ -76,7 +76,6 @@ internal fun MessageAnalysisDetailsScreen(
     modifier: Modifier = Modifier
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val isPolling by viewModel.isPolling.collectAsStateWithLifecycle()
     val analysis =
         if (uiState is DetailsUiState.Success) {
             val success = uiState as DetailsUiState.Success<MessageAnalysis>
@@ -129,11 +128,8 @@ internal fun MessageAnalysisDetailsScreen(
     DetailsScreenScaffold(
         onTopBarUpdate = onTopBarUpdate,
         onLoadDetails = { viewModel.loadAnalysis(analysisId) },
-        onPollingStart = { viewModel.startPolling(analysisId) },
-        onPollingStop = viewModel::stopPolling,
         screenTitle = screenTitle,
         uiState = uiState,
-        isPolling = isPolling,
         data = scaffoldData,
         modifier = modifier
     ) { analysis ->

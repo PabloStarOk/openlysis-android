@@ -3,40 +3,31 @@ package com.openlysis.feature.results
 import com.openlysis.core.network.di.ApplicationScope
 import com.openlysis.data.analysis.di.MessageAnalysisUpdateTracker
 import com.openlysis.data.analysis.di.SmsAnalysesRepository
+import com.openlysis.data.analysis.model.analysis.AnalysisStatus
 import com.openlysis.data.analysis.model.message.MessageAnalysis
 import com.openlysis.data.analysis.model.message.MessageType
 import com.openlysis.data.analysis.repository.AnalysesRepository
 import com.openlysis.data.analysis.request.AnalyzeMessage
 import com.openlysis.data.analysis.service.AnalysisUpdateTracker
-import com.openlysis.feature.results.components.preview.AnalysisPreviewState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import javax.inject.Inject
 
 /**
- * ViewModel for the SMS Previews screen.
+ * ViewModel for displaying details of a message analysis.
  *
- * Injects an [AnalysesRepository] for analyzing SMS messages.
- *
- * @param repository The repository used to fetch and analyze SMS messages.
+ * @param repository The repository used to fetch and manage SMS analysis data.
  * @property updateTracker Tracker for analysis updates
- * @property appScope Application-level coroutine scope
+ * @param appScope The application-level coroutine scope.
  */
 @HiltViewModel
-internal class SmsPreviewsScreenViewModel
+internal class SmsDetailsScreenViewModel
     @Inject
     constructor(
         @SmsAnalysesRepository repository: AnalysesRepository<AnalyzeMessage, MessageAnalysis>,
         @MessageAnalysisUpdateTracker(MessageType.Sms)
         updateTracker: AnalysisUpdateTracker<MessageAnalysis>,
         @ApplicationScope appScope: CoroutineScope
-    ) : PreviewsScreenViewModel<MessageAnalysis>(repository, updateTracker, appScope) {
-        override fun handlePreviewConversion(result: MessageAnalysis): AnalysisPreviewState =
-            AnalysisPreviewState(
-                id = result.id,
-                headerContent = result.message.sender,
-                startedDate = result.startedDate,
-                status = result.status,
-                verdict = result.verdict
-            )
+    ) : DetailsScreenViewModel<MessageAnalysis>(repository, updateTracker, appScope) {
+        override fun getStatus(result: MessageAnalysis): AnalysisStatus = result.status
     }

@@ -82,6 +82,8 @@
     <string name="filters_chip_checkmark_icon_alt">Checkmark icon indicating the tag is selected</string>
 
     <string name="previews_screen_filter_button_icon_alt">Filter icon</string>
+    <string name="previews_cards_header_icon_cloud_off_alt">Cloud icon with a slash indicating the analysis is not being refreshed</string>
+    <string name="previews_cards_header_icon_check_alt">Checkmark icon indicating analysis completion</string>
 
     <string name="email_previews_screen_title">Emails</string>
     <string name="email_previews_cards_header_label">Sender</string>

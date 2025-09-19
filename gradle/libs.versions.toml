@@ -28,6 +28,9 @@ protobuf = "4.31.1"
 protobufPlugin = "0.9.5"
 splashScreen = "1.0.1"
 workManager = "2.10.2"
+microsoftSignalR = "9.0.7"
+jackson = "2.13.5" # Required version to support 24+ API level
+slf4jAndroid = "1.7.36"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -62,6 +65,7 @@ google-dagger-hilt-core = { group = "com.google.dagger", name = "hilt-core", ver
 androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "androidXHilt"}
 kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlinxDatetime" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
+kotlinx-coroutines-rx3 = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-rx3", version.ref = "kotlinxCoroutines" }
 androidx-dataStore = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "androidXDataStore" }
 androidx-dataStoreProto = { group = "androidx.datastore", name = "datastore", version.ref = "androidXDataStore" }
 protobuf-kotlin-lite = { group = "com.google.protobuf", name = "protobuf-kotlin-lite", version.ref = "protobuf" }
@@ -71,6 +75,10 @@ androidx-workmanager-runtime = { group = "androidx.work", name = "work-runtime",
 androidx-workmanager-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "workManager" }
 androidx-hilt-workmanager = { group = "androidx.hilt", name = "hilt-work", version.ref = "androidXHilt" }
 androidx-hilt-compiler = { group = "androidx.hilt", name = "hilt-compiler", version.ref = "androidXHilt" }
+microsoft-signalr = { group = "com.microsoft.signalr", name = "signalr", version.ref = "microsoftSignalR" }
+microsoft-signalr-messagepack = { group = "com.microsoft.signalr.messagepack", name = "signalr-messagepack", version.ref = "microsoftSignalR" }
+jackson-annotations = { group = "com.fasterxml.jackson.core", name = "jackson-annotations", version.ref = "jackson" }
+slf4j-android = { group = "org.slf4j", name = "slf4j-android", version.ref = "slf4jAndroid" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
