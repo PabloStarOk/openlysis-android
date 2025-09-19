@@ -30,6 +30,7 @@ splashScreen = "1.0.1"
 workManager = "2.10.2"
 microsoftSignalR = "9.0.7"
 jackson = "2.13.5" # Required version to support 24+ API level
+slf4jAndroid = "1.7.36"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -77,6 +78,7 @@ androidx-hilt-compiler = { group = "androidx.hilt", name = "hilt-compiler", vers
 microsoft-signalr = { group = "com.microsoft.signalr", name = "signalr", version.ref = "microsoftSignalR" }
 microsoft-signalr-messagepack = { group = "com.microsoft.signalr.messagepack", name = "signalr-messagepack", version.ref = "microsoftSignalR" }
 jackson-annotations = { group = "com.fasterxml.jackson.core", name = "jackson-annotations", version.ref = "jackson" }
+slf4j-android = { group = "org.slf4j", name = "slf4j-android", version.ref = "slf4jAndroid" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
