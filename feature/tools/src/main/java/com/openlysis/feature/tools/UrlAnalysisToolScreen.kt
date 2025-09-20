@@ -90,7 +90,12 @@ internal fun UrlAnalysisToolScreen(
                         keyboardType = KeyboardType.Uri,
                         imeAction = ImeAction.Send
                     ),
-                keyboardActions = KeyboardActions(onSend = { onSubmit() })
+                keyboardActions =
+                    KeyboardActions(onSend = {
+                        if (uiState.canRequestAnalysis) {
+                            onSubmit()
+                        }
+                    })
             )
         }
     }
