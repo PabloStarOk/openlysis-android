@@ -2,6 +2,9 @@ package com.openlysis.feature.results.components
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.animation.animateColor
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,6 +17,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -45,6 +49,21 @@ internal fun AnalysisStatusBadge(
     modifier: Modifier = Modifier
 ) {
     val style = badgeStylesMap.getValue(status)
+    val transition = updateTransition(targetState = style, label = "Status badge transition")
+    val backgroundColor by
+        transition.animateColor(
+            transitionSpec = { tween(200) },
+            label = "Status badge background color"
+        ) {
+            it.getBackgroundColor(LocalAppColorScheme.current)
+        }
+    val foregroundColor by
+        transition.animateColor(
+            transitionSpec = { tween(200) },
+            label = "Status badge foreground color"
+        ) {
+            it.getForegroundColor(LocalAppColorScheme.current)
+        }
 
     Row(
         horizontalArrangement = Arrangement.spacedBy(LocalAppSpacing.current.value200),
@@ -54,7 +73,7 @@ internal fun AnalysisStatusBadge(
     ) {
         Surface(
             shape = RoundedCornerShape(LocalAppRadius.current.value100),
-            color = style.getBackgroundColor(LocalAppColorScheme.current),
+            color = backgroundColor,
             modifier =
                 Modifier
                     .weight(1f)
@@ -62,7 +81,7 @@ internal fun AnalysisStatusBadge(
             Text(
                 text = stringResource(style.labelResId),
                 style = LocalAppTypography.current.bodySmall,
-                color = style.getForegroundColor(LocalAppColorScheme.current),
+                color = foregroundColor,
                 textAlign = TextAlign.Center,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
