@@ -93,9 +93,12 @@ internal fun <TResult : Model> DetailsScreenScaffold(
     if (!initialized) {
         initialized = true
         LaunchedEffect(Unit) {
-            onTopBarUpdate(TopBarState(title = screenTitle))
             onLoadDetails()
         }
+    }
+
+    LaunchedEffect(Unit) {
+        onTopBarUpdate(TopBarState(title = screenTitle))
     }
 
     val scrollState = rememberScrollState()
