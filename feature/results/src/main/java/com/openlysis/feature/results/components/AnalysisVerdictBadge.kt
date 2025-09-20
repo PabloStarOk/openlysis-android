@@ -1,6 +1,10 @@
 package com.openlysis.feature.results.components
 
 import androidx.annotation.StringRes
+import androidx.compose.animation.animateColor
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -10,6 +14,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -45,21 +50,36 @@ internal fun AnalysisVerdictBadge(
 ) {
     val style = badgeStylesMap.getValue(verdict)
     val dimensions = badgeDimensionsMap.getValue(size)
+    val transition = updateTransition(targetState = style, "Verdict badge transition")
+    val backGroundColor by transition.animateColor(
+        transitionSpec = { tween(200) },
+        label = "Verdict badge background color"
+    ) {
+        it.getBackgroundColor(LocalAppColorScheme.current)
+    }
+    val borderColor by transition.animateColor(
+        transitionSpec = { tween(200) },
+        label = "Verdict badge border color"
+    ) {
+        it.getBorderColor(LocalAppColorScheme.current)
+    }
+    val foregroundColor by transition.animateColor(
+        transitionSpec = { tween(200) },
+        label = "Verdict badge foreground color"
+    ) {
+        it.getForegroundColor(LocalAppColorScheme.current)
+    }
 
     Surface(
         shape = RoundedCornerShape(LocalAppRadius.current.value100),
-        color = style.getBackgroundColor(LocalAppColorScheme.current),
-        border =
-            BorderStroke(
-                width = 1.dp,
-                color = style.getBorderColor(LocalAppColorScheme.current)
-            ),
+        color = backGroundColor,
+        border = BorderStroke(width = 1.dp, color = borderColor),
         modifier = modifier.widthIn(min = dimensions.minWidth)
     ) {
         Text(
             text = stringResource(style.labelResId),
             style = dimensions.getLabelStyle(LocalAppTypography.current),
-            color = style.getForegroundColor(LocalAppColorScheme.current),
+            color = foregroundColor,
             textAlign = TextAlign.Center,
             modifier =
                 Modifier
@@ -152,7 +172,7 @@ private val badgeDimensionsMap =
     )
 
 @Immutable
-private data class AnalysisVerdictBadgeStyle(
+internal data class AnalysisVerdictBadgeStyle(
     val getBackgroundColor: (AppColorScheme) -> Color,
     val getForegroundColor: (AppColorScheme) -> Color,
     val getBorderColor: (AppColorScheme) -> Color,
@@ -160,7 +180,7 @@ private data class AnalysisVerdictBadgeStyle(
 )
 
 @Immutable
-private data class AnalysisVerdictBadgeDimensions(
+internal data class AnalysisVerdictBadgeDimensions(
     val minWidth: Dp,
     val getVerticalPadding: (Spacing) -> Dp,
     val getHorizontalPadding: (Spacing) -> Dp,
