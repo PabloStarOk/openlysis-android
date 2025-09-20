@@ -75,7 +75,8 @@ internal class AuthScreenViewModel
                         AuthenticationType.SignIn -> AuthenticationType.SignUp
                     }
                 it.copy(
-                    authType = targetType
+                    authType = targetType,
+                    authStatus = AuthenticationStatus.None
                 )
             }
         }
