@@ -1,8 +1,7 @@
 package com.openlysis.feature.results
 
 import com.openlysis.core.network.di.ApplicationScope
-import com.openlysis.data.analysis.di.MessageAnalysesRepository
-import com.openlysis.data.analysis.di.MessageAnalysisUpdateTracker
+import com.openlysis.data.analysis.di.MessageAnalysisDependency
 import com.openlysis.data.analysis.model.message.MessageAnalysis
 import com.openlysis.data.analysis.model.message.MessageType
 import com.openlysis.data.analysis.repository.AnalysesRepository
@@ -17,7 +16,7 @@ import javax.inject.Inject
  * ViewModel responsible for managing email analysis previews.
  * Extends [PreviewsScreenViewModel] to handle specific email message analysis functionality.
  *
- * @property repository Repository handling email analysis operations, injected with [EmailAnalysesRepository]
+ * @property repository Repository handling email analysis operations, injected with [MessageAnalysisDependency]
  * @property updateTracker Tracker for analysis updates
  * @property appScope Application-level coroutine scope
  */
@@ -25,9 +24,9 @@ import javax.inject.Inject
 internal class EmailPreviewsScreenViewModel
     @Inject
     constructor(
-        @MessageAnalysesRepository(MessageType.Email)
+        @MessageAnalysisDependency(MessageType.Email)
         repository: AnalysesRepository<AnalyzeMessage, MessageAnalysis>,
-        @MessageAnalysisUpdateTracker(MessageType.Email)
+        @MessageAnalysisDependency(MessageType.Email)
         updateTracker: AnalysisUpdateTracker<MessageAnalysis>,
         @ApplicationScope appScope: CoroutineScope
     ) : PreviewsScreenViewModel<MessageAnalysis>(repository, updateTracker, appScope) {

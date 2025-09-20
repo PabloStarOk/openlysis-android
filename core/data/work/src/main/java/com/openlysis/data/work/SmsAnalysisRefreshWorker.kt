@@ -16,8 +16,7 @@ import com.openlysis.core.network.AppDispatcher
 import com.openlysis.core.network.di.Dispatcher
 import com.openlysis.core.outcome.NetworkError
 import com.openlysis.core.outcome.Outcome
-import com.openlysis.data.analysis.di.MessageAnalysesRepository
-import com.openlysis.data.analysis.di.MessageAnalysisUpdateTracker
+import com.openlysis.data.analysis.di.MessageAnalysisDependency
 import com.openlysis.data.analysis.model.analysis.AnalysisStatus
 import com.openlysis.data.analysis.model.common.Verdict
 import com.openlysis.data.analysis.model.message.MessageAnalysis
@@ -59,9 +58,9 @@ class SmsAnalysisRefreshWorker
         @Assisted context: Context,
         @Assisted workerParameters: WorkerParameters,
         @Dispatcher(AppDispatcher.IO) private val coroutineDispatcher: CoroutineDispatcher,
-        @MessageAnalysesRepository(MessageType.Sms)
+        @MessageAnalysisDependency(MessageType.Sms)
         private val smsRepository: AnalysesRepository<AnalyzeMessage, MessageAnalysis>,
-        @MessageAnalysisUpdateTracker(MessageType.Sms)
+        @MessageAnalysisDependency(MessageType.Sms)
         private val updateTracker: AnalysisUpdateTracker<MessageAnalysis>,
         private val notifier: Notifier
     ) : CoroutineWorker(context, workerParameters) {

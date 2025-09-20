@@ -16,7 +16,7 @@ import com.openlysis.core.link.DeepLinks
 import com.openlysis.core.network.AppDispatcher
 import com.openlysis.core.network.di.Dispatcher
 import com.openlysis.core.outcome.Outcome
-import com.openlysis.data.analysis.di.MessageAnalysesRepository
+import com.openlysis.data.analysis.di.MessageAnalysisDependency
 import com.openlysis.data.analysis.model.analysis.AnalysisStatus
 import com.openlysis.data.analysis.model.common.AnalysisSettings
 import com.openlysis.data.analysis.model.common.Verdict
@@ -50,7 +50,7 @@ class SmsAnalysisStartWorker
         @Assisted context: Context,
         @Assisted workerParameters: WorkerParameters,
         @Dispatcher(AppDispatcher.IO) private val coroutineDispatcher: CoroutineDispatcher,
-        @MessageAnalysesRepository(MessageType.Sms)
+        @MessageAnalysisDependency(MessageType.Sms)
         private val smsRepository: AnalysesRepository<AnalyzeMessage, MessageAnalysis>,
         private val analysisSettings: AnalysisSettings,
         private val notifier: Notifier

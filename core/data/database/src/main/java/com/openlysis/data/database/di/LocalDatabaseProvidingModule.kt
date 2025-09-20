@@ -2,8 +2,7 @@ package com.openlysis.data.database.di
 
 import android.content.Context
 import androidx.room.Room
-import com.openlysis.data.analysis.di.EmailAnalysesLocalDataSource
-import com.openlysis.data.analysis.di.SmsAnalysesLocalDataSource
+import com.openlysis.data.analysis.di.MessageAnalysisDependency
 import com.openlysis.data.analysis.model.analysis.FileMultiAnalysis
 import com.openlysis.data.analysis.model.analysis.UrlMultiAnalysis
 import com.openlysis.data.analysis.model.message.MessageAnalysis
@@ -167,7 +166,7 @@ internal object LocalDatabaseProvidingModule {
             )
         }
 
-    @EmailAnalysesLocalDataSource
+    @MessageAnalysisDependency(MessageType.Email)
     @Singleton
     @Provides
     fun provideEmailAnalysisLocalDs(
@@ -188,7 +187,7 @@ internal object LocalDatabaseProvidingModule {
             analysisDao = analysisDao
         )
 
-    @SmsAnalysesLocalDataSource
+    @MessageAnalysisDependency(MessageType.Sms)
     @Singleton
     @Provides
     fun provideSmsAnalysisLocalDs(

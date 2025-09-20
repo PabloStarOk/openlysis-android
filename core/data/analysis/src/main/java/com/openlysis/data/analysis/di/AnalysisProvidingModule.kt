@@ -20,26 +20,28 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 internal object AnalysisProvidingModule {
-    @MessageAnalysesRepository(MessageType.Email)
+    @MessageAnalysisDependency(MessageType.Email)
     @Singleton
     @Provides
     fun provideEmailAnalysesRepository(
-        @EmailAnalysesLocalDataSource localDs: AnalysesLocalDataSource<MessageAnalysis>,
-        @EmailAnalysesRemoteDataSource remoteDs:
-            AnalysesRemoteDataSource<AnalyzeMessage, MessageAnalysis>
+        @MessageAnalysisDependency(MessageType.Email)
+        localDs: AnalysesLocalDataSource<MessageAnalysis>,
+        @MessageAnalysisDependency(MessageType.Email)
+        remoteDs: AnalysesRemoteDataSource<AnalyzeMessage, MessageAnalysis>
     ): AnalysesRepository<AnalyzeMessage, MessageAnalysis> =
         DefaultAnalysesRepository(
             localDs = localDs,
             remoteDs = remoteDs
         )
 
-    @MessageAnalysesRepository(MessageType.Sms)
+    @MessageAnalysisDependency(MessageType.Sms)
     @Singleton
     @Provides
     fun provideSmsAnalysesRepository(
-        @SmsAnalysesLocalDataSource localDs: AnalysesLocalDataSource<MessageAnalysis>,
-        @SmsAnalysesRemoteDataSource remoteDs:
-            AnalysesRemoteDataSource<AnalyzeMessage, MessageAnalysis>
+        @MessageAnalysisDependency(MessageType.Sms)
+        localDs: AnalysesLocalDataSource<MessageAnalysis>,
+        @MessageAnalysisDependency(MessageType.Sms)
+        remoteDs: AnalysesRemoteDataSource<AnalyzeMessage, MessageAnalysis>
     ): AnalysesRepository<AnalyzeMessage, MessageAnalysis> =
         DefaultAnalysesRepository(
             localDs = localDs,

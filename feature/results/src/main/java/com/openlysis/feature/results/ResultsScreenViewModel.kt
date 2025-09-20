@@ -3,7 +3,7 @@ package com.openlysis.feature.results
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.openlysis.core.outcome.Outcome
-import com.openlysis.data.analysis.di.MessageAnalysesRepository
+import com.openlysis.data.analysis.di.MessageAnalysisDependency
 import com.openlysis.data.analysis.model.analysis.AnalysisStatus
 import com.openlysis.data.analysis.model.analysis.FileMultiAnalysis
 import com.openlysis.data.analysis.model.analysis.MultiAnalysis
@@ -34,9 +34,9 @@ import javax.inject.Inject
 internal class ResultsScreenViewModel
     @Inject
     constructor(
-        @MessageAnalysesRepository(MessageType.Email)
+        @MessageAnalysisDependency(MessageType.Email)
         private val emailAnalysisRepo: AnalysesRepository<AnalyzeMessage, MessageAnalysis>,
-        @MessageAnalysesRepository(MessageType.Sms)
+        @MessageAnalysisDependency(MessageType.Sms)
         private val smsAnalysisRepo: AnalysesRepository<AnalyzeMessage, MessageAnalysis>,
         private val fileAnalysisRepo: AnalysesRepository<AnalyzeFile, FileMultiAnalysis>,
         private val urlAnalysisRepo: AnalysesRepository<AnalyzeUrl, UrlMultiAnalysis>
