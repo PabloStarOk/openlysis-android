@@ -2,7 +2,7 @@ package com.openlysis.feature.tools
 
 import androidx.lifecycle.viewModelScope
 import com.openlysis.core.outcome.Outcome
-import com.openlysis.data.analysis.di.EmailAnalysesRepository
+import com.openlysis.data.analysis.di.MessageAnalysesRepository
 import com.openlysis.data.analysis.model.common.AnalysisSettings
 import com.openlysis.data.analysis.model.message.MessageAnalysis
 import com.openlysis.data.analysis.model.message.MessageType
@@ -40,8 +40,8 @@ internal class EmailAnalysisToolScreenViewModel
         private val analysisSettings: AnalysisSettings,
         val attachmentSettings: FileAttachmentSettings,
         private val attachmentFactory: AttachmentFactory,
-        @EmailAnalysesRepository private val emailRepository:
-            AnalysesRepository<AnalyzeMessage, MessageAnalysis>
+        @MessageAnalysesRepository(MessageType.Email)
+        private val emailRepository: AnalysesRepository<AnalyzeMessage, MessageAnalysis>
     ) : AnalysisToolScreenViewModel() {
         private val _uiState =
             MutableStateFlow<EmailAnalysisToolUiState>(EmailAnalysisToolUiState())

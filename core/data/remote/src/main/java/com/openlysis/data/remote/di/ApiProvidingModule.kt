@@ -7,10 +7,9 @@ import com.openlysis.core.network.AppDispatcher
 import com.openlysis.core.network.di.ApplicationScope
 import com.openlysis.core.network.di.Dispatcher
 import com.openlysis.data.analysis.di.EmailAnalysesRemoteDataSource
-import com.openlysis.data.analysis.di.EmailAnalysesRepository
+import com.openlysis.data.analysis.di.MessageAnalysesRepository
 import com.openlysis.data.analysis.di.MessageAnalysisUpdateTracker
 import com.openlysis.data.analysis.di.SmsAnalysesRemoteDataSource
-import com.openlysis.data.analysis.di.SmsAnalysesRepository
 import com.openlysis.data.analysis.model.analysis.AnalysisStatus
 import com.openlysis.data.analysis.model.analysis.FileMultiAnalysis
 import com.openlysis.data.analysis.model.analysis.UrlMultiAnalysis
@@ -181,7 +180,8 @@ internal object ApiProvidingModule {
     @Provides
     fun provideEmailAnalysisUpdateTracker(
         connectionProvider: SignalRConnectionProvider,
-        @EmailAnalysesRepository repository: AnalysesRepository<AnalyzeMessage, MessageAnalysis>,
+        @MessageAnalysesRepository(MessageType.Email)
+        repository: AnalysesRepository<AnalyzeMessage, MessageAnalysis>,
         @ApplicationScope appScope: CoroutineScope
     ): AnalysisUpdateTracker<MessageAnalysis> =
         SignalRAnalysisUpdateTracker(
@@ -200,7 +200,8 @@ internal object ApiProvidingModule {
     @Provides
     fun provideSmsAnalysisUpdateTracker(
         connectionProvider: SignalRConnectionProvider,
-        @SmsAnalysesRepository repository: AnalysesRepository<AnalyzeMessage, MessageAnalysis>,
+        @MessageAnalysesRepository(MessageType.Sms)
+        repository: AnalysesRepository<AnalyzeMessage, MessageAnalysis>,
         @ApplicationScope appScope: CoroutineScope
     ): AnalysisUpdateTracker<MessageAnalysis> =
         SignalRAnalysisUpdateTracker(

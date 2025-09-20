@@ -4,7 +4,7 @@ import android.net.Uri
 import androidx.lifecycle.SavedStateHandle
 import com.openlysis.core.link.DeepLinks
 import com.openlysis.core.outcome.Outcome
-import com.openlysis.data.analysis.di.SmsAnalysesRepository
+import com.openlysis.data.analysis.di.MessageAnalysesRepository
 import com.openlysis.data.analysis.model.common.AnalysisSettings
 import com.openlysis.data.analysis.model.message.MessageAnalysis
 import com.openlysis.data.analysis.model.message.MessageType
@@ -31,8 +31,8 @@ internal class SmsAnalysisToolScreenViewModel
     constructor(
         savedStateHandle: SavedStateHandle,
         private val analysisSettings: AnalysisSettings,
-        @SmsAnalysesRepository private val smsRepository:
-            AnalysesRepository<AnalyzeMessage, MessageAnalysis>
+        @MessageAnalysesRepository(MessageType.Sms)
+        private val smsRepository: AnalysesRepository<AnalyzeMessage, MessageAnalysis>
     ) : AnalysisToolScreenViewModel() {
         private val _uiState = MutableStateFlow(SmsAnalysisToolUiState())
         val uiState = _uiState.asStateFlow()

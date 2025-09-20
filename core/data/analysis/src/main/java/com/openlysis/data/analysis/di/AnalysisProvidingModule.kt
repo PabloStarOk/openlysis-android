@@ -1,6 +1,7 @@
 package com.openlysis.data.analysis.di
 
 import com.openlysis.data.analysis.model.message.MessageAnalysis
+import com.openlysis.data.analysis.model.message.MessageType
 import com.openlysis.data.analysis.repository.AnalysesRepository
 import com.openlysis.data.analysis.repository.DefaultAnalysesRepository
 import com.openlysis.data.analysis.request.AnalyzeMessage
@@ -19,7 +20,7 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 internal object AnalysisProvidingModule {
-    @EmailAnalysesRepository
+    @MessageAnalysesRepository(MessageType.Email)
     @Singleton
     @Provides
     fun provideEmailAnalysesRepository(
@@ -32,7 +33,7 @@ internal object AnalysisProvidingModule {
             remoteDs = remoteDs
         )
 
-    @SmsAnalysesRepository
+    @MessageAnalysesRepository(MessageType.Sms)
     @Singleton
     @Provides
     fun provideSmsAnalysesRepository(

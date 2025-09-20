@@ -1,8 +1,8 @@
 package com.openlysis.feature.results
 
 import com.openlysis.core.network.di.ApplicationScope
+import com.openlysis.data.analysis.di.MessageAnalysesRepository
 import com.openlysis.data.analysis.di.MessageAnalysisUpdateTracker
-import com.openlysis.data.analysis.di.SmsAnalysesRepository
 import com.openlysis.data.analysis.model.message.MessageAnalysis
 import com.openlysis.data.analysis.model.message.MessageType
 import com.openlysis.data.analysis.repository.AnalysesRepository
@@ -26,7 +26,8 @@ import javax.inject.Inject
 internal class SmsPreviewsScreenViewModel
     @Inject
     constructor(
-        @SmsAnalysesRepository repository: AnalysesRepository<AnalyzeMessage, MessageAnalysis>,
+        @MessageAnalysesRepository(MessageType.Sms)
+        repository: AnalysesRepository<AnalyzeMessage, MessageAnalysis>,
         @MessageAnalysisUpdateTracker(MessageType.Sms)
         updateTracker: AnalysisUpdateTracker<MessageAnalysis>,
         @ApplicationScope appScope: CoroutineScope

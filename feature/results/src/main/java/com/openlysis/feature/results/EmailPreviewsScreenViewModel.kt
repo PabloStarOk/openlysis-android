@@ -1,7 +1,7 @@
 package com.openlysis.feature.results
 
 import com.openlysis.core.network.di.ApplicationScope
-import com.openlysis.data.analysis.di.EmailAnalysesRepository
+import com.openlysis.data.analysis.di.MessageAnalysesRepository
 import com.openlysis.data.analysis.di.MessageAnalysisUpdateTracker
 import com.openlysis.data.analysis.model.message.MessageAnalysis
 import com.openlysis.data.analysis.model.message.MessageType
@@ -25,7 +25,8 @@ import javax.inject.Inject
 internal class EmailPreviewsScreenViewModel
     @Inject
     constructor(
-        @EmailAnalysesRepository repository: AnalysesRepository<AnalyzeMessage, MessageAnalysis>,
+        @MessageAnalysesRepository(MessageType.Email)
+        repository: AnalysesRepository<AnalyzeMessage, MessageAnalysis>,
         @MessageAnalysisUpdateTracker(MessageType.Email)
         updateTracker: AnalysisUpdateTracker<MessageAnalysis>,
         @ApplicationScope appScope: CoroutineScope

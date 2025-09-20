@@ -3,14 +3,14 @@ package com.openlysis.feature.results
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.openlysis.core.outcome.Outcome
-import com.openlysis.data.analysis.di.EmailAnalysesRepository
-import com.openlysis.data.analysis.di.SmsAnalysesRepository
+import com.openlysis.data.analysis.di.MessageAnalysesRepository
 import com.openlysis.data.analysis.model.analysis.AnalysisStatus
 import com.openlysis.data.analysis.model.analysis.FileMultiAnalysis
 import com.openlysis.data.analysis.model.analysis.MultiAnalysis
 import com.openlysis.data.analysis.model.analysis.UrlMultiAnalysis
 import com.openlysis.data.analysis.model.common.Verdict
 import com.openlysis.data.analysis.model.message.MessageAnalysis
+import com.openlysis.data.analysis.model.message.MessageType
 import com.openlysis.data.analysis.repository.AnalysesRepository
 import com.openlysis.data.analysis.request.AnalyzeFile
 import com.openlysis.data.analysis.request.AnalyzeMessage
@@ -34,10 +34,10 @@ import javax.inject.Inject
 internal class ResultsScreenViewModel
     @Inject
     constructor(
-        @EmailAnalysesRepository private val emailAnalysisRepo:
-            AnalysesRepository<AnalyzeMessage, MessageAnalysis>,
-        @SmsAnalysesRepository private val smsAnalysisRepo:
-            AnalysesRepository<AnalyzeMessage, MessageAnalysis>,
+        @MessageAnalysesRepository(MessageType.Email)
+        private val emailAnalysisRepo: AnalysesRepository<AnalyzeMessage, MessageAnalysis>,
+        @MessageAnalysesRepository(MessageType.Sms)
+        private val smsAnalysisRepo: AnalysesRepository<AnalyzeMessage, MessageAnalysis>,
         private val fileAnalysisRepo: AnalysesRepository<AnalyzeFile, FileMultiAnalysis>,
         private val urlAnalysisRepo: AnalysesRepository<AnalyzeUrl, UrlMultiAnalysis>
     ) : ViewModel() {
