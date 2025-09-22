@@ -47,13 +47,13 @@ internal abstract class DetailsScreenViewModel<TModel : Model>(
             when (outcome) {
                 is Outcome.Success -> {
                     val analysis = outcome.value
-                    val isUpdatable = analysis.isUpdatable()
-                    if (isUpdatable) reactToTrackerEvents(analysis)
+                    val isRefreshable = analysis.isRefreshable()
+                    if (isRefreshable) reactToTrackerEvents(analysis)
                     _uiState.update {
                         DetailsUiState.Success(
                             analysis,
-                            isRefreshing = updateTracker.isTracking.value,
-                            isUpdatable
+                            isRefreshable,
+                            isRefreshing = updateTracker.isTracking.value
                         )
                     }
                 }
@@ -93,8 +93,8 @@ internal abstract class DetailsScreenViewModel<TModel : Model>(
         _uiState.update {
             DetailsUiState.Success(
                 analysis,
-                isRefreshing = updateTracker.isTracking.value,
-                analysis.isUpdatable()
+                isRefreshable = analysis.isRefreshable(),
+                isRefreshing = updateTracker.isTracking.value
             )
         }
     }
@@ -108,7 +108,7 @@ internal abstract class DetailsScreenViewModel<TModel : Model>(
         }
     }
 
-    private fun TModel.isUpdatable(): Boolean {
+    private fun TModel.isRefreshable(): Boolean {
         val status = getStatus(this)
         return status == AnalysisStatus.Queued || status == AnalysisStatus.InProgress
     }

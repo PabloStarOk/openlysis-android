@@ -3,22 +3,24 @@ package com.openlysis.feature.results.components.detail
 import android.text.format.DateFormat
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.expandVertically
+import androidx.compose.animation.animateColor
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.updateTransition
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
-import androidx.compose.animation.shrinkVertically
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -28,13 +30,13 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -42,7 +44,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
@@ -102,33 +107,39 @@ internal fun <TResult : Model> DetailsScreenScaffold(
     }
 
     val scrollState = rememberScrollState()
-    val shouldShowRefreshingBar by remember(uiState, data) {
+    val showStatusBar by remember(uiState, data) {
         derivedStateOf {
-            uiState is DetailsUiState.Success &&
-                uiState.isRefreshing &&
-                data?.status == AnalysisStatus.Queued ||
-                data?.status == AnalysisStatus.InProgress
+            uiState is DetailsUiState.Success && uiState.isRefreshable
         }
     }
-    var isRefreshingBarVisible by rememberSaveable { mutableStateOf(false) }
-    LaunchedEffect(shouldShowRefreshingBar) {
-        if (shouldShowRefreshingBar) {
-            isRefreshingBarVisible = true
-        } else {
-            delay(5000)
-            isRefreshingBarVisible = false
+    val statusBarExitDelay = 5000
+    var statusBarReservedHeight by rememberSaveable(showStatusBar) {
+        mutableIntStateOf(0)
+    }
+    val refreshingError by remember(uiState) {
+        derivedStateOf {
+            showStatusBar &&
+                uiState is DetailsUiState.Success && !uiState.isRefreshing
         }
     }
 
-    Column {
+    LaunchedEffect(showStatusBar) {
+        if (!showStatusBar) {
+            delay(statusBarExitDelay.toLong())
+            statusBarReservedHeight = 0
+        }
+    }
+
+    Box(modifier = modifier) {
         Column(
             verticalArrangement = Arrangement.spacedBy(LocalAppSpacing.current.value800),
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier =
-                modifier
+                Modifier
                     .verticalScroll(scrollState)
                     .padding(LocalAppSpacing.current.value400)
-                    .weight(1f)
+                    .fillMaxHeight(1f)
+                    .padding()
         ) {
             if (uiState is DetailsUiState.Loading) {
                 Box(
@@ -206,18 +217,35 @@ internal fun <TResult : Model> DetailsScreenScaffold(
             }
 
             content(uiState.analysis)
+
+            Spacer(
+                modifier =
+                    modifier
+                        .animateContentSize(animationSpec = tween(300))
+                        .height(with(LocalDensity.current) { statusBarReservedHeight.toDp() })
+            )
         }
 
-        if (data == null) return@Column
+        if (data == null) return@Box
 
         AnimatedVisibility(
-            visible = isRefreshingBarVisible,
-            enter = expandVertically() + slideInVertically(initialOffsetY = { -it }),
-            exit = shrinkVertically() + slideOutVertically(targetOffsetY = { it })
+            visible = showStatusBar,
+            enter = fadeIn(tween(300)) + scaleIn(tween(400)),
+            exit =
+                fadeOut(tween(300, delayMillis = statusBarExitDelay)) +
+                    scaleOut(tween(400, delayMillis = statusBarExitDelay)),
+            modifier =
+                Modifier
+                    .padding(LocalAppSpacing.current.value400)
+                    .align(Alignment.BottomCenter)
         ) {
-            RefreshingIndicationBar(
+            StatusIndicationBar(
                 status = data.status,
-                modifier = Modifier.fillMaxWidth()
+                refreshingError = refreshingError,
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .onSizeChanged { statusBarReservedHeight = it.height }
             )
         }
     }
@@ -380,70 +408,110 @@ private fun HeroInformationCard(
 }
 
 @Composable
-private fun RefreshingIndicationBar(
+private fun StatusIndicationBar(
     status: AnalysisStatus,
+    refreshingError: Boolean,
     modifier: Modifier = Modifier
 ) {
+    val shape = RoundedCornerShape(LocalAppRadius.current.value100)
     val isFinished = status != AnalysisStatus.Queued && status != AnalysisStatus.InProgress
     val textResourceId =
-        if (isFinished) {
-            R.string.details_screen_refreshing_status_completed
-        } else {
-            R.string.details_screen_refreshing_status_in_progress
+        when {
+            refreshingError -> R.string.details_screen_refreshing_status_error
+            isFinished -> R.string.details_screen_refreshing_status_completed
+            else -> R.string.details_screen_refreshing_status_in_progress
         }
+    val transition =
+        updateTransition(Pair(isFinished, refreshingError), "Analysis details status bar")
+    val backgroundColor by
+        transition.animateColor(
+            transitionSpec = { tween(300) },
+            label = "Analysis details status bar background color"
+        ) { (finished, refreshingError) ->
+            when {
+                refreshingError -> LocalAppColorScheme.current.background.warning.tertiary
+                finished -> LocalAppColorScheme.current.background.brand.tertiary
+                else -> LocalAppColorScheme.current.background.default.primary
+            }
+        }
+    val borderColor by
+        transition.animateColor(
+            transitionSpec = { tween(300) },
+            label = "Analysis details status bar border color"
+        ) { (_, refreshingError) ->
+            when {
+                refreshingError -> LocalAppColorScheme.current.border.warning.primary
+                else -> LocalAppColorScheme.current.border.brand.primary
+            }
+        }
+    val foregroundColor by transition.animateColor(
+        transitionSpec = { tween(300) },
+        label = "Analysis details status bar foreground color"
+    ) { (_, refreshingError) ->
+        when {
+            refreshingError -> LocalAppColorScheme.current.text.warning.primary
+            else -> LocalAppColorScheme.current.text.brand.primary
+        }
+    }
 
-    Column(
-        modifier = modifier
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(space = LocalAppSpacing.current.value200),
+        verticalAlignment = Alignment.CenterVertically,
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .graphicsLayer(
+                    shadowElevation = with(LocalDensity.current) { 4.dp.toPx() },
+                    shape = shape,
+                    clip = false
+                ).background(color = backgroundColor, shape = shape)
+                .border(
+                    width = 1.dp,
+                    color = borderColor,
+                    shape = shape
+                ).padding(LocalAppSpacing.current.value300)
     ) {
-        HorizontalDivider(
-            thickness = 1.dp,
-            color = LocalAppColorScheme.current.border.default.primary
+        Text(
+            text = stringResource(textResourceId),
+            style = LocalAppTypography.current.bodyBase,
+            color = foregroundColor,
+            modifier = Modifier.weight(1f)
         )
 
-        Row(
-            horizontalArrangement =
-                Arrangement.spacedBy(
-                    space = LocalAppSpacing.current.value200,
-                    alignment = Alignment.CenterHorizontally
-                ),
-            verticalAlignment = Alignment.CenterVertically,
-            modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .background(
-                        color = LocalAppColorScheme.current.background.default.primary
-                    ).padding(LocalAppSpacing.current.value300)
-        ) {
-            Text(
-                text = stringResource(textResourceId),
-                style = LocalAppTypography.current.bodyBase,
-                color = LocalAppColorScheme.current.text.brand.primary
-            )
-
-            AnimatedContent(
-                targetState = isFinished,
-                transitionSpec = {
-                    scaleIn() + fadeIn() togetherWith
-                        fadeOut() + scaleOut()
-                }
-            ) { targetState ->
-                if (targetState) {
+        AnimatedContent(
+            targetState = Pair(isFinished, refreshingError),
+            transitionSpec = {
+                scaleIn() + fadeIn() togetherWith
+                    fadeOut() + scaleOut()
+            }
+        ) { (finished, refreshingError) ->
+            when {
+                refreshingError ->
+                    Icon(
+                        imageVector = AppIcons.CloudOff,
+                        contentDescription =
+                            stringResource(
+                                R.string.details_screen_refreshing_status_error_icon_alt
+                            ),
+                        tint = foregroundColor,
+                        modifier = Modifier.size(24.dp)
+                    )
+                finished ->
                     Icon(
                         imageVector = AppIcons.Check,
                         contentDescription =
                             stringResource(
                                 R.string.details_screen_refreshing_status_completed_icon_alt
                             ),
-                        tint = LocalAppColorScheme.current.icon.positive.primary,
-                        modifier = Modifier.size(25.dp)
+                        tint = foregroundColor,
+                        modifier = Modifier.size(24.dp)
                     )
-                } else {
+                else ->
                     CircularProgressIndicator(
                         color = LocalAppColorScheme.current.icon.brand.primary,
                         trackColor = LocalAppColorScheme.current.border.default.primary,
-                        modifier = Modifier.size(25.dp)
+                        modifier = Modifier.size(24.dp)
                     )
-                }
             }
         }
     }

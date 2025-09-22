@@ -146,8 +146,10 @@
     <string name="details_screen_threat_score_help">Indicates how dangerous the analyzed data could be if it is malicious.</string>
 
     <string name="details_screen_refreshing_status_in_progress">Refreshing analysis</string>
-    <string name="details_screen_refreshing_status_completed">Analysis completed</string>
+    <string name="details_screen_refreshing_status_completed">Analysis finished</string>
+    <string name="details_screen_refreshing_status_error">Cannot refresh right now</string>
     <string name="details_screen_refreshing_status_completed_icon_alt">Checkmark icon indicating the completion of the analysis</string>
+    <string name="details_screen_refreshing_status_error_icon_alt">Cloud icon with a slash indicating that the analysis is not being refreshed due to a network issue</string>
 
     <string name="details_section_accordion_expand_label">Tap to expand the section</string>
     <string name="details_section_accordion_collapse_label">Tap to collapse the section</string>
