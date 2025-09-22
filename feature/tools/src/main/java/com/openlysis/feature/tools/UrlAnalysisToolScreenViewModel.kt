@@ -38,9 +38,10 @@ internal class UrlAnalysisToolScreenViewModel
          */
         fun updateUrl(url: String) {
             _uiState.update {
-                val isValidUrl = Patterns.WEB_URL.matcher(url).matches()
+                val cleanUrl = url.trim()
+                val isValidUrl = Patterns.WEB_URL.matcher(cleanUrl).matches()
                 it.copy(
-                    url = url,
+                    url = cleanUrl,
                     isValidUrl = isValidUrl,
                     canRequestAnalysis = isValidUrl
                 )

@@ -87,7 +87,7 @@ internal class AuthScreenViewModel
          * @param email The new email address entered by the user.
          */
         fun updateEmail(email: String) {
-            _uiState.update { it.copy(email = email) }
+            _uiState.update { it.copy(email = email.trim()) }
         }
 
         /**
