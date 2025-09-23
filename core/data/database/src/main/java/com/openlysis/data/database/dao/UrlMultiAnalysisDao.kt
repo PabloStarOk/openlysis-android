@@ -18,9 +18,9 @@ internal interface UrlMultiAnalysisDao :
     QueueDao,
     RetrievalDao<UrlMultiAnalysis> {
     /**
-     * Deletes the oldest [UrlMultiAnalysisEntity] records that have a parent and are not in `Queued` or `InProgress` status.
+     * Deletes the oldest [UrlMultiAnalysisEntity] records that does not have a parent.
      *
-     * The deletion is based on the minimum `createdAt` timestamp. Only entities with `hasParent = 1` and a status other than `Queued` or `InProgress` are considered.
+     * The deletion is based on the minimum `createdAt` timestamp. Only entities with `hasParent = 0` are considered.
      *
      * @param limit The maximum number of entities to delete.
      */
@@ -30,8 +30,7 @@ internal interface UrlMultiAnalysisDao :
             WHERE id IN (
                         SELECT id 
                         FROM UrlMultiAnalysisEntity
-                        WHERE hasParent = 1 
-                        AND lower(status) NOT IN (lower("Queued"), lower("InProgress"))
+                        WHERE hasParent = 0
                         ORDER BY createdAt ASC
                         LIMIT :limit
             )

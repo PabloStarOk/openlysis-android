@@ -19,9 +19,9 @@ internal interface EmailMultiReputationDao :
     QueueDao,
     RetrievalDao<MultiReputation<EmailAddressReputation>> {
     /**
-     * Deletes the oldest [MultiReputationEntity] records that have a parent and match the email data type.
+     * Deletes the oldest [MultiReputationEntity] records that does not have a parent and match the email data type.
      *
-     * The oldest entities are determined by the minimum `createdAt` value. Only entities with `dataType = "EmailAddress"` and `hasParent = 1` are considered.
+     * The oldest entities are determined by the minimum `createdAt` value. Only entities with `dataType = "EmailAddress"` and `hasParent = 0` are considered.
      *
      * @param limit The maximum number of entities to delete.
      */
@@ -32,7 +32,7 @@ internal interface EmailMultiReputationDao :
                         SELECT id 
                         FROM MultiReputationEntity
                         WHERE dataType IS "EmailAddress" 
-                        AND hasParent = 1
+                        AND hasParent = 0
                         ORDER BY createdAt ASC
                         LIMIT :limit
                         )

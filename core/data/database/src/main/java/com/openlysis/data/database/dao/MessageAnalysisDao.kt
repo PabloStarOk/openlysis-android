@@ -18,9 +18,9 @@ internal interface MessageAnalysisDao :
     ExistsDao,
     QueueDao {
     /**
-     * Deletes the oldest [MessageAnalysisEntity] records that are not in `Queued` or `InProgress` status.
+     * Deletes the oldest [MessageAnalysisEntity] records.
      *
-     * The deletion is based on the minimum `createdAt` timestamp. Only entities with a status other than `Queued` or `InProgress` are considered.
+     * The deletion is based on the minimum `createdAt` timestamp.
      *
      * @param limit The maximum number of entities to delete.
      */
@@ -30,7 +30,6 @@ internal interface MessageAnalysisDao :
             WHERE id IN (
                         SELECT id 
                         FROM MessageAnalysisEntity
-                        WHERE lower(status) NOT IN (lower("Queued"), lower("InProgress"))
                         ORDER BY createdAt ASC
                         LIMIT :limit
             )
