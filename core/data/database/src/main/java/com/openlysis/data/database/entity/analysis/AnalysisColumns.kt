@@ -7,6 +7,7 @@ import com.openlysis.data.analysis.model.common.Verdict
 /**
  * Shared entity columns representing a single analysis result for a file or URL.
  *
+ * @property id The ID of the analysis.
  * @property serviceName The name of the analysis service.
  * @property status The [AnalysisStatus] of the analysis.
  * @property verdict The [Verdict] of the analysis.
@@ -14,6 +15,7 @@ import com.openlysis.data.analysis.model.common.Verdict
  * @property multiAnalysisId The ID of the parent multi-analysis entity.
  */
 internal data class AnalysisColumns(
+    val id: String,
     val serviceName: String,
     val status: AnalysisStatus,
     val verdict: Verdict,
@@ -23,10 +25,9 @@ internal data class AnalysisColumns(
     /**
      * Converts this entity to a [Analysis] model.
      *
-     * @param id The unique identifier for the analysis.
      * @return The [Analysis] model.
      */
-    fun convertToModel(id: String): Analysis =
+    fun convertToModel(): Analysis =
         Analysis(
             id = id,
             serviceName = serviceName,
@@ -48,6 +49,7 @@ internal data class AnalysisColumns(
             multiAnalysisId: String
         ): AnalysisColumns =
             AnalysisColumns(
+                id = model.id,
                 serviceName = model.serviceName,
                 status = model.status,
                 verdict = model.verdict,

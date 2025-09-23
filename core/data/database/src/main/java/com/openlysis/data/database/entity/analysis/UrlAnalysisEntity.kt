@@ -4,16 +4,15 @@ import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
-import androidx.room.PrimaryKey
 import com.openlysis.data.analysis.model.analysis.Analysis
 
 /**
  * Entity representing a single analysis result for a URL.
  *
- * @property id Unique identifier for the analysis.
  * @property columns The [AnalysisColumns] containing analysis details and parent reference.
  */
 @Entity(
+    primaryKeys = ["multiAnalysisId", "id"],
     foreignKeys = [
         ForeignKey(
             UrlMultiAnalysisEntity::class,
@@ -26,7 +25,6 @@ import com.openlysis.data.analysis.model.analysis.Analysis
     indices = [Index("multiAnalysisId")]
 )
 internal data class UrlAnalysisEntity(
-    @PrimaryKey val id: String,
     @Embedded val columns: AnalysisColumns
 ) {
     /**
@@ -34,7 +32,7 @@ internal data class UrlAnalysisEntity(
      *
      * @return The [Analysis] model.
      */
-    fun convertToModel(): Analysis = columns.convertToModel(id)
+    fun convertToModel(): Analysis = columns.convertToModel()
 
     companion object {
         /**
@@ -48,7 +46,6 @@ internal data class UrlAnalysisEntity(
             model: Analysis,
             multiAnalysisId: String
         ) = UrlAnalysisEntity(
-            id = model.id,
             columns = AnalysisColumns.createFromModel(model, multiAnalysisId)
         )
     }

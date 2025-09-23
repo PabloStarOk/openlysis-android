@@ -2,14 +2,14 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "4167f2278ad2ab7a84a7c3643a67f506",
+    "identityHash": "ff7fc4aff92d4c0490bb94f63758fce6",
     "entities": [
       {
         "tableName": "UrlAnalysisEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `serviceName` TEXT NOT NULL, `status` TEXT NOT NULL, `verdict` TEXT NOT NULL, `threatScore` INTEGER, `multiAnalysisId` TEXT NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`multiAnalysisId`) REFERENCES `UrlMultiAnalysisEntity`(`id`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `serviceName` TEXT NOT NULL, `status` TEXT NOT NULL, `verdict` TEXT NOT NULL, `threatScore` INTEGER, `multiAnalysisId` TEXT NOT NULL, PRIMARY KEY(`multiAnalysisId`, `id`), FOREIGN KEY(`multiAnalysisId`) REFERENCES `UrlMultiAnalysisEntity`(`id`) ON UPDATE CASCADE ON DELETE CASCADE )",
         "fields": [
           {
-            "fieldPath": "id",
+            "fieldPath": "columns.id",
             "columnName": "id",
             "affinity": "TEXT",
             "notNull": true
@@ -47,6 +47,7 @@
         "primaryKey": {
           "autoGenerate": false,
           "columnNames": [
+            "multiAnalysisId",
             "id"
           ]
         },
@@ -77,10 +78,10 @@
       },
       {
         "tableName": "FileAnalysisEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `serviceName` TEXT NOT NULL, `status` TEXT NOT NULL, `verdict` TEXT NOT NULL, `threatScore` INTEGER, `multiAnalysisId` TEXT NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`multiAnalysisId`) REFERENCES `FileMultiAnalysisEntity`(`id`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `serviceName` TEXT NOT NULL, `status` TEXT NOT NULL, `verdict` TEXT NOT NULL, `threatScore` INTEGER, `multiAnalysisId` TEXT NOT NULL, PRIMARY KEY(`multiAnalysisId`, `id`), FOREIGN KEY(`multiAnalysisId`) REFERENCES `FileMultiAnalysisEntity`(`id`) ON UPDATE CASCADE ON DELETE CASCADE )",
         "fields": [
           {
-            "fieldPath": "id",
+            "fieldPath": "columns.id",
             "columnName": "id",
             "affinity": "TEXT",
             "notNull": true
@@ -118,6 +119,7 @@
         "primaryKey": {
           "autoGenerate": false,
           "columnNames": [
+            "multiAnalysisId",
             "id"
           ]
         },
@@ -711,7 +713,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '4167f2278ad2ab7a84a7c3643a67f506')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'ff7fc4aff92d4c0490bb94f63758fce6')"
     ]
   }
 }

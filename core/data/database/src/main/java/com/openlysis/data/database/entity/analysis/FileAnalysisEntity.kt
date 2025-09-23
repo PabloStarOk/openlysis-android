@@ -4,16 +4,16 @@ import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
-import androidx.room.PrimaryKey
 import com.openlysis.data.analysis.model.analysis.Analysis
+import kotlin.uuid.ExperimentalUuidApi
 
 /**
  * Entity representing a single analysis result for a file.
  *
- * @property id Unique identifier for the analysis.
  * @property columns The [AnalysisColumns] containing analysis details and parent reference.
  */
 @Entity(
+    primaryKeys = ["multiAnalysisId", "id"],
     foreignKeys = [
         ForeignKey(
             FileMultiAnalysisEntity::class,
@@ -26,7 +26,6 @@ import com.openlysis.data.analysis.model.analysis.Analysis
     indices = [Index("multiAnalysisId")]
 )
 internal data class FileAnalysisEntity(
-    @PrimaryKey val id: String,
     @Embedded val columns: AnalysisColumns
 ) {
     /**
@@ -34,7 +33,7 @@ internal data class FileAnalysisEntity(
      *
      * @return The [Analysis] model.
      */
-    fun convertToModel(): Analysis = columns.convertToModel(id)
+    fun convertToModel(): Analysis = columns.convertToModel()
 
     companion object {
         /**
@@ -44,11 +43,11 @@ internal data class FileAnalysisEntity(
          * @param multiAnalysisId The parent multi-analysis ID.
          * @return The [FileAnalysisEntity] entity.
          */
+        @OptIn(ExperimentalUuidApi::class)
         fun createFromModel(
             model: Analysis,
             multiAnalysisId: String
         ) = FileAnalysisEntity(
-            id = model.id,
             columns = AnalysisColumns.createFromModel(model, multiAnalysisId)
         )
     }
