@@ -2,7 +2,7 @@ package com.openlysis.data.database.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
-import androidx.room.Update
+import androidx.room.Upsert
 
 /**
  * Generic DAO interface for Room database operations on entities.
@@ -21,10 +21,10 @@ internal interface EntityDao<TEntity>
     suspend fun add(vararg entities: TEntity)
 
     /**
-     * Updates one or more entities in the database.
+     * Updates or inserts one or more entities in the database.
      *
-     * @param entities The entities to update.
+     * @param entities The entities to update or insert.
      */
-    @Update
-    suspend fun update(vararg entities: TEntity)
+    @Upsert
+    suspend fun upsert(vararg entities: TEntity)
 }

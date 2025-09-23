@@ -70,13 +70,13 @@ internal class PhoneMultiReputationsLocalDataSource
          * @param parentId The parent entity ID, or `null` if not applicable.
          * @param models The list of [MultiReputation]<[PhoneNumberReputation]> to update.
          */
-        override suspend fun update(
+        override suspend fun upsert(
             parentId: String?,
             models: List<MultiReputation<PhoneNumberReputation>>
         ) {
             val (reputationEntities, multiReputationEntities) = convertToEntities(parentId, models)
-            multiReputationDao.update(*multiReputationEntities)
-            phoneReputationDao.update(*reputationEntities)
+            multiReputationDao.upsert(*multiReputationEntities)
+            phoneReputationDao.upsert(*reputationEntities)
 
             if (Log.isLoggable(LOG_TAG, Log.DEBUG)) {
                 Log.d(

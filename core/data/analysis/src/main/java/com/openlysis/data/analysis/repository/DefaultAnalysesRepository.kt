@@ -53,11 +53,7 @@ internal class DefaultAnalysesRepository<TRequest, TModel>
 
         if (outcome is Outcome.Success) {
             val model = outcome.value
-            if (localDs.exists(model)) {
-                localDs.update(model)
-            } else {
-                localDs.save(model)
-            }
+            localDs.upsert(model)
         }
 
         return outcome
@@ -94,6 +90,6 @@ internal class DefaultAnalysesRepository<TRequest, TModel>
 
     override suspend fun updateLocally(model: TModel) {
         if (!localDs.exists(model)) return
-        localDs.update(model)
+        localDs.upsert(model)
     }
 }

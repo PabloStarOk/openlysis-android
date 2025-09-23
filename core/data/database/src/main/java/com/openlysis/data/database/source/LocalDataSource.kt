@@ -54,23 +54,6 @@ internal abstract class LocalDataSource<TModel>(
     }
 
     /**
-     * Updates a model in the local database.
-     *
-     * @param model The model to update.
-     */
-    override suspend fun update(model: TModel) {
-        if (!existsDao.exists(model.id)) {
-            Log.w(
-                LOG_TAG,
-                "Trying to update an entity that does not exist."
-            )
-            return
-        }
-
-        handleUpdate(model)
-    }
-
-    /**
      * Retrieves a model by its ID.
      *
      * @param id The unique identifier of the model.
@@ -113,13 +96,6 @@ internal abstract class LocalDataSource<TModel>(
      * @param model The model to save.
      */
     internal abstract suspend fun handleSave(model: TModel)
-
-    /**
-     * Handles the actual update logic for the model. Must be implemented by subclasses.
-     *
-     * @param model The model to update.
-     */
-    internal abstract suspend fun handleUpdate(model: TModel)
 
     /**
      * Retrieves a model by its ID from the local database.

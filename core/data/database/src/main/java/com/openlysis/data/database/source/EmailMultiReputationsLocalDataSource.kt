@@ -70,13 +70,13 @@ internal class EmailMultiReputationsLocalDataSource
          * @param parentId The parent entity ID, or `null` if not applicable.
          * @param models The list of [MultiReputation]<[EmailAddressReputation]> to update.
          */
-        override suspend fun update(
+        override suspend fun upsert(
             parentId: String?,
             models: List<MultiReputation<EmailAddressReputation>>
         ) {
             val (reputationEntities, multiReputationEntities) = convertToEntities(parentId, models)
-            multiReputationDao.update(*multiReputationEntities)
-            emailReputationDao.update(*reputationEntities)
+            multiReputationDao.upsert(*multiReputationEntities)
+            emailReputationDao.upsert(*reputationEntities)
 
             if (Log.isLoggable(LOG_TAG, Log.DEBUG)) {
                 Log.d(

@@ -92,23 +92,23 @@ internal class MessageAnalysesLocalDataSource
          *
          * @param model The [MessageAnalysis] to update.
          */
-        override suspend fun handleUpdate(model: MessageAnalysis) {
+        override suspend fun upsert(model: MessageAnalysis) {
             val entity = MessageAnalysisEntity.createFromModel(model)
 
-            analysisDao.update(entity)
-            urlDs.update(
+            analysisDao.upsert(entity)
+            urlDs.upsert(
                 parentId = model.id,
                 models = model.urlMultiAnalyses
             )
-            fileDs.update(
+            fileDs.upsert(
                 parentId = model.id,
                 models = model.fileMultiAnalyses
             )
-            emailDs.update(
+            emailDs.upsert(
                 parentId = model.id,
                 models = model.emailAddressMultiReputations
             )
-            phoneDs.update(
+            phoneDs.upsert(
                 parentId = model.id,
                 models = model.phoneNumberMultiReputations
             )

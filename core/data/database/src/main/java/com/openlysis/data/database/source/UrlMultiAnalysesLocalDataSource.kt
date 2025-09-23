@@ -68,13 +68,13 @@ internal class UrlMultiAnalysesLocalDataSource
          * @param parentId The parent entity ID, or `null` if not applicable.
          * @param models The list of [UrlMultiAnalysis] to update.
          */
-        override suspend fun update(
+        override suspend fun upsert(
             parentId: String?,
             models: List<UrlMultiAnalysis>
         ) {
             val (analysisEntities, multiAnalysisEntities) = convertToEntities(parentId, models)
-            multiAnalysisDao.update(*multiAnalysisEntities)
-            urlAnalysisDao.update(*analysisEntities)
+            multiAnalysisDao.upsert(*multiAnalysisEntities)
+            urlAnalysisDao.upsert(*analysisEntities)
 
             if (Log.isLoggable(LOG_TAG, Log.DEBUG)) {
                 Log.d(

@@ -17,11 +17,11 @@ interface AnalysesLocalDataSource<TModel> where TModel : Model {
     suspend fun save(model: TModel)
 
     /**
-     * Updates an existing model in the local data source.
+     * Inserts a new model or updates an existing one in the local data source.
      *
-     * @param model The model to update.
+     * @param model The model to upsert.
      */
-    suspend fun update(model: TModel)
+    suspend fun upsert(model: TModel)
 
     /**
      * Checks if a [TModel] exists in the local data source.

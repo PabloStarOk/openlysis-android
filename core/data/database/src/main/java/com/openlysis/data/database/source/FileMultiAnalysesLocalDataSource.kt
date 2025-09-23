@@ -68,13 +68,13 @@ internal class FileMultiAnalysesLocalDataSource
          * @param parentId The parent entity ID, or `null` if not applicable.
          * @param models The list of [FileMultiAnalysis] to update.
          */
-        override suspend fun update(
+        override suspend fun upsert(
             parentId: String?,
             models: List<FileMultiAnalysis>
         ) {
             val (analysisEntities, multiAnalysisEntities) = convertToEntities(parentId, models)
-            multiAnalysisDao.update(*multiAnalysisEntities)
-            fileAnalysisDao.update(*analysisEntities)
+            multiAnalysisDao.upsert(*multiAnalysisEntities)
+            fileAnalysisDao.upsert(*analysisEntities)
 
             if (Log.isLoggable(LOG_TAG, Log.DEBUG)) {
                 Log.d(

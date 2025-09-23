@@ -40,7 +40,7 @@ internal abstract class RelationalLocalDataSource<TModel>(
      * @param parentId The parent entity ID, or `null` if not applicable.
      * @param models The list of models to update.
      */
-    internal abstract suspend fun update(
+    internal abstract suspend fun upsert(
         parentId: String?,
         models: List<TModel>
     )
@@ -58,12 +58,12 @@ internal abstract class RelationalLocalDataSource<TModel>(
     }
 
     /**
-     * Handles updating a single model by delegating to [update] with a null parent ID.
+     * Handles updating a single model by delegating to [upsert] with a null parent ID.
      *
      * @param model The model instance to update.
      */
-    override suspend fun handleUpdate(model: TModel) {
-        update(
+    override suspend fun upsert(model: TModel) {
+        upsert(
             parentId = null,
             listOf(model)
         )
