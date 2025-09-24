@@ -3,6 +3,7 @@ package com.openlysis.data.remote.signalr
 import com.microsoft.signalr.HubConnection
 import com.microsoft.signalr.HubConnectionState
 import com.openlysis.core.network.AppDispatcher
+import com.openlysis.core.network.NetworkMonitor
 import com.openlysis.core.network.di.ApplicationScope
 import com.openlysis.core.network.di.Dispatcher
 import kotlinx.coroutines.CoroutineDispatcher
@@ -12,6 +13,9 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.distinctUntilChangedBy
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.rx3.await
 import kotlinx.coroutines.sync.Mutex
@@ -28,12 +32,14 @@ import kotlin.reflect.KClass
  * @param hubConnection The SignalR [HubConnection] instance to manage.
  * @param appScope The application-wide [CoroutineScope] for launching coroutines.
  * @param ioDispatcher The [CoroutineDispatcher] used for IO operations.
+ * @param networkMonitor The [NetworkMonitor] used to observe network connectivity changes.
  */
 internal class DefaultSignalRConnectionProvider(
     private val stopDelayMillis: Long,
     private val hubConnection: HubConnection,
     @ApplicationScope private val appScope: CoroutineScope,
-    @Dispatcher(AppDispatcher.IO) private val ioDispatcher: CoroutineDispatcher
+    @Dispatcher(AppDispatcher.IO) private val ioDispatcher: CoroutineDispatcher,
+    private val networkMonitor: NetworkMonitor
 ) : SignalRConnectionProvider {
     private val connectionMutex = Mutex()
     private val activeConnections = ConcurrentHashMap.newKeySet<SignalRHubMethod>()
@@ -51,6 +57,11 @@ internal class DefaultSignalRConnectionProvider(
             if (exception == null && closedIntentionally) return@onClosed
             _isAvailable.value = false
         }
+
+        networkMonitor.isOnline
+            .distinctUntilChangedBy { it }
+            .onEach(::onOnlineChange)
+            .launchIn(appScope)
     }
 
     override suspend fun <TDto : Any> connect(
@@ -58,7 +69,7 @@ internal class DefaultSignalRConnectionProvider(
         handler: (TDto) -> Unit,
         dtoClass: KClass<TDto>
     ) {
-        if (activeConnections.contains(hubMethod)) return
+        if (activeConnections.contains(hubMethod) || !_isAvailable.value) return
 
         hubConnection.on(hubMethod.name, handler, dtoClass.java)
         activeConnections.add(hubMethod)
@@ -106,5 +117,13 @@ internal class DefaultSignalRConnectionProvider(
         if (activeConnections.isNotEmpty()) return
         closedIntentionally = true
         hubConnection.stop().await()
+    }
+
+    private fun onOnlineChange(isOnline: Boolean) {
+        if (!isOnline) {
+            activeConnections.clear()
+        }
+
+        _isAvailable.value = isOnline
     }
 }

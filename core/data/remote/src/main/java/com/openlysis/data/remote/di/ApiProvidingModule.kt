@@ -4,6 +4,7 @@ import com.microsoft.signalr.HubConnection
 import com.microsoft.signalr.HubConnectionBuilder
 import com.microsoft.signalr.messagepack.MessagePackHubProtocol
 import com.openlysis.core.network.AppDispatcher
+import com.openlysis.core.network.NetworkMonitor
 import com.openlysis.core.network.di.ApplicationScope
 import com.openlysis.core.network.di.Dispatcher
 import com.openlysis.data.analysis.di.MessageAnalysisDependency
@@ -159,14 +160,16 @@ internal object ApiProvidingModule {
     fun provideSignalRConnectionProvider(
         hubConnection: HubConnection,
         @ApplicationScope appScope: CoroutineScope,
-        @Dispatcher(AppDispatcher.IO) ioDispatcher: CoroutineDispatcher
+        @Dispatcher(AppDispatcher.IO) ioDispatcher: CoroutineDispatcher,
+        networkMonitor: NetworkMonitor
     ): SignalRConnectionProvider {
         val provider =
             DefaultSignalRConnectionProvider(
                 stopDelayMillis = 10_000,
                 hubConnection,
                 appScope,
-                ioDispatcher
+                ioDispatcher,
+                networkMonitor
             )
         provider.listenForConnectionEvents()
         return provider

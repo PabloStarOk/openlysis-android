@@ -11,6 +11,9 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.distinctUntilChangedBy
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.reflect.KClass
@@ -43,6 +46,13 @@ internal class SignalRAnalysisUpdateTracker<
     override val updates: SharedFlow<TAnalysis> = _updates.asSharedFlow()
     override val isTracking: StateFlow<Boolean> = connectionProvider.isAvailable
 
+    init {
+        connectionProvider.isAvailable
+            .distinctUntilChangedBy { it }
+            .onEach(::onIsAvailableChange)
+            .launchIn(appScope)
+    }
+
     override suspend fun track(vararg analysisIds: String) {
         if (analysisIds.isEmpty()) return
 
@@ -50,7 +60,7 @@ internal class SignalRAnalysisUpdateTracker<
             val existing = trackedAnalyses.getOrDefault(id, 0)
             trackedAnalyses[id] = existing + 1
         }
-        connectionProvider.connect<TDto>(hubMethod, this::handleIncomingUpdate, dtoClass)
+        connectionProvider.connect<TDto>(hubMethod, ::handleIncomingUpdate, dtoClass)
         untrackNonUpdatable(*analysisIds)
     }
 
@@ -96,5 +106,11 @@ internal class SignalRAnalysisUpdateTracker<
 
         trackedAnalyses.remove(analysis.id)
         disconnectIfNoTrackedAnalyses()
+    }
+
+    private suspend fun onIsAvailableChange(isAvailable: Boolean) {
+        if (!isAvailable || trackedAnalyses.isEmpty()) return
+        connectionProvider.connect<TDto>(hubMethod, ::handleIncomingUpdate, dtoClass)
+        untrackNonUpdatable(*trackedAnalyses.keys.toTypedArray())
     }
 }
