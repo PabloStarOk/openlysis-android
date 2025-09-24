@@ -15,6 +15,7 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+        isCoreLibraryDesugaringEnabled = true
     }
     kotlinOptions {
         jvmTarget = "11"
@@ -36,6 +37,8 @@ dependencies {
     implementation(projects.core.data.analysis)
     implementation(projects.core.data.auth)
     implementation(projects.core.common)
+
+    coreLibraryDesugaring(libs.android.tools.desugar)
 
     compileOnly(libs.google.dagger.hilt.core)
 
