@@ -42,6 +42,7 @@ internal class ConnectivityManagerNetworkMonitor
                     NetworkRequest
                         .Builder()
                         .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                        .addCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
                         .build()
                 connectivityManager.registerNetworkCallback(request, callback)
 
@@ -68,8 +69,14 @@ internal class ConnectivityManagerNetworkMonitor
             }
         }
 
-        private fun ConnectivityManager.isCurrentlyConnected() =
-            activeNetwork
-                ?.let(::getNetworkCapabilities)
-                ?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) == true
+        private fun ConnectivityManager.isCurrentlyConnected(): Boolean {
+            val capabilities =
+                activeNetwork
+                    ?.let(::getNetworkCapabilities)
+
+            if (capabilities == null) return false
+
+            return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) &&
+                capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
+        }
     }
