@@ -25,6 +25,6 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.kotlinx.coroutines.core)
-    compileOnly(libs.google.dagger.hilt.core)
+    implementation(libs.google.dagger.hilt)
     ksp(libs.google.dagger.hilt.compiler)
 }
