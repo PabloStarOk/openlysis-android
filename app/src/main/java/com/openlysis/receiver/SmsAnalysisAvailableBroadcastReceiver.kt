@@ -3,8 +3,6 @@ package com.openlysis.receiver
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
 import androidx.core.app.NotificationManagerCompat
 import androidx.work.Constraints
 import androidx.work.NetworkType
@@ -12,11 +10,19 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.OutOfQuotaPolicy
 import androidx.work.WorkManager
 import androidx.work.workDataOf
+import com.openlysis.core.network.AppDispatcher
+import com.openlysis.core.network.NetworkMonitor
+import com.openlysis.core.network.di.ApplicationScope
+import com.openlysis.core.network.di.Dispatcher
 import com.openlysis.data.work.SmsAnalysisRefreshWorker
 import com.openlysis.data.work.SmsAnalysisStartWorker
 import com.openlysis.data.work.constant.SmsAnalysisWorkers
 import com.openlysis.notification.Notifier
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
@@ -27,6 +33,15 @@ import javax.inject.Inject
 @AndroidEntryPoint
 internal class SmsAnalysisAvailableBroadcastReceiver : BroadcastReceiver() {
     @Inject lateinit var notifier: Notifier
+
+    @Inject lateinit var networkMonitor: NetworkMonitor
+
+    @Inject @ApplicationScope
+    lateinit var appScope: CoroutineScope
+
+    @Inject
+    @Dispatcher(AppDispatcher.IO)
+    lateinit var ioDispatcher: CoroutineDispatcher
 
     override fun onReceive(
         context: Context,
@@ -65,13 +80,9 @@ internal class SmsAnalysisAvailableBroadcastReceiver : BroadcastReceiver() {
         when (subAction) {
             SubAction.Analyze -> {
                 enqueueWorkers(context, notificationId, messageSender, messageBody)
-                if (!hasInternetConnection(context)) {
-                    notifier.notifySmsAnalysisPendingByInternet(notificationId, messageSender)
-                }
+                notifyIfOffline(notificationId, messageSender)
             }
-            SubAction.Cancel -> {
-                NotificationManagerCompat.from(context).cancel(notificationId)
-            }
+            SubAction.Cancel -> NotificationManagerCompat.from(context).cancel(notificationId)
         }
     }
 
@@ -109,23 +120,31 @@ internal class SmsAnalysisAvailableBroadcastReceiver : BroadcastReceiver() {
                     )
                 ).build()
 
-        val workManager = WorkManager.Companion.getInstance(context)
+        val workManager = WorkManager.getInstance(context)
         workManager
             .beginWith(smsAnalysisStartWorker)
             .then(smsAnalysisRefreshWorker)
             .enqueue()
     }
 
-    private fun hasInternetConnection(context: Context): Boolean {
-        val connectivityManager = context.getSystemService(ConnectivityManager::class.java)
-        val currentNetwork = connectivityManager.activeNetwork
-        val capabilities = connectivityManager.getNetworkCapabilities(currentNetwork)
-        val reachInternet =
-            capabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) == true
-        val isValidated =
-            capabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED) == true
-
-        return reachInternet && isValidated
+    private fun notifyIfOffline(
+        notificationId: Int,
+        messageSender: String
+    ) {
+        val pendingResult = goAsync()
+        appScope.launch(ioDispatcher) {
+            try {
+                val isOnline = networkMonitor.isOnline.first()
+                if (!isOnline) {
+                    notifier.notifySmsAnalysisPendingByInternet(
+                        notificationId,
+                        messageSender
+                    )
+                }
+            } finally {
+                pendingResult.finish()
+            }
+        }
     }
 
     /**
