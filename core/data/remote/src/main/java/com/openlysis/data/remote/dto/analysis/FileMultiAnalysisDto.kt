@@ -7,7 +7,6 @@ import com.openlysis.data.analysis.model.common.HashValues
 import com.openlysis.data.analysis.model.common.Verdict
 import com.squareup.moshi.JsonClass
 import kotlinx.datetime.Instant
-import kotlinx.datetime.toJavaInstant
 
 /**
  * Data Transfer Object (DTO) for the [FileMultiAnalysis] model.
@@ -40,7 +39,7 @@ internal data class FileMultiAnalysisDto(
     internal fun convertToModel(): FileMultiAnalysis =
         FileMultiAnalysis(
             id = id,
-            startedDate = Instant.parse(startedDate).toJavaInstant(),
+            startedDate = Instant.parse(startedDate),
             status = AnalysisStatus.parse(status),
             finalVerdict = Verdict.parse(finalVerdict),
             avgThreatScore = averageThreatScore,

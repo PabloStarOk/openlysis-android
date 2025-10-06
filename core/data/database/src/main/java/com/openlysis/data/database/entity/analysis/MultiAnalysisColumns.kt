@@ -5,7 +5,8 @@ import com.openlysis.data.analysis.model.analysis.AnalysisStatus
 import com.openlysis.data.analysis.model.analysis.MultiAnalysis
 import com.openlysis.data.analysis.model.common.HashValues
 import com.openlysis.data.analysis.model.common.Verdict
-import java.time.Instant
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 
 /**
  * Shared entity columns representing a multi-analysis record for a file or URL.
@@ -48,7 +49,7 @@ internal data class MultiAnalysisColumns(
                 avgThreatScore = model.avgThreatScore,
                 hashValues = model.hashValues,
                 messageAnalysisId = messageAnalysisId,
-                createdAt = Instant.now(),
+                createdAt = Clock.System.now(),
                 hasParent = messageAnalysisId != null
             )
     }

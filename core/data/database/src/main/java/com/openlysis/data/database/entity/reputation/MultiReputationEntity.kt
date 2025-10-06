@@ -8,7 +8,8 @@ import com.openlysis.data.analysis.model.common.Verdict
 import com.openlysis.data.analysis.model.reputation.MultiReputation
 import com.openlysis.data.analysis.model.reputation.Reputation
 import com.openlysis.data.database.entity.message.MessageAnalysisEntity
-import java.time.Instant
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 
 /**
  * Entity representing a multi-reputation record for an email address or phone number.
@@ -84,7 +85,7 @@ internal data class MultiReputationEntity(
                 finalVerdict = model.finalVerdict,
                 data = model.data,
                 messageAnalysisId = messageAnalysisId,
-                createdAt = Instant.now(),
+                createdAt = Clock.System.now(),
                 hasParent = messageAnalysisId != null
             )
     }

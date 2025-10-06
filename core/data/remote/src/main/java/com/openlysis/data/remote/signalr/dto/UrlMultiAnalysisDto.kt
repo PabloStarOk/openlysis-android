@@ -7,8 +7,8 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.openlysis.data.analysis.model.analysis.AnalysisStatus
 import com.openlysis.data.analysis.model.analysis.UrlMultiAnalysis
 import com.openlysis.data.analysis.model.common.Verdict
+import kotlinx.datetime.Instant
 import java.net.URI
-import java.time.Instant
 
 /**
  * DTO sent over SignalR for [UrlMultiAnalysis] model.
@@ -52,7 +52,7 @@ internal data class UrlMultiAnalysisDto
         override fun convertToModel(): UrlMultiAnalysis =
             UrlMultiAnalysis(
                 id = id,
-                startedDate = Instant.ofEpochMilli(startedDateMillis),
+                startedDate = Instant.fromEpochMilliseconds(startedDateMillis),
                 status = status,
                 finalVerdict = finalVerdict,
                 avgThreatScore = averageThreatScore,

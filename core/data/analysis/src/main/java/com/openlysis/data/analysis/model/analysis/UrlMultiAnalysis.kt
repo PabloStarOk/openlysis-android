@@ -2,8 +2,8 @@ package com.openlysis.data.analysis.model.analysis
 
 import com.openlysis.data.analysis.model.common.HashValues
 import com.openlysis.data.analysis.model.common.Verdict
+import kotlinx.datetime.Instant
 import java.net.URI
-import java.time.Instant
 
 /**
  * Represents the results of a multi-engine analysis performed on a URL.

@@ -8,7 +8,8 @@ import com.openlysis.data.analysis.model.common.HashValues
 import com.openlysis.data.analysis.model.common.Verdict
 import com.openlysis.data.analysis.model.message.Message
 import com.openlysis.data.analysis.model.message.MessageAnalysis
-import java.time.Instant
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 
 /**
  * Entity representing a message analysis record in the database.
@@ -46,7 +47,7 @@ internal data class MessageAnalysisEntity(
                 hashValues = model.hashValues,
                 status = model.status,
                 verdict = model.verdict,
-                createdAt = Instant.now()
+                createdAt = Clock.System.now()
             )
     }
 }

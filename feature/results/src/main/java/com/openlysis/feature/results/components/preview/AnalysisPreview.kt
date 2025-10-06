@@ -54,8 +54,7 @@ import com.openlysis.feature.results.R
 import com.openlysis.feature.results.components.AnalysisStatusBadge
 import com.openlysis.feature.results.components.AnalysisVerdictBadge
 import kotlinx.coroutines.delay
-import kotlinx.datetime.toKotlinInstant
-import java.time.Instant
+import kotlinx.datetime.Instant
 
 /**
  * A composable that displays a preview of an analysis with interactive elements.
@@ -75,10 +74,7 @@ internal fun AnalysisPreview(
     val localContext = LocalContext.current
     val formattedDate =
         remember(state.startedDate) {
-            val epochMilliseconds =
-                state.startedDate
-                    .toKotlinInstant()
-                    .toEpochMilliseconds()
+            val epochMilliseconds = state.startedDate.toEpochMilliseconds()
             DateFormat
                 .getMediumDateFormat(localContext)
                 .format(epochMilliseconds)
@@ -322,7 +318,7 @@ private fun AnalysisPreviewPreview() {
                     id = "Test",
                     headerContent = "A test",
                     status = AnalysisStatus.Queued,
-                    startedDate = Instant.ofEpochSecond(1751766596),
+                    startedDate = Instant.fromEpochSeconds(1751766596),
                     verdict = Verdict.Undetected,
                     isRefreshing = true
                 )

@@ -1,8 +1,8 @@
 package com.openlysis.data.database
 
 import androidx.room.TypeConverter
+import kotlinx.datetime.Instant
 import java.net.URI
-import java.time.Instant
 
 /**
  * Type converters for Room database, enabling support for [Instant] and [URI] types.
@@ -15,11 +15,11 @@ import java.time.Instant
 internal class Converters {
     /** Converts a [Long] timestamp to [Instant]. */
     @TypeConverter
-    fun fromTimestamp(value: Long): Instant = Instant.ofEpochMilli(value)
+    fun fromTimestamp(value: Long): Instant = Instant.fromEpochMilliseconds(value)
 
     /** Converts an [Instant] to a [Long] timestamp. */
     @TypeConverter
-    fun instantToTimestamp(instant: Instant): Long = instant.toEpochMilli()
+    fun instantToTimestamp(instant: Instant): Long = instant.toEpochMilliseconds()
 
     /** Converts a [String] to [URI]. */
     @TypeConverter

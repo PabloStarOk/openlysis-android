@@ -23,6 +23,7 @@ android {
 
 dependencies {
     implementation(libs.kotlinx.coroutines.core)
+    api(libs.kotlinx.datetime)
     api(projects.core.common)
 
     compileOnly(libs.moshi.kotlin)

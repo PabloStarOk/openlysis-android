@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.openlysis.data.analysis.model.analysis.AnalysisStatus
 import com.openlysis.data.analysis.model.analysis.FileMultiAnalysis
 import com.openlysis.data.analysis.model.common.Verdict
-import java.time.Instant
+import kotlinx.datetime.Instant
 
 /**
  * DTO sent over SignalR for [FileMultiAnalysis] model.
@@ -51,7 +51,7 @@ internal data class FileMultiAnalysisDto
         override fun convertToModel(): FileMultiAnalysis =
             FileMultiAnalysis(
                 id = id,
-                startedDate = Instant.ofEpochMilli(startedDateMillis),
+                startedDate = Instant.fromEpochMilliseconds(startedDateMillis),
                 status = status,
                 finalVerdict = finalVerdict,
                 avgThreatScore = averageThreatScore,

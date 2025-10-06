@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.openlysis.data.analysis.model.common.Verdict
 import com.openlysis.data.analysis.model.reputation.MultiReputation
 import com.openlysis.data.analysis.model.reputation.PhoneNumberReputation
-import java.time.Instant
+import kotlinx.datetime.Instant
 
 /**
  * DTO sent over SignalR for [MultiReputation] model (phone number).
@@ -42,7 +42,7 @@ internal data class PhoneNumberMultiReputationDto
         internal fun convertToModel(): MultiReputation<PhoneNumberReputation> =
             MultiReputation<PhoneNumberReputation>(
                 id = id,
-                evaluationDate = Instant.ofEpochMilli(evaluationDateMillis),
+                evaluationDate = Instant.fromEpochMilliseconds(evaluationDateMillis),
                 finalVerdict = finalVerdict,
                 data = phoneNumber,
                 reputations = reputations.map { r -> r.convertToModel() }

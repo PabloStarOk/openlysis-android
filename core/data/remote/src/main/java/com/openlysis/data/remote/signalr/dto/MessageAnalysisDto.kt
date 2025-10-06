@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.openlysis.data.analysis.model.analysis.AnalysisStatus
 import com.openlysis.data.analysis.model.common.Verdict
 import com.openlysis.data.analysis.model.message.MessageAnalysis
-import java.time.Instant
+import kotlinx.datetime.Instant
 
 /**
  * DTO sent over SignalR for [MessageAnalysis] model.
@@ -45,7 +45,7 @@ internal data class MessageAnalysisDto
         override fun convertToModel(): MessageAnalysis =
             MessageAnalysis(
                 id = id,
-                startedDate = Instant.ofEpochMilli(startedDateMillis),
+                startedDate = Instant.fromEpochMilliseconds(startedDateMillis),
                 message = messageInformation.convertToModel(),
                 hashValues = messageInformation.hashValues.convertToModel(),
                 status = status,

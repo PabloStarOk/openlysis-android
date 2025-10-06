@@ -71,7 +71,6 @@ import com.openlysis.feature.results.components.AnalysisStatusBadge
 import com.openlysis.feature.results.components.AnalysisVerdictBadge
 import com.openlysis.feature.results.util.getNetworkErrorMessage
 import kotlinx.coroutines.delay
-import kotlinx.datetime.toKotlinInstant
 
 /**
  * Scaffold for displaying details screens.
@@ -170,7 +169,7 @@ internal fun <TResult : Model> DetailsScreenScaffold(
 
             val dateFormat = DateFormat.getLongDateFormat(LocalContext.current)
             val timeFormat = DateFormat.getTimeFormat(LocalContext.current)
-            val startedDateMillis = data.startedDate.toKotlinInstant().toEpochMilliseconds()
+            val startedDateMillis = data.startedDate.toEpochMilliseconds()
             val formattedDate = dateFormat.format(startedDateMillis)
             val formattedTime = timeFormat.format(startedDateMillis)
 

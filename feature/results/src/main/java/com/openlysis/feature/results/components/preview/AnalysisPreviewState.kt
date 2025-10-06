@@ -2,7 +2,7 @@ package com.openlysis.feature.results.components.preview
 
 import com.openlysis.data.analysis.model.analysis.AnalysisStatus
 import com.openlysis.data.analysis.model.common.Verdict
-import java.time.Instant
+import kotlinx.datetime.Instant
 
 /**
  * Represents the state of an analysis preview.

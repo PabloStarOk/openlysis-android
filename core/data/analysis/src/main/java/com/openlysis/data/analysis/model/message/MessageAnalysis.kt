@@ -9,7 +9,7 @@ import com.openlysis.data.analysis.model.common.Verdict
 import com.openlysis.data.analysis.model.reputation.EmailAddressReputation
 import com.openlysis.data.analysis.model.reputation.MultiReputation
 import com.openlysis.data.analysis.model.reputation.PhoneNumberReputation
-import java.time.Instant
+import kotlinx.datetime.Instant
 
 /**
  * Represents the comprehensive analysis of a message.

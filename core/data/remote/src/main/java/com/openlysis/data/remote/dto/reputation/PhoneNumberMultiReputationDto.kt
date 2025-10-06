@@ -5,7 +5,6 @@ import com.openlysis.data.analysis.model.reputation.MultiReputation
 import com.openlysis.data.analysis.model.reputation.PhoneNumberReputation
 import com.squareup.moshi.JsonClass
 import kotlinx.datetime.Instant
-import kotlinx.datetime.toJavaInstant
 
 /**
  * Data Transfer Object (DTO) for the [MultiReputation] model.
@@ -32,7 +31,7 @@ internal data class PhoneNumberMultiReputationDto(
     internal fun convertToModel(): MultiReputation<PhoneNumberReputation> =
         MultiReputation<PhoneNumberReputation>(
             id = id,
-            evaluationDate = Instant.parse(evaluationDate).toJavaInstant(),
+            evaluationDate = Instant.parse(evaluationDate),
             finalVerdict = Verdict.parse(finalVerdict),
             data = phoneNumber,
             reputations = reputations.map { r -> r.convertToModel() }

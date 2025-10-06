@@ -2,7 +2,7 @@ package com.openlysis.data.analysis.model.reputation
 
 import com.openlysis.data.analysis.model.common.Model
 import com.openlysis.data.analysis.model.common.Verdict
-import java.time.Instant
+import kotlinx.datetime.Instant
 
 /**
  * The result of a multi-reputation, which is an aggregation of multiple individual reputations

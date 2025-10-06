@@ -3,7 +3,7 @@ package com.openlysis.data.analysis.model.analysis
 import com.openlysis.data.analysis.model.common.HashValues
 import com.openlysis.data.analysis.model.common.Model
 import com.openlysis.data.analysis.model.common.Verdict
-import java.time.Instant
+import kotlinx.datetime.Instant
 
 /**
  * The result of a multi-analysis, which is an aggregation of multiple individual analyses

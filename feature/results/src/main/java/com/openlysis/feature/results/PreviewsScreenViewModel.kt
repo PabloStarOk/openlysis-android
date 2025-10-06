@@ -22,7 +22,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toKotlinInstant
 import kotlinx.datetime.toLocalDateTime
 import java.util.concurrent.ConcurrentHashMap
 
@@ -168,11 +167,7 @@ internal abstract class PreviewsScreenViewModel<TResult : Model>(
             loadedPreviews.values
                 .filter {
                     val analysisDate =
-                        it.startedDate
-                            .toKotlinInstant()
-                            .toLocalDateTime(
-                                TimeZone.currentSystemDefault()
-                            ).date
+                        it.startedDate.toLocalDateTime(TimeZone.currentSystemDefault()).date
                     analysisDate >= startDate && analysisDate <= endDate
                 }.filter { it.verdict in filtersState.selectedVerdicts }
                 .filter { it.status in filtersState.selectedStatuses }

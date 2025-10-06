@@ -3,7 +3,7 @@ package com.openlysis.feature.results.components.detail
 import androidx.compose.runtime.Immutable
 import com.openlysis.data.analysis.model.analysis.AnalysisStatus
 import com.openlysis.data.analysis.model.common.Verdict
-import java.time.Instant
+import kotlinx.datetime.Instant
 
 /**
  * Data class representing the required data by the details screen scaffold.
