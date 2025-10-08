@@ -62,7 +62,7 @@
 
     <string name="email_message_tool_screen_title">Analizar Correo Electrónico</string>
     <string name="email_message_tool_section_title">Mensaje de Correo Electrónico</string>
-    <string name="email_message_tool_section_description">Ingresa el remitente, asunto (opcional) y contenido del mensaje..</string>
+    <string name="email_message_tool_section_description">Ingresa el remitente, asunto (opcional) y contenido del mensaje.</string>
     <string name="email_message_tool_file_section_title">Archivos Adjuntos</string>
     <string name="email_message_tool_file_section_description">Adjunta archivos relacionados con el mensaje para analizarlos.</string>
 
