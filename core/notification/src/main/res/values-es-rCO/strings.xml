@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="notifications_sms_analysis_channel_name">Análisis automatizado de SMS</string>
+    <string name="notifications_sms_analysis_channel_description">Estas notificaciones se refieren al análisis automatizado de mensajes SMS. Cuando se recibe un SMS, la aplicación notifica al usuario para decidir si desea analizarlo. Si el usuario acepta, el análisis comienza y las actualizaciones posteriores se reflejan en la notificación.</string>
+
+    <string name="notifications_sms_analyze_title">Nuevo SMS recibido</string>
+    <string name="notifications_sms_analyze_content">Has recibido un mensaje SMS de %s: \"%s\". Puedes analizarlo para verificar su veracidad.</string>
+    <string name="notifications_sms_analyze_primary_action_label">Analizar</string>
+    <string name="notifications_sms_analyze_cancel_action_label">Cancelar</string>
+
+    <string name="worker_notification_title_sms_analysis_pending_by_internet">Análisis de SMS Pendiente</string>
+    <string name="worker_notification_title_sms_analysis_in_progress">Análisis de SMS en progreso</string>
+    <string name="worker_notification_title_sms_analysis_completed_generic">Análisis de SMS completado</string>
+    <string name="worker_notification_title_sms_analysis_completed_suspicious">SMS sospechoso</string>
+    <string name="worker_notification_title_sms_analysis_completed_malicious">SMS malicioso</string>
+    <string name="worker_notification_title_sms_analysis_failed">Análisis de SMS fállido</string>
+    <string name="worker_notification_title_sms_analysis_error_on_start">Error al iniciar el análisis de SMS</string>
+    <string name="worker_notification_title_sms_analysis_error_on_refresh">Error al refrescar el análisis de SMS</string>
+
+    <string name="worker_notification_content_sms_analysis_pending_by_internet">El análisis del mensaje SMS de %s está pendiente. Se iniciará automáticamente cuando haya una conexión de red disponible.</string>
+    <string name="worker_notification_content_sms_analysis_in_progress">El análisis del mensaje SMS de %s está en progreso.</string>
+    <string name="worker_notification_content_sms_analysis_completed_unknown">El veredicto del mensaje SMS de %s no pudo ser determinado.</string>
+    <string name="worker_notification_content_sms_analysis_completed_undetected">El análisis de un mensaje SMS de %s fue detectado como limpio.</string>
+    <string name="worker_notification_content_sms_analysis_completed_suspicious">El análisis de un mensaje SMS de %s fue detectado como sospechoso.</string>
+    <string name="worker_notification_content_sms_analysis_completed_malicious">El análisis de un mensaje SMS de %s fue detectado como malicioso.</string>
+    <string name="worker_notification_content_sms_analysis_failed">El análisis del mensaje SMS de %s falló.</string>
+    <string name="worker_notification_content_sms_analysis_error_start_verb">iniciar</string>
+    <string name="worker_notification_content_sms_analysis_error_refresh_verb">refrescar</string>
+    <string name="worker_notification_content_sms_analysis_error_generic">El análisis del mensaje SMS de %s no se pudo %s debido a un error inesperado.</string>
+    <string name="worker_notification_content_sms_analysis_error_server">El análisis del mensaje SMS de %s no se pudo %s debido a un error del servidor.</string>
+    <string name="worker_notification_content_sms_analysis_error_network">El análisis del mensaje SMS de %s no se pudo %s debido a un error de red.</string>
+    <string name="worker_notification_content_sms_analysis_error_unreachable">El análisis del mensaje SMS de %s no se pudo %s debido a que el servidor no está disponible.</string>
+    <string name="worker_notification_content_sms_analysis_error_unavailable">El análisis del mensaje SMS de %s no se pudo %s debido a que este servicio no está disponible en este momento.</string>
+</resources>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="openlysis_icon_alt">Ícono de Openlysis</string>
+
+    <string name="sign_up_button_label">Registrarme</string>
+    <string name="sign_in_button_label">Iniciar sesión</string>
+
+    <string name="error_sign_in">Correo electrónico o contraseña incorrecta.</string>
+    <string name="error_sign_up">Este correo electrónico ya está registrado.</string>
+    <string name="error_generic">Ocurrió un error inesperado. Por favor, inténtalo de nuevo.</string>
+    <string name="error_server">Ocurrió un error del servidor. Por favor, inténtalo más tarde.</string>
+    <string name="error_network">Ocurrió un error de red. Verifica tu conexión e inténtalo de nuevo.</string>
+    <string name="error_server_unreachable">El servidor no está disponible. Por favor, inténtalo más tarde.</string>
+    <string name="error_unavailable">Este servicio no está disponible en este momento. Por favor, inténtalo más tarde.</string>
+
+    <string name="screen_welcome_title">¡Bienvenido!</string>
+    <string name="screen_welcome_description">Ahorra tu tiempo mientras optimizas tu seguridad digital.</string>
+
+    <string name="screen_auth_email_input_label">Correo Electrónico</string>
+    <string name="screen_auth_password_input_label">Contraseña</string>
+    <string name="screen_auth_password_input_show_icon_alt">Ícono de mostrar la contraseña</string>
+    <string name="screen_auth_password_input_hide_icon_alt">Ícono de ocultar la contraseña</string>
+    <string name="screen_auth_primary_button_icon_alt">Ícono de ingresar</string>
+
+    <string name="screen_auth_sign_in_title">Iniciar sesión</string>
+    <string name="screen_auth_sign_in_switch_auth_type_label">¿No tienes cuenta?</string>
+    <string name="screen_auth_sign_in_switch_auth_type_button_label">Crea una aquí</string>
+
+    <string name="screen_auth_sign_up_title">Registrarme</string>
+    <string name="screen_auth_sign_up_switch_auth_type_label">¿Ya tienes una cuenta?</string>
+    <string name="screen_auth_sign_up_switch_auth_type_button_label">Ingresa aquí</string>
+    <string name="screen_auth_sign_up_confirm_password_input_label">Confirmar contraseña</string>
+    <string name="screen_auth_sign_up_passwords_do_not_match">Las contraseñas no coinciden.</string>
+
+    <string name="password_requirements">Requerimientos de la contraseña</string>
+    <string name="password_requirements_expanded_chevron_icon_alt">Ícono de flecha hacia arriba</string>
+    <string name="password_requirements_collapsed_chevron_icon_alt">Ícono de flecha hacia abajo</string>
+    <string name="password_requirements_met_icon_alt">Ícono de verificación que indica el cumplimiento del requisito</string>
+    <string name="password_requirements_unmet_icon_alt">Ícono de cruz que indica que el requisito no se cumple</string>
+
+    <plurals name="password_requirements_min_length">
+        <item quantity="one">Mínimo %d carácter.</item>
+        <item quantity="other">Mínimo %d caracteres.</item>
+    </plurals>
+    <plurals name="password_requirements_min_lower_letters">
+        <item quantity="one">Mínimo %d letra minúscula.</item>
+        <item quantity="other">Mínimo %d letras minúsculas.</item>
+    </plurals>
+    <plurals name="password_requirements_min_upper_letters">
+        <item quantity="one">Mínimo %d letra mayúscula.</item>
+        <item quantity="other">Mínimo %d letras mayúsculas.</item>
+    </plurals>
+    <plurals name="password_requirements_min_digits">
+        <item quantity="one">Mínimo %d número.</item>
+        <item quantity="other">Mínimo %d números.</item>
+    </plurals>
+    <plurals name="password_requirements_min_special_chars">
+        <item quantity="one">Mínimo %d carácter especial.</item>
+        <item quantity="other">Mínimo %d caracteres especiales.</item>
+    </plurals>
+</resources>

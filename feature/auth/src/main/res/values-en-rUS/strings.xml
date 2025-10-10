@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="openlysis_icon_alt">Openlysis icon</string>
+
+    <string name="sign_up_button_label">Sign up</string>
+    <string name="sign_in_button_label">Sign in</string>
+
+    <string name="error_sign_in">Email or password invalid.</string>
+    <string name="error_sign_up">This email is already registered.</string>
+    <string name="error_generic">An unexpected error occurred. Please try again.</string>
+    <string name="error_server">A server error occurred. Please try again later.</string>
+    <string name="error_network">A network error occurred. Please check your connection and try again.</string>
+    <string name="error_server_unreachable">The server is unavailable. Please try again later.</string>
+    <string name="error_unavailable">This service is currently unavailable. Please try again later.</string>
+
+    <string name="screen_welcome_title">Welcome!</string>
+    <string name="screen_welcome_description">Save time while optimizing your digital security.</string>
+
+    <string name="screen_auth_email_input_label">Email</string>
+    <string name="screen_auth_password_input_label">Password</string>
+    <string name="screen_auth_password_input_show_icon_alt">Show password icon</string>
+    <string name="screen_auth_password_input_hide_icon_alt">Hide password icon</string>
+    <string name="screen_auth_primary_button_icon_alt">Enter icon</string>
+
+    <string name="screen_auth_sign_in_title">Sign In</string>
+    <string name="screen_auth_sign_in_switch_auth_type_label">Don\'t have an account?</string>
+    <string name="screen_auth_sign_in_switch_auth_type_button_label">Create one</string>
+
+    <string name="screen_auth_sign_up_title">Sign Up</string>
+    <string name="screen_auth_sign_up_switch_auth_type_label">Already have an account?</string>
+    <string name="screen_auth_sign_up_switch_auth_type_button_label">Sign in here</string>
+    <string name="screen_auth_sign_up_confirm_password_input_label">Confirm password</string>
+    <string name="screen_auth_sign_up_passwords_do_not_match">Passwords do not match.</string>
+
+    <string name="password_requirements">Password requirements</string>
+    <string name="password_requirements_expanded_chevron_icon_alt">Chevron up icon</string>
+    <string name="password_requirements_collapsed_chevron_icon_alt">Chevron down icon</string>
+    <string name="password_requirements_met_icon_alt">Checkmark icon indicating the requirement is met</string>
+    <string name="password_requirements_unmet_icon_alt">Cross icon indicating the requirement is not met</string>
+
+    <plurals name="password_requirements_min_length">
+        <item quantity="one">At least %d character.</item>
+        <item quantity="other">At least %d characters.</item>
+    </plurals>
+    <plurals name="password_requirements_min_lower_letters">
+        <item quantity="one">At least %d lowercase letter.</item>
+        <item quantity="other">At least %d lowercase letters.</item>
+    </plurals>
+    <plurals name="password_requirements_min_upper_letters">
+        <item quantity="one">At least %d uppercase letter.</item>
+        <item quantity="other">At least %d uppercase letters.</item>
+    </plurals>
+    <plurals name="password_requirements_min_digits">
+        <item quantity="one">At least %d digit.</item>
+        <item quantity="other">At least %d digits.</item>
+    </plurals>
+    <plurals name="password_requirements_min_special_chars">
+        <item quantity="one">At least %d special character.</item>
+        <item quantity="other">At least %d special characters.</item>
+    </plurals>
+</resources>

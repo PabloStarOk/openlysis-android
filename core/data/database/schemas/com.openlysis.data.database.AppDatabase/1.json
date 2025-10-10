@@ -1,0 +1,719 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "ff7fc4aff92d4c0490bb94f63758fce6",
+    "entities": [
+      {
+        "tableName": "UrlAnalysisEntity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `serviceName` TEXT NOT NULL, `status` TEXT NOT NULL, `verdict` TEXT NOT NULL, `threatScore` INTEGER, `multiAnalysisId` TEXT NOT NULL, PRIMARY KEY(`multiAnalysisId`, `id`), FOREIGN KEY(`multiAnalysisId`) REFERENCES `UrlMultiAnalysisEntity`(`id`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "columns.id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "columns.serviceName",
+            "columnName": "serviceName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "columns.status",
+            "columnName": "status",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "columns.verdict",
+            "columnName": "verdict",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "columns.threatScore",
+            "columnName": "threatScore",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "columns.multiAnalysisId",
+            "columnName": "multiAnalysisId",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "multiAnalysisId",
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_UrlAnalysisEntity_multiAnalysisId",
+            "unique": false,
+            "columnNames": [
+              "multiAnalysisId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_UrlAnalysisEntity_multiAnalysisId` ON `${TABLE_NAME}` (`multiAnalysisId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "UrlMultiAnalysisEntity",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "multiAnalysisId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "FileAnalysisEntity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `serviceName` TEXT NOT NULL, `status` TEXT NOT NULL, `verdict` TEXT NOT NULL, `threatScore` INTEGER, `multiAnalysisId` TEXT NOT NULL, PRIMARY KEY(`multiAnalysisId`, `id`), FOREIGN KEY(`multiAnalysisId`) REFERENCES `FileMultiAnalysisEntity`(`id`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "columns.id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "columns.serviceName",
+            "columnName": "serviceName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "columns.status",
+            "columnName": "status",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "columns.verdict",
+            "columnName": "verdict",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "columns.threatScore",
+            "columnName": "threatScore",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "columns.multiAnalysisId",
+            "columnName": "multiAnalysisId",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "multiAnalysisId",
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_FileAnalysisEntity_multiAnalysisId",
+            "unique": false,
+            "columnNames": [
+              "multiAnalysisId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_FileAnalysisEntity_multiAnalysisId` ON `${TABLE_NAME}` (`multiAnalysisId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "FileMultiAnalysisEntity",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "multiAnalysisId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "UrlMultiAnalysisEntity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `url` TEXT NOT NULL, `startedDate` INTEGER NOT NULL, `status` TEXT NOT NULL, `finalVerdict` TEXT NOT NULL, `avgThreatScore` INTEGER, `messageAnalysisId` TEXT, `createdAt` INTEGER NOT NULL, `hasParent` INTEGER NOT NULL, `hash_md5` TEXT NOT NULL, `hash_sha1` TEXT NOT NULL, `hash_sha256` TEXT NOT NULL, `hash_sha512` TEXT NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`messageAnalysisId`) REFERENCES `MessageAnalysisEntity`(`id`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "url",
+            "columnName": "url",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "columns.startedDate",
+            "columnName": "startedDate",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "columns.status",
+            "columnName": "status",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "columns.finalVerdict",
+            "columnName": "finalVerdict",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "columns.avgThreatScore",
+            "columnName": "avgThreatScore",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "columns.messageAnalysisId",
+            "columnName": "messageAnalysisId",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "columns.createdAt",
+            "columnName": "createdAt",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "columns.hasParent",
+            "columnName": "hasParent",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "columns.hashValues.md5",
+            "columnName": "hash_md5",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "columns.hashValues.sha1",
+            "columnName": "hash_sha1",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "columns.hashValues.sha256",
+            "columnName": "hash_sha256",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "columns.hashValues.sha512",
+            "columnName": "hash_sha512",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_UrlMultiAnalysisEntity_messageAnalysisId",
+            "unique": false,
+            "columnNames": [
+              "messageAnalysisId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_UrlMultiAnalysisEntity_messageAnalysisId` ON `${TABLE_NAME}` (`messageAnalysisId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "MessageAnalysisEntity",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "messageAnalysisId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "FileMultiAnalysisEntity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `startedDate` INTEGER NOT NULL, `status` TEXT NOT NULL, `finalVerdict` TEXT NOT NULL, `avgThreatScore` INTEGER, `messageAnalysisId` TEXT, `createdAt` INTEGER NOT NULL, `hasParent` INTEGER NOT NULL, `hash_md5` TEXT NOT NULL, `hash_sha1` TEXT NOT NULL, `hash_sha256` TEXT NOT NULL, `hash_sha512` TEXT NOT NULL, `file_name` TEXT NOT NULL, `file_contentType` TEXT NOT NULL, `file_size` INTEGER NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`messageAnalysisId`) REFERENCES `MessageAnalysisEntity`(`id`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "columns.startedDate",
+            "columnName": "startedDate",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "columns.status",
+            "columnName": "status",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "columns.finalVerdict",
+            "columnName": "finalVerdict",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "columns.avgThreatScore",
+            "columnName": "avgThreatScore",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "columns.messageAnalysisId",
+            "columnName": "messageAnalysisId",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "columns.createdAt",
+            "columnName": "createdAt",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "columns.hasParent",
+            "columnName": "hasParent",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "columns.hashValues.md5",
+            "columnName": "hash_md5",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "columns.hashValues.sha1",
+            "columnName": "hash_sha1",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "columns.hashValues.sha256",
+            "columnName": "hash_sha256",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "columns.hashValues.sha512",
+            "columnName": "hash_sha512",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "fileMetadata.name",
+            "columnName": "file_name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "fileMetadata.contentType",
+            "columnName": "file_contentType",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "fileMetadata.size",
+            "columnName": "file_size",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_FileMultiAnalysisEntity_messageAnalysisId",
+            "unique": false,
+            "columnNames": [
+              "messageAnalysisId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_FileMultiAnalysisEntity_messageAnalysisId` ON `${TABLE_NAME}` (`messageAnalysisId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "MessageAnalysisEntity",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "messageAnalysisId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "EmailReputationEntity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `serviceName` TEXT NOT NULL, `verdict` TEXT NOT NULL, `isDisposable` INTEGER, `isRiskyTld` INTEGER, `multiReputationId` TEXT NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`multiReputationId`) REFERENCES `MultiReputationEntity`(`id`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "serviceName",
+            "columnName": "serviceName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "verdict",
+            "columnName": "verdict",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isDisposable",
+            "columnName": "isDisposable",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "isRiskyTld",
+            "columnName": "isRiskyTld",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "multiReputationId",
+            "columnName": "multiReputationId",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_EmailReputationEntity_multiReputationId",
+            "unique": false,
+            "columnNames": [
+              "multiReputationId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_EmailReputationEntity_multiReputationId` ON `${TABLE_NAME}` (`multiReputationId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "MultiReputationEntity",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "multiReputationId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "PhoneReputationEntity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `serviceName` TEXT NOT NULL, `verdict` TEXT NOT NULL, `localFormat` TEXT NOT NULL, `countryCode` TEXT NOT NULL, `dialingCode` INTEGER NOT NULL, `lineType` TEXT NOT NULL, `multiReputationId` TEXT NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`multiReputationId`) REFERENCES `MultiReputationEntity`(`id`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "serviceName",
+            "columnName": "serviceName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "verdict",
+            "columnName": "verdict",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "localFormat",
+            "columnName": "localFormat",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "countryCode",
+            "columnName": "countryCode",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dialingCode",
+            "columnName": "dialingCode",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lineType",
+            "columnName": "lineType",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "multiReputationId",
+            "columnName": "multiReputationId",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_PhoneReputationEntity_multiReputationId",
+            "unique": false,
+            "columnNames": [
+              "multiReputationId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_PhoneReputationEntity_multiReputationId` ON `${TABLE_NAME}` (`multiReputationId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "MultiReputationEntity",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "multiReputationId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "MultiReputationEntity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `dataType` TEXT NOT NULL, `evaluationDate` INTEGER NOT NULL, `finalVerdict` TEXT NOT NULL, `data` TEXT NOT NULL, `messageAnalysisId` TEXT, `createdAt` INTEGER NOT NULL, `hasParent` INTEGER NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`messageAnalysisId`) REFERENCES `MessageAnalysisEntity`(`id`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dataType",
+            "columnName": "dataType",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "evaluationDate",
+            "columnName": "evaluationDate",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "finalVerdict",
+            "columnName": "finalVerdict",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "data",
+            "columnName": "data",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "messageAnalysisId",
+            "columnName": "messageAnalysisId",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "createdAt",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "hasParent",
+            "columnName": "hasParent",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_MultiReputationEntity_messageAnalysisId",
+            "unique": false,
+            "columnNames": [
+              "messageAnalysisId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_MultiReputationEntity_messageAnalysisId` ON `${TABLE_NAME}` (`messageAnalysisId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "MessageAnalysisEntity",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "messageAnalysisId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "MessageAnalysisEntity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `startedDate` INTEGER NOT NULL, `status` TEXT NOT NULL, `verdict` TEXT NOT NULL, `createdAt` INTEGER NOT NULL, `message_type` TEXT NOT NULL, `message_sender` TEXT NOT NULL, `message_content` TEXT NOT NULL, `message_subject` TEXT, `hash_md5` TEXT NOT NULL, `hash_sha1` TEXT NOT NULL, `hash_sha256` TEXT NOT NULL, `hash_sha512` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "startedDate",
+            "columnName": "startedDate",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "status",
+            "columnName": "status",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "verdict",
+            "columnName": "verdict",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "createdAt",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "message.type",
+            "columnName": "message_type",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "message.sender",
+            "columnName": "message_sender",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "message.content",
+            "columnName": "message_content",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "message.subject",
+            "columnName": "message_subject",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "hashValues.md5",
+            "columnName": "hash_md5",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "hashValues.sha1",
+            "columnName": "hash_sha1",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "hashValues.sha256",
+            "columnName": "hash_sha256",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "hashValues.sha512",
+            "columnName": "hash_sha512",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        }
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'ff7fc4aff92d4c0490bb94f63758fce6')"
+    ]
+  }
+}

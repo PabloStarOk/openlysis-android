@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="verdict_stats_clean_label">Clean</string>
+    <string name="verdict_stats_suspicious_label">Suspicious</string>
+    <string name="verdict_stats_malicious_label">Malicious</string>
+    <string name="verdict_stats_unknown_label">Unknown</string>
+    <string name="verdict_stats_last_results_label">Last results</string>
+    <string name="verdict_stats_default_label">Stats</string>
+
+    <string name="analysis_results_section_card_icon_alt">Chevron right icon</string>
+    <string name="analysis_results_section_card_in_progress">Analyses in progress</string>
+
+    <string name="results_screen_emails_card_title">Emails</string>
+    <string name="results_screen_sms_card_title">SMS Text Messages</string>
+    <string name="results_screen_files_card_title">Files</string>
+    <string name="results_screen_urls_card_title">URLs</string>
+    <string name="results_screen_emails_card_description">Review the results of your email analyses.</string>
+    <string name="results_screen_sms_card_description">Review the results of your SMS text message analyses.</string>
+    <string name="results_screen_files_card_description">Review the results of your file analyses.</string>
+    <string name="results_screen_urls_card_description">Review the results of your URL analyses.</string>
+    <string name="results_screen_emails_card_icon_alt">Mail icon</string>
+    <string name="results_screen_sms_card_icon_alt">Message icon</string>
+    <string name="results_screen_files_card_icon_alt">File icon</string>
+    <string name="results_screen_urls_card_icon_alt">Link icon</string>
+
+    <string name="analysis_status_queued_badge_label">Analysis queued</string>
+    <string name="analysis_status_in_progress_badge_label">Analysis in progress</string>
+    <string name="analysis_status_completed_badge_label">Analysis completed</string>
+    <string name="analysis_status_failed_badge_label">Analysis failed</string>
+    <string name="analysis_status_timeout_badge_label">Analysis timed out</string>
+
+    <string name="analysis_status_queued_badge_icon_alt">Icon indicating queued analysis</string>
+    <string name="analysis_status_in_progress_badge_icon_alt">Rotating arrow icon indicating analysis in progress</string>
+    <string name="analysis_status_completed_badge_icon_alt">Check mark icon indicating completed analysis</string>
+    <string name="analysis_status_failed_badge_icon_alt">Cross icon indicating failed analysis</string>
+    <string name="analysis_status_timeout_badge_icon_alt">Clock icon indicating analysis timed out</string>
+
+    <string name="analysis_verdict_clean_badge">Clean</string>
+    <string name="analysis_verdict_suspicious_badge">Suspicious</string>
+    <string name="analysis_verdict_malicious_badge">Malicious</string>
+    <string name="analysis_verdict_unknown_badge">Unknown</string>
+
+    <string name="analysis_preview_started_date_label">Start date</string>
+    <string name="analysis_preview_verdict_label">Verdict</string>
+    <string name="analysis_preview_refresh_button_label">Refresh</string>
+    <string name="analysis_preview_refresh_button_icon_alt">Refresh icon</string>
+    <string name="analysis_preview_details_button_label">Details</string>
+    <string name="analysis_preview_details_button_icon_alt">Document icon</string>
+
+    <string name="error_analysis_repository_generic">An unexpected error occurred. Please try again.</string>
+    <string name="error_analysis_repository_server">A server error occurred. Please try again later.</string>
+    <string name="error_analysis_repository_network">A network error occurred. Please check your connection and try again.</string>
+    <string name="error_analysis_repository_server_unreachable">The server is unavailable. Please try again later.</string>
+    <string name="error_analysis_repository_unavailable">This service is currently unavailable. Please try again later.</string>
+
+    <string name="analyses_limit_reached_no_analyses">No analyses to show.</string>
+    <string name="analyses_limit_reached_no_more_analyses">No more analyses to show.</string>
+
+    <string name="filters_sort_by_section_label">Sort by</string>
+    <string name="filters_sort_by_date_label">Date</string>
+    <string name="filters_sort_by_verdict_label">Verdict</string>
+    <string name="filters_sort_by_status_label">Analysis status</string>
+    <string name="filters_verdict_section_label">Verdict</string>
+    <string name="filters_status_section_label">Analysis Status</string>
+    <string name="filters_status_queued_label">Queued</string>
+    <string name="filters_status_in_progress_label">In progress</string>
+    <string name="filters_status_completed_label">Completed</string>
+    <string name="filters_status_failed_label">Failed</string>
+    <string name="filters_status_timeout_label">Timed out</string>
+    <string name="filters_date_section_label">Date range</string>
+    <string name="filters_date_select_button_icon_alt">Calendar icon</string>
+    <string name="filters_date_dialog_min_date_label">Minimum date</string>
+    <string name="filters_date_dialog_max_date_label">Maximum date</string>
+    <string name="filters_date_dialog_accept_button_label">Accept</string>
+    <string name="filters_date_dialog_accept_button_icon_alt">Checkmark icon indicating to confirm the selected range.</string>
+    <string name="filters_date_dialog_cancel_button_label">Cancel</string>
+    <string name="filters_date_dialog_cancel_button_icon_alt">Cross icon indicating to cancel the selected range.</string>
+    <string name="filters_reset_all_button_label">Reset all</string>
+    <string name="filters_apply_button_label">Apply</string>
+    <string name="filters_cancel_button_label">Cancel</string>
+    <string name="filters_section_reset_button_label">Reset</string>
+    <string name="filters_chip_checkmark_icon_alt">Checkmark icon indicating the tag is selected</string>
+
+    <string name="previews_screen_filter_button_icon_alt">Filter icon</string>
+    <string name="previews_cards_header_icon_cloud_off_alt">Cloud icon with a slash indicating the analysis is not being refreshed</string>
+    <string name="previews_cards_header_icon_check_alt">Checkmark icon indicating analysis completion</string>
+
+    <string name="email_previews_screen_title">Emails</string>
+    <string name="email_previews_cards_header_label">Sender</string>
+
+    <string name="sms_previews_screen_title">SMS</string>
+    <string name="sms_previews_cards_header_label">Sender</string>
+
+    <string name="file_previews_screen_title">Files</string>
+    <string name="file_previews_cards_header_label">File Name</string>
+
+    <string name="url_previews_screen_title" translatable="false">URLs</string>
+    <string name="url_previews_cards_header_label" translatable="false">URL</string>
+
+    <string name="help_icon_alt">Help icon</string>
+    <string name="copy_icon_alt">Copy icon</string>
+
+    <string name="details_screen_email_title">Email Analysis</string>
+    <string name="details_screen_sms_title">SMS Analysis</string>
+    <string name="details_screen_file_title">File Analysis</string>
+    <string name="details_screen_url_title">URL Analysis</string>
+    <string name="details_screen_file_name_label">File Name</string>
+    <string name="details_screen_url_label">URL</string>
+    <string name="details_screen_verdict_label">Verdict</string>
+    <string name="details_screen_threat_score_label">Threat Score</string>
+
+    <string name="details_screen_started_datetime_section_title">Start Date and Time</string>
+    <string name="details_screen_started_datetime_section_date_label">Start Date</string>
+    <string name="details_screen_started_datetime_section_time_label">Start Time</string>
+
+    <string name="details_screen_message_information_section_title">Message Information</string>
+    <string name="details_screen_message_sender_label">Sender</string>
+    <string name="details_screen_message_subject_label">Subject</string>
+    <string name="details_screen_message_content_label">Content</string>
+    <string name="details_screen_message_no_analyzable_data">No data was detected or attached to be analyzed.</string>
+    <string name="details_screen_message_analyzed_files_section_title">Analyzed Files</string>
+    <string name="details_screen_message_analyzed_file_label">File Name</string>
+    <string name="details_screen_message_analyzed_urls_section_title">Analyzed URLs</string>
+    <string name="details_screen_message_analyzed_url_label">URL</string>
+    <string name="details_screen_message_reputation_email_section_title">Email Reputation</string>
+    <string name="details_screen_message_reputation_email_label">Email Address</string>
+    <string name="details_screen_message_reputation_phone_section_title">Phone Number Reputation</string>
+    <string name="details_screen_message_reputation_phone_label">Phone Number</string>
+    <string name="details_screen_message_sub_result_final_verdict_label">Final Verdict</string>
+    <string name="details_screen_message_sub_result_information_section_title">Information</string>
+    <string name="details_screen_service_results_section_title">Service Results</string>
+    <string name="details_screen_service_results_failed_analysis">Analysis failed</string>
+    <string name="details_screen_service_results_threat_score">TS</string>
+    <string name="details_screen_service_results_help_message">The acronym \'TS\' indicates the threat score that the service gave to the analyzed data.</string>
+    <string name="details_screen_service_results_not_found">External service results were not found.</string>
+
+    <string name="details_screen_file_information_section_title">File Information</string>
+    <string name="details_screen_file_information_type_label">File Type</string>
+    <string name="details_screen_file_information_size_label">File Size</string>
+
+    <string name="details_screen_hash" translatable="false">Hash</string>
+    <string name="details_screen_hash_sha_1" translatable="false">SHA-1</string>
+    <string name="details_screen_hash_sha_256" translatable="false">SHA-256</string>
+    <string name="details_screen_hash_sha_512" translatable="false">SHA-512</string>
+    <string name="details_screen_hash_md5" translatable="false">MD5</string>
+    <string name="details_screen_hash_value_copied">Hash value copied</string>
+
+    <string name="details_screen_verdict_help">Indicates the reliability of the analyzed data.</string>
+    <string name="details_screen_threat_score_help">Indicates how dangerous the analyzed data could be if it is malicious.</string>
+
+    <string name="details_screen_refreshing_status_in_progress">Refreshing analysis</string>
+    <string name="details_screen_refreshing_status_completed">Analysis finished</string>
+    <string name="details_screen_refreshing_status_error">Cannot refresh right now</string>
+    <string name="details_screen_refreshing_status_completed_icon_alt">Checkmark icon indicating the completion of the analysis</string>
+    <string name="details_screen_refreshing_status_error_icon_alt">Cloud icon with a slash indicating that the analysis is not being refreshed due to a network issue</string>
+
+    <string name="details_section_accordion_expand_label">Tap to expand the section</string>
+    <string name="details_section_accordion_collapse_label">Tap to collapse the section</string>
+    <string name="details_section_accordion_collapsed_chevron_icon_alt">Chevron down icon</string>
+    <string name="details_section_accordion_expanded_chevron_icon_alt">Chevron up icon</string>
+</resources>

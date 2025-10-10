@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="verdict_stats_clean_label">Limpios</string>
+    <string name="verdict_stats_suspicious_label">Sospechosos</string>
+    <string name="verdict_stats_malicious_label">Maliciosos</string>
+    <string name="verdict_stats_unknown_label">Desconocidos</string>
+    <string name="verdict_stats_last_results_label">Últimos resultados</string>
+    <string name="verdict_stats_default_label">Estadísticas</string>
+    
+    <string name="analysis_results_section_card_icon_alt">Ícono de flecha hacia la derecha</string>
+    <string name="analysis_results_section_card_in_progress">Análisis en progreso</string>
+    
+    <string name="results_screen_emails_card_title">Correos Electrónicos</string>
+    <string name="results_screen_sms_card_title">Mensajes de Texto SMS</string>
+    <string name="results_screen_files_card_title">Archivos</string>
+    <string name="results_screen_urls_card_title">URLs</string>
+    <string name="results_screen_emails_card_description">Revisa los resultados de tus análisis de los correos electrónicos.</string>
+    <string name="results_screen_sms_card_description">Revisa los resultados de tus análisis de los mensajes de texto SMS.</string>
+    <string name="results_screen_files_card_description">Revisa los resultados de tus análisis de archivos.</string>
+    <string name="results_screen_urls_card_description">Revisa los resultados de tus análisis de URLs.</string>
+    <string name="results_screen_emails_card_icon_alt">Ícono de correo</string>
+    <string name="results_screen_sms_card_icon_alt">Ícono de mensaje</string>
+    <string name="results_screen_files_card_icon_alt">Ícono de archivo</string>
+    <string name="results_screen_urls_card_icon_alt">Ícono de enlace</string>
+
+    <string name="analysis_status_queued_badge_label">Análisis en cola</string>
+    <string name="analysis_status_in_progress_badge_label">Análisis en progreso</string>
+    <string name="analysis_status_completed_badge_label">Análisis completado</string>
+    <string name="analysis_status_failed_badge_label">Análisis fallido</string>
+    <string name="analysis_status_timeout_badge_label">Análisis sobrepaso el tiempo de espera</string>
+
+    <string name="analysis_status_queued_badge_icon_alt">Ícono indicando análisis en cola</string>
+    <string name="analysis_status_in_progress_badge_icon_alt">Ícono de flecha rotando indicando análisis en progreso</string>
+    <string name="analysis_status_completed_badge_icon_alt">Ícono de marca de verificación indicando análisis completado</string>
+    <string name="analysis_status_failed_badge_icon_alt">Ícono de cruz indicando análisis fallido</string>
+    <string name="analysis_status_timeout_badge_icon_alt">Ícono de reloj indicando que el análisis sobrepasó el tiempo de espera</string>
+
+    <string name="analysis_verdict_clean_badge">Limpio</string>
+    <string name="analysis_verdict_suspicious_badge">Sospechoso</string>
+    <string name="analysis_verdict_malicious_badge">Malicioso</string>
+    <string name="analysis_verdict_unknown_badge">Desconocido</string>
+
+    <string name="analysis_preview_started_date_label">Fecha de inicio</string>
+    <string name="analysis_preview_verdict_label">Veredicto</string>
+    <string name="analysis_preview_details_button_label">Detalles</string>
+    <string name="analysis_preview_details_button_icon_alt">Ícono de documento</string>
+    <string name="analysis_preview_refresh_button_label">Refrescar</string>
+    <string name="analysis_preview_refresh_button_icon_alt">Ícono de refrescar</string>
+
+    <string name="error_analysis_repository_generic">Ocurrió un error inesperado. Por favor, inténtalo de nuevo.</string>
+    <string name="error_analysis_repository_server">Ocurrió un error del servidor. Por favor, inténtalo más tarde.</string>
+    <string name="error_analysis_repository_network">Ocurrió un error de red. Verifica tu conexión e inténtalo de nuevo.</string>
+    <string name="error_analysis_repository_server_unreachable">El servidor no está disponible. Por favor, inténtalo más tarde.</string>
+    <string name="error_analysis_repository_unavailable">Este servicio no está disponible en este momento. Por favor, inténtalo más tarde.</string>
+
+    <string name="analyses_limit_reached_no_analyses">No hay análisis para mostrar.</string>
+    <string name="analyses_limit_reached_no_more_analyses">No hay más análisis para mostrar.</string>
+
+    <string name="filters_sort_by_section_label">Ordenar por</string>
+    <string name="filters_sort_by_date_label">Fecha</string>
+    <string name="filters_sort_by_verdict_label">Veredicto</string>
+    <string name="filters_sort_by_status_label">Estado del análisis</string>
+    <string name="filters_verdict_section_label">Veredicto</string>
+    <string name="filters_status_section_label">Estado del Análisis</string>
+    <string name="filters_status_queued_label">En cola</string>
+    <string name="filters_status_in_progress_label">En progreso</string>
+    <string name="filters_status_completed_label">Completado</string>
+    <string name="filters_status_failed_label">Fallido</string>
+    <string name="filters_status_timeout_label">Fallido por tiempo de espera</string>
+    <string name="filters_date_section_label">Rango de Fechas</string>
+    <string name="filters_date_select_button_icon_alt">Ícono de calendario</string>
+    <string name="filters_date_dialog_min_date_label">Fecha mínima</string>
+    <string name="filters_date_dialog_max_date_label">Fecha máxima</string>
+    <string name="filters_date_dialog_accept_button_label">Aceptar</string>
+    <string name="filters_date_dialog_accept_button_icon_alt">Ícono de marca de verificación indicando confirmar el rango seleccionado.</string>
+    <string name="filters_date_dialog_cancel_button_label">Cancelar</string>
+    <string name="filters_date_dialog_cancel_button_icon_alt">Ícono de cruz indicando cancelar el rango seleccionado.</string>
+    <string name="filters_reset_all_button_label">Reestablecer todo</string>
+    <string name="filters_apply_button_label">Aplicar</string>
+    <string name="filters_cancel_button_label">Cancelar</string>
+    <string name="filters_section_reset_button_label">Reestablecer</string>
+    <string name="filters_chip_checkmark_icon_alt">Ícono de marca de verificación indicando que la etiqueta está seleccionada</string>
+
+    <string name="previews_screen_filter_button_icon_alt">Ícono de filtro</string>
+    <string name="previews_cards_header_icon_cloud_off_alt">Ícono de nube con una línea indicando que el análisis no se está refrescando</string>
+    <string name="previews_cards_header_icon_check_alt">Ícono de marca de verificación indicando que el análisis se ha completado</string>
+
+    <string name="email_previews_screen_title">Correos Electrónicos</string>
+    <string name="email_previews_cards_header_label">Remitente</string>
+
+    <string name="sms_previews_screen_title">Mensajes de Texto SMS</string>
+    <string name="sms_previews_cards_header_label">Remitente</string>
+
+    <string name="file_previews_screen_title">Archivos</string>
+    <string name="file_previews_cards_header_label">Nombre del Archivo</string>
+
+    <string name="help_icon_alt">Ícono de ayuda</string>
+    <string name="copy_icon_alt">Ícono de copiar</string>
+
+    <string name="details_screen_email_title">Análisis de Correo</string>
+    <string name="details_screen_sms_title">Análisis de SMS</string>
+    <string name="details_screen_file_title">Análisis de Archivo</string>
+    <string name="details_screen_url_title">Análisis de URL</string>
+    <string name="details_screen_file_name_label">Nombre del Archivo</string>
+    <string name="details_screen_url_label">URL</string>
+    <string name="details_screen_verdict_label">Veredicto</string>
+    <string name="details_screen_threat_score_label">Puntaje de la Amenaza</string>
+
+    <string name="details_screen_started_datetime_section_title">Fecha y Hora de Inicio</string>
+    <string name="details_screen_started_datetime_section_date_label">Fecha de Inicio</string>
+    <string name="details_screen_started_datetime_section_time_label">Hora de Inicio</string>
+
+    <string name="details_screen_message_information_section_title">Información del Mensaje</string>
+    <string name="details_screen_message_sender_label">Remitente</string>
+    <string name="details_screen_message_subject_label">Asunto</string>
+    <string name="details_screen_message_content_label">Contenido</string>
+    <string name="details_screen_message_no_analyzable_data">Ningún dato fue detectado o adjuntado para ser analizado.</string>
+    <string name="details_screen_message_analyzed_files_section_title">Archivos Analizados</string>
+    <string name="details_screen_message_analyzed_file_label">Nombre del Archivo</string>
+    <string name="details_screen_message_analyzed_urls_section_title">URLs Analizadas</string>
+    <string name="details_screen_message_analyzed_url_label">URL</string>
+    <string name="details_screen_message_reputation_email_section_title">Reputación de Correos Electrónicos</string>
+    <string name="details_screen_message_reputation_email_label">Dirección de Correo Electrónico</string>
+    <string name="details_screen_message_reputation_phone_section_title">Reputación de Números Telefónicos</string>
+    <string name="details_screen_message_reputation_phone_label">Número Telefónico</string>
+    <string name="details_screen_message_sub_result_final_verdict_label">Veredicto Final</string>
+    <string name="details_screen_message_sub_result_information_section_title">Información</string>
+    <string name="details_screen_service_results_section_title">Resultados de Servicios</string>
+    <string name="details_screen_service_results_failed_analysis">Análisis fallido</string>
+    <string name="details_screen_service_results_threat_score">PA</string>
+    <string name="details_screen_service_results_help_message">El acrónimo \'PA\' indica el puntaje de la amenaza que el servicio le dio al dato analizado.</string>
+    <string name="details_screen_service_results_not_found">No se encontraron los resultados de servicios externos.</string>
+
+    <string name="details_screen_file_information_section_title">Información del Archivo</string>
+    <string name="details_screen_file_information_type_label">Tipo de Archivo</string>
+    <string name="details_screen_file_information_size_label">Tamaño del Archivo</string>
+
+    <string name="details_screen_hash" translatable="false">Hash</string>
+    <string name="details_screen_hash_sha_1" translatable="false">SHA-1</string>
+    <string name="details_screen_hash_sha_256" translatable="false">SHA-256</string>
+    <string name="details_screen_hash_sha_512" translatable="false">SHA-512</string>
+    <string name="details_screen_hash_md5" translatable="false">MD5</string>
+    <string name="details_screen_hash_value_copied">Valor de hash copiado</string>
+
+    <string name="details_screen_verdict_help">Indica la fiabilidad del dato analizado.</string>
+    <string name="details_screen_threat_score_help">Indica qué tan peligroso podría ser el dato analizado en caso de ser malicioso.</string>
+
+    <string name="details_screen_refreshing_status_in_progress">Actualizando análisis</string>
+    <string name="details_screen_refreshing_status_completed">Análisis finalizado</string>
+    <string name="details_screen_refreshing_status_error">No se puede actualizar ahora mismo</string>
+    <string name="details_screen_refreshing_status_completed_icon_alt">Ícono de marca de verificación indicando que el análisis se ha completado</string>
+    <string name="details_screen_refreshing_status_error_icon_alt">Ícono de nube con una línea indicando que el análisis no se está refrescando debido a un problema de red</string>
+
+    <string name="details_section_accordion_expand_label">Presiona para expandir la sección</string>
+    <string name="details_section_accordion_collapse_label">Presiona para contraer la sección</string>
+    <string name="details_section_accordion_collapsed_chevron_icon_alt">Ícono de flecha hacia abajo</string>
+    <string name="details_section_accordion_expanded_chevron_icon_alt">Ícono de flecha hacia arriba</string>
+</resources>

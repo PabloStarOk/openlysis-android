@@ -1,0 +1,210 @@
+package com.openlysis.feature.tools.navigation
+
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.AnimatedContentTransitionScope.SlideDirection
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavController
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavOptions
+import androidx.navigation.compose.composable
+import androidx.navigation.navDeepLink
+import androidx.navigation.navigation
+import com.openlysis.core.designsystem.components.bar.TopBarState
+import com.openlysis.core.link.DeepLinks
+import com.openlysis.data.analysis.model.analysis.FileMultiAnalysis
+import com.openlysis.data.analysis.model.analysis.UrlMultiAnalysis
+import com.openlysis.data.analysis.model.message.MessageAnalysis
+import com.openlysis.feature.tools.EmailAnalysisToolScreen
+import com.openlysis.feature.tools.EmailAnalysisToolScreenViewModel
+import com.openlysis.feature.tools.FileAnalysisToolScreen
+import com.openlysis.feature.tools.FileAnalysisToolScreenViewModel
+import com.openlysis.feature.tools.SmsAnalysisToolScreen
+import com.openlysis.feature.tools.SmsAnalysisToolScreenViewModel
+import com.openlysis.feature.tools.ToolsScreen
+import com.openlysis.feature.tools.UrlAnalysisToolScreen
+import com.openlysis.feature.tools.UrlAnalysisToolScreenViewModel
+import com.openlysis.feature.tools.model.ToolCategory
+import com.openlysis.feature.tools.model.ToolsDataSource
+import kotlinx.serialization.Serializable
+
+/**
+ * Base navigation route for the tools navigation graph.
+ */
+@Serializable
+data object ToolsBaseRoute
+
+/**
+ * Route for accessing the tools screen.
+ */
+@Serializable
+data object ToolsRoute
+
+/**
+ * Route for accessing the email analysis tool screen, which provides functionality
+ * for analyzing email messages within the tools navigation graph.
+ */
+@Serializable
+data object EmailAnalysisToolRoute
+
+/**
+ * Route for accessing the SMS analysis tool screen, which provides functionality
+ * for analyzing SMS messages within the tools navigation graph.
+ */
+@Serializable
+data object SmsAnalysisToolRoute
+
+/**
+ * Route for accessing the file analysis tool screen, which provides functionality
+ * for analyzing files and documents within the tools navigation graph.
+ */
+@Serializable
+data object FileAnalysisToolRoute
+
+/**
+ * Route for accessing the URL analysis tool screen, which provides functionality
+ * for analyzing web URLs and links within the tools navigation graph.
+ */
+@Serializable
+data object UrlAnalysisToolRoute
+
+/**
+ * Provides functionality to navigate to the tools screen.
+ */
+fun NavController.navigateToTools(navOptions: NavOptions) =
+    navigate(ToolsBaseRoute, navOptions = navOptions)
+
+/**
+ * Adds the tools screen to the navigation graph.
+ *
+ * @param navController The navigation controller for handling navigation events
+ * @param onMessageAnalysisStart Callback triggered when message analysis is started
+ * @param onFileAnalysisStart Callback triggered when file analysis is started
+ * @param onUrlAnalysisStart Callback triggered when URL analysis is started
+ * @param onTopBarUpdate Callback to update the top bar state
+ * @param enterTransition Animation played when the screen enters
+ * @param exitTransition Animation played when the screen exits
+ * @param popEnterTransition Animation played when the screen re-enters after pop (defaults to enterTransition)
+ * @param popExitTransition Animation played when the screen is popped (defaults to exitTransition)
+ */
+fun NavGraphBuilder.toolsScreen(
+    navController: NavController,
+    onMessageAnalysisStart: (MessageAnalysis) -> Unit,
+    onFileAnalysisStart: (FileMultiAnalysis) -> Unit,
+    onUrlAnalysisStart: (UrlMultiAnalysis) -> Unit,
+    onTopBarUpdate: (TopBarState) -> Unit,
+    enterTransition: (
+    AnimatedContentTransitionScope<NavBackStackEntry>.()
+    -> @JvmSuppressWildcards EnterTransition?
+    ),
+    exitTransition: (
+    AnimatedContentTransitionScope<NavBackStackEntry>.()
+    -> @JvmSuppressWildcards ExitTransition?
+    ),
+    popEnterTransition: (
+    AnimatedContentTransitionScope<NavBackStackEntry>.()
+    -> @JvmSuppressWildcards EnterTransition?
+    ) = enterTransition,
+    popExitTransition: (
+    AnimatedContentTransitionScope<NavBackStackEntry>.()
+    -> @JvmSuppressWildcards ExitTransition?
+    ) = exitTransition
+) {
+    navigation<ToolsBaseRoute>(startDestination = ToolsRoute) {
+        composable<ToolsRoute>(
+            enterTransition = enterTransition,
+            exitTransition = exitTransition,
+            popEnterTransition = popEnterTransition,
+            popExitTransition = popExitTransition
+        ) { backStackEntry ->
+            ToolsScreen(
+                onToolClick = {
+                    when (it) {
+                        ToolCategory.Email -> navController.navigate(EmailAnalysisToolRoute)
+                        ToolCategory.Sms -> navController.navigate(SmsAnalysisToolRoute)
+                        ToolCategory.File -> navController.navigate(FileAnalysisToolRoute)
+                        ToolCategory.Url -> navController.navigate(UrlAnalysisToolRoute)
+                    }
+                },
+                toolsRepository = ToolsDataSource()
+            )
+        }
+
+        composable<EmailAnalysisToolRoute>(
+            enterTransition = {
+                slideIntoContainer(towards = SlideDirection.Down) +
+                    fadeIn()
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    towards = SlideDirection.Up
+                ) + fadeOut()
+            }
+        ) { backStackEntry ->
+            EmailAnalysisToolScreen(
+                viewModel = hiltViewModel<EmailAnalysisToolScreenViewModel>(),
+                onAnalysisStart = onMessageAnalysisStart,
+                onTopBarUpdate = onTopBarUpdate
+            )
+        }
+
+        composable<SmsAnalysisToolRoute>(
+            deepLinks = listOf(navDeepLink { uriPattern = DeepLinks.Tools.Sms.URI_PATTERN }),
+            enterTransition = {
+                slideIntoContainer(towards = SlideDirection.Down) +
+                    fadeIn()
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    towards = SlideDirection.Up
+                ) + fadeOut()
+            }
+        ) { backStackEntry ->
+            SmsAnalysisToolScreen(
+                viewModel = hiltViewModel<SmsAnalysisToolScreenViewModel>(),
+                onAnalysisStart = onMessageAnalysisStart,
+                onTopBarUpdate = onTopBarUpdate
+            )
+        }
+
+        composable<FileAnalysisToolRoute>(
+            enterTransition = {
+                slideIntoContainer(towards = SlideDirection.Down) +
+                    fadeIn()
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    towards = SlideDirection.Up
+                ) + fadeOut()
+            }
+        ) { backStackEntry ->
+            FileAnalysisToolScreen(
+                viewModel = hiltViewModel<FileAnalysisToolScreenViewModel>(),
+                onAnalysisStart = onFileAnalysisStart,
+                onTopBarUpdate = onTopBarUpdate
+            )
+        }
+
+        composable<UrlAnalysisToolRoute>(
+            enterTransition = {
+                slideIntoContainer(towards = SlideDirection.Down) +
+                    fadeIn()
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    towards = SlideDirection.Up
+                ) + fadeOut()
+            }
+        ) { backStackEntry ->
+            UrlAnalysisToolScreen(
+                viewModel = hiltViewModel<UrlAnalysisToolScreenViewModel>(),
+                onAnalysisStart = onUrlAnalysisStart,
+                onTopBarUpdate = onTopBarUpdate
+            )
+        }
+    }
+}

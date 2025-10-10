@@ -1,13 +1,36 @@
 [versions]
-agp = "8.9.2"
+agp = "8.9.3"
 kotlin = "2.0.21"
 coreKtx = "1.16.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
-lifecycleRuntimeKtx = "2.8.7"
+lifecycleRuntimeKtx = "2.9.1"
 activityCompose = "1.10.1"
-composeBom = "2024.09.00"
+composeBom = "2025.06.00"
+jetbrainsKotlinJvm = "2.0.21"
+appcompat = "1.7.1"
+ktlint-gradle = "12.2.0"
+ktlint-ruleset = "0.4.22"
+androidxNavigation = "2.9.0"
+jsonSerializationPlugin = "2.0.21"
+retrofit = "3.0.0"
+moshi = "1.15.2"
+androidToolsDesugar = "2.1.5"
+material = "1.12.0"
+room = "2.7.1"
+hilt = "2.56.2"
+androidXHilt = "1.2.0"
+kotlinxDatetime = "0.5.0"
+kotlinxCoroutines = "1.10.2"
+androidXDataStore = "1.1.7"
+protobuf = "4.31.1"
+protobufPlugin = "0.9.5"
+splashScreen = "1.0.1"
+workManager = "2.10.2"
+microsoftSignalR = "9.0.7"
+jackson = "2.13.5" # Required version to support 24+ API level
+slf4jAndroid = "1.7.36"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -24,9 +47,49 @@ androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-toolin
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+ktlint-ruleset = { group = "io.nlopez.compose.rules", name = "ktlint", version.ref = "ktlint-ruleset"}
+androidx-navigation = { group = "androidx.navigation", name = "navigation-compose", version.ref = "androidxNavigation"}
+retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+retrofit-converter-moshi = { group = "com.squareup.retrofit2", name = "converter-moshi", version.ref = "retrofit" }
+moshi-kotlin = { group = "com.squareup.moshi", name = "moshi-kotlin", version.ref = "moshi" }
+moshi-kotlin-codegen = { group = "com.squareup.moshi", name = "moshi-kotlin-codegen", version.ref = "moshi"}
+android-tools-desugar = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "androidToolsDesugar"}
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+google-dagger-hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt"}
+google-dagger-hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt"}
+google-dagger-hilt-core = { group = "com.google.dagger", name = "hilt-core", version.ref = "hilt"}
+androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "androidXHilt"}
+kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlinxDatetime" }
+kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
+kotlinx-coroutines-rx3 = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-rx3", version.ref = "kotlinxCoroutines" }
+androidx-dataStore = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "androidXDataStore" }
+androidx-dataStoreProto = { group = "androidx.datastore", name = "datastore", version.ref = "androidXDataStore" }
+protobuf-kotlin-lite = { group = "com.google.protobuf", name = "protobuf-kotlin-lite", version.ref = "protobuf" }
+protobuf-protoc = { group = "com.google.protobuf", name = "protoc", version.ref = "protobuf" }
+androidx-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "splashScreen" }
+androidx-workmanager-runtime = { group = "androidx.work", name = "work-runtime", version.ref = "workManager" }
+androidx-workmanager-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "workManager" }
+androidx-hilt-workmanager = { group = "androidx.hilt", name = "hilt-work", version.ref = "androidXHilt" }
+androidx-hilt-compiler = { group = "androidx.hilt", name = "hilt-compiler", version.ref = "androidXHilt" }
+microsoft-signalr = { group = "com.microsoft.signalr", name = "signalr", version.ref = "microsoftSignalR" }
+microsoft-signalr-messagepack = { group = "com.microsoft.signalr.messagepack", name = "signalr-messagepack", version.ref = "microsoftSignalR" }
+jackson-annotations = { group = "com.fasterxml.jackson.core", name = "jackson-annotations", version.ref = "jackson" }
+slf4j-android = { group = "org.slf4j", name = "slf4j-android", version.ref = "slf4jAndroid" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-
+jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
+android-library = { id = "com.android.library", version.ref = "agp" }
+ktlint-gradle = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint-gradle" }
+json-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "jsonSerializationPlugin" }
+google-devtools-ksp = { id = "com.google.devtools.ksp", version = "2.1.21-2.0.2" }
+google-dagger-hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt"}
+androidx-room = { id = "androidx.room", version.ref = "room" }
+kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize" }
+protobuf = { id = "com.google.protobuf", version.ref = "protobufPlugin" }
