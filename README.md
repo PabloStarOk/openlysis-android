@@ -1,5 +1,5 @@
 ![MIT License](https://img.shields.io/github/license/PabloStarOk/openlysis-android?style=for-the-badge)
-![Release](https://img.shields.io/github/v/release/PabloStarOk/openlysis-android?style=for-the-badge)
+![Release](https://img.shields.io/github/v/release/PabloStarOk/openlysis-android?include_prereleases&display_name=release&style=for-the-badge)
 
 ![Openlysis](./.github/assets/appIcon.svg)
 
